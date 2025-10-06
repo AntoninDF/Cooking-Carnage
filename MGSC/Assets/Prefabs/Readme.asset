@@ -12,28 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
   m_Name: Readme
   m_EditorClassIdentifier: 
-  icon: {fileID: 2800000, guid: d19680cd422524695938fbe55cc3b3bd, type: 3}
-  title: HDRP Empty Template
+  icon: {fileID: 2800000, guid: 9266273b8f123004195741f969177dda, type: 3}
+  title: Prefab folder
   sections:
-  - heading: Welcome to the HDRP Empty Template
-    text: This template includes the settings and assets you need to start creating
-      with HDRP.
+  - heading: What should I put here ?
+    text: In this folder, every prefab or prefab variant that is destined to be put
+      directly in the game can be stored. Mesh prefabs, or intermediate prefabs that
+      may only exist within other prefabs should not be stored here, but rather in
+      the most suitable place according to you (preferably near other assets that
+      use them).
     linkText: 
     url: 
-  - heading: Documentation
-    text: 
-    linkText: Read more about the HDRP
-    url: https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@latest/index.html
-  - heading: Samples
-    text: 
-    linkText: Samples and content you can use in your project
-    url: https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@latest?subfolder=/manual/HDRP-Sample-Content.html
-  - heading: Forums
-    text: 
-    linkText: Get answers and support
-    url: https://forum.unity.com/forums/high-definition-render-pipeline.386/
-  - heading: Bugs
-    text: 
-    linkText: Report any bugs
-    url: https://unity3d.com/unity/qa/bug-reporting
+  - heading: What shouldn't I put here ?
+    text: Anything that isn't a prefab or prefab variant shouldn't be here. For graphics
+      prefabs, only put them here if they are meant to be directly put in a scene.
+      Do not put here a Leaf prefab, for example, if Leaf prefabs should only exist
+      inside Tree prefabs
+    linkText: 
+    url: 
+  - heading: Gameplay prefab
+    text: If your prefab has no functionnality except being seen (graphics), put
+      it in the Graphics folder. If it is associated with a gameplay element with
+      graphics, put it in gameplay. If it serves another purpose (helper, data, etc.),
+      put it in other.
+    linkText: 
+    url: 
   loadedLayout: 1
