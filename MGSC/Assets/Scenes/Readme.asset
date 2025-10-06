@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: Readme
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: 2a883f4c030cbad44a2565919e1a208b, type: 3}
+  title: How to use scenes
+  sections:
+  - heading: MainScene
+    text: This scene is used for building the game, and contains all the logic, UI,
+      visuals and other content necessary to play the game. Changes to this scene
+      should only be made when you are certain that your change should be reflected
+      in the game.
+    linkText: 
+    url: 
+  - heading: Dev Scenes
+    text: In this folder, you can create all the scenes you want to work on specific
+      features, that will not directly be reflected in the game. You can use it to
+      test stuff. You can also duplicate and rename the main scene there, to start
+      from the current latest version of the game.
+    linkText: 
+    url: 
+  - heading: Backup
+    text: In this folder, we can backup the MainScene, to make sure that prior versions
+      of the game are saved. This doesn't mean it will always work, since changes
+      to prefabs will be reflected in these scenes too !
+    linkText: 
+    url: 
+  loadedLayout: 1
