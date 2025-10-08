@@ -39,8 +39,9 @@ public class Item : MonoBehaviour, IInteractable, IGrabbable
     public void Interact(Interactor interactor)
     {
         OnInteract?.Invoke();
-        Collider.isTrigger = true;
         bool didGrab = interactor.Inventory.Grab(this);
+        if (didGrab)
+            Collider.isTrigger = true;
         if (containerSlot != null && didGrab)
         {
             containerSlot.Release();

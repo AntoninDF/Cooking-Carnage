@@ -12,6 +12,7 @@ public class ContainerSlot : MonoBehaviour
     [SerializeField] private bool checkOverlap;
     [SerializeField] private Material available;
     [SerializeField] private Material unavailable;
+    private Transform lastItemParent;
 
     private void Start()
     {
@@ -28,11 +29,14 @@ public class ContainerSlot : MonoBehaviour
         if (!IsFree()) return;
         if (item is not Item) return;
         ((Item)item).SetPosition(this.transform.position);
+        lastItemParent = item.Transform.parent;
+        item.Transform.parent = this.transform;
         HeldItem = item;
         UpdateMaterial();
     }
     public void Release()
     {
+        HeldItem.Transform.parent = lastItemParent;
         HeldItem = null;
         UpdateMaterial();
     }
