@@ -28,10 +28,12 @@ public class Inventory : MonoBehaviour
         return true;
     }
 
-    public void Release()
+    public IGrabbable Release()
     {
         interactor.OnTryThrow -= HeldItem.TryThrow;
+        IGrabbable temp = HeldItem;
         HeldItem = null;
+        return temp;
     }
 
     void UpdateGrabbedItemTransform()

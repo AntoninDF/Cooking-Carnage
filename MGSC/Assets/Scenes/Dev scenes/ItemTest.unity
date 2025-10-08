@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 2
@@ -321,6 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -491,6 +493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 4
@@ -658,6 +661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 2
@@ -883,6 +887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -1600,6 +1605,134 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 42070245}
   m_SourcePrefab: {fileID: 100100000, guid: 21ce63aa00ff1e949a8f41048d147be1, type: 3}
+--- !u!1 &130316856
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 130316857}
+  - component: {fileID: 130316861}
+  - component: {fileID: 130316860}
+  - component: {fileID: 130316859}
+  - component: {fileID: 130316858}
+  m_Layer: 0
+  m_Name: Item (45)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &130316857
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130316856}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 14.703, y: -0.125, z: -0.771}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1314394658}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &130316858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130316856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 11400000, guid: 201583b5079a7c440b685062b7413e63, type: 2}
+  previewValidObject: {fileID: 1955634336}
+  previewInvalidObject: {fileID: 1584151597}
+  releaseMode: 5
+--- !u!135 &130316859
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130316856}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &130316860
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130316856}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 7fa68f2135e5d0549b9d0df422d88641, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &130316861
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130316856}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &159397582
 GameObject:
   m_ObjectHideFlags: 0
@@ -2405,6 +2538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -2565,6 +2699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 5
@@ -2692,6 +2827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 1955634336}
   previewInvalidObject: {fileID: 1584151597}
   releaseMode: 5
@@ -3248,6 +3384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -3375,6 +3512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -3502,6 +3640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -3615,6 +3754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 1
@@ -3755,6 +3895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -4555,6 +4696,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 0
@@ -4682,6 +4824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 1955634336}
   previewInvalidObject: {fileID: 1584151597}
   releaseMode: 4
@@ -4824,6 +4967,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 4
@@ -5554,6 +5698,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 1
@@ -5778,6 +5923,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 2
@@ -6230,6 +6376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 0
@@ -6821,6 +6968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 0
@@ -7103,6 +7251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 1
@@ -7199,6 +7348,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1314394658}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &860218676
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3127976429884797967, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
+      propertyPath: m_Name
+      value: P_Recipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432649730967317080, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 11.542399
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432649730967317080, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432649730967317080, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.4936821
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432649730967317080, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432649730967317080, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432649730967317080, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432649730967317080, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432649730967317080, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432649730967317080, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432649730967317080, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 94c0aa36dae497a4cbdfba4c360de968, type: 3}
 --- !u!1 &866182513
 GameObject:
   m_ObjectHideFlags: 0
@@ -7246,6 +7452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -7500,6 +7707,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -8393,6 +8601,134 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956212278}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &969853898
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 969853899}
+  - component: {fileID: 969853903}
+  - component: {fileID: 969853902}
+  - component: {fileID: 969853901}
+  - component: {fileID: 969853900}
+  m_Layer: 0
+  m_Name: Item (42)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &969853899
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969853898}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 15.2, y: -0.125, z: -0.203}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1314394658}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &969853900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969853898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 11400000, guid: 1c8073359e8768b48b632d094adecbbe, type: 2}
+  previewValidObject: {fileID: 1955634336}
+  previewInvalidObject: {fileID: 1584151597}
+  releaseMode: 5
+--- !u!135 &969853901
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969853898}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &969853902
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969853898}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: e0daf6bc0b2e66f408d76e73d6fe46ad, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &969853903
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969853898}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &980235956
 GameObject:
   m_ObjectHideFlags: 0
@@ -8426,6 +8762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 2
@@ -8723,6 +9060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 5
@@ -8850,6 +9188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 1955634336}
   previewInvalidObject: {fileID: 1584151597}
   releaseMode: 5
@@ -8929,6 +9268,134 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1009144091}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1055147640
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1055147641}
+  - component: {fileID: 1055147645}
+  - component: {fileID: 1055147644}
+  - component: {fileID: 1055147643}
+  - component: {fileID: 1055147642}
+  m_Layer: 0
+  m_Name: Item (40)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1055147641
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1055147640}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 14.471, y: -0.125, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1314394658}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1055147642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1055147640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 11400000, guid: a76e628c554ac584b983c4119d40efe7, type: 2}
+  previewValidObject: {fileID: 1955634336}
+  previewInvalidObject: {fileID: 1584151597}
+  releaseMode: 5
+--- !u!135 &1055147643
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1055147640}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1055147644
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1055147640}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 828bf3e994668a6409309bc7ad622715, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1055147645
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1055147640}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1060499104
 GameObject:
@@ -9074,6 +9541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 4
@@ -9209,6 +9677,262 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1076233877}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1079503435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1079503436}
+  - component: {fileID: 1079503440}
+  - component: {fileID: 1079503439}
+  - component: {fileID: 1079503438}
+  - component: {fileID: 1079503437}
+  m_Layer: 0
+  m_Name: Item (43)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1079503436
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079503435}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 15.2, y: -0.125, z: -0.501}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1314394658}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1079503437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079503435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 11400000, guid: 1c8073359e8768b48b632d094adecbbe, type: 2}
+  previewValidObject: {fileID: 1955634336}
+  previewInvalidObject: {fileID: 1584151597}
+  releaseMode: 5
+--- !u!135 &1079503438
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079503435}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1079503439
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079503435}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: e0daf6bc0b2e66f408d76e73d6fe46ad, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1079503440
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079503435}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1092544093
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1092544094}
+  - component: {fileID: 1092544098}
+  - component: {fileID: 1092544097}
+  - component: {fileID: 1092544096}
+  - component: {fileID: 1092544095}
+  m_Layer: 0
+  m_Name: Item (39)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1092544094
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092544093}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 14.115, y: -0.125, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1314394658}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1092544095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092544093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 11400000, guid: a76e628c554ac584b983c4119d40efe7, type: 2}
+  previewValidObject: {fileID: 1955634336}
+  previewInvalidObject: {fileID: 1584151597}
+  releaseMode: 5
+--- !u!135 &1092544096
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092544093}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1092544097
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092544093}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 828bf3e994668a6409309bc7ad622715, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1092544098
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092544093}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1107280370
 GameObject:
   m_ObjectHideFlags: 0
@@ -9399,6 +10123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 6
@@ -9653,6 +10378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -10217,6 +10943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 1
@@ -10369,6 +11096,13 @@ Transform:
   - {fileID: 1534318407}
   - {fileID: 509784717}
   - {fileID: 1907957696}
+  - {fileID: 1092544094}
+  - {fileID: 1055147641}
+  - {fileID: 1558447971}
+  - {fileID: 969853899}
+  - {fileID: 1079503436}
+  - {fileID: 1546111167}
+  - {fileID: 130316857}
   - {fileID: 1955634340}
   - {fileID: 1584151601}
   - {fileID: 415388812}
@@ -11272,6 +12006,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 1
@@ -11634,6 +12369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 6
@@ -11825,6 +12561,134 @@ Transform:
   m_Children: []
   m_Father: {fileID: 544235422}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1546111166
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1546111167}
+  - component: {fileID: 1546111171}
+  - component: {fileID: 1546111170}
+  - component: {fileID: 1546111169}
+  - component: {fileID: 1546111168}
+  m_Layer: 0
+  m_Name: Item (44)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1546111167
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546111166}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 15.2, y: -0.125, z: -0.771}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1314394658}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1546111168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546111166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 11400000, guid: 1c8073359e8768b48b632d094adecbbe, type: 2}
+  previewValidObject: {fileID: 1955634336}
+  previewInvalidObject: {fileID: 1584151597}
+  releaseMode: 5
+--- !u!135 &1546111169
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546111166}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1546111170
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546111166}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: e0daf6bc0b2e66f408d76e73d6fe46ad, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1546111171
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546111166}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &1553556766
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11892,6 +12756,134 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1851622465}
   m_SourcePrefab: {fileID: 100100000, guid: 21ce63aa00ff1e949a8f41048d147be1, type: 3}
+--- !u!1 &1558447970
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1558447971}
+  - component: {fileID: 1558447975}
+  - component: {fileID: 1558447974}
+  - component: {fileID: 1558447973}
+  - component: {fileID: 1558447972}
+  m_Layer: 0
+  m_Name: Item (41)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1558447971
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558447970}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 14.82, y: -0.125, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1314394658}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1558447972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558447970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 11400000, guid: a76e628c554ac584b983c4119d40efe7, type: 2}
+  previewValidObject: {fileID: 1955634336}
+  previewInvalidObject: {fileID: 1584151597}
+  releaseMode: 5
+--- !u!135 &1558447973
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558447970}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1558447974
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558447970}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 828bf3e994668a6409309bc7ad622715, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1558447975
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558447970}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1559787355
 GameObject:
   m_ObjectHideFlags: 0
@@ -12051,6 +13043,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 1955634336}
   previewInvalidObject: {fileID: 1584151597}
   releaseMode: 4
@@ -12268,6 +13261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 2
@@ -12437,6 +13431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -12661,6 +13656,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 1955634336}
   previewInvalidObject: {fileID: 1584151597}
   releaseMode: 4
@@ -12803,6 +13799,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 0
@@ -12900,6 +13897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 6
@@ -13038,6 +14036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 6
@@ -13259,6 +14258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 5
@@ -13454,6 +14454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -13581,6 +14582,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 1955634336}
   previewInvalidObject: {fileID: 1584151597}
   releaseMode: 5
@@ -13835,6 +14837,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 0
@@ -14393,6 +15396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 0
@@ -14434,6 +15438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 1
@@ -14532,6 +15537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 3
@@ -14659,6 +15665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 5
@@ -15295,6 +16302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00dcecceea47a674c84e61c6d55b6b07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
+  dataModel: {fileID: 0}
   previewValidObject: {fileID: 0}
   previewInvalidObject: {fileID: 0}
   releaseMode: 2
@@ -15695,3 +16703,4 @@ SceneRoots:
   - {fileID: 1553556766}
   - {fileID: 1746776884}
   - {fileID: 932326450}
+  - {fileID: 860218676}

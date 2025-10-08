@@ -12,11 +12,13 @@ public class Item : MonoBehaviour, IInteractable, IGrabbable
 
     public Collider Collider { get; set; }
 
-    private List<Vector3> pointsToDebug = new();
-    private Vector3 offsetToLowestPoint;
+    [SerializeField] public SO_Item dataModel;
     [SerializeField] private GameObject previewValidObject;
     [SerializeField] private GameObject previewInvalidObject;
     [SerializeField] private EReleaseMode releaseMode;
+
+    private List<Vector3> pointsToDebug = new();
+    private Vector3 offsetToLowestPoint;
     private ContainerSlot containerSlot;
     private Quaternion initialRotation;
 
