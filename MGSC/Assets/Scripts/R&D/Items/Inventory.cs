@@ -20,11 +20,12 @@ public class Inventory : MonoBehaviour
         UpdateGrabbedItemTransform();
     }
 
-    public void Grab<T>(T item) where T : IGrabbable
+    public bool Grab<T>(T item) where T : IGrabbable
     {
-        if (HeldItem != null) return;
+        if (HeldItem != null) return false;
         HeldItem = item;
         interactor.OnTryThrow += HeldItem.TryThrow;
+        return true;
     }
 
     public void Release()

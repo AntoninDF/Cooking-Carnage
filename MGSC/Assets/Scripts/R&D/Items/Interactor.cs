@@ -17,6 +17,9 @@ public class Interactor : MonoBehaviour
     [SerializeField] private float reachDistance = 10f;
     public Action<Interactor> OnTryInteract {  get; set; }
     public Action<Interactor> OnTryThrow {  get; set; }
+
+
+    private RaycastHit hit;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -39,6 +42,9 @@ public class Interactor : MonoBehaviour
             OnTryInteract?.Invoke(this);
         }
 
+        SetLookTransform();
+        Physics.Raycast(lookTransform.position, lookTransform.rotation * Vector3.forward, out hit, reachDistance);
+        LookInfo = hit;
     }
 
     private bool CheckForInteractInput()
@@ -53,7 +59,6 @@ public class Interactor : MonoBehaviour
 
     public bool AllowInteraction<T>(T interactable) where T : IInteractable
     {
-        RaycastHit hit;
         SetLookTransform();
         if (Physics.Raycast(lookTransform.position, lookTransform.rotation * Vector3.forward, out hit, reachDistance))
         {
@@ -69,11 +74,11 @@ public class Interactor : MonoBehaviour
 
     public bool AllowThrow<T>(T interactable) where T : IGrabbable
     {
-        RaycastHit hit;
         SetLookTransform();
         if (Physics.Raycast(lookTransform.position, lookTransform.rotation * Vector3.forward, out hit, reachDistance))
         {
-            if (hit.collider.gameObject.GetComponent<ContainerSurface>() != null)
+            if (hit.collider.gameObject.GetComponent<ContainerSurface>() != null ||
+                hit.collider.gameObject.GetComponent<ContainerSlot>() != null)
             {
                 LookTarget = hit.collider.gameObject;
                 LookInfo = hit;
