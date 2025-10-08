@@ -18,12 +18,15 @@ public class Item : MonoBehaviour, IInteractable, IGrabbable
     [SerializeField] private GameObject previewInvalidObject;
     [SerializeField] private EReleaseMode releaseMode;
     private ContainerSlot containerSlot;
+    private Quaternion initialRotation;
 
     void Start()
     {
         Collider = GetComponent<Collider>();
 
         offsetToLowestPoint = FindLowestPoint();
+        initialRotation = transform.rotation;
+        
 
     }
 
@@ -92,12 +95,14 @@ public class Item : MonoBehaviour, IInteractable, IGrabbable
         if (interactor.LookTarget.GetComponent<ContainerSurface>() == null) return;
         Collider.isTrigger = true;
         transform.position = interactor.LookInfo.point;
+        transform.rotation = initialRotation;
     }
 
     private void Release2(Interactor interactor)
     {
         if (interactor.LookTarget.GetComponent<ContainerSurface>() == null) return;
         transform.position = interactor.LookInfo.point;
+        transform.rotation = initialRotation;
         Collider.isTrigger = false;
     }
     private void Release3(Interactor interactor)
@@ -142,8 +147,8 @@ public class Item : MonoBehaviour, IInteractable, IGrabbable
 
     private void TryPreview(Interactor interactor) 
     {
-        if (previewValidObject == null || previewInvalidObject == null) return;
         if (releaseMode != EReleaseMode.NoPhysicsAndNoClipAndPreview) return;
+        if (previewValidObject == null || previewInvalidObject == null) InitPreviewObjects();
         if (Manager.Inventory.HeldItem == (IGrabbable)this) 
             Preview(interactor); 
         else 
@@ -191,6 +196,7 @@ public class Item : MonoBehaviour, IInteractable, IGrabbable
         {
             return false;
         }
+        if (interactor.LookInfo.collider.GetComponent<ContainerSurface>() == null) return false;
         return true;
     }
 
@@ -205,7 +211,39 @@ public class Item : MonoBehaviour, IInteractable, IGrabbable
     public void SetPosition(Vector3 position)
     {
         transform.position = position - offsetToLowestPoint;
-        transform.rotation = Quaternion.identity;
+        transform.rotation = initialRotation;
+    }
+
+    private void InitPreviewObjects()
+    {
+        MeshRenderer mR = GetComponent<MeshRenderer>();
+        MeshFilter mF = GetComponent<MeshFilter>();
+        if (mR == null || mF == null) return;
+        if (previewValidObject == null)
+        {
+            previewValidObject = new GameObject(this.gameObject.name + "_ValidPreview");
+            previewValidObject.transform.localScale = transform.localScale;
+            previewValidObject.transform.rotation = initialRotation;
+            MeshRenderer mr = previewValidObject.AddComponent<MeshRenderer>();
+            MeshFilter mf = previewValidObject.AddComponent<MeshFilter>();
+            Material mat = new Material(mR.material);
+            mat.color = Color.green;
+            mr.material = mat;
+            mf.mesh = mF.mesh;
+        }
+        if (previewInvalidObject == null)
+        {
+            previewInvalidObject = new GameObject(this.gameObject.name + "_InvalidPreview");
+            previewInvalidObject.transform.localScale = transform.localScale;
+            previewInvalidObject.transform.rotation = initialRotation;
+            MeshRenderer mr = previewInvalidObject.AddComponent<MeshRenderer>();
+            MeshFilter mf = previewInvalidObject.AddComponent<MeshFilter>();
+            Material mat = new Material(mR.material);
+            mat.color = Color.red;
+            mr.material = mat;
+
+            mf.mesh = mF.mesh;
+        }
     }
 
 #if UNITY_EDITOR

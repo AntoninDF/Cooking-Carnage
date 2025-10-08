@@ -17,6 +17,11 @@ public class ContainerSlot : MonoBehaviour
     {
         Collider = GetComponent<Collider>();
     }
+
+    private void Update()
+    {
+        UpdateMaterial();
+    }
     public void Grab(IGrabbable item)
     {
         UpdateMaterial();
@@ -34,8 +39,7 @@ public class ContainerSlot : MonoBehaviour
 
     public bool IsFree()
     {
-        bool isFree = true;
-        if (HeldItem != null) isFree = false;
+        bool isFree = HeldItem == null;
 
         if (checkOverlap)
         {
