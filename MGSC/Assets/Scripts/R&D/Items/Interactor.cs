@@ -29,6 +29,7 @@ public class Interactor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateLookInfo();
 
         if (CheckForThrowInput())
         {
@@ -41,7 +42,6 @@ public class Interactor : MonoBehaviour
             InteractWithLookTarget();
         }
 
-        UpdateLookInfo();
     }
 
     private bool CheckForInteractInput()
@@ -70,12 +70,15 @@ public class Interactor : MonoBehaviour
     /// <returns></returns>
     private bool AllowInteraction(out IInteractable interactable)
     {
-        foreach (var comp in LookTarget.GetComponents<Component>())
+        if (LookTarget != null)
         {
-            if (comp is IInteractable)
+            foreach (var comp in LookTarget.GetComponents<Component>())
             {
-                interactable = (IInteractable)comp;
-                return true;
+                if (comp is IInteractable)
+                {
+                    interactable = (IInteractable)comp;
+                    return true;
+                }
             }
         }
         interactable = null;

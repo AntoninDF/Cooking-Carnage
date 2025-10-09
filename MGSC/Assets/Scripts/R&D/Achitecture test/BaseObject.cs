@@ -2,15 +2,31 @@ using UnityEngine;
 
 public class BaseObject : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    // Inventory as container
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // Access player data
+
+    // Access interactor data
+
+    // Access game data
+
+    // Interact
+
+    // Drop
+
+    // Grab
+
+    // Cook
+
+    // StartTimer
+
+    // Consume
+
+    // Trigger animation
+
+    // Start VFX
+
+    // Play sound
+
+    // Modify game data
 }
