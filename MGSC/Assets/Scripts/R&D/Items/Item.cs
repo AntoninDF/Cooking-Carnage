@@ -52,14 +52,6 @@ public class Item : MonoBehaviour, IInteractable, IGrabbable
         Debug.Log("[Item] Interact : Interacting...");
     }
 
-    public void TryInteract(Interactor interactor)
-    {
-        if (interactor.AllowInteraction(this) && interactor.LookInfo.collider.gameObject == this.gameObject)
-        {
-            Interact(interactor);
-        }
-    }
-
     public void Throw(Interactor interactor)
     {
         Manager.Inventory.Release();

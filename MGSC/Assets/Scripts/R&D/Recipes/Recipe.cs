@@ -11,7 +11,7 @@ public class Recipe : MonoBehaviour, IInteractable
     [Tooltip("Select the SO_Recipe object that models how this recipe should be/behave.")]
     [SerializeField] private SO_Recipe dataModel;
 
-    private List<Item> containedItems = new();
+    private Dictionary<SO_Item, int> containedItems = new() ;
     private Item item;
     bool initialized = false;
 
@@ -32,10 +32,11 @@ public class Recipe : MonoBehaviour, IInteractable
 
     public void Interact(Interactor interactor)
     {
-        containedItems.Add(item.Manager.Inventory.HeldItem as Item);
+        SO_Item itemType = ((Item)item.Manager.Inventory.HeldItem).dataModel;
+        if (!containedItems.ContainsKey(itemType)) containedItems[itemType] = 0;
+        containedItems[itemType]++;
         var temp = item.Manager.Inventory.Release();
-        item.Manager.Interactor.OnTryInteract -= ((Item)temp).TryInteract;
-        temp.Transform.gameObject.SetActive(false);
+        GameObject.Destroy(temp.Transform.gameObject);
         Debug.Log("[Recipe] Interact : Recipe currently contains : " + containedItems.Count);
         if (CheckRecipe())
         {
@@ -55,9 +56,19 @@ public class Recipe : MonoBehaviour, IInteractable
     }
     private bool CheckRecipe()
     {
+        string containedItemsString = "[Recipe] CheckRecipe : Contained items\n";
+        foreach (KeyValuePair<SO_Item, int> kvp in containedItems)
+        {
+            containedItemsString += kvp.Key.ToString();
+            containedItemsString += " : ";
+            containedItemsString += kvp.Value.ToString();
+        }
+        Debug.Log(containedItemsString);
+
         foreach (SO_Item item in dataModel.itemsNeeded)
         {
-            int a = containedItems.Count((elm) => (elm.dataModel == item));
+            if (!containedItems.ContainsKey(item)) return false;
+            int a = containedItems[item];
             int b = dataModel.itemsNeeded.Count((elm) => elm == item);
             Debug.Log("[Recipe] CheckRecipe : " + item + " : " + a + " contained, " + b + " needed.");
             if (a < b)  return false;

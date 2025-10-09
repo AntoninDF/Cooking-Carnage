@@ -26,13 +26,6 @@ public class ItemManager : MonoBehaviour
         foreach (Item item in items)
         {
             item.Manager = this;
-            interactor.OnTryInteract += item.TryInteract;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

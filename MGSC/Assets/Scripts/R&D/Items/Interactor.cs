@@ -32,19 +32,16 @@ public class Interactor : MonoBehaviour
 
         if (CheckForThrowInput())
         {
-            Debug.Log("[Interactor] Update : Tring to throw an object");
             OnTryThrow?.Invoke(this);
         }
 
         if (CheckForInteractInput())
         {
-            Debug.Log("[Interactor] Update : Trying to interact");
             OnTryInteract?.Invoke(this);
+            InteractWithLookTarget();
         }
 
-        SetLookTransform();
-        Physics.Raycast(lookTransform.position, lookTransform.rotation * Vector3.forward, out hit, reachDistance);
-        LookInfo = hit;
+        UpdateLookInfo();
     }
 
     private bool CheckForInteractInput()
@@ -57,40 +54,57 @@ public class Interactor : MonoBehaviour
         return Input.GetMouseButtonDown(0);
     }
 
-    public bool AllowInteraction<T>(T interactable) where T : IInteractable
+    private void InteractWithLookTarget()
     {
-        SetLookTransform();
-        if (Physics.Raycast(lookTransform.position, lookTransform.rotation * Vector3.forward, out hit, reachDistance))
+        IInteractable interactable;
+        if (AllowInteraction(out interactable))
         {
-            if (hit.collider.gameObject.GetComponent<T>() != null)
+            interactable.Interact(this);
+        }
+    }
+
+    /// <summary>
+    /// Check if the looked at target has a component implementing IInteractable, and if so, passes it back as out parameter. Otherwise it will be null.
+    /// </summary>
+    /// <param name="interactable">The interactable that the player is looking at</param>
+    /// <returns></returns>
+    private bool AllowInteraction(out IInteractable interactable)
+    {
+        foreach (var comp in LookTarget.GetComponents<Component>())
+        {
+            if (comp is IInteractable)
             {
-                LookTarget = hit.collider.gameObject;
-                LookInfo = hit;
+                interactable = (IInteractable)comp;
                 return true;
             }
         }
+        interactable = null;
         return false;
     }
 
     public bool AllowThrow<T>(T interactable) where T : IGrabbable
     {
-        SetLookTransform();
-        if (Physics.Raycast(lookTransform.position, lookTransform.rotation * Vector3.forward, out hit, reachDistance))
-        {
-            if (hit.collider.gameObject.GetComponent<ContainerSurface>() != null ||
-                hit.collider.gameObject.GetComponent<ContainerSlot>() != null)
-            {
-                LookTarget = hit.collider.gameObject;
-                LookInfo = hit;
-                return true;
-            }
-        }
-        return false;
+        
+        if (LookTarget.HasComponent<ContainerSurface>() &&
+            LookTarget.HasComponent<ContainerSlot>())
+            return false;
+        return true;
     }
 
     public void SetLookTransform()
     {
         Camera cam = Camera.main;
         lookTransform = cam.transform;
+    }
+
+    private void UpdateLookInfo()
+    {
+        SetLookTransform();
+        if (Physics.Raycast(lookTransform.position, lookTransform.rotation * Vector3.forward, out hit, reachDistance))
+        {
+            LookInfo = hit;
+            LookTarget = LookInfo.collider.gameObject;
+        }
+        // The case when the player looks at nothing (the sky) isn't handled
     }
 }
