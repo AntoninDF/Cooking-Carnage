@@ -5,15 +5,18 @@ namespace Controller
     /* PlayerController applies the supposed actions linked to the inputs on the player Prefab */
     public class PlayerController : MonoBehaviour
     {
-        [Header("Movement Parameters")]
+        [Header("Parameters")]
         [Tooltip("Base movement speed when walking.")]
         [Range(1f, 30f)]
         [SerializeField] private float walkSpeed = 3.0f;
-
-        [Header("Look Parameters")]
+        
         [Tooltip("Sensitivity of the mouse when looking around.")]
         [Range(0.01f, 2f)]
         [SerializeField] private float mouseSensitivity = 0.1f;
+        
+        [Tooltip("Height size of the Character")]
+        [Range(0.1f, 8f)]
+        [SerializeField] private float characterSize = 2f;
 
         [Tooltip("Maximum vertical angle the player can look up or down.")]
         [Range(0, 90)]
@@ -36,6 +39,11 @@ namespace Controller
         
         void Update()
         {
+            if (!Mathf.Approximately(characterController.height, characterSize)) /*REFACTO : Cest uniquement pour du parametrage, a jarter assez vite*/
+            {
+                characterController.height = characterSize;
+            }
+            
             HandleMovement();
             HandleRotation();
         }
