@@ -5,32 +5,42 @@ namespace Controller
     /* PlayerController applies the supposed actions linked to the inputs on the player Prefab */
     public class PlayerController : MonoBehaviour
     {
+        #region Properties
+        public PlayerInterface Interface { get => _playerInterface; set => _playerInterface = value; }
+        public PlayerInputHandler InputHandler { get => _playerInputHandler; set => _playerInputHandler = value; }
+        public float CurrentSpeed => _walkSpeed;
+        #endregion
+
+        #region Fields
         [Header("Parameters")]
         [Tooltip("Base movement speed when walking.")]
         [Range(1f, 30f)]
-        [SerializeField] private float walkSpeed = 3.0f;
+        [SerializeField] private float _walkSpeed = 3.0f;
         
         [Tooltip("Sensitivity of the mouse when looking around.")]
         [Range(0.01f, 2f)]
-        [SerializeField] private float mouseSensitivity = 0.1f;
+        [SerializeField] private float _mouseSensitivity = 0.1f;
         
         [Tooltip("Height size of the Character")]
         [Range(0.1f, 8f)]
-        [SerializeField] private float characterSize = 2f;
+        [SerializeField] private float _characterSize = 2f;
 
         [Tooltip("Maximum vertical angle the player can look up or down.")]
         [Range(0, 90)]
-        [SerializeField] private float upDownLookRange = 80f;
+        [SerializeField] private float _upDownLookRange = 80f;
 
         [Header ("References")] /*REFACTO : needs to be referenced automatically by GameInitializer*/
-        [SerializeField] private CharacterController characterController; 
-        [SerializeField] private Camera mainCamera;
-        [SerializeField] private PlayerInputHandler playerInputHandler;
-
-        private Vector3 currentMovement;
-        private float verticalRotation;
-        private float CurrentSpeed => walkSpeed ;
+        [SerializeField] private CharacterController _characterController; 
+        [SerializeField] private Camera _mainCamera;
+        private PlayerInterface _playerInterface;
         
+        private PlayerInputHandler _playerInputHandler;
+
+        private Vector3 _currentMovement;
+        private float _verticalRotation;
+        #endregion
+
+        #region Methods
         void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -39,9 +49,9 @@ namespace Controller
         
         void Update()
         {
-            if (!Mathf.Approximately(characterController.height, characterSize)) /*REFACTO : Cest uniquement pour du parametrage, a jarter assez vite*/
+            if (!Mathf.Approximately(_characterController.height, _characterSize)) /*REFACTO : Cest uniquement pour du parametrage, a jarter assez vite*/
             {
-                characterController.height = characterSize;
+                _characterController.height = _characterSize;
             }
             
             HandleMovement();
@@ -50,31 +60,31 @@ namespace Controller
 
         private Vector3 CalculateWorldDirection()
         {
-            Vector3 inputDirection = new Vector3(playerInputHandler.MovementInput.x, 0f, playerInputHandler.MovementInput.y);
+            Vector3 inputDirection = new Vector3(_playerInputHandler.MovementInput.x, 0f, _playerInputHandler.MovementInput.y);
             Vector3 worldDirection = transform.TransformDirection(inputDirection);
             return worldDirection.normalized;
         }
         
         private void HandleJumping()
         {
-            if (characterController.isGrounded)
+            if (_characterController.isGrounded)
             {
-                currentMovement.y = -0.5f;
+                _currentMovement.y = -0.5f;
             }
             else
             {
-                currentMovement.y += Physics.gravity.y * Time.deltaTime;
+                _currentMovement.y += Physics.gravity.y * Time.deltaTime;
             }
         }
 
         private void HandleMovement()
         {
             Vector3 worldDirection = CalculateWorldDirection();
-            currentMovement.x = worldDirection.x * CurrentSpeed;
-            currentMovement.z = worldDirection.z * CurrentSpeed;
+            _currentMovement.x = worldDirection.x * CurrentSpeed;
+            _currentMovement.z = worldDirection.z * CurrentSpeed;
 
             HandleJumping();
-            characterController.Move(currentMovement * Time.deltaTime);
+            _characterController.Move(_currentMovement * Time.deltaTime);
         }
 
         private void ApplyHorizontalRotation(float rotationAmount)
@@ -84,18 +94,18 @@ namespace Controller
 
         private void ApplyVerticalRotation(float rotationAmount)
         {
-            verticalRotation = Mathf.Clamp(verticalRotation - rotationAmount, -upDownLookRange, upDownLookRange);
-            mainCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
+            _verticalRotation = Mathf.Clamp(_verticalRotation - rotationAmount, -_upDownLookRange, _upDownLookRange);
+            _mainCamera.transform.localRotation = Quaternion.Euler(_verticalRotation, 0, 0);
         }
 
         private void HandleRotation()
         {
-            float mouseXRotation = playerInputHandler.RotationInput.x * mouseSensitivity;
-            float mouseYRotation = playerInputHandler.RotationInput.y * mouseSensitivity;
+            float mouseXRotation = _playerInputHandler.RotationInput.x * _mouseSensitivity;
+            float mouseYRotation = _playerInputHandler.RotationInput.y * _mouseSensitivity;
 
             ApplyHorizontalRotation(mouseXRotation);
             ApplyVerticalRotation(mouseYRotation);
         }
-
+        #endregion
     }
 }

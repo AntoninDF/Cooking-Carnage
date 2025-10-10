@@ -114,7 +114,7 @@ Transform:
   m_GameObject: {fileID: 1116370139634909629}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.72055113, z: -0, w: 0.6934019}
-  m_LocalPosition: {x: 0.2441845, y: 1.0799999, z: 0.4166809}
+  m_LocalPosition: {x: 0.304, y: 1.262, z: 0.687}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -484,9 +484,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1840063740979463002}
   - component: {fileID: 532770150131431517}
+  - component: {fileID: 7891404858160394470}
   - component: {fileID: 2210158232699748847}
-  - component: {fileID: 4602043291947343261}
-  - component: {fileID: 9126472379308853425}
+  - component: {fileID: 5901026354249844853}
+  - component: {fileID: 8997797185294905405}
   m_Layer: 2
   m_Name: P_Player
   m_TagString: Untagged
@@ -536,6 +537,18 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &7891404858160394470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6331963460517924519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b28d800e715d944baa069bb7be768e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInterface
 --- !u!114 &2210158232699748847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,13 +561,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5a021667056d014a998e6477a6a70ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Controller.PlayerController
-  walkSpeed: 3
-  mouseSensitivity: 0.1
-  upDownLookRange: 80
-  characterController: {fileID: 532770150131431517}
-  mainCamera: {fileID: 8176875720438577591}
-  playerInputHandler: {fileID: 7508012559399416190}
---- !u!114 &4602043291947343261
+  _walkSpeed: 3
+  _mouseSensitivity: 0.1
+  _characterSize: 2
+  _upDownLookRange: 80
+  _characterController: {fileID: 532770150131431517}
+  _mainCamera: {fileID: 8176875720438577591}
+--- !u!114 &5901026354249844853
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -563,12 +576,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 6331963460517924519}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfce8f66aa310f94fb00d88a9d20a74c, type: 3}
+  m_Script: {fileID: 11500000, guid: ad9543b05ec534b408f7a34476c01eeb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Interactor
-  inventory: {fileID: 9126472379308853425}
-  reachDistance: 10
---- !u!114 &9126472379308853425
+  m_EditorClassIdentifier: Assembly-CSharp::Controller.PlayerInteractor
+  _handSlot: {fileID: 7591977346864290166}
+  _defaultHeldItem: {fileID: 0}
+  _reachDistance: 3
+--- !u!114 &8997797185294905405
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -577,11 +591,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6331963460517924519}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4206d867406fdb4d808db370bd35b74, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ac4c68215ec6684c859585a279671f7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Inventory
-  interactor: {fileID: 4602043291947343261}
-  handSlot: {fileID: 7591977346864290166}
+  m_EditorClassIdentifier: Assembly-CSharp::Controller.PlayerInputHandler
 --- !u!1 &6477787026131637750
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +672,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac4c68215ec6684c859585a279671f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Controller.PlayerInputHandler
-  playerControls: {fileID: -944628639613478452, guid: d540ca64bbdbc2d49a245fdd676dfd50, type: 3}
 --- !u!1 &7475533244635095131
 GameObject:
   m_ObjectHideFlags: 0
