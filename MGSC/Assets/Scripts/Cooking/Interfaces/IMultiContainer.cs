@@ -5,5 +5,5 @@ using UnityEngine;
 
 public interface IMultiContainer : IContainer
 {
-    public List<IGrabbable> HeldItems { get; set; }
+    public List<IGrabbable> HeldItems { get;}
 }

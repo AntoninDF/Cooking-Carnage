@@ -6,7 +6,7 @@ namespace Controller
     public class PlayerController : MonoBehaviour
     {
         #region Properties
-        public PlayerInterface Interface { get => _playerInterface; set => _playerInterface = value; }
+        public PlayerInterface Player { get => _playerInterface; set => _playerInterface = value; }
         public PlayerInputHandler InputHandler { get => _playerInputHandler; set => _playerInputHandler = value; }
         public float CurrentSpeed => _walkSpeed;
         #endregion

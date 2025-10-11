@@ -8,7 +8,7 @@ namespace Controller
     public class PlayerInputHandler : MonoBehaviour
     {
         [Header("Input Action Asset")]  /*REFACTO : needs to be referenced automatically by GameInitializer*/ // Tkt mon gars je suis dessus <3
-        public PlayerInterface Interface { get => _playerInterface; set => _playerInterface = value; }
+        public PlayerInterface Player { get => _playerInterface; set => _playerInterface = value; }
         public InputActionAsset PlayerControls { get => _playerControls; set => _playerControls = value; }
 
 

@@ -40,9 +40,9 @@ namespace Controller
             _interactor = GetComponent<PlayerInteractor>();
             _inputHandler = GetComponent<PlayerInputHandler>();
 
-            _controller.Interface = this;
-            _interactor.Interface = this;
-            _inputHandler.Interface = this;
+            _controller.Player = this;
+            _interactor.Player = this;
+            _inputHandler.Player = this;
         }
         #endregion
     }

@@ -13,7 +13,7 @@ namespace Cooking
     {
         #region Properties
         public PlayerInterface Player { get => _player; set => _player = value; }
-        public List<BaseObject> Items { get => _items; private set => _items = value; }
+        public List<Component> Items { get => _items; private set => _items = value; }
         #endregion
 
         #region Fields
@@ -21,7 +21,7 @@ namespace Cooking
         [Tooltip("Specify if the scene should be scanned on start to list every cooking element")]
         [SerializeField] private bool _getItemsFromScene = false;
         [Tooltip("List here all the items that are instantiated on game start, so that they are referenced somewhere")]
-        [SerializeField] private List<BaseObject> _items;
+        [SerializeField] private List<Component> _items;
 
         private PlayerInterface _player;
         #endregion
@@ -35,16 +35,13 @@ namespace Cooking
 
             if (_getItemsFromScene)
             {
-                _items = FindObjectsByType<BaseObject>(FindObjectsSortMode.None).ToList();
+                // Not implemented yet
             }
-            foreach (BaseObject item in _items)
-            {
-                item.Interface = this;
-                item.Player = Player;
-            }
+            
+            // Loop through all interactables, and assign them the player reference
         }
 
-        public void AddItem(BaseObject item)
+        public void AddItem(Component item)
         {
             if (_items.Contains(item)) return;
             _items.Add(item);

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Cooking;
+using Mono.Cecil;
 
 namespace Controller
 {
@@ -14,12 +15,12 @@ namespace Controller
         public RaycastHit LookInfo { get; private set; }
         public IContainer LookContainer { get; private set; }
         public float ReachDistance { get => _reachDistance; set => _reachDistance = value; }
-        public PlayerInterface Interface { get => _playerInterface; set => _playerInterface = value; }
         public Action<PlayerInteractor> OnInteract { get; set; }
         public IGrabbable HeldItem { get=> _heldItem; set=> _heldItem=value; }
         public Transform ItemSlot => _handSlot;
         public Action<IGrabbable> OnGrab { get; set; }
         public Action<IGrabbable> OnDrop { get; set; }
+        public PlayerInterface Player { get => _playerInterface; set => _playerInterface = value; }
 
         #endregion
 
@@ -28,7 +29,7 @@ namespace Controller
         [Tooltip("Transform for the slot where objects are put when grabbed")]
         [SerializeField] private Transform _handSlot;
         [Tooltip("If the player should hold on to an item on start, reference it here")]
-        [SerializeField] private BaseObject _defaultHeldItem;
+        [SerializeField] private IGrabbable _defaultHeldItem;
         [Space()]
         [Header("Parameters")]
         [Tooltip("Distance in meters up to which the player can reach items")]
@@ -77,15 +78,15 @@ namespace Controller
             {
                 LookInfo = hit;
                 LookTarget = LookInfo.collider.gameObject;
-                BaseObject target;
-                if (LookTargetIsValid(out target))
+                Component target;
+                if (LookTargetImplements<IWatchable>(out target))
                 {
-                    target.LookAt(this);
+                    ((IWatchable)target).LookAt(this);
                 }
-                IContainer container;
-                if (LookTargetIsContainer(out container))
+                Component container;
+                if (LookTargetImplements<IContainer>(out container))
                 {
-                    LookContainer = container;
+                    LookContainer = container as IContainer;
                 }
             }
             else
@@ -97,10 +98,10 @@ namespace Controller
 
         private void Interact(InputAction.CallbackContext context)
         {
-            BaseObject target;
-            if (!LookTargetIsValid(out target)) return;
+            Component target;
+            if (!LookTargetImplements<IInteractable>(out target)) return;
 
-            target.Interact(this);
+            ((IInteractable)target).Interact(this);
             OnInteract?.Invoke(this);
         }
 
@@ -109,41 +110,20 @@ namespace Controller
         /// </summary>
         /// <param name="interactable">The interactable that the player is looking at</param>
         /// <returns></returns>
-        private bool LookTargetIsValid(out BaseObject baseObject)
+        private bool LookTargetImplements<T>(out Component component) where T : IGeneric<T>
         {
             if (LookTarget != null)
             {
                 foreach (var comp in LookTarget.GetComponents<Component>())
                 {
-                    if (comp is BaseObject)
+                    if (comp is T)
                     {
-                        baseObject = comp as BaseObject;
+                        component = comp;
                         return true;
                     }
                 }
             }
-            baseObject = null;
-            return false;
-        }
-        /// <summary>
-        /// Check if the looked at target has a component implementing IContainer, and if so, passes it back as out parameter. Otherwise it will be null.
-        /// </summary>
-        /// <param name="interactable">The interactable that the player is looking at</param>
-        /// <returns></returns>
-        private bool LookTargetIsContainer(out IContainer container)
-        {
-            if (LookTarget != null)
-            {
-                foreach (var comp in LookTarget.GetComponents<Component>())
-                {
-                    if (comp is IContainer)
-                    {
-                        container = (IContainer)comp;
-                        return true;
-                    }
-                }
-            }
-            container = null;
+            component = null;
             return false;
         }
 
@@ -157,9 +137,9 @@ namespace Controller
 
         public void Grab()
         {
-            BaseObject target;
-            if (!LookTargetIsValid(out target)) return;
-            Grab(target);
+            Component target;
+            if (!LookTargetImplements<IGrabbable>(out target)) return;
+            Grab(target as IGrabbable);
         }
         public void Grab(IGrabbable item)
         {
@@ -179,16 +159,15 @@ namespace Controller
             if (_heldItem == null) return;
             if (_grabbedItemThisFrame) return;
 
-            IContainer container;
-            if (!LookTargetIsContainer(out container)) return;
+            Component container;
+            if (!LookTargetImplements<IContainer>(out container)) return;
 
-            if (checkOverlap && container is IMultiContainer && _heldItem is BaseObject)
+            if (checkOverlap && container is IMultiContainer)
             {
-                bool isValid = BaseObject.CheckValidSpot((BaseObject)_heldItem, LookInfo.point);
-                if (!isValid) return;
+                // REFACTO - TO DO : Implement overlap checking. Return if there is an overlap, otherwise continue
             }
 
-            container.Grab(_heldItem);
+            ((IContainer)container).Grab(_heldItem);
             OnDrop?.Invoke(_heldItem);
             _heldItem = null;
         }

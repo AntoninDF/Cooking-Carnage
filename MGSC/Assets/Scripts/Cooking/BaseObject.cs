@@ -8,10 +8,10 @@ namespace Cooking
 {
 
     /// <summary>
-    /// The BaseObject is the foundational base for every interactable object in MGSC. It should provide every base mecanic to be combined in child objects.
+    /// The BaseObject is just an example class for the implementation of the methods linked to each interactable. It can't and shouldn't be inherited from.
     /// </summary>
     [RequireComponent(typeof(Collider))]
-    public class BaseObject : MonoBehaviour, IInteractable, IGrabbable, ISoloContainer, IWatchable
+    public sealed class BaseObject : MonoBehaviour, IInteractable, IGrabbable, ISoloContainer, IWatchable
     {
         // Access game data
 
@@ -45,22 +45,22 @@ namespace Cooking
 
         #region Fields
 
-        protected Transform _defaultParent;
-        protected Quaternion _defaultRotation;
+        private Transform _defaultParent;
+        private Quaternion _defaultRotation;
         private Collider _collider;
-        protected Vector3 _targetPos;
-        protected Quaternion _targetRot;
+        private Vector3 _targetPos;
+        private Quaternion _targetRot;
         #endregion
 
         #region Methods
-        public virtual void Awake()
+        public void Awake()
         {
             _defaultParent = transform.parent;
             _defaultRotation = transform.rotation;
             _collider = GetComponent<Collider>();
         }
 
-        public virtual void GetGrabbed(IContainer newContainer)
+        public void GetGrabbed(IContainer newContainer)
         {
             Container?.Drop(this);
             Container = newContainer;
@@ -68,7 +68,7 @@ namespace Cooking
             OnGrabbed?.Invoke();
         }
 
-        public virtual void Grab(IGrabbable item)
+        public void Grab(IGrabbable item)
         {
             if (HeldItem == null)
             {
@@ -78,16 +78,16 @@ namespace Cooking
             }
         }
 
-        public virtual void Interact(PlayerInteractor interactor)
+        public void Interact(PlayerInteractor interactor)
         {
             
-            Player = interactor.Interface;
+            Player = interactor.Player;
             OnInteract?.Invoke();
         }
 
-        public virtual void LookAt(PlayerInteractor interactor)
+        public void LookAt(PlayerInteractor interactor)
         {
-            Player = interactor.Interface;
+            Player = interactor.Player;
             IsLookedAt = true;
             StartCoroutine(StopBeingLookedAt());
         }
@@ -96,7 +96,7 @@ namespace Cooking
         /// Coroutine to ensure the IsLookedAt flag is reset next frame, unless it is still looked at in which case it will be set as true again.
         /// </summary>
         /// <returns></returns>
-        public virtual IEnumerator StopBeingLookedAt()
+        public IEnumerator StopBeingLookedAt()
         {
             yield return default(IEnumerator);
             IsLookedAt = false;
@@ -107,23 +107,12 @@ namespace Cooking
             HeldItem = null;
             OnDrop?.Invoke(item);
         }
-        protected Vector3 FindLowestPoint()
+        private Vector3 FindLowestPoint()
         {
             Ray ray = new Ray(transform.position + Vector3.down * 3, Vector3.up);
             RaycastHit hitInfo;
             Collider.Raycast(ray, out hitInfo, 3);
             return hitInfo.point - transform.position;
-        }
-
-        /// <summary>
-        /// Not implemented yet, returns true all the time for now
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="pos"></param>
-        /// <returns></returns>
-        public static bool CheckValidSpot(BaseObject obj, Vector3 pos)
-        {
-            return true;
         }
 
         /// <summary>
