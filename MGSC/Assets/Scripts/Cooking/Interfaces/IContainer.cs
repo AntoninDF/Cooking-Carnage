@@ -8,4 +8,5 @@ public interface IContainer : IGeneric<IContainer>
     public void Drop(IGrabbable item);
     public Action<IGrabbable> OnGrab { get; set; }
     public Action<IGrabbable> OnDrop { get; set; }
+    public bool CanGrab(IGrabbable item);
 }

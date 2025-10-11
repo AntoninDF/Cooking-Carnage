@@ -89,7 +89,7 @@ namespace Cooking
             {
                 StopCooking();
             }
-            Debug.Log("Trying to cook...");
+
             foreach (var furnaceSlot in Slots)
             {
                 if (furnaceSlot == null) continue;

@@ -16,9 +16,13 @@ namespace Cooking
         public Action<IGrabbable> OnGrab { get ; set; }
         public Action<IGrabbable> OnDrop { get; set; }
         public List<IGrabbable> HeldItems => _items;
+        public int MaxItemCount => _maxItemCount;
         #endregion
 
         #region Fields
+        [Header("Surface container parameters")]
+        [Tooltip("How many items can be put on this surface. Negative means infinite")]
+        [SerializeField] private int _maxItemCount = 100;
         private List<IGrabbable> _items = new();
 
         #endregion
@@ -40,6 +44,11 @@ namespace Cooking
 
             _items.Remove(item);
             OnDrop?.Invoke(item);
+        }
+        public bool CanGrab(IGrabbable item)
+        {
+            if (_maxItemCount < 0) return true;
+            return _items.Count < _maxItemCount;
         }
         #endregion
     }

@@ -159,19 +159,24 @@ namespace Controller
             if (_heldItem == null) return;
             if (_grabbedItemThisFrame) return;
 
-            Component container;
-            if (!LookTargetImplements<IContainer>(out container)) return;
+            Component component;
+            if (!LookTargetImplements<IContainer>(out component)) return;
 
-            if (checkOverlap && container is IMultiContainer)
+            IContainer container = component as IContainer;
+            if (!container.CanGrab(_heldItem)) return;
+
+            if (checkOverlap && component is IMultiContainer)
             {
                 // REFACTO - TO DO : Implement overlap checking. Return if there is an overlap, otherwise continue
             }
 
-            ((IContainer)container).Grab(_heldItem);
+            //Finally grab
+            container.Grab(_heldItem);
             OnDrop?.Invoke(_heldItem);
             _heldItem = null;
         }
 
+        public bool CanGrab(IGrabbable item) => _heldItem == null;
 
         #endregion
     }

@@ -31,6 +31,8 @@ namespace Cooking
         [Header("References")]
         [Tooltip("Transform designating where the contained item should go")]
         [SerializeField] private Transform _itemSlot;
+        [Tooltip("Filter which type of object can be contained in this slot")]
+        [SerializeField] private ESlotFilter _filter;
 
         private Collider _collider;
         private IGrabbable _heldItem;
@@ -57,12 +59,35 @@ namespace Cooking
 
         public void Grab(IGrabbable item)
         {
-            if (_heldItem != null) return;
+            if (!CanGrab(item))
+                throw new Exception("The grab method was called, but the target container " +
+                    "cannot receive the given item. Please check it with CanGrab before calling Grab.");
             if (_itemSlot == null)
                 throw new MissingReferenceException("Please reference the item slot's transform in this container slot's dedicated field : " + name);
+
             _heldItem = item;
             item.GetGrabbed(this);
             OnGrab?.Invoke(item);
+        }
+
+        public bool CanGrab(IGrabbable item)
+        {
+            if (_heldItem != null) return false;
+            switch (_filter)
+            {
+                default:
+                case ESlotFilter.All:
+                    return true;
+                case ESlotFilter.Ingredient:
+                    if (item is not Ingredient) return false;
+                    break;
+                case ESlotFilter.MultiSlotContainer:
+                    if (item is not MultiSlotContainer && 
+                        !item.transform.gameObject.HasComponent<MultiSlotContainer>()) 
+                        return false;
+                    break;
+            }
+            return true;
         }
 
         public void GetGrabbed(IContainer newContainer)
@@ -85,6 +110,13 @@ namespace Cooking
             _collider.enabled = Player.HeldItem != null;
         }
         #endregion
+
+        private enum ESlotFilter
+        {
+            All = 0,
+            Ingredient = 1,
+            MultiSlotContainer = 2
+        }
     }
 
 }
