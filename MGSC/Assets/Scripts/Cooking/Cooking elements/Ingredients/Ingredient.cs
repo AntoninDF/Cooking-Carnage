@@ -8,7 +8,7 @@ namespace Cooking
     public class Ingredient : Item
     {
         #region Properties
-
+        public SO_Ingredient Model => _model;
         #endregion
 
         #region Fields
@@ -21,6 +21,12 @@ namespace Cooking
 
         #region Methods
 
+        protected override void Start()
+        {
+            base.Start();
+            if (_model == null)
+                throw new MissingReferenceException("Please assign an ingredient model in the inspector : " + name);
+        }
         #endregion
 
     }

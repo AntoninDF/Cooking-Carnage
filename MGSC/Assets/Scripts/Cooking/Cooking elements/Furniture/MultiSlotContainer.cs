@@ -25,7 +25,7 @@ namespace Cooking
         [SerializeField] private List<SlotContainer> _slots = new ();
         [Tooltip("Wether or not this container should scan it's hierarchy on Start to find it's own slots")]
         [SerializeField] private bool _detectSlots;
-        List<IGrabbable> _items = new();
+        List<IGrabbable> _items = new();  // List of all the items contained in the slots.
 
         #endregion
 
@@ -66,6 +66,16 @@ namespace Cooking
 
             _items.Add(item);
             OnGrab?.Invoke(item);
+        }
+
+        /// <summary>
+        /// Returns false, always. No item should be grabbed outside of the ones in the slots. And grabbing a slot isn't an option (yet?)
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool CanGrab(IGrabbable item)
+        {
+            return false;
         }
         #endregion
     }
