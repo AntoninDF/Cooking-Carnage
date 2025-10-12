@@ -5,7 +5,7 @@ using UnityEngine;
 public class MusicPlayer : MonoBehaviour
 {
     public AudioClip music;
-    [SerializeField] private float _volume = 1f;
+    [SerializeField] private float _volume = 0.5f;
 
 
     private AudioSource _source;
