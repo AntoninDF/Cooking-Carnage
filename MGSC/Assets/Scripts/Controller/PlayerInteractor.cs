@@ -16,10 +16,13 @@ namespace Controller
         public RaycastHit LookInfo { get; private set; }
         public IContainer LookContainer { get; private set; }
         public float ReachDistance { get => _reachDistance; set => _reachDistance = value; }
+        [field: SerializeField]
         public UnityEvent<PlayerInteractor> OnInteract { get; set; }
         public IGrabbable HeldItem { get=> _heldItem; set=> _heldItem=value; }
         public Transform ItemSlot => _handSlot;
+        [field: SerializeField]
         public UnityEvent<IGrabbable> OnGrab { get; set; }
+        [field: SerializeField]
         public UnityEvent<IGrabbable> OnDrop { get; set; }
         public PlayerInterface Player { get => _playerInterface; set => _playerInterface = value; }
 

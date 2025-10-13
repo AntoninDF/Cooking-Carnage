@@ -13,27 +13,29 @@ namespace Cooking
     {
         #region Properties
 
-        [field: SerializeField] public UnityEvent OnFailedStartAttempt {  get; set; } // Invoked when the player tries to start cooking, but it fails. How ironic
-        public UnityEvent OnStartCooking { get; set; }
-        public UnityEvent OnStopCooking { get; set; }
+        public UnityEvent OnFailedStartAttempt => _onFailedStartAttempt;
+        public UnityEvent OnStartCooking => _onStartCooking;
+        public UnityEvent OnStopCooking => _onStopCooking;
         public bool IsCooking => _isCooking;
         public float Strength => _strength;
         #endregion
 
         #region Fields
         [Header("Furnace references")]
-        [Tooltip("When this interactable will be interacted with, it will start cooking")]
-        [SerializeField] private Interactable _button;
         [Tooltip("The furnace needs a reference to it's own door to ensure it's closed while cooking :)")]
         [SerializeField] private Door _door;
-        [SerializeField] private ParticleSystem _onStartCooking;
-        [SerializeField] private ParticleSystem _onStopCooking;
-        [SerializeField] private ParticleSystem _onFailedStartCooking;
-        [SerializeField] private GameObject _cookingIndicator;
         [Space]
         [Header("Furnace parameters")]
         [Tooltip("Speed modifier for the furnace")]
         [SerializeField] private float _strength = 1.0f;
+        [Space]
+        [Header("Furnace events")]
+        [Tooltip("Invoked when the furnace starts cooking")]
+        [SerializeField] private UnityEvent _onStartCooking;
+        [Tooltip("Invoked when the furnace stops cooking")]
+        [SerializeField] private UnityEvent _onStopCooking;
+        [Tooltip("Invoked when the player tries to start the furnace, but it cannot be started (if the door is opened for example)")]
+        [SerializeField] private UnityEvent _onFailedStartAttempt;
 
         private bool _isCooking = false;
         #endregion
@@ -44,21 +46,6 @@ namespace Cooking
         {
             if (_door == null)
                 throw new MissingReferenceException("Please assign a reference to the furnace's door in the inspector :)");
-            if (_button == null)
-                throw new MissingReferenceException("Please assign a reference to the furnace's start button in the inspector :)");
-            if (_cookingIndicator == null)
-                throw new MissingReferenceException("Please assign a reference to the furnace's cooking indicator in the inspector :)");
-
-            _button.OnInteract.AddListener(ToggleCooking);
-
-            // Feedback, to do again better later
-            OnStartCooking.AddListener(() => _onStartCooking?.Play());
-            OnStopCooking.AddListener(() => _onStopCooking?.Play());
-            OnFailedStartAttempt.AddListener(() => _onFailedStartCooking?.Play());
-            OnStartCooking.AddListener(() => _cookingIndicator?.SetActive(true));
-            OnStopCooking.AddListener(() => _cookingIndicator?.SetActive(false));
-
-            _cookingIndicator.SetActive(false);
         }
 
         private void Update()
@@ -66,7 +53,7 @@ namespace Cooking
             Cook();
         }
 
-        private void ToggleCooking()
+        public void ToggleCooking()
         {
             if (_isCooking)
             {

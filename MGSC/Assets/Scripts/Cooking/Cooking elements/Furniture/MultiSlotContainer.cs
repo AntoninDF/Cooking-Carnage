@@ -13,8 +13,8 @@ namespace Cooking
     {
         #region Properties
         public List<IGrabbable> HeldItems => _items;
-        public UnityEvent<IGrabbable> OnGrab { get; set; }
-        public UnityEvent<IGrabbable> OnDrop { get; set; }
+        public UnityEvent<IGrabbable> OnGrab => _onGrab;
+        public UnityEvent<IGrabbable> OnDrop => _onDrop;
         public PlayerInterface Player { get; set; }
         public List<SlotContainer> Slots => _slots;
 
@@ -27,6 +27,12 @@ namespace Cooking
         [Tooltip("Wether or not this container should scan it's hierarchy on Start to find it's own slots")]
         [SerializeField] private bool _detectSlots;
         List<IGrabbable> _items = new();  // List of all the items contained in the slots.
+        [Space]
+        [Header("Multislot events")]
+        [Tooltip("Invoked when an item is put in one of the slots")]
+        [SerializeField] private UnityEvent<IGrabbable> _onGrab;
+        [Tooltip("Invoked when an item is taken out of one of the slots")]
+        [SerializeField] private UnityEvent<IGrabbable> _onDrop;
 
         #endregion
 

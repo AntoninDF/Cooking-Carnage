@@ -15,8 +15,8 @@ namespace Cooking
 
         public Transform ItemSlot => _itemSlot;
 
-        public UnityEvent<IGrabbable> OnGrab { get; set; }
-        public UnityEvent<IGrabbable> OnDrop { get; set; }
+        public UnityEvent<IGrabbable> OnGrab => _onGrab;
+        public UnityEvent<IGrabbable> OnDrop => _onDrop;
         public PlayerInterface Player { get; set; }
         public bool IsEmpty => _heldItem == null;
 
@@ -29,11 +29,18 @@ namespace Cooking
         #endregion
 
         #region Fields
-        [Header("References")]
+        [Header("Slot references")]
         [Tooltip("Transform designating where the contained item should go")]
         [SerializeField] private Transform _itemSlot;
         [Tooltip("Filter which type of object can be contained in this slot")]
         [SerializeField] private ESlotFilter _filter;
+        [Space]
+        [Header("Slot events")]
+        [Tooltip("Invoked when an item is put into the slot")]
+        [SerializeField] private UnityEvent<IGrabbable> _onGrab;
+        [Tooltip("Invoked when an item is taken out of the slot")]
+        [SerializeField] private UnityEvent<IGrabbable> _onDrop;
+
 
         private Collider _collider;
         private IGrabbable _heldItem;

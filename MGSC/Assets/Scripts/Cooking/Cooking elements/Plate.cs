@@ -17,7 +17,7 @@ namespace Cooking
 
         public float CookPercentage => CookDuration / (TargetCookDuration > 0 ? TargetCookDuration : 1.0f);
 
-        public UnityEvent<ICookable> OnCook { get; set; }
+        public UnityEvent<ICookable> OnCook => _onCook;
 
         #endregion
 
@@ -31,6 +31,10 @@ namespace Cooking
         [Header("Plate parameters")]
         [Tooltip("How much time it will take to be 100% cooked.")]
         [SerializeField] private float _targetCookDuration = 10.0f;
+        [Space]
+        [Header("Plate events")]
+        [Tooltip("Invoked repeatedly when the plate is cooking")]
+        [SerializeField] private UnityEvent<ICookable> _onCook;
         #endregion
 
         #region Methods

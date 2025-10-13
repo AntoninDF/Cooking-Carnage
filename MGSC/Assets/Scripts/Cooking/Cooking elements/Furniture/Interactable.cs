@@ -13,7 +13,7 @@ namespace Cooking
     public class Interactable : MonoBehaviour, IInteractable, IWatchable
     {
         #region Properties
-        public UnityEvent OnInteract { get; set; }
+        public UnityEvent OnInteract => _onInteract;
 
         public PlayerInterface Player { get; set; }
         public bool IsLookedAt => Player.LookTarget == gameObject;
@@ -25,6 +25,8 @@ namespace Cooking
         [Header("Interactable references")]
         [Tooltip("Reference the canvas or panel game object that must show when the interactable is hovered.")]
         [SerializeField] private GameObject _tooltip;
+        [Tooltip("Invoked when the interactable is interacted with")]
+        [SerializeField] private UnityEvent _onInteract;
 
         private Collider _collider;
         #endregion
