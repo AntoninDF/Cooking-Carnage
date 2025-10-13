@@ -2,14 +2,15 @@ using Controller;
 using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
 
     public class TrashCan : Interactable, IContainer
     {
-        public Action<IGrabbable> OnGrab {get;set;}
-        public Action<IGrabbable> OnDrop { get; set; }
+        public UnityEvent<IGrabbable> OnGrab {get;set;}
+        public UnityEvent<IGrabbable> OnDrop { get; set; }
 
         public bool CanGrab(IGrabbable item)
         {

@@ -130,10 +130,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5233620803308715999}
   - component: {fileID: 8176875720438577591}
-  - component: {fileID: 6149532619246381991}
   - component: {fileID: 5280809937849278583}
   - component: {fileID: 4530543119198632473}
   - component: {fileID: 792690331128738535}
+  - component: {fileID: 6284207074240266949}
   m_Layer: 0
   m_Name: FP Camera
   m_TagString: MainCamera
@@ -208,14 +208,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &6149532619246381991
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667480711654270360}
-  m_Enabled: 1
 --- !u!114 &5280809937849278583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,6 +403,20 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
+--- !u!114 &6284207074240266949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667480711654270360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 1667480711654270360}
 --- !u!1 &4650989589209113625
 GameObject:
   m_ObjectHideFlags: 0

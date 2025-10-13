@@ -2,6 +2,7 @@ using Controller;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -13,8 +14,8 @@ namespace Cooking
     {
         #region Properties
         public PlayerInterface Player { get; set; }
-        public Action<IGrabbable> OnGrab { get ; set; }
-        public Action<IGrabbable> OnDrop { get; set; }
+        public UnityEvent<IGrabbable> OnGrab { get ; set; }
+        public UnityEvent<IGrabbable> OnDrop { get; set; }
         public List<IGrabbable> HeldItems => _items;
         public int MaxItemCount => _maxItemCount;
         #endregion

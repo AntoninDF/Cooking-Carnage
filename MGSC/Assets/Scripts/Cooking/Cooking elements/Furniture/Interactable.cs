@@ -2,6 +2,7 @@ using Controller;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -12,7 +13,7 @@ namespace Cooking
     public class Interactable : MonoBehaviour, IInteractable, IWatchable
     {
         #region Properties
-        public Action OnInteract { get; set; }
+        public UnityEvent OnInteract { get; set; }
 
         public PlayerInterface Player { get; set; }
         public bool IsLookedAt => Player.LookTarget == gameObject;

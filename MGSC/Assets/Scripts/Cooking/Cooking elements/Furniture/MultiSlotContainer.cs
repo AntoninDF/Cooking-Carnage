@@ -2,6 +2,7 @@ using Controller;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -12,8 +13,8 @@ namespace Cooking
     {
         #region Properties
         public List<IGrabbable> HeldItems => _items;
-        public Action<IGrabbable> OnGrab { get; set; }
-        public Action<IGrabbable> OnDrop { get; set; }
+        public UnityEvent<IGrabbable> OnGrab { get; set; }
+        public UnityEvent<IGrabbable> OnDrop { get; set; }
         public PlayerInterface Player { get; set; }
         public List<SlotContainer> Slots => _slots;
 
@@ -45,8 +46,8 @@ namespace Cooking
 
             foreach (var slot in _slots)
             {
-                slot.OnGrab += Grab;
-                slot.OnDrop += Drop;
+                slot.OnGrab.AddListener(Grab);
+                slot.OnDrop.AddListener(Drop);
             }
                 
         }

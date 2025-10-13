@@ -1,6 +1,7 @@
 using Controller;
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -14,13 +15,13 @@ namespace Cooking
 
         public Transform ItemSlot => _itemSlot;
 
-        public Action<IGrabbable> OnGrab { get; set; }
-        public Action<IGrabbable> OnDrop { get; set; }
+        public UnityEvent<IGrabbable> OnGrab { get; set; }
+        public UnityEvent<IGrabbable> OnDrop { get; set; }
         public PlayerInterface Player { get; set; }
         public bool IsEmpty => _heldItem == null;
 
         public IContainer Container { get; set; }
-        public Action OnGrabbed { get; set; }
+        public UnityEvent OnGrabbed { get; set; }
 
         public Collider Collider => _collider;
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -16,7 +17,7 @@ namespace Cooking
 
         public float CookPercentage => CookDuration / (TargetCookDuration > 0 ? TargetCookDuration : 1.0f);
 
-        public Action<ICookable> OnCook { get; set; }
+        public UnityEvent<ICookable> OnCook { get; set; }
 
         #endregion
 

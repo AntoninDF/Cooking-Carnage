@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -12,9 +13,9 @@ namespace Cooking
     {
         #region Properties
 
-        public Action OnFailedStartAttempt {  get; set; } // Invoked when the player tries to start cooking, but it fails. How ironic
-        public Action OnStartCooking { get; set; }
-        public Action OnStopCooking { get; set; }
+        [field: SerializeField] public UnityEvent OnFailedStartAttempt {  get; set; } // Invoked when the player tries to start cooking, but it fails. How ironic
+        public UnityEvent OnStartCooking { get; set; }
+        public UnityEvent OnStopCooking { get; set; }
         public bool IsCooking => _isCooking;
         public float Strength => _strength;
         #endregion
@@ -48,14 +49,14 @@ namespace Cooking
             if (_cookingIndicator == null)
                 throw new MissingReferenceException("Please assign a reference to the furnace's cooking indicator in the inspector :)");
 
-            _button.OnInteract += ToggleCooking;
+            _button.OnInteract.AddListener(ToggleCooking);
 
             // Feedback, to do again better later
-            OnStartCooking += () => _onStartCooking?.Play();
-            OnStopCooking += () => _onStopCooking?.Play();
-            OnFailedStartAttempt += () => _onFailedStartCooking?.Play();
-            OnStartCooking += () => _cookingIndicator?.SetActive(true);
-            OnStopCooking += () => _cookingIndicator?.SetActive(false);
+            OnStartCooking.AddListener(() => _onStartCooking?.Play());
+            OnStopCooking.AddListener(() => _onStopCooking?.Play());
+            OnFailedStartAttempt.AddListener(() => _onFailedStartCooking?.Play());
+            OnStartCooking.AddListener(() => _cookingIndicator?.SetActive(true));
+            OnStopCooking.AddListener(() => _cookingIndicator?.SetActive(false));
 
             _cookingIndicator.SetActive(false);
         }

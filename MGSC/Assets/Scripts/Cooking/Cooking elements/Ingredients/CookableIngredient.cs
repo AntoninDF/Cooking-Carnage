@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -9,7 +10,7 @@ namespace Cooking
     {
         #region Properties
         public float TargetCookDuration { get=>_targetCookDuration; set=>_targetCookDuration = value; }
-        public Action<ICookable> OnCook { get; set; }
+        public UnityEvent<ICookable> OnCook { get; set; }
         public float CookDuration { get; set; }
         public float CookPercentage => CookDuration / (TargetCookDuration > 0 ? TargetCookDuration : 1.0f);
 

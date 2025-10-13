@@ -2,6 +2,7 @@ using Controller;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -13,7 +14,7 @@ namespace Cooking
     {
         #region Properties
 
-        public Action OnGrabbed { get; set; }
+        public  UnityEvent OnGrabbed { get; set; }
         public IContainer Container { get; set; }
         public PlayerInterface Player { get; set; }
         public Collider Collider => _collider;
