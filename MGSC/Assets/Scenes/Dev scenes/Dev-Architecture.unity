@@ -969,6 +969,54 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7963073277497947739, guid: c4d45a154d46b374db2f8b18fc35d2c4, type: 3}
   m_PrefabInstance: {fileID: 261534175}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &984284667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 984284669}
+  - component: {fileID: 984284668}
+  m_Layer: 0
+  m_Name: EventBinder test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &984284668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984284667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82d75c8f06403854db1e99a474c8636d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventBinder
+  boundObject: {fileID: 1519767823}
+  myEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &984284669
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984284667}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.76828, y: 1.052, z: 2.12427}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1023674487 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
@@ -1362,6 +1410,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a327db39c1b60544fb9488aeb51ef930, type: 3}
+--- !u!114 &1519767823 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8959947206317709117, guid: 1080d30395c23b7408af1cbc2098aee5, type: 3}
+  m_PrefabInstance: {fileID: 792882542}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9eea54203173b445b253fa8360f0291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MusicPlayer
 --- !u!1 &1546642221
 GameObject:
   m_ObjectHideFlags: 0
@@ -1497,6 +1556,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 907773646007148477, guid: 1fc7f36d6e2771943b96697af515250d, type: 3}
   m_PrefabInstance: {fileID: 1594358950}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1613955039
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1613955041}
+  - component: {fileID: 1613955040}
+  m_Layer: 0
+  m_Name: Action test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1613955040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1613955039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6fa6c80792eafb40896f92c525d4497, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Test
+--- !u!4 &1613955041
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1613955039}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.76828, y: 1.052, z: 2.12427}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1627322446 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8169156123038115805, guid: 2c99165fa478e504d9b0d2c89aa3db05, type: 3}
@@ -2230,3 +2333,5 @@ SceneRoots:
   - {fileID: 1366135665}
   - {fileID: 465807710}
   - {fileID: 792882542}
+  - {fileID: 984284669}
+  - {fileID: 1613955041}

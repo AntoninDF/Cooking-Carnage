@@ -2,14 +2,23 @@ using Controller;
 using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
 
     public class TrashCan : Interactable, IContainer
     {
-        public Action<IGrabbable> OnGrab {get;set;}
-        public Action<IGrabbable> OnDrop { get; set; }
+        #region Properties
+        public UnityEvent<IGrabbable> OnGrab => _onGrab;
+        public UnityEvent<IGrabbable> OnDrop => null; // The trashcan never drops anything for now
+        #endregion
+
+        #region Fields
+        [Header("Trashcan events")]
+        [Tooltip("Invoked when an item is put into the trashcan")]
+        [SerializeField] private UnityEvent<IGrabbable> _onGrab;
+        #endregion
 
         public bool CanGrab(IGrabbable item)
         {

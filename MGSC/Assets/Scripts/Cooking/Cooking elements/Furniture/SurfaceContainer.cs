@@ -2,6 +2,7 @@ using Controller;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -13,8 +14,8 @@ namespace Cooking
     {
         #region Properties
         public PlayerInterface Player { get; set; }
-        public Action<IGrabbable> OnGrab { get ; set; }
-        public Action<IGrabbable> OnDrop { get; set; }
+        public UnityEvent<IGrabbable> OnGrab => _onGrab;
+        public UnityEvent<IGrabbable> OnDrop => _onDrop;
         public List<IGrabbable> HeldItems => _items;
         public int MaxItemCount => _maxItemCount;
         #endregion
@@ -23,6 +24,14 @@ namespace Cooking
         [Header("Surface container parameters")]
         [Tooltip("How many items can be put on this surface. Negative means infinite")]
         [SerializeField] private int _maxItemCount = 100;
+        [Space]
+        [Header("Surface container events")]
+        [Tooltip("Invoked when an item is put onto the surface")]
+        [SerializeField] private UnityEvent<IGrabbable> _onGrab;
+        [Tooltip("Invoked when an item is taken out of the surface")]
+        [SerializeField] private UnityEvent<IGrabbable> _onDrop;
+
+
         private List<IGrabbable> _items = new();
 
         #endregion

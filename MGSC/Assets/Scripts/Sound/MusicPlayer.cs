@@ -13,15 +13,12 @@ public class MusicPlayer : MonoBehaviour
     void Start()
     {
         _source = GetComponent<AudioSource>();
-        Debug.Log("Source is" + _source);
-        Debug.Log("Clip is" + music);
         _source.clip = music;
         _source.volume = _volume;
     }
 
     public void ToggleMusic()
     {
-        Debug.Log("Yup");
         if (_source.isPlaying)
         {
             _source.Stop();

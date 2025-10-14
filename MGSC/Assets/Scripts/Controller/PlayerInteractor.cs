@@ -1,8 +1,9 @@
-using System;
-using UnityEngine;
-using UnityEngine.InputSystem;
 using Cooking;
 using Mono.Cecil;
+using System;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 namespace Controller
 {
@@ -15,11 +16,14 @@ namespace Controller
         public RaycastHit LookInfo { get; private set; }
         public IContainer LookContainer { get; private set; }
         public float ReachDistance { get => _reachDistance; set => _reachDistance = value; }
-        public Action<PlayerInteractor> OnInteract { get; set; }
+        [field: SerializeField]
+        public UnityEvent<PlayerInteractor> OnInteract { get; set; }
         public IGrabbable HeldItem { get=> _heldItem; set=> _heldItem=value; }
         public Transform ItemSlot => _handSlot;
-        public Action<IGrabbable> OnGrab { get; set; }
-        public Action<IGrabbable> OnDrop { get; set; }
+        [field: SerializeField]
+        public UnityEvent<IGrabbable> OnGrab { get; set; }
+        [field: SerializeField]
+        public UnityEvent<IGrabbable> OnDrop { get; set; }
         public PlayerInterface Player { get => _playerInterface; set => _playerInterface = value; }
 
         #endregion

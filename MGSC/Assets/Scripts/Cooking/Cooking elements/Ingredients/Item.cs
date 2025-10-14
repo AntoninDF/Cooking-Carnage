@@ -2,6 +2,7 @@ using Controller;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -13,7 +14,7 @@ namespace Cooking
     {
         #region Properties
 
-        public Action OnGrabbed { get; set; }
+        public UnityEvent OnGrabbed => _onGrabbed;
         public IContainer Container { get; set; }
         public PlayerInterface Player { get; set; }
         public Collider Collider => _collider;
@@ -22,14 +23,17 @@ namespace Cooking
 
         #region Fields
 
-        [Header("References")]
+        [Header("Item references")]
         [Tooltip("Reference the canvas or panel game object that must show when the ingredient is hovered.")]
         [SerializeField] protected GameObject _tooltip;
         [Space]
-        [Header("Parameters")]
+        [Header("Item parameters")]
         [Tooltip("How long wil the ingredient take to go from a place to another when grabbed")]
         [SerializeField] private float _grabAnimationDuration = 0.2f;
         [Space]
+        [Header("Item events")]
+        [Tooltip("Invoked when this item is grabbed by the player or another container")]
+        [SerializeField] private UnityEvent _onGrabbed;
 
         private Coroutine _coroutine;
         protected Transform _defaultParent;
