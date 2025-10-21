@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Cooking
 {
     /// <summary>
     /// The ContainerFilter component should be added to a gameobject with a container component. It filters out which Grabbables can be grabbed.
     /// </summary>
-    
+
     public class ContainerFilter : MonoBehaviour
     {
         #region Fields
