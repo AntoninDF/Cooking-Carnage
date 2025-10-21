@@ -7,7 +7,7 @@ namespace Client
     /// <summary>
     /// Defines the base identity for a client's alien species
     /// </summary>
-    [CreateAssetMenu(fileName = "New Client", menuName = "Scriptable Objects/New Client")]
+    [CreateAssetMenu(fileName = "New Client", menuName = "Scriptable Objects/Client")]
     public class SO_Client : ScriptableObject
     {
         [Tooltip("The name will be used if needed in UI, or other places. It is the species' name rather than an individual name.")]
