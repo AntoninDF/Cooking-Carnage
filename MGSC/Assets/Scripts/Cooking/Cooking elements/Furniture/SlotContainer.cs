@@ -32,8 +32,6 @@ namespace Cooking
         [Header("Slot references")]
         [Tooltip("Transform designating where the contained item should go")]
         [SerializeField] private Transform _itemSlot;
-        [Tooltip("Filter which type of object can be contained in this slot")]
-        [SerializeField] private ESlotFilter _filter;
         [Space]
         [Header("Slot events")]
         [Tooltip("Invoked when an item is put into the slot")]
@@ -44,6 +42,7 @@ namespace Cooking
 
         private Collider _collider;
         private IGrabbable _heldItem;
+        private ContainerFilter _filter;
         #endregion
 
         #region Methods
@@ -81,20 +80,13 @@ namespace Cooking
         public bool CanGrab(IGrabbable item)
         {
             if (_heldItem != null) return false;
-            switch (_filter)
-            {
-                default:
-                case ESlotFilter.All:
-                    return true;
-                case ESlotFilter.Ingredient:
-                    if (item is not Ingredient) return false;
-                    break;
-                case ESlotFilter.MultiSlotContainer:
-                    if (item is not MultiSlotContainer && 
-                        !item.transform.gameObject.HasComponent<MultiSlotContainer>()) 
-                        return false;
-                    break;
-            }
+
+            if (_filter == null)
+                _filter = this.gameObject.GetComponent<ContainerFilter>();
+
+            if (_filter != null && item is MonoBehaviour)
+                if (!_filter.IsValid((MonoBehaviour)item))
+                    return false;
             return true;
         }
 

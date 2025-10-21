@@ -33,6 +33,7 @@ namespace Cooking
 
 
         private List<IGrabbable> _items = new();
+        private ContainerFilter _filter;
 
         #endregion
 
@@ -56,6 +57,12 @@ namespace Cooking
         }
         public bool CanGrab(IGrabbable item)
         {
+            if (_filter == null)
+                _filter = this.gameObject.GetComponent<ContainerFilter>();
+
+            if (_filter != null && item is MonoBehaviour)
+                if (!_filter.IsValid((MonoBehaviour)item))
+                    return false;
             if (_maxItemCount < 0) return true;
             return _items.Count < _maxItemCount;
         }
