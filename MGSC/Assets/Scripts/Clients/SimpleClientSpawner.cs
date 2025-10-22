@@ -39,7 +39,6 @@ namespace Client
             nextSpawnedClient = (nextSpawnedClient + 1)% models.Count;
 
             client.SetSplinePath(spline);
-            client.Init();
         }
     }
 

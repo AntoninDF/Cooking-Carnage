@@ -22,6 +22,7 @@ public class ReferenceManager
     {
         typeof(OrderingCounter),
         typeof(SittingCounter),
+        typeof(Counter),
         typeof(Item),
         typeof(Ingredient),
         typeof(Furnace),
