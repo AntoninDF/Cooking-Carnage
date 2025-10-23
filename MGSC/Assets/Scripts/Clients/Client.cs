@@ -1,9 +1,11 @@
-using UnityEngine;
 using Cooking;
+using GameSystem;
+using Orders;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Splines;
 
-namespace Client
+namespace Clients
 {
     /// <summary>
     /// This part of the client class handles the client's behaviour.
@@ -129,6 +131,15 @@ namespace Client
             if (_state == EClientState.AtCounter && !_hasOrdered)
             {
                 _hasOrdered = true;
+                _state = EClientState.ReachingSpline;
+            }
+        }
+
+        public void ResolveOrder(SplineContainer newPath)
+        {
+            if (_state == EClientState.AtCounter && _hasOrdered)
+            {
+                _splineComp = newPath;
                 _state = EClientState.ReachingSpline;
             }
         }

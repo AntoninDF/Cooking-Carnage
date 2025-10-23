@@ -2,7 +2,7 @@ using Cooking;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Client
+namespace Clients
 {
     /// <summary>
     /// Defines the base identity for a client's alien species
@@ -19,5 +19,4 @@ namespace Client
         [Tooltip("The loot is the list of ingredients dropped upon death.")]
         public List<SO_Ingredient> loot;
     }
-
 }

@@ -24,6 +24,7 @@ namespace Cooking
         public UnityEvent OnGrabbed { get; set; }
 
         public Collider Collider => _collider;
+        public ContainerFilter Filter => _filter;
 
         public bool IsLookedAt => Player.LookTarget == gameObject;
         #endregion
@@ -67,7 +68,7 @@ namespace Cooking
         public void Grab(IGrabbable item)
         {
             if (!CanGrab(item))
-                throw new Exception("The grab method was called, but the target container " +
+                Debug.LogWarning("The grab method was called, but the target container " +
                     "cannot receive the given item. Please check it with CanGrab before calling Grab.");
             if (_itemSlot == null)
                 throw new MissingReferenceException("Please reference the item slot's transform in this container slot's dedicated field : " + name);

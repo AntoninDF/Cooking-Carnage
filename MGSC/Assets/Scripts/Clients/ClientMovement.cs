@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Splines;
 
-namespace Client
+namespace Clients
 {
 
     public class ClientMovement

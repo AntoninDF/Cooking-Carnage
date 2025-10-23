@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Client
+namespace Clients
 {
 
     public class Counter : MonoBehaviour

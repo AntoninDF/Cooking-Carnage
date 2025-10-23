@@ -9,8 +9,12 @@ namespace GameSystem
     /// </summary>
     public class GameInitializer : MonoBehaviour
     {
-        // PUBLIC PROPERTIES
+        #region Properties
         public PlayerInterface Player {  get=>_player; private set => _player=value; }
+
+        #endregion
+
+        #region Fields
 
         // SERIALIZED FIELDS
         [Header("References")]
@@ -18,12 +22,16 @@ namespace GameSystem
         [Tooltip("Pass in the scriptable object holding references to every element to spawn on game start")]
         [SerializeField] private SO_ScenePreset _scenePreset;
 
-        [Tooltip("Pass in the transform at which the player will be spawned")]
-        [SerializeField] private Transform _playerStart;
+        // Transform at which the player will be spawned
+        private Transform _playerStart;
 
         // PRIVATE FIELDS
         private PlayerInterface _player;
         private bool _destroyAfterInitialization = true;
+        private OrderManager _orderManager;
+        #endregion
+
+        #region Methods
 
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -46,11 +54,18 @@ namespace GameSystem
 
             // Create a player if none exist yet
             if (_player == null) SpawnPlayer();
-            ResetPlayer();
 
             // Create all the objects as requested in the scene preset
             foreach (var go in _scenePreset.Objects)
                 Instantiate(go);
+
+            // Initialize managers
+            // Note : It's important to call the ReferenceManager as late as possible, because it scans the scene upon being created (when first called).
+             _orderManager = new OrderManager();
+            ReferenceManager.Instance.SetManager(_orderManager);
+
+            _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
+            ResetPlayer();
         }
 
         /// <summary>
@@ -100,6 +115,7 @@ namespace GameSystem
             _player.Controller.InputHandler = _player.InputHandler;
             _player.InputHandler.SetInputReferences();
         }
+        #endregion
     }
 
 }

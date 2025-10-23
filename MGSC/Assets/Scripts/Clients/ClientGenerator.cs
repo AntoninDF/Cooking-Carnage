@@ -3,7 +3,7 @@ using Cooking;
 using System.Collections.Generic;
 using UnityEngine.Splines;
 
-namespace Client
+namespace Clients
 {
     /// <summary>
     /// This part of the client class handles the Client generation.
