@@ -5,9 +5,10 @@ namespace GameSystem
     /// <summary>
     /// A helper object to time stuff
     /// </summary>
-    public class Timer
+    public class TimerManager : Manager
     {
-        // Not implemented, probably because it's actually useless
+        // Not implemented yet
+        public TimerManager() : base() { }
     }
 
 }

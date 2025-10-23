@@ -3,7 +3,7 @@ using UnityEngine;
 using Cooking;
 using UnityEngine.Splines;
 
-namespace Client
+namespace Clients
 {
     /// <summary>
     /// Just for tests. Pharrell, it belongs to you to make it clean <3

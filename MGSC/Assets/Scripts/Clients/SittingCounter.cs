@@ -1,10 +1,11 @@
 using Cooking;
 using NUnit.Framework;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Client
+namespace Clients
 {
 
     public class SittingCounter : Counter
@@ -18,6 +19,8 @@ namespace Client
         [Header("References")]
         [Tooltip("Slots on which the items will be spawned. If no more slot is available, they will spawn on the spawner's transform. The slots should be ordered")]
         [SerializeField] private List<SlotContainer> _slotsToSpawn;
+        [Tooltip("Slot on which the meal will be served.")]
+        [SerializeField] private SlotContainer _mealSlot;
         [Space]
         [Header("Specific events")]
         [Tooltip("This event will be invoked when a client is successfully killed")]
@@ -26,6 +29,36 @@ namespace Client
         #endregion
 
         #region Methods
+
+        private void Start()
+        {
+            if (_slotsToSpawn == null || _slotsToSpawn.Count == 0)
+                Debug.LogError("Please reference several slots on the sitting counter '" + name + "' for ingredients to be put on");
+            if (_mealSlot == null)
+                Debug.LogError("Please reference a slot on the sitting counter '" + name + "' for the meal to be served");
+
+
+            ContainerFilter filter;
+            foreach (var slot in _slotsToSpawn)
+            {
+                if (slot.Filter ==  null)
+                    filter = slot.AddComponent<ContainerFilter>();
+                else
+                     filter = slot.GetComponent<ContainerFilter>();
+                filter.SetAll(false);
+                filter.item = true;
+                filter.ingredient = true;
+                filter.filterOperator = ContainerFilter.ELogicOperator.And;
+            }
+            if (_mealSlot.Filter == null)
+                filter = _mealSlot.AddComponent<ContainerFilter>();
+            else
+                filter = _mealSlot.GetComponent<ContainerFilter>();
+            filter.SetAll(false);
+            filter.item = true;
+            filter.meal = true;
+            filter.filterOperator = ContainerFilter.ELogicOperator.And;
+        }
 
         public void TryKill()
         {

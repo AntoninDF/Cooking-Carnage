@@ -46,6 +46,14 @@ namespace Cooking
             }
             return false;
         }
+        public void SetAll(bool value)
+        {
+            item = value;
+            ingredient = value;
+            plate = value;
+            meal = value;
+            container = value;
+        }
 
         public enum ELogicOperator
         {

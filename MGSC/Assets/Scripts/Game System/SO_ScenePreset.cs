@@ -18,6 +18,10 @@ namespace GameSystem
         [Tooltip("The input action asset for the player")]
         [SerializeField] private InputActionAsset _inputActions;
 
+        public GameObject OrderPrefab {  get=> _orderPrefab; private set=> _orderPrefab = value; }
+        [Tooltip("The order's prefab that will be instantiated on new orders")]
+        [SerializeField] private GameObject _orderPrefab;
+
         public List<GameObject> Objects {  get=>_objects; private set=>_objects=value; }
         [Tooltip("List of gameobjects to instantiate on scene start (Awake)")]
         [SerializeField] private List<GameObject> _objects;
