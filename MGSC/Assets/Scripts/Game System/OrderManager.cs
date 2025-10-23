@@ -25,7 +25,7 @@ namespace GameSystem
 
         public OrderManager()
         {
-            (this as IManager).Register();
+            Register();
         }
 
         public Order NewOrder(Client client, SO_Recipe recipe)
@@ -47,8 +47,13 @@ namespace GameSystem
             _activeOrders.Remove(order);
             _pastOrders.Add(order);
 
-            Debug.Log("[OrderManager] ResolveOrder : The order with the '" + order.Recipe.Name + "' recipe has been completed in " + (info.Timestamp - order.Timestamp) + "s for client " + order.Owner);
+            Debug.Log("[OrderManager] ResolveOrder : The order with the '" + order.Recipe.Name + "' recipe has been completed in " + (info.Timestamp - order.Timestamp) + "s for client " + order.Owner.name);
             // Tell the money manager that money's been made
+        }
+
+        public void Register()
+        {
+            ReferenceManager.Instance.SetManager(this);
         }
 
         #endregion

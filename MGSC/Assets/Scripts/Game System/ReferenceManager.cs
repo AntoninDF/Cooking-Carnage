@@ -59,12 +59,17 @@ namespace GameSystem
             {
                 Debug.LogWarning("A manager '" + nameof(manager) + "' tried to register on the ReferenceManager, but an instance was already registered.");
             }
+            Debug.Log(typeof(T));
             _managers[typeof(T)] = manager;
         }
 
         public T GetManager<T>() where T : class, IManager
         {
-            if (!_managers.ContainsKey(typeof(T)) ||  _managers[typeof(T)] == null) return default(T);
+            if (!_managers.ContainsKey(typeof(T)) || _managers[typeof(T)] == null)
+            {
+                Debug.LogWarning("No manager of type " + nameof(T) + " was found. Key contained : " + (_managers.ContainsKey(typeof(T))?"true":"false"));
+                return default(T);
+            }
             return _managers[typeof(T)] as T;
         }
         public bool TryGetManager<T>(out T manager) where T : class, IManager

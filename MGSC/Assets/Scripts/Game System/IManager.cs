@@ -1,10 +1,10 @@
-﻿namespace GameSystem
+﻿using UnityEngine;
+
+namespace GameSystem
 {
     public interface IManager
     {
-        public void Register()
-        {
-            ReferenceManager.Instance.SetManager(this);
-        }
+        public void Register();
+        // ReferenceManager.Instance.SetManager(this);
     }
 }

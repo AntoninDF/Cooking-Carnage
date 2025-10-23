@@ -20,10 +20,6 @@ namespace Clients
         #endregion
 
         #region Methods
-        private void Start()
-        {
-            _orderManager = ReferenceManager.Instance.GetManager<OrderManager>();
-        }
 
         public void TryAcceptOrder()
         {
@@ -34,8 +30,9 @@ namespace Clients
 
         private void AcceptOrder()
         {
-            _currentClient.AcceptOrder();
-            _orderManager.NewOrder(_currentClient, GetOrder());
+            if (!EnforceReferences()) return;
+            Order newOrder = _orderManager.NewOrder(_currentClient, GetOrder());
+            _currentClient.AcceptOrder(newOrder);
             Free();
         }
 
@@ -46,6 +43,18 @@ namespace Clients
         private SO_Recipe GetOrder()
         {
             return _currentClient.RequestedRecipe;
+        }
+
+        private bool EnforceReferences()
+        {
+            if (_orderManager == null)
+                _orderManager = ReferenceManager.Instance.GetManager<OrderManager>();
+            if (_orderManager == null)
+            {
+                Debug.LogError("[OrderingCounter] : No order manager found.");
+                return false;
+            }
+            return true;
         }
 
         #endregion
