@@ -81,9 +81,9 @@ namespace Clients
             return this;
         }
 
-        public Client SetOrder(SO_Recipe order)
+        public Client SetOrder(SO_Recipe recipe)
         {
-            Order = order;
+            RequestedRecipe = recipe;
             return this;
         }
 

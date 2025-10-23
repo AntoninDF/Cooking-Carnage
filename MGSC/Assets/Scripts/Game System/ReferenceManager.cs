@@ -37,7 +37,7 @@ namespace GameSystem
 
         };
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;
-        private Dictionary<Type, Manager> _managers;
+        private Dictionary<Type, IManager> _managers;
 
         private static ReferenceManager _instance;
         #endregion
@@ -52,7 +52,7 @@ namespace GameSystem
             DebugTrackedObjectsCount();
         }
 
-        public void SetManager<T>(T manager) where T : Manager
+        public void SetManager<T>(T manager) where T : IManager
         {
             if (manager == null) throw new ArgumentNullException(nameof(manager));
             if (_managers.ContainsKey(typeof(T)) && _managers[typeof(T)] != null)
@@ -62,12 +62,12 @@ namespace GameSystem
             _managers[typeof(T)] = manager;
         }
 
-        public T GetManager<T>() where T : Manager
+        public T GetManager<T>() where T : class, IManager
         {
-            if (!_managers.ContainsKey(typeof(T)) ||  _managers[typeof(T)] == null) return null;
+            if (!_managers.ContainsKey(typeof(T)) ||  _managers[typeof(T)] == null) return default(T);
             return _managers[typeof(T)] as T;
         }
-        public bool TryGetManager<T>(out T manager) where T : Manager
+        public bool TryGetManager<T>(out T manager) where T : class, IManager
         {
             manager = GetManager<T>();
             return manager != null;

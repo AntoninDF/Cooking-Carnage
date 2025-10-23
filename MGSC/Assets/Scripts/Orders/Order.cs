@@ -4,13 +4,14 @@ using Cooking;
 
 namespace Orders
 {
-    public class Order : MonoBehaviour
+    public class Order
     {
         #region Properties
 
         public Client Owner => _owner;
         public SO_Recipe Recipe => _recipe;
         public float Timestamp => _timestamp;
+        public bool IsResolved { get; set; } // Wether the order has been served or not
 
         #endregion
 

@@ -2,6 +2,7 @@ using Cooking;
 using GameSystem;
 using Orders;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -16,7 +17,8 @@ namespace Clients
     {
         #region Properties
         public EClientType Type { get; private set; }
-        public SO_Recipe Order {  get; private set; }
+        public SO_Recipe RequestedRecipe {  get; private set; }
+        public Order Order => _order;
         public List<SO_Ingredient> IngredientsToDrop { get; private set; }
         public SO_Client Model { get; private set; }
         public float Speed { get => _speed; set => _speed = value; }
@@ -41,6 +43,7 @@ namespace Clients
 
         private ClientMovement _movement;
         private bool _debugSplinePosition;
+        private Order _order;
         #endregion
 
         #region Methods
@@ -126,12 +129,13 @@ namespace Clients
             _currentCounter.Register(this);
         }
 
-        public void AcceptOrder()
+        public void AcceptOrder(Order order)
         {
             if (_state == EClientState.AtCounter && !_hasOrdered)
             {
                 _hasOrdered = true;
                 _state = EClientState.ReachingSpline;
+                _order = order;
             }
         }
 

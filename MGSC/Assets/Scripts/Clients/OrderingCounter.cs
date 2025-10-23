@@ -45,7 +45,7 @@ namespace Clients
         /// <returns></returns>
         private SO_Recipe GetOrder()
         {
-            return _currentClient.Order;
+            return _currentClient.RequestedRecipe;
         }
 
         #endregion

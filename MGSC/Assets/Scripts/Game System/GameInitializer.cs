@@ -62,7 +62,6 @@ namespace GameSystem
             // Initialize managers
             // Note : It's important to call the ReferenceManager as late as possible, because it scans the scene upon being created (when first called).
              _orderManager = new OrderManager();
-            ReferenceManager.Instance.SetManager(_orderManager);
 
             _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
             ResetPlayer();

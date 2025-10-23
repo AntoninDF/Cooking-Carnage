@@ -1,5 +1,7 @@
 using Cooking;
+using GameSystem;
 using NUnit.Framework;
+using Orders;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,6 +14,8 @@ namespace Clients
     {
         #region Properties
         public UnityEvent OnKill => _onKill;
+        public UnityEvent OnServe => _onServe;
+        public Meal ServedMeal => _mealSlot?.HeldItem as Meal;
 
         #endregion
 
@@ -25,12 +29,22 @@ namespace Clients
         [Header("Specific events")]
         [Tooltip("This event will be invoked when a client is successfully killed")]
         [SerializeField] private UnityEvent _onKill;
+        [Tooltip("This event will be invoked when a client is served")]
+        [SerializeField] private UnityEvent _onServe;
 
+        private OrderManager _orderManager;
         #endregion
 
         #region Methods
 
         private void Start()
+        {
+            EnforceSlots();
+            _mealSlot.OnGrab.AddListener(Serve);
+            _orderManager = ReferenceManager.Instance.GetManager<OrderManager>();
+        }
+
+        private void EnforceSlots()
         {
             if (_slotsToSpawn == null || _slotsToSpawn.Count == 0)
                 Debug.LogError("Please reference several slots on the sitting counter '" + name + "' for ingredients to be put on");
@@ -41,10 +55,10 @@ namespace Clients
             ContainerFilter filter;
             foreach (var slot in _slotsToSpawn)
             {
-                if (slot.Filter ==  null)
+                if (slot.Filter == null)
                     filter = slot.AddComponent<ContainerFilter>();
                 else
-                     filter = slot.GetComponent<ContainerFilter>();
+                    filter = slot.GetComponent<ContainerFilter>();
                 filter.SetAll(false);
                 filter.item = true;
                 filter.ingredient = true;
@@ -58,6 +72,14 @@ namespace Clients
             filter.item = true;
             filter.meal = true;
             filter.filterOperator = ContainerFilter.ELogicOperator.And;
+        }
+
+        private void Serve(IGrabbable item)
+        {
+            Meal meal = item as Meal;
+            _onServe?.Invoke();
+            ServingInfo info = new ServingInfo(meal);
+            _orderManager.ResolveOrder(_currentClient.Order, info);
         }
 
         public void TryKill()
