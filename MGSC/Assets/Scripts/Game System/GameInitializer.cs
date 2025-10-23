@@ -29,6 +29,7 @@ namespace GameSystem
         private PlayerInterface _player;
         private bool _destroyAfterInitialization = true;
         private OrderManager _orderManager;
+        private TimerManager _timerManager;
         #endregion
 
         #region Methods
@@ -62,6 +63,7 @@ namespace GameSystem
             // Initialize managers
             // Note : It's important to call the ReferenceManager as late as possible, because it scans the scene upon being created (when first called).
              _orderManager = new OrderManager();
+             _timerManager = new TimerManager();
 
             _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
             ResetPlayer();
