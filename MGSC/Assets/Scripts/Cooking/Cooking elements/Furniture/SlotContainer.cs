@@ -68,8 +68,7 @@ namespace Cooking
         public void Grab(IGrabbable item)
         {
             if (!CanGrab(item))
-                Debug.LogWarning("The grab method was called, but the target container " +
-                    "cannot receive the given item. Please check it with CanGrab before calling Grab.");
+                return;
             if (_itemSlot == null)
                 throw new MissingReferenceException("Please reference the item slot's transform in this container slot's dedicated field : " + name);
 
@@ -108,7 +107,11 @@ namespace Cooking
             if (_collider == null) return;
             if (Player == null) return;
 
-            _collider.enabled = Player.HeldItem != null;
+            SetActive(Player.HeldItem != null);
+        }
+
+        public void SetAnimationMode(bool animate = true)
+        {
         }
         #endregion
 
@@ -117,6 +120,11 @@ namespace Cooking
             All = 0,
             Ingredient = 1,
             MultiSlotContainer = 2
+        }
+
+        public void SetActive(bool active)
+        {
+            _collider.enabled = active;
         }
     }
 

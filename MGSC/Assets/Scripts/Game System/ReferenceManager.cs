@@ -59,7 +59,6 @@ namespace GameSystem
             {
                 Debug.LogWarning("A manager '" + nameof(manager) + "' tried to register on the ReferenceManager, but an instance was already registered.");
             }
-            Debug.Log(typeof(T));
             _managers[typeof(T)] = manager;
         }
 

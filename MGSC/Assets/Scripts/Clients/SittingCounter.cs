@@ -76,10 +76,14 @@ namespace Clients
 
         private void Serve(IGrabbable item)
         {
+            if (_currentClient == null) return;
             Meal meal = item as Meal;
             _onServe?.Invoke();
             ServingInfo info = new ServingInfo(meal);
             _orderManager.ResolveOrder(_currentClient.Order, info);
+            _mealSlot.Drop(item);
+            Destroy(meal.gameObject);
+            Free();
         }
 
         public void TryKill()
@@ -91,7 +95,6 @@ namespace Clients
         private void Kill()
         {
             AddLoot(_currentClient.IngredientsToDrop);
-            Debug.Log("Number of ingredients to drop : " + _currentClient.IngredientsToDrop.Count);
             _currentClient.Kill();
             _currentClient = null;
             _onKill?.Invoke();
@@ -107,7 +110,6 @@ namespace Clients
         }
         public void Spawn(SO_Ingredient ingredient)
         {
-            Debug.Log("Spawning item...");
             if (_slotsToSpawn == null || _slotsToSpawn.Count == 0)
             {
                 Debug.LogError("[SittingCounter] Spawn : Couldn't find any slot to put the ingredients. Please reference them in the inspector");
@@ -115,6 +117,7 @@ namespace Clients
 
             GameObject go = GameObject.Instantiate(ingredient.Prefab);
             Ingredient item = go.GetComponent<Ingredient>();
+            item.SetAnimationMode(false);
             bool couldBePlaced = false;
             foreach (var slot in _slotsToSpawn)
             {

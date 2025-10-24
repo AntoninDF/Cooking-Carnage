@@ -93,6 +93,14 @@ namespace Cooking
                     return false;
             return true;
         }
+
+        public void SetActive(bool active)
+        {
+            foreach(var slot in _slots)
+            {
+                slot.SetActive(active);
+            }
+        }
         #endregion
     }
 

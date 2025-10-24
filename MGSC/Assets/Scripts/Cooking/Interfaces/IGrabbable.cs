@@ -10,6 +10,7 @@ namespace Cooking
         public IContainer Container { get; set; }
         public UnityEvent OnGrabbed { get;}
         public void GetGrabbed(IContainer newContainer);
+        public void SetAnimationMode(bool animate=true);
         public Collider Collider { get; }
     }
 
