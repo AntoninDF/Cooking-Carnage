@@ -22,7 +22,8 @@ namespace Cooking
 
         public bool CanGrab(IGrabbable item)
         {
-            if (item is not Ingredient) return false;
+            if (item is not ITrashable) return false;
+            //(item as ITrashable).Dispose();
             return true;
         }
 

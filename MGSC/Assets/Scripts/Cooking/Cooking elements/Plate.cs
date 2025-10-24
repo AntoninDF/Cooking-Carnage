@@ -23,6 +23,8 @@ namespace Cooking
 
         #region Fields
         [Header("Plate references")]
+        [Tooltip("Reference a slot container in which to put the base ingredient.")]
+        [SerializeField] private SlotContainer _baseIngredientSlot;
         [Tooltip("Reference a multi slot container in which to put every ingredient.")]
         [SerializeField] private MultiSlotContainer _ingredientSlots;
         [Tooltip("The recipe book should contain every possible recipe for this object.")]
@@ -38,6 +40,18 @@ namespace Cooking
         #endregion
 
         #region Methods
+
+        private void Start()
+        {
+            if (_baseIngredientSlot == null)
+                Debug.LogError("[Plate] : Please reference the base ingredient slot in the inspector");
+            if (_ingredientSlots == null)
+                Debug.LogError("[Plate] : Please reference the ingredient multislot in the inspector");
+            if (_ingredientSlots == null)
+                Debug.LogError("[Plate] : Please reference the ingredient multislot in the inspector");
+
+            _ingredientSlots.SetActive(false);
+        }
 
         public void Cook(float dT) 
         {

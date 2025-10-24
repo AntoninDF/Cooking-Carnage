@@ -1,7 +1,6 @@
 using Cooking;
 using GameSystem;
 using Orders;
-using System;
 using UnityEngine;
 
 namespace Clients
@@ -14,6 +13,13 @@ namespace Clients
         #endregion
 
         #region Fields
+        [Header("OrderingCounter references")]
+        [Tooltip("Prefab that will be instantiated as an order ticket")]
+        [SerializeField] private GameObject _ticketPrefab;
+        [Tooltip("Slot on which to put the order ticket")]
+        [SerializeField] private SlotContainer _ticketSlot;
+        [Tooltip("List of all the available recipes")]
+        [SerializeField] private SO_RecipeBook _recipeBook;
 
         private OrderManager _orderManager;
 
@@ -32,8 +38,35 @@ namespace Clients
         {
             if (!EnforceReferences()) return;
             Order newOrder = _orderManager.NewOrder(_currentClient, GetOrder());
+            if (newOrder == null)
+            {
+                Debug.LogError("[OrderingCounter] AcceptOrder : The newly created order was null. Please look into that");
+            }
             _currentClient.AcceptOrder(newOrder);
+            OrderTicket ticket = MakeTicket(newOrder);
+            StoreTicket(ticket);
             Free();
+        }
+
+        private OrderTicket MakeTicket(Order order)
+        {
+            if (_ticketPrefab == null)
+                Debug.LogError("[OrderingCounter] : The ticket prefab's reference is missing, please assign it in the inspector");
+            GameObject go = Instantiate(_ticketPrefab);
+            OrderTicket ticket = go.GetComponent<OrderTicket>();
+            if (ticket == null)
+                Debug.LogError("[OrderingCounter] : The ticket prefab's OrderTicket component is missing. Please make sure there is one on the root object");
+            ticket.SetTargetOrder(order);
+
+            return ticket;
+        }
+
+        private void StoreTicket(OrderTicket ticket)
+        {
+            if (_ticketSlot == null)
+                Debug.LogError("[OrderingCounter] : The ticket slot's reference is missing, please assign it in the inspector");
+            ticket.SetAnimationMode(false);
+            _ticketSlot.Grab(ticket);
         }
 
         /// <summary>
@@ -42,7 +75,9 @@ namespace Clients
         /// <returns></returns>
         private SO_Recipe GetOrder()
         {
-            return _currentClient.RequestedRecipe;
+            float r = Random.Range(0,1);
+            int index = Mathf.FloorToInt((_recipeBook.Recipes.Count - 1) * r);
+            return _recipeBook.Recipes[index];
         }
 
         private bool EnforceReferences()

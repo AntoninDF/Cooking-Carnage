@@ -5,7 +5,7 @@ namespace Cooking
     /// <summary>
     /// Implements the base behaviour for every ingredient
     /// </summary>
-    public class Ingredient : Item
+    public class Ingredient : Item, ITrashable
     {
         #region Properties
         public SO_Ingredient Model => _model;
@@ -27,6 +27,7 @@ namespace Cooking
             if (_model == null)
                 throw new MissingReferenceException("Please assign an ingredient model in the inspector : " + name);
         }
+
         #endregion
 
     }

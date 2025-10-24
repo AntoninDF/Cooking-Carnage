@@ -143,7 +143,9 @@ namespace Controller
         {
             Component target;
             if (!LookTargetImplements<IGrabbable>(out target)) return;
-            Grab(target as IGrabbable);
+            IGrabbable t = target as IGrabbable;
+            t.SetAnimationMode(true);
+            Grab(t);
         }
         public void Grab(IGrabbable item)
         {

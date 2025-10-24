@@ -42,6 +42,7 @@ namespace Cooking
         protected Quaternion _defaultRotation;
         private Collider _collider;
         private bool _wasLookedAtThisFrame;
+        private bool _animate=true;
         #endregion
 
         #region Methods
@@ -70,11 +71,15 @@ namespace Cooking
                 transform.parent = newContainer.transform;
             }
             OnGrabbed?.Invoke();
-            GrabAnimation();
-
+            GrabAnimation(!_animate);
         }
 
-        private void GrabAnimation()
+        public void SetAnimationMode(bool animate=true)
+        {
+            _animate = animate;
+        }
+
+        private void GrabAnimation(bool instantaneous=false)
         {
             if (_coroutine != null)
             {
@@ -82,7 +87,16 @@ namespace Cooking
                 _coroutine = null;
             }
             SetTargetSlot();
-            _coroutine = StartCoroutine(GoToTargetSlot(_grabAnimationDuration));
+            if (instantaneous)
+            {
+                transform.localPosition = _targetPos;
+                transform.localRotation = _targetRot;
+            }
+            else
+            {
+                _coroutine = StartCoroutine(GoToTargetSlot(_grabAnimationDuration));
+            }
+
         }
 
         /// <summary>

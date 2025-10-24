@@ -139,12 +139,11 @@ namespace Clients
             }
         }
 
-        public void ResolveOrder(SplineContainer newPath)
+        public void ResolveOrder()
         {
             if (_state == EClientState.AtCounter && _hasOrdered)
             {
-                _splineComp = newPath;
-                _state = EClientState.ReachingSpline;
+                Destroy(gameObject);
             }
         }
 
