@@ -28,7 +28,7 @@ namespace GameSystem
             ReferenceManager.Instance.SetManager(this);
         }
 
-        public void InitializeGameLoop()
+        public void OnEnable()
         {
             Register();
             StartRunning();
