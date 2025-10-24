@@ -17,6 +17,7 @@ namespace Cooking
         public UnityEvent<IGrabbable> OnDrop => _onDrop;
         public List<IGrabbable> HeldItems => _items;
         public int MaxItemCount => _maxItemCount;
+        public bool IsLocked => false;
         #endregion
 
         #region Fields

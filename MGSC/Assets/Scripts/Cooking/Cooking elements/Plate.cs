@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -41,8 +42,9 @@ namespace Cooking
 
         #region Methods
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             if (_baseIngredientSlot == null)
                 Debug.LogError("[Plate] : Please reference the base ingredient slot in the inspector");
             if (_ingredientSlots == null)
@@ -50,11 +52,22 @@ namespace Cooking
             if (_ingredientSlots == null)
                 Debug.LogError("[Plate] : Please reference the ingredient multislot in the inspector");
 
+            SetupSlots();
+        }
+
+        private void SetupSlots()
+        {
             _ingredientSlots.SetActive(false);
+            _baseIngredientSlot.OnGrab.AddListener((item) => _ingredientSlots.SetActive(true));
+            _baseIngredientSlot.OnDrop.AddListener((item) => _ingredientSlots.SetActive(false));
+
+            _ingredientSlots.OnGrab.AddListener((item) => _baseIngredientSlot.IsLocked = true);
+            _ingredientSlots.OnDrop.AddListener((item) => { if (_ingredientSlots.HeldItems.Count == 0) _baseIngredientSlot.IsLocked = false; });
         }
 
         public void Cook(float dT) 
         {
+            Debug.Log("Cooking... (" + Mathf.Round(CookDuration*100)/100 + "s)");
             CookDuration += dT; 
             OnCook?.Invoke(this);
 
@@ -63,6 +76,7 @@ namespace Cooking
                 SO_Recipe recipe = default(SO_Recipe);
                 if (IsValidRecipe(ref recipe))
                 {
+                    Debug.Log("Recipe is valid");
                     TransformToMeal(recipe);
                 }
             }
@@ -75,6 +89,7 @@ namespace Cooking
         /// <returns></returns>
         private bool IsValidRecipe(ref SO_Recipe recipe)
         {
+            Debug.Log("Validating meal recipe");
             var ingredients = _ingredientSlots.HeldItems.Select((item) => ((Ingredient)item).Model);
             foreach (var r in _recipeBook.Recipes)
             {

@@ -95,6 +95,7 @@ namespace Clients
         private void Kill()
         {
             AddLoot(_currentClient.IngredientsToDrop);
+            _orderManager.CancelOrder(_currentClient.Order);
             _currentClient.Kill();
             _currentClient = null;
             _onKill?.Invoke();
@@ -121,11 +122,12 @@ namespace Clients
             bool couldBePlaced = false;
             foreach (var slot in _slotsToSpawn)
             {
-                if (!slot.IsEmpty) continue;
+                if (!slot.IsFree) continue;
                 slot.Grab(item);
+                Debug.Log("Item "+item.name+" placed on slot "+slot.name);
+                Debug.Log(slot.name+"'s contained item is "+slot.HeldItem.transform.name);
                 item.transform.position = slot.transform.position;
                 couldBePlaced = true;
-                Debug.Log("Item placed on slot");
                 break;
             }
             if (!couldBePlaced) go.transform.position = transform.position;

@@ -37,20 +37,34 @@ namespace GameSystem
 
         public void ResolveOrder(Order order, ServingInfo info)
         {
-            if (!_activeOrders.Contains(order))
-            {
-                Debug.LogError("[OrderManager] ResolveOrder : Trying to resolve an order that has either " +
-                    "not been created by the OrderManager, or that is not active anymore");
-            }
+            StashOrder(order);
             OrderRating rating = OrderEvaluator.Evaluate(order, info);
-            _activeOrders.Remove(order);
-            _pastOrders.Add(order);
             order.Resolve();
             Debug.Log("[OrderManager] ResolveOrder : The order with the recipe '" + order.Recipe.Name + "' has been completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 + "s for client " + order.Owner.name
                 + ". Expected meal : '" + order.Recipe.Name + "'. Received meal : '" + info.Meal.Recipe.Name + "'. Money gained : " + rating.MoneyGained + ".");
             // Tell the money manager that money's been made
         }
 
+        public void CancelOrder(Order order)
+        {
+            StashOrder(order);
+            order.Cancel();
+        }
+
+        /// <summary>
+        /// Sets the order as over, and stores it in memory
+        /// </summary>
+        /// <param name="order">Order to stash</param>
+        private void StashOrder(Order order)
+        {
+            if (!_activeOrders.Contains(order))
+            {
+                Debug.LogError("[OrderManager] ResolveOrder : Trying to resolve an order that has either " +
+                    "not been created by the OrderManager, or that is not active anymore");
+            }
+            _activeOrders.Remove(order);
+            _pastOrders.Add(order);
+        }
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
