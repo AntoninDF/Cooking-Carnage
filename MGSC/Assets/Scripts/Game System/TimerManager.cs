@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Game_System.Interface;
 using UnityEngine;
 
 namespace GameSystem
@@ -8,7 +7,7 @@ namespace GameSystem
     /// <summary>
     /// A Gamesystem used to manage all the timers throughout the game
     /// </summary>
-    public class TimerManager : IManager, IUpdatable
+    public class TimerManager : UpdatableBase, IManager
     {
         #region Properties
         
@@ -31,11 +30,10 @@ namespace GameSystem
         
         public void Register()
         {
-            RegisterToGameLoop();
             ReferenceManager.Instance.SetManager(this);
         }
         
-        public void Update(float deltaTime)
+        public override void Update(float deltaTime)
         {
             foreach (var timerKey in _timers)
             {
@@ -81,16 +79,6 @@ namespace GameSystem
         public void RemoveTimer(string name)
         {
             _timers.Remove(name);
-        }
-
-        public void RegisterToGameLoop()
-        {
-            ReferenceManager.Instance.GetManager<GameLoop>().RegisterUpdatable(this);
-        }
-
-        public void UnregisterFromGameLoop()
-        {
-            ReferenceManager.Instance.GetManager<GameLoop>().UnregisterUpdatable(this);
         }
 
         #endregion
@@ -140,8 +128,6 @@ namespace GameSystem
             Elapsed += deltaTime;
             if (Elapsed >= Duration)
             {
-                _onComplete?.Invoke();
-
                 if (IsLooping)
                 {
                     Elapsed = 0f;
@@ -149,6 +135,7 @@ namespace GameSystem
                 else
                 {
                     IsComplete = true;
+                    _onComplete.Invoke();
                 }
             }
         }
