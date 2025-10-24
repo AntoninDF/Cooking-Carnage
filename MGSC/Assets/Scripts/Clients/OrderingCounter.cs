@@ -66,6 +66,7 @@ namespace Clients
             if (_ticketSlot == null)
                 Debug.LogError("[OrderingCounter] : The ticket slot's reference is missing, please assign it in the inspector");
             ticket.SetAnimationMode(false);
+            _ticketSlot.Drop(_ticketSlot.HeldItem);
             _ticketSlot.Grab(ticket);
         }
 
