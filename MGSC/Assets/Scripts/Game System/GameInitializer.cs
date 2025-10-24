@@ -28,8 +28,10 @@ namespace GameSystem
         // PRIVATE FIELDS
         private PlayerInterface _player;
         private bool _destroyAfterInitialization = true;
+        
         private OrderManager _orderManager;
         private TimerManager _timerManager;
+        private AdaptiveClientSpawner _adaptiveClientSpawner;
         #endregion
 
         #region Methods
@@ -64,7 +66,10 @@ namespace GameSystem
             // Note : It's important to call the ReferenceManager as late as possible, because it scans the scene upon being created (when first called).
              _orderManager = new OrderManager();
              _timerManager = new TimerManager();
-
+             _adaptiveClientSpawner = new AdaptiveClientSpawner();
+            
+             _adaptiveClientSpawner.LaunchDelay();
+             
             _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
             ResetPlayer();
         }
