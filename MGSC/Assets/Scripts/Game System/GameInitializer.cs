@@ -21,6 +21,7 @@ namespace GameSystem
 
         [Tooltip("Pass in the scriptable object holding references to every element to spawn on game start")]
         [SerializeField] private SO_ScenePreset _scenePreset;
+        [SerializeField] private GameLoop _gameLoop;
 
         // Transform at which the player will be spawned
         private Transform _playerStart;
@@ -61,6 +62,9 @@ namespace GameSystem
             // Create all the objects as requested in the scene preset
             foreach (var go in _scenePreset.Objects)
                 Instantiate(go);
+            
+            // Init GameLoop
+            _gameLoop.InitializeGameLoop();
 
             // Initialize managers
             // Note : It's important to call the ReferenceManager as late as possible, because it scans the scene upon being created (when first called).

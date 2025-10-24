@@ -23,18 +23,14 @@ namespace GameSystem
 
         #region Methods
         
-        void Awake()
-        {
-            Register();
-        }
-        
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
         }
 
-        private void Start()
+        public void InitializeGameLoop()
         {
+            Register();
             StartRunning();
         }
 
