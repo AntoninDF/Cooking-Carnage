@@ -49,7 +49,7 @@ namespace GameSystem
             _elementDict = new();
             _managers = new();
             ScanHierarchy();
-            DebugTrackedObjectsCount();
+            //DebugTrackedObjectsCount();
         }
 
         public void SetManager<T>(T manager) where T : IManager

@@ -57,7 +57,7 @@ namespace Cooking
                 StopCooking();
                 return;
             }
-            if (_door.IsOpen || _slot.IsEmpty)
+            if (_door.IsOpen || _slot.IsFree)
             {
                 OnFailedStartAttempt?.Invoke();
                 return;
@@ -70,7 +70,7 @@ namespace Cooking
         {
             if (!_isCooking) return;
 
-            if (_door.IsOpen || _slot.IsEmpty)
+            if (_door.IsOpen || _slot.IsFree)
             {
                 StopCooking();
                 return;

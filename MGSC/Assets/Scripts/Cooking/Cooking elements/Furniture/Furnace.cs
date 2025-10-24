@@ -78,7 +78,7 @@ namespace Cooking
             foreach (var furnaceSlot in Slots)
             {
                 if (furnaceSlot == null) continue;
-                if (furnaceSlot.IsEmpty) continue;
+                if (furnaceSlot.IsFree) continue;
 
                 MultiSlotContainer tray = null;
                 if (!furnaceSlot.HeldItem.transform.gameObject.HasComponent<MultiSlotContainer>(ref tray)) continue;
@@ -86,7 +86,7 @@ namespace Cooking
                 foreach (var traySlot in tray.Slots)
                 {
                     if (traySlot == null) continue;
-                    if (traySlot.IsEmpty) continue;
+                    if (traySlot.IsFree) continue;
                     if (traySlot.HeldItem is not ICookable) continue; // What happens when a non-cookable object goes into the oven ?
                     ICookable cookItem = traySlot.HeldItem as ICookable;
                     cookItem.Cook(Time.deltaTime * _strength);

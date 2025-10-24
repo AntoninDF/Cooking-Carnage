@@ -8,6 +8,7 @@ namespace Cooking
     /// <summary>
     /// The slot container can receive up to one IGrabbable object
     /// </summary>
+    [RequireComponent(typeof(Collider))]
     public class SlotContainer : MonoBehaviour, ISoloContainer, IGrabbable, IWatchable
     {
         #region Properties
@@ -18,7 +19,8 @@ namespace Cooking
         public UnityEvent<IGrabbable> OnGrab => _onGrab;
         public UnityEvent<IGrabbable> OnDrop => _onDrop;
         public PlayerInterface Player { get; set; }
-        public bool IsEmpty => _heldItem == null;
+        public bool IsFree => _heldItem == null && !_locked;
+        public bool IsLocked { get => _locked; set => _locked = value; }
 
         public IContainer Container { get; set; }
         public UnityEvent OnGrabbed { get; set; }
@@ -44,6 +46,7 @@ namespace Cooking
         private Collider _collider;
         private IGrabbable _heldItem;
         private ContainerFilter _filter;
+        private bool _locked;
         #endregion
 
         #region Methods
@@ -80,6 +83,7 @@ namespace Cooking
         public bool CanGrab(IGrabbable item)
         {
             if (_heldItem != null) return false;
+            if (_locked) return false;
 
             if (_filter == null)
                 _filter = this.gameObject.GetComponent<ContainerFilter>();
@@ -107,7 +111,7 @@ namespace Cooking
             if (_collider == null) return;
             if (Player == null) return;
 
-            SetActive(Player.HeldItem != null);
+            SetActive(Player.HeldItem != null && !_locked);
         }
 
         public void SetAnimationMode(bool animate = true)
@@ -124,6 +128,8 @@ namespace Cooking
 
         public void SetActive(bool active)
         {
+            if (_collider == null)
+                _collider = GetComponent<Collider>();
             _collider.enabled = active;
         }
     }

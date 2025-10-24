@@ -19,6 +19,7 @@ public class ContainerFilterEditor : Editor
         if (filter.item)
         {
             filter.ingredient = GUILayout.Toggle(filter.ingredient, "Ingredient");
+            filter.baseIngredient = GUILayout.Toggle(filter.baseIngredient, "Base ingredient");
             filter.plate = GUILayout.Toggle(filter.plate, "Plate");
             filter.meal = GUILayout.Toggle(filter.meal, "Meal");
 

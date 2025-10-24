@@ -17,6 +17,7 @@ namespace Cooking
         public UnityEvent<IGrabbable> OnDrop => _onDrop;
         public PlayerInterface Player { get; set; }
         public List<SlotContainer> Slots => _slots;
+        public bool IsLocked => false;
 
         #endregion
 
@@ -96,9 +97,10 @@ namespace Cooking
 
         public void SetActive(bool active)
         {
+            Debug.Log("Set active " + active);
             foreach(var slot in _slots)
             {
-                slot.SetActive(active);
+                slot.IsLocked = !active;
             }
         }
         #endregion
