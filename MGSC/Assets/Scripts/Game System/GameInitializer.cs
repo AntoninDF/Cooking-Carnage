@@ -32,6 +32,8 @@ namespace GameSystem
         private OrderManager _orderManager;
         private TimerManager _timerManager;
         private AdaptiveClientSpawner _adaptiveClientSpawner;
+        private MoneyManager _moneyManager;
+        private DataManager _dataManager;
         #endregion
 
         #region Methods
@@ -71,8 +73,10 @@ namespace GameSystem
              _orderManager = new OrderManager();
              _timerManager = new TimerManager();
              _adaptiveClientSpawner = new AdaptiveClientSpawner();
+            _moneyManager = new MoneyManager();
+            _dataManager = new DataManager();
             
-             _adaptiveClientSpawner.LaunchDelay();
+             _adaptiveClientSpawner.LaunchDelay(); // Might be moved to the adaptive client spawner's constructor ?
              
             _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
             ResetPlayer();
