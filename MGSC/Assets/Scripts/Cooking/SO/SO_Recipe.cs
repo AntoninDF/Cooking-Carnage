@@ -21,6 +21,10 @@ namespace Cooking
 
         [Tooltip("The item prefab should contain the graphics and a meal component")]
         public GameObject mealPrefab;
+        [Tooltip("How long does it take to go from raw to cooked ?")]
+        public float timeToCook = 10f;
+        [Tooltip("How long does it take to go from cooked to overcooked ?")]
+        public float timeToOvercook = 12f;
         [Tooltip("The list of ingredients that are needed to complete the recipe")]
         public List<SO_Ingredient> itemsNeeded;
         [Tooltip("Do the ingredients need to be ordered to complete the recipe ?")]

@@ -20,6 +20,12 @@ namespace Cooking
 
         #region Methods
 
+        protected override void Start()
+        {
+            base.Start();
+            _tooltipComponent.SetText(Recipe.Name);
+        }
+
         #endregion
     }
 

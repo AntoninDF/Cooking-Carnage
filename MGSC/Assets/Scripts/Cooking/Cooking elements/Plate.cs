@@ -16,9 +16,10 @@ namespace Cooking
         public float TargetCookDuration {get => _targetCookDuration; set => _targetCookDuration = value; }
         public float CookDuration { get; set; }
 
-        public float CookPercentage => CookDuration / (TargetCookDuration > 0 ? TargetCookDuration : 1.0f);
+        public float CookPercentage => CookDuration / (TargetCookDuration > 0 ? TargetCookDuration : 1.0f); // Between 0 and 1
 
         public UnityEvent<ICookable> OnCook => _onCook;
+        public ECookStatus CookStatus => ECookStatus.Raw;
 
         #endregion
 
@@ -30,10 +31,10 @@ namespace Cooking
         [SerializeField] private MultiSlotContainer _ingredientSlots;
         [Tooltip("The recipe book should contain every possible recipe for this object.")]
         [SerializeField] private SO_RecipeBook _recipeBook;
-        [Space]
-        [Header("Plate parameters")]
-        [Tooltip("How much time it will take to be 100% cooked.")]
-        [SerializeField] private float _targetCookDuration = 10.0f;
+        //[Space]
+        //[Header("Plate parameters")]
+        //[Tooltip("How much time it will take to be 100% cooked.")]
+        private float _targetCookDuration = 0.0f;
         [Space]
         [Header("Plate events")]
         [Tooltip("Invoked repeatedly when the plate is cooking")]
@@ -67,21 +68,22 @@ namespace Cooking
 
         public void Cook(float dT) 
         {
-            Debug.Log("Cooking... (" + Mathf.Round(CookDuration*100)/100 + "s)");
+            SO_Recipe recipe = GetMatchingRecipe();
+            _targetCookDuration = recipe.timeToCook;
             CookDuration += dT; 
             OnCook?.Invoke(this);
+            UpdateTooltip();
 
-            if (CookPercentage > 1)
+            if (CookPercentage >= 1)
             {
-                SO_Recipe recipe = default(SO_Recipe);
-                if (IsValidRecipe(ref recipe))
-                {
-                    Debug.Log("Recipe is valid");
-                    TransformToMeal(recipe);
-                }
+                TransformToMeal(recipe);
             }
         }
-
+        public void StopCooking()
+        {
+            CookDuration = 0f;
+            UpdateTooltip();
+        }
         /// <summary>
         /// Checks if the current ingredient list can make a recipe. If so, it passes said recipe as ref
         /// </summary>
@@ -89,18 +91,22 @@ namespace Cooking
         /// <returns></returns>
         private bool IsValidRecipe(ref SO_Recipe recipe)
         {
-            Debug.Log("Validating meal recipe");
+            recipe = GetMatchingRecipe();
+            return recipe != _recipeBook.DefaultRecipe;
+        }
+
+        private SO_Recipe GetMatchingRecipe()
+        {
             var ingredients = _ingredientSlots.HeldItems.Select((item) => ((Ingredient)item).Model);
             foreach (var r in _recipeBook.Recipes)
             {
                 if (SO_Recipe.Compare(ingredients, r))
                 {
-                    recipe = r;
-                    return true;
+                    return r;
                 }
             }
 
-            return false;
+            return _recipeBook.DefaultRecipe;
         }
 
         private void TransformToMeal(SO_Recipe recipe)
@@ -114,6 +120,23 @@ namespace Cooking
             Container.Drop(this);
             Container.Grab(meal);
             Destroy(this.gameObject);
+        }
+
+        private void UpdateTooltip()
+        {
+            string text;
+            if (CookDuration == 0)
+            {
+                text = "Plate";
+            }
+            else
+            {
+                text = "Cooking (" + Mathf.RoundToInt(CookPercentage*100) +"%)";
+            }
+            if (_tooltipComponent != null)
+            {
+                _tooltipComponent.SetText(text);
+            }
         }
 
         #endregion

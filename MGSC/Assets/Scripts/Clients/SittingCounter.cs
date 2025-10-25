@@ -124,8 +124,6 @@ namespace Clients
             {
                 if (!slot.IsFree) continue;
                 slot.Grab(item);
-                Debug.Log("Item "+item.name+" placed on slot "+slot.name);
-                Debug.Log(slot.name+"'s contained item is "+slot.HeldItem.transform.name);
                 item.transform.position = slot.transform.position;
                 couldBePlaced = true;
                 break;

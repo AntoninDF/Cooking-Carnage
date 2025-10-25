@@ -78,8 +78,7 @@ namespace Clients
         {
             if (_recipeBook == null)
                 Debug.LogError("[OrderingCounter] (" + name + ") : Please reference a recipe book in the inspector");
-            float r = Random.Range(0,1);
-            int index = Mathf.FloorToInt((_recipeBook.Recipes.Count - 1) * r);
+            int index = Random.Range(0, _recipeBook.Recipes.Count);
             return _recipeBook.Recipes[index];
         }
 

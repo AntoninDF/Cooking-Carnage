@@ -149,6 +149,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: P_Meal
       objectReference: {fileID: 0}
+    - target: {fileID: 8324880841174000268, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
+      propertyPath: m_text
+      value: Meal
+      objectReference: {fileID: 0}
     - target: {fileID: 8446389273013402685, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -197,6 +201,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.Meal
   _tooltip: {fileID: 8506661882781126868}
   _grabAnimationDuration: 0.2
+  _onGrabbed:
+    m_PersistentCalls:
+      m_Calls: []
   _recipe: {fileID: 11400000, guid: 3b043d5ba27faa14f8bb9a6cf6ed3c49, type: 2}
 --- !u!1 &8506661882781126868 stripped
 GameObject:

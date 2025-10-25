@@ -47,7 +47,7 @@ namespace Cooking
 
         private void Update()
         {
-            Cook();
+            TryCook();
         }
 
         public void ToggleCooking()
@@ -66,7 +66,7 @@ namespace Cooking
             OnStartCooking?.Invoke();
         }
 
-        private void Cook()
+        private void TryCook()
         {
             if (!_isCooking) return;
 
@@ -75,6 +75,11 @@ namespace Cooking
                 StopCooking();
                 return;
             }
+            Cook();
+        }
+
+        private void Cook()
+        {
             ICookable cookItem = _slot.HeldItem as ICookable;
             if (cookItem == null) return;
             cookItem.Cook(Time.deltaTime * _strength);
@@ -83,6 +88,9 @@ namespace Cooking
         private void StopCooking()
         {
             _isCooking = false;
+            ICookable cookItem = _slot.HeldItem as ICookable;
+            if (cookItem == null) return;
+            cookItem.StopCooking();
             OnStopCooking?.Invoke();
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Orders;
 using Clients;
+using System;
 
 namespace GameSystem
 {
@@ -11,7 +12,7 @@ namespace GameSystem
         #region Properties
         public List<Order> Orders => _activeOrders;
         public List<Order> PastOrders => _pastOrders;
-
+        public Action<Order> OnNewOrder;
 
         #endregion
 
@@ -30,8 +31,10 @@ namespace GameSystem
 
         public Order NewOrder(Client client, SO_Recipe recipe)
         {
-            Order order = new Order(client, recipe);
+            int id = _pastOrders.Count + _activeOrders.Count + 1;
+            Order order = new Order(client, recipe, id);
             _activeOrders.Add(order);
+            OnNewOrder?.Invoke(order);
             return order;
         }
 
@@ -39,7 +42,7 @@ namespace GameSystem
         {
             StashOrder(order);
             OrderRating rating = OrderEvaluator.Evaluate(order, info);
-            order.Resolve();
+            order.Resolve(info, rating);
             Debug.Log("[OrderManager] ResolveOrder : The order with the recipe '" + order.Recipe.Name + "' has been completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 + "s for client " + order.Owner.name
                 + ". Expected meal : '" + order.Recipe.Name + "'. Received meal : '" + info.Meal.Recipe.Name + "'. Money gained : " + rating.MoneyGained + ".");
             // Tell the money manager that money's been made

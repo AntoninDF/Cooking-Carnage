@@ -97,7 +97,6 @@ namespace Cooking
 
         public void SetActive(bool active)
         {
-            Debug.Log("Set active " + active);
             foreach(var slot in _slots)
             {
                 slot.IsLocked = !active;
