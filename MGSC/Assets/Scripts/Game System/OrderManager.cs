@@ -13,6 +13,7 @@ namespace GameSystem
         public List<Order> Orders => _activeOrders;
         public List<Order> PastOrders => _pastOrders;
         public Action<Order> OnNewOrder;
+        public Action<Order> OnOrderResolved;
 
         #endregion
 
@@ -43,6 +44,7 @@ namespace GameSystem
             StashOrder(order);
             OrderRating rating = OrderEvaluator.Evaluate(order, info);
             order.Resolve(info, rating);
+            OnOrderResolved?.Invoke(order);
             Debug.Log("[OrderManager] ResolveOrder : The order with the recipe '" + order.Recipe.Name + "' has been completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 + "s for client " + order.Owner.name
                 + ". Expected meal : '" + order.Recipe.Name + "'. Received meal : '" + info.Meal.Recipe.Name + "'. Money gained : " + rating.MoneyGained + ".");
             // Tell the money manager that money's been made

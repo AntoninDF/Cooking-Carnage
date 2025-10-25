@@ -47,12 +47,13 @@ namespace GameSystem
         private void SetSubscriptionToServings(bool subscribe)
         {
             OrderManager orderManager = ReferenceManager.Instance.GetManager<OrderManager>();
-            if (subscribe) orderManager.OnNewOrder += OnOrderResolved;
-            else orderManager.OnNewOrder -= OnOrderResolved;
+            if (subscribe) orderManager.OnOrderResolved += OnOrderResolved;
+            else orderManager.OnOrderResolved -= OnOrderResolved;
         }
 
         private void OnOrderResolved(Order order)
         {
+            EnforceReferences();
             AddMoney(MoneyEvaluator.Evaluate(order));
         }
 

@@ -73,8 +73,8 @@ namespace GameSystem
              _orderManager = new OrderManager();
              _timerManager = new TimerManager();
              _adaptiveClientSpawner = new AdaptiveClientSpawner();
-            _moneyManager = new MoneyManager();
             _dataManager = new DataManager();
+            _moneyManager = new MoneyManager();
             
              _adaptiveClientSpawner.LaunchDelay(); // Might be moved to the adaptive client spawner's constructor ?
              
