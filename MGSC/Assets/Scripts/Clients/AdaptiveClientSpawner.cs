@@ -1,13 +1,14 @@
 
+using Clients;
+using Cooking;
+using GameSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Clients;
-using Cooking;
-using GameSystem;
 using UnityEngine;
 using UnityEngine.Splines;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 namespace GameSystem
@@ -44,13 +45,25 @@ namespace GameSystem
 
         public AdaptiveClientSpawner() //WIP should set the properties base values according to a Settings Data passed by GameInitializer
         {
+            Register();
             _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
-            _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
-            
+            _timerManager.StartTimer("AdaptiveClientSpawner Init", 0.01f, () => Init(), false);
+
+            /*
             models = ReferenceManager.Instance.GetElementOfType<SimpleClientSpawner>().models;
             recipes = ReferenceManager.Instance.GetElementOfType<SimpleClientSpawner>().recipes;
             spline = ReferenceManager.Instance.GetElementOfType<SimpleClientSpawner>().spline;
-            
+            */
+
+        }
+
+        public void Init()
+        {
+            _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
+            models = ReferenceManager.AssetReferences.clientList;
+            recipes = ReferenceManager.AssetReferences.recipeBook;
+            spline = ReferenceManager.Instance.GetManager<PathManager>().SplineComponent;
+
             EnqueueClient(NewClient());
         }
         
@@ -100,7 +113,7 @@ namespace GameSystem
                         clientSO = nextClients.Dequeue();
                 }
                 
-                Client client = Client.New(clientSO, recipes.Recipes[Random.Range(0,recipes.Recipes.Count)], ReferenceManager.Instance.GetElementOfType<SimpleClientSpawner>().transform.position);
+                Client client = Client.New(clientSO, recipes.Recipes[Random.Range(0,recipes.Recipes.Count)], Vector3.zero);
 
                 client.SetSplinePath(spline);
                 

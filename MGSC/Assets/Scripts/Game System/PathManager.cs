@@ -7,6 +7,7 @@ namespace GameSystem
     public class PathManager : MonoBehaviour, IManager
     {
         public Spline MainSpline => _splineComponent.Spline;
+        public SplineContainer SplineComponent => _splineComponent;
         
         [SerializeField] private SplineContainer _splineComponent;
 
