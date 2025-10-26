@@ -119,7 +119,7 @@ namespace GameSystem
 
         SO_Client NewClient() //WIP should check clients history
         {
-            int indexType = Random.Range(1, Enum.GetValues(typeof(EClientType)).Length-1); // not 0 cause => None
+            int indexType = Random.Range(1, Enum.GetValues(typeof(EClientType)).Length); // not 0 cause => None
             
             var filtered = models.Where(m => m.clientType == (EClientType)indexType).ToList();
 
