@@ -49,9 +49,18 @@ namespace GameSystem
             {
                 updatable.Update(deltaTime);
             }
-            
         }
-        
+
+        private void FixedUpdate()
+        {
+            if (!IsRunning) return;
+            
+            foreach (var updatable in _updatables)
+            {
+                updatable.FixedUpdate();
+            }
+        }
+
         /// <summary>
         /// Starts the game loop
         /// </summary>
