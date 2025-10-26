@@ -1,4 +1,5 @@
-﻿using GameSystem;
+﻿using Controller;
+using GameSystem;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -7,6 +8,8 @@ namespace UI
 {
     public class UIManager : MonoBehaviour, IManager
     {
+        public bool IsEnabled { get; private set; }
+
         [SerializeField] private UnityEvent _onStart;
         [SerializeField] private UnityEvent _onEnable;
         [SerializeField] private UnityEvent _onDisable;
@@ -15,12 +18,14 @@ namespace UI
         private InputActionAsset _inputActionAsset;
         private InputActionMap _playerInputs;
         private InputActionMap _UIInputs;
+        private PlayerInterface _player;
 
         void Start()
         {
             Register();
             Init();
             EnableUI();
+            SubscribeToEvents();
             _onStart?.Invoke();
         }
 
@@ -30,6 +35,7 @@ namespace UI
             _inputActionAsset = ReferenceManager.AssetReferences.inputActionsAsset;
             _playerInputs = _inputActionAsset.FindActionMap("Player");
             _UIInputs = _inputActionAsset.FindActionMap("UI");
+            _player = ReferenceManager.Instance.GetElementOfType<PlayerInterface>();
 
             if (_gameLoop == null)
                 Debug.LogError("An error occured during the initialization of the UIManager : No gameloop found");
@@ -39,6 +45,14 @@ namespace UI
                 Debug.LogError("An error occured during the initialization of the UIManager : No player action map found");
             if (_UIInputs == null)
                 Debug.LogError("An error occured during the initialization of the UIManager : No UI action map found");
+            if (_player == null)
+                Debug.LogError("An error occured during the initialization of the UIManager : No player found");
+        }
+
+        public void ToggleUI()
+        {
+            if (IsEnabled) DisableUI();
+            else EnableUI();
         }
 
         public void EnableUI()
@@ -47,6 +61,7 @@ namespace UI
             _playerInputs.Disable();
             _UIInputs.Enable();
             FreeCursor();
+            IsEnabled = true;
             _onEnable?.Invoke();
         }
 
@@ -56,6 +71,7 @@ namespace UI
             _playerInputs.Enable();
             _UIInputs.Disable();
             LockCursor();
+            IsEnabled = false;
             _onDisable?.Invoke();
         }
 
@@ -69,6 +85,11 @@ namespace UI
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+        }
+
+        private void SubscribeToEvents()
+        {
+            _player.InputHandler.OnPause += (ctx) => ToggleUI();
         }
 
         public void Register()

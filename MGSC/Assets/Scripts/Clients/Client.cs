@@ -44,6 +44,8 @@ namespace Clients
         private ClientMovement _movement;
         private bool _debugSplinePosition;
         private Order _order;
+
+        private GameLoop _gameLoop;
         #endregion
 
         #region Methods
@@ -60,10 +62,16 @@ namespace Clients
                 Debug.LogError("[Client] Init : No spline component was referenced. Consider using SetSplinePath.");
 
             _movement.SetSplinePos(0.0f);
+
+            _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
+            if (_gameLoop == null)
+                Debug.LogError("[Client] Init : No gameloop found.");
+
         }
 
         private void Update()
         {
+            if (!_gameLoop.IsRunning) return;
             if (_state == EClientState.Moving || _state == EClientState.None)
             {
                 if (_state == EClientState.Moving) _movement.MoveAlongSpline();

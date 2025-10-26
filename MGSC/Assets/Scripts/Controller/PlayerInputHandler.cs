@@ -23,16 +23,19 @@ namespace Controller
         private string _rotation = "Rotation";
         private string _interact = "Interact";
         private string _grab = "Grab";
+        private string _pause = "Pause";
         
         private InputAction _movementAction;
         private InputAction _rotationAction;
         private InputAction _interactAction;
         private InputAction _grabAction;
+        private InputAction _pauseAction;
         
         public Vector2 MovementInput { get; private set; }
         public Vector2 RotationInput { get; private set; }
         public Action<InputAction.CallbackContext> OnInteract { get; set; }
         public Action<InputAction.CallbackContext> OnGrab { get; set; }
+        public Action<InputAction.CallbackContext> OnPause { get; set; }
 
         public void SetInputReferences()
         {
@@ -44,6 +47,7 @@ namespace Controller
             _rotationAction = mapReference.FindAction(_rotation);
             _interactAction = mapReference.FindAction(_interact);
             _grabAction = mapReference.FindAction(_grab);
+            _pauseAction = mapReference.FindAction(_pause);
 
             SubscribeActionValuesToInputEvents();
         }
@@ -59,6 +63,8 @@ namespace Controller
             _interactAction.performed += inputInfo => OnInteract?.Invoke(inputInfo);
 
             _grabAction.performed += inputInfo => OnGrab?.Invoke(inputInfo);
+
+            _pauseAction.performed += inputInfo => OnPause?.Invoke(inputInfo);
         }
 
         private void OnEnable()

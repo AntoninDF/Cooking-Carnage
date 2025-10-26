@@ -5,6 +5,7 @@ using UnityEngine;
 using Cooking;
 using Clients;
 using UnityEngine.Rendering;
+using Controller;
 
 namespace GameSystem
 {
@@ -35,6 +36,7 @@ namespace GameSystem
             typeof(Meal),
             typeof(SimpleClientSpawner),
             typeof(PlayerStart),
+            typeof(PlayerInterface),
 
         };
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;
