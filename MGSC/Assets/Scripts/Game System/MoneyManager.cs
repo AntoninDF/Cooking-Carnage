@@ -1,8 +1,8 @@
 
-
-using Clients;
 using Orders;
 using System;
+using System.Diagnostics;
+using UnityEngine;
 
 namespace GameSystem
 {
@@ -54,7 +54,7 @@ namespace GameSystem
         private void OnOrderResolved(Order order)
         {
             EnforceReferences();
-            AddMoney(MoneyEvaluator.Evaluate(order));
+            AddMoney(order.OrderRating.MoneyGained);
         }
 
         private void AddMoney(float amount)

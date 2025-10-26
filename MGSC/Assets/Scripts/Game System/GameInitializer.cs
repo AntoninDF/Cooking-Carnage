@@ -22,6 +22,9 @@ namespace GameSystem
         [Tooltip("Pass in the scriptable object holding references to every element to spawn on game start")]
         [SerializeField] private SO_ScenePreset _scenePreset;
 
+        [Tooltip("Pass in the scriptable object holding references to every important data asset for the game")]
+        [SerializeField] private SO_AssetReferences _assetReferences;
+
         // Transform at which the player will be spawned
         private Transform _playerStart;
 
@@ -29,11 +32,7 @@ namespace GameSystem
         private PlayerInterface _player;
         private bool _destroyAfterInitialization = true;
         
-        private OrderManager _orderManager;
-        private TimerManager _timerManager;
         private AdaptiveClientSpawner _adaptiveClientSpawner;
-        private MoneyManager _moneyManager;
-        private DataManager _dataManager;
         #endregion
 
         #region Methods
@@ -57,6 +56,9 @@ namespace GameSystem
             if (_scenePreset == null)
                 throw new MissingReferenceException("Please assign a scene preset scriptable object in the game initializer's inspector, otherwise it cannot initialize anything :)");
             
+            if (_assetReferences == null)
+                throw new MissingReferenceException("Please assign an asset reference scriptable object in the game initializer's inspector, otherwise many references will be missing :)");
+            
             // Create a player if none exist yet
             if (_player == null) SpawnPlayer();
 
@@ -70,13 +72,14 @@ namespace GameSystem
 
             // Initialize managers
             // Note : It's important to call the ReferenceManager as late as possible, because it scans the scene upon being created (when first called).
-             _orderManager = new OrderManager();
-             _timerManager = new TimerManager();
+             new OrderManager();
+             new TimerManager();
              _adaptiveClientSpawner = new AdaptiveClientSpawner();
-            _dataManager = new DataManager();
-            _moneyManager = new MoneyManager();
+             new DataManager();
+             new MoneyManager();
             
              _adaptiveClientSpawner.LaunchDelay(); // Might be moved to the adaptive client spawner's constructor ?
+            ReferenceManager.AssetReferences = _assetReferences;
              
             _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
             ResetPlayer();
