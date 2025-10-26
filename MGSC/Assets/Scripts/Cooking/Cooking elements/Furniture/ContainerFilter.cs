@@ -52,6 +52,8 @@ namespace Cooking
                     return item is ICookable;
                 case EItemType.Trashable:
                     return item is ITrashable;
+                case EItemType.Oven:
+                    return item is Oven;
                 
                 
             }
@@ -68,7 +70,7 @@ namespace Cooking
             MustNotBe
         }
 
-        // When an option is added to this enum, also add the corresponding logic to IsValid()
+        // When an option is added to this enum, also add the corresponding logic to IsValid(MonoBehaviour, EItemType)
         // Do not change the IDs !! It will break every existing filter
         public enum EItemType
         {
@@ -80,7 +82,9 @@ namespace Cooking
             OrderTicket=5,
 
             Cookable=6,
-            Trashable=7
+            Trashable=7,
+
+            Oven=8,
         }
 
         [System.Serializable]

@@ -1,10 +1,14 @@
-﻿using Unity.VisualScripting.Antlr3.Runtime.Misc;
+﻿using Controller;
+using System.Net;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Cooking
 {
-    public class Oven : MonoBehaviour
+    [RequireComponent(typeof(Collider))]
+    public class Oven : MonoBehaviour, IGrabbable
     {
         #region Properties
         public UnityEvent OnStartCooking => _onStartCooking;
@@ -14,6 +18,14 @@ namespace Cooking
         public UnityEvent OnItemOvercooked => _onItemOvercooked;
         public bool IsCooking => _isCooking;
         public float Strength => _strength;
+
+        public IContainer Container { get; set; }
+
+        public UnityEvent OnGrabbed => _onGrabbed;
+
+        public Collider Collider => _collider;
+
+        public PlayerInterface Player { get; set; }
 
         #endregion
 
@@ -42,12 +54,16 @@ namespace Cooking
 
         private bool _isCooking = false;
         private ECookStatus _currentStatus = ECookStatus.Raw;
+
+        private UnityEvent _onGrabbed;
+        private Collider _collider;
         #endregion
 
         #region Methods
 
         private void Start()
         {
+            _collider = GetComponent<Collider>();
             if (_door == null)
                 throw new MissingReferenceException("Please assign a reference to the furnace's door in the inspector :)");
         }
@@ -118,6 +134,27 @@ namespace Cooking
             cookItem.StopCooking();
             OnStopCooking?.Invoke();
         }
+
+        public void GetGrabbed(IContainer newContainer)
+        {
+            if (newContainer is not SlotContainer) return;
+            Container?.Drop(this);
+            Container = newContainer;
+            if (newContainer is ISoloContainer)
+            {
+                ISoloContainer soloContainer = (ISoloContainer)newContainer;
+                transform.SetParent(soloContainer.ItemSlot);
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.identity;
+            }
+            else
+            {
+                transform.parent = newContainer.transform;
+            }
+            OnGrabbed?.Invoke();
+        }
+
+        public void SetAnimationMode(bool animate = true) { }
 
         #endregion
     }

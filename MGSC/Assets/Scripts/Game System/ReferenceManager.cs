@@ -37,6 +37,7 @@ namespace GameSystem
             typeof(SimpleClientSpawner),
             typeof(PlayerStart),
             typeof(PlayerInterface),
+            typeof(OvenSetup),
 
         };
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;
