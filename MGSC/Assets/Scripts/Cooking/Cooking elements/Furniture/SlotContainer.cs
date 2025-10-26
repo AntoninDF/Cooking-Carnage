@@ -54,6 +54,7 @@ namespace Cooking
         void Start()
         {
             _collider = GetComponent<Collider>();
+            _filter = gameObject.GetComponent<ContainerFilter>();
         }
 
         private void Update()

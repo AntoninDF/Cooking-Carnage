@@ -205,6 +205,35 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _recipe: {fileID: 11400000, guid: 3b043d5ba27faa14f8bb9a6cf6ed3c49, type: 2}
+  _onCook:
+    m_PersistentCalls:
+      m_Calls: []
+  _onOvercooked:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3760342279962552020}
+        m_TargetAssemblyTypeName: UI.Tooltip, Assembly-CSharp
+        m_MethodName: SetText
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Meal (overcooked)
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &3760342279962552020 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8635841490322215612, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
+  m_PrefabInstance: {fileID: 4897602428472439912}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8506661882781126868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8282a0477ed6190469e94da767e2f0f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Tooltip
 --- !u!1 &8506661882781126868 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3889558238914864316, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}

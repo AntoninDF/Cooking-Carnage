@@ -15,18 +15,21 @@ namespace Cooking
 
         public float CookPercentage => CookDuration / (TargetCookDuration > 0 ? TargetCookDuration : 1.0f); // Between 0 and 1
 
-        public ECookStatus CookStatus { get; set; } = ECookStatus.Cooked;
+        public ECookStatus CookStatus { get; set; }  = ECookStatus.Cooked;
 
         public UnityEvent<ICookable> OnCook => _onCook;
+        public UnityEvent OnOvercooked => _onOvercooked;
         #endregion
 
         #region Fields
         [Header("Meal references")]
         [Tooltip("Set what recipe this meal represents")]
         [SerializeField] private SO_Recipe _recipe;
-        [Header("Plate events")]
-        [Tooltip("Invoked repeatedly when the plate is cooking")]
+        [Header("Meal events")]
+        [Tooltip("Invoked repeatedly when the meal is cooking")]
         [SerializeField] private UnityEvent<ICookable> _onCook;
+        [Tooltip("Invoked when the meal gets overcooked")]
+        [SerializeField] private UnityEvent _onOvercooked;
 
         private float _targetCookDuration = 0.0f;
         #endregion
@@ -46,26 +49,28 @@ namespace Cooking
             OnCook?.Invoke(this);
             UpdateTooltip();
 
-            if (CookPercentage >= 1)
+            if (CookPercentage >= 1 && CookStatus != ECookStatus.Overcooked)
             {
                 TransformToBurntMeal();
             }
         }
         private void TransformToBurntMeal()
         {
-            name = name + "(burnt)";
             CookStatus = ECookStatus.Overcooked;
+            _onOvercooked?.Invoke();
         }
         public void StopCooking()
         {
-            throw new System.NotImplementedException();
+            string text = _recipe.Name;
+            if (CookStatus == ECookStatus.Overcooked) text += " (overcooked)";
+            _tooltipComponent.SetText(text);
         }
         private void UpdateTooltip()
         {
             string text;
             if (CookDuration == 0)
             {
-                text = "Plate";
+                text = _recipe.Name;
             }
             else
             {

@@ -64,13 +64,16 @@ namespace Clients
 
         private void Update()
         {
-            if (_state == EClientState.Moving)
+            if (_state == EClientState.Moving || _state == EClientState.None)
             {
-                _movement.MoveAlongSpline();
+                if (_state == EClientState.Moving) _movement.MoveAlongSpline();
                 if (!_hasOrdered)
                 { 
-                    if (CheckForCounter(out OrderingCounter counter))
-                        UseCounter(counter);
+                    if (CheckForCounter(out OrderingCounter counter, false))
+                    {
+                        if (!counter.IsFree) _state = EClientState.None;
+                        else UseCounter(counter);
+                    }
                 }
                 else if (CheckForCounter(out SittingCounter counter))
                 {
@@ -98,13 +101,15 @@ namespace Clients
         /// </summary>
         /// <typeparam name="T">The specific counter type to look for</typeparam>
         /// <returns>The first free counter found</returns>
-        private T CheckForCounter<T>() where T : Counter
+        private T CheckForCounter<T>(bool mustBeFree=true) where T : Counter
         {
             foreach (var counter in _counters)
             {
                 if (counter is not T) continue;
+                if (counter == null) continue;
                 if (Vector3.Distance(transform.position, counter.transform.position) < Mathf.Max(_reachDistance, counter.ReachDistance))
                 {
+                    if (!mustBeFree) return counter as T;
                     if (!counter.IsFree) continue;
                     return counter as T;
                 }
@@ -116,9 +121,9 @@ namespace Clients
         /// </summary>
         /// <typeparam name="T">The specific counter type to look for</typeparam>
         /// <returns>True if a counter is found, false otherwise</returns>
-        private bool CheckForCounter<T>(out T counter) where T : Counter
+        private bool CheckForCounter<T>(out T counter, bool mustBeFree = true) where T : Counter
         {
-            counter = CheckForCounter<T>();
+            counter = CheckForCounter<T>(mustBeFree);
             return counter != null;
         }
 
@@ -175,6 +180,7 @@ namespace Clients
             Sitting = 3,
             ReachingSpline = 4,
             AtCounter = 5,
+
         }
 
 

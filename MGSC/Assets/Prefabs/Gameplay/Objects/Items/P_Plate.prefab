@@ -278,13 +278,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557202aa2b7e51340b943eb639e2e5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerFilter
-  filterOperator: 1
-  item: 1
-  ingredient: 1
-  baseIngredient: 0
-  plate: 0
-  meal: 0
-  container: 0
+  _filters:
+  - Condition: 0
+    ItemType: 0
 --- !u!4 &5093425840896064849 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
@@ -435,13 +431,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557202aa2b7e51340b943eb639e2e5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerFilter
-  filterOperator: 1
-  item: 1
-  ingredient: 1
-  baseIngredient: 0
-  plate: 0
-  meal: 0
-  container: 0
+  _filters:
+  - Condition: 0
+    ItemType: 0
 --- !u!4 &5710712298739903893 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
@@ -642,7 +634,6 @@ MonoBehaviour:
   _baseIngredientSlot: {fileID: 2637016309878564467}
   _ingredientSlots: {fileID: 4334623239686519242}
   _recipeBook: {fileID: 11400000, guid: 367f956cce92a474abe807c44ec4f8ab, type: 2}
-  _targetCookDuration: 10
   _onCook:
     m_PersistentCalls:
       m_Calls: []
@@ -780,13 +771,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557202aa2b7e51340b943eb639e2e5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerFilter
-  filterOperator: 1
-  item: 1
-  ingredient: 1
-  baseIngredient: 1
-  plate: 0
-  meal: 0
-  container: 0
+  _filters:
+  - Condition: 0
+    ItemType: 1
 --- !u!65 &5658860339439240192
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -958,10 +945,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557202aa2b7e51340b943eb639e2e5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerFilter
-  filterOperator: 1
-  item: 1
-  ingredient: 1
-  baseIngredient: 0
-  plate: 0
-  meal: 0
-  container: 0
+  _filters:
+  - Condition: 0
+    ItemType: 0

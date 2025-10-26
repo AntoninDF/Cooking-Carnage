@@ -10,6 +10,8 @@ namespace Cooking
         public UnityEvent OnStartCooking => _onStartCooking;
         public UnityEvent OnStopCooking => _onStopCooking;
         public UnityEvent OnFailedStartAttempt => _onFailedStartAttempt;
+        public UnityEvent OnItemCooked => _onItemCooked;
+        public UnityEvent OnItemOvercooked => _onItemOvercooked;
         public bool IsCooking => _isCooking;
         public float Strength => _strength;
 
@@ -33,8 +35,13 @@ namespace Cooking
         [SerializeField] private UnityEvent _onStopCooking;
         [Tooltip("Invoked when the player tries to start the furnace, but it cannot be started (if the door is opened for example)")]
         [SerializeField] private UnityEvent _onFailedStartAttempt;
+        [Tooltip("Invoked when the item is cooked")]
+        [SerializeField] private UnityEvent _onItemCooked;
+        [Tooltip("Invoked when the item is overcooked")]
+        [SerializeField] private UnityEvent _onItemOvercooked;
 
         private bool _isCooking = false;
+        private ECookStatus _currentStatus = ECookStatus.Raw;
         #endregion
 
         #region Methods
@@ -82,6 +89,18 @@ namespace Cooking
             ICookable cookItem = _slot.HeldItem as ICookable;
             if (cookItem == null) return;
             cookItem.Cook(Time.deltaTime * _strength);
+            if (_currentStatus != cookItem.CookStatus)
+            {
+                _currentStatus = cookItem.CookStatus;
+                if (_currentStatus == ECookStatus.Cooked)
+                {
+                    _onItemCooked?.Invoke();
+                }
+                if (_currentStatus == ECookStatus.Overcooked)
+                {
+                    _onItemOvercooked?.Invoke();
+                }
+            }
         }
 
         public void StartCooking()
@@ -93,6 +112,7 @@ namespace Cooking
         public void StopCooking()
         {
             _isCooking = false;
+            _currentStatus = ECookStatus.Raw;
             ICookable cookItem = _slot.HeldItem as ICookable;
             if (cookItem == null) return;
             cookItem.StopCooking();

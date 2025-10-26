@@ -353,6 +353,7 @@ GameObject:
   - component: {fileID: 907773646007148477}
   - component: {fileID: 8944990482035548773}
   - component: {fileID: 8694085614272024491}
+  - component: {fileID: 5304546344795068638}
   m_Layer: 0
   m_Name: P_TrashCan
   m_TagString: Untagged
@@ -412,6 +413,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.TrashCan
   _tooltip: {fileID: 1886711821361914195}
+  _onInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  _onGrab:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &5304546344795068638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5531540517549779428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 557202aa2b7e51340b943eb639e2e5d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerFilter
+  _filters:
+  - Condition: 0
+    ItemType: 7
 --- !u!1 &5730867053718067289
 GameObject:
   m_ObjectHideFlags: 0

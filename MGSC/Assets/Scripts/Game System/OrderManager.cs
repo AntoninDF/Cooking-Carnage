@@ -45,8 +45,8 @@ namespace GameSystem
             OrderRating rating = OrderEvaluator.Evaluate(order, info);
             order.Resolve(info, rating);
             OnOrderResolved?.Invoke(order);
-            Debug.Log("[OrderManager] ResolveOrder : The order with the recipe '" + order.Recipe.Name + "' has been completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 + "s for client " + order.Owner.name
-                + ". Expected meal : '" + order.Recipe.Name + "'. Received meal : '" + info.Meal.Recipe.Name + "'. Money gained : " + rating.MoneyGained + ".");
+            Debug.Log("[OrderManager] ResolveOrder : Order " + (order.OrderRating.IsCorrectRecipe ? "successfully": "poorly") + " completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 + "s for client " + order.Owner.name
+                + ". Money gained : " + rating.MoneyGained + ". Expected '" + order.Recipe.Name + "', received '" + info.Meal.Recipe.Name + "'.");
             // Tell the money manager that money's been made
         }
 
