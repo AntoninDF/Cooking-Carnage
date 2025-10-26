@@ -86,8 +86,6 @@ namespace GameSystem
              _adaptiveClientSpawner = new AdaptiveClientSpawner();
              _dataManager = new DataManager();
              _moneyManager = new MoneyManager();
-            
-             _adaptiveClientSpawner.LaunchDelay(); // Might be moved to the adaptive client spawner's constructor ?
 
             _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
             ResetPlayer();

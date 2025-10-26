@@ -23,16 +23,27 @@ namespace GameSystem
 
         #region Methods
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public TimerManager()
         {
             Register();
         }
         
+        
+        /// <summary>
+        /// IManager Interface method to register itself to the ReferenceManager
+        /// </summary>
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
         }
         
+        
+        /// <summary>
+        /// Updates all active timers (provided by the UpdatableBase inheritance)
+        /// </summary>
         public override void Update(float deltaTime)
         {
             foreach (var timerKey in _timers)
@@ -41,20 +52,29 @@ namespace GameSystem
             }
         }
         
+        
+        /// <summary>
+        /// Starts a timer with the given name, duration, callback, and loop option
+        /// </summary>
         public Timer StartTimer(string name, float duration, Action onComplete, bool loop = false)
         {
+            // If the timer already exist, replaces it by the new one
             if (_timers.TryGetValue(name, out var existingTimer))
             {
                 existingTimer.Reset(name, duration, onComplete, loop);
                 existingTimer.Resume();
                 return existingTimer;
             }
-
+            
+            // Creates a new timer
             var t = new Timer(name, duration, onComplete, loop);
             _timers[name] = t;
             return t;
         }
         
+        /// <summary>
+        /// Pauses a timer
+        /// </summary>
         public void StopTimer(string name)
         {
             if (_timers.TryGetValue(name, out var t))
@@ -63,6 +83,9 @@ namespace GameSystem
             }
         }
         
+        /// <summary>
+        /// Resumes a paused timer
+        /// </summary>
         public void ResumeTimer(string name)
         {
             if (_timers.TryGetValue(name, out var t))
@@ -71,11 +94,17 @@ namespace GameSystem
             }
         }
         
+        /// <summary>
+        /// Checks if a timer is currently running
+        /// </summary>
         public bool IsTimerRunning(string name)
         {
             return _timers.TryGetValue(name, out var t) && !t.IsComplete && !t.IsPaused;
         }
         
+        /// <summary>
+        /// Removes a timer from the list (deletes it)
+        /// </summary>
         public void RemoveTimer(string name)
         {
             _timers.Remove(name);

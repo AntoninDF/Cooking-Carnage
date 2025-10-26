@@ -11,18 +11,21 @@ namespace GameSystem
     {
         #region Properties
         
-        private static readonly List<UpdatableBase> _updatables = new();
+        public bool IsRunning { get; private set; }
         
         #endregion
 
         #region Fields
 
-        public bool IsRunning { get; private set; }
+        private static readonly List<UpdatableBase> _updatables = new();
 
         #endregion
 
         #region Methods
         
+        /// <summary>
+        /// IManager Interface method to register itself to the ReferenceManager
+        /// </summary>
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
@@ -34,34 +37,50 @@ namespace GameSystem
             StartRunning();
         }
 
+        /// <summary>
+        /// Updates all the registered updatables if the GameLoop IsRunning
+        /// </summary>
         void Update()
         {
-            if (IsRunning)
+            if (!IsRunning) return;
+            
+            float deltaTime = Time.deltaTime;
+            foreach (var updatable in _updatables)
             {
-                float deltaTime = Time.deltaTime;
-                foreach (var manager in _updatables)
-                {
-                    manager.Update(deltaTime);
-                }
+                updatable.Update(deltaTime);
             }
+            
         }
         
+        /// <summary>
+        /// Starts the game loop
+        /// </summary>
         public void StartRunning()
         {
             IsRunning = true;
         }
 
+        
+        /// <summary>
+        /// Stops the game loop
+        /// </summary>
         public void StopRunning()
         {
             IsRunning = false;
         }
-
-        public void RegisterUpdatable(UpdatableBase manager)
+        
+        /// <summary>
+        /// Registers classes that implements UpdatableBase to be updated each frame
+        /// </summary>
+        public void RegisterUpdatable(UpdatableBase updatable)
         {
-            if (!_updatables.Contains(manager))
-                _updatables.Add(manager);
+            if (!_updatables.Contains(updatable))
+                _updatables.Add(updatable);
         }
 
+        /// <summary>
+        /// Unregisters a previously registered updatable
+        /// </summary>
         public void UnregisterUpdatable(UpdatableBase manager)
         {
             _updatables.Remove(manager);
