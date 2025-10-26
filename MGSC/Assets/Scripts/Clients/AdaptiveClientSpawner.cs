@@ -14,150 +14,168 @@ using Random = UnityEngine.Random;
 namespace GameSystem
 {
     /// <summary>
-    /// Used to make appear a specific new client at precise timing
+    /// Spawning Manager used to make appear a specific new client at precise timing
     /// </summary>
     public class AdaptiveClientSpawner : IManager
     {
         #region Properties
-
-        private float delayLength = 5;
-        private float randomDelayRange = 10;
-        private float retryDelay = 2;
-        private string timerName = "clientSpawn";
         
-        private List<SO_Client> models;
-        private SO_RecipeBook recipes;
-        private SplineContainer spline;
+        // Public Properties
+        public int NextClientCount => nextClients.Count;
+        public SO_Client GetNextClient() => nextClients.Count > 0 ? nextClients.Peek() : null;
         
-        private TimerManager _timerManager;
-        private GameLoop _gameLoop;
-        
-        Queue<SO_Client> nextClients = new();
+        // Private Properties
+        float GetRandomizedDelay => (delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
+        bool CanSpawnClient => OrderingCounterAvailable() && _gameLoop.IsRunning;
         
         #endregion
 
         #region Fields
         
+        // Setup Fields
+        private float delayLength = 5;
+        private float randomDelayRange = 10;
+        private float retryDelay = 2;
+        private string timerName = "clientSpawn";
+        private List<SO_Client> models;
+        private SO_RecipeBook recipes;
+        private SplineContainer spline;
+        
+        // Reference Fields
+        private TimerManager _timerManager;
+        private GameLoop _gameLoop;
+        
+        private Queue<SO_Client> nextClients = new();
         
         #endregion
 
         #region Methods
-
-        public AdaptiveClientSpawner() //WIP should set the properties base values according to a Settings Data passed by GameInitializer
+        
+        /// <summary>
+        /// Constructor of the script, waiting for the GameInitializer to be ready
+        /// </summary>
+        public AdaptiveClientSpawner()
         {
             Register();
             _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
             _timerManager.StartTimer("AdaptiveClientSpawner Init", 0.01f, () => Init(), false);
-
-            /*
-            models = ReferenceManager.Instance.GetElementOfType<SimpleClientSpawner>().models;
-            recipes = ReferenceManager.Instance.GetElementOfType<SimpleClientSpawner>().recipes;
-            spline = ReferenceManager.Instance.GetElementOfType<SimpleClientSpawner>().spline;
-            */
-
         }
-
-        public void Init()
+        
+        
+        /// <summary>
+        /// IManager Interface method to register itself to the ReferenceManager
+        /// </summary>
+        public void Register()
         {
+            ReferenceManager.Instance.SetManager(this);
+        }
+        
+        
+        /// <summary>
+        /// Setup the fields according to referenced data and then lauches the cycle
+        /// </summary>
+        void Init() 
+        {
+            // WIP : should also setup floats according to a Settings Data
+            
             _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
             models = ReferenceManager.AssetReferences.clientList;
             recipes = ReferenceManager.AssetReferences.recipeBook;
             spline = ReferenceManager.Instance.GetManager<PathManager>().SplineComponent;
 
-            EnqueueClient(NewClient());
+            Launch();
         }
         
-        bool CanSpawnClient()
+        
+        /// <summary>
+        /// Check if a counter is free to order
+        /// </summary>
+        bool OrderingCounterAvailable() 
         {
-            return OrderingCounterAvailable() && _gameLoop.IsRunning;
-
-        }
-
-        bool OrderingCounterAvailable()
-        {
+            // WIP : counter occupation system might change
+            
             var counters = ReferenceManager.Instance.GetElementsOfType<OrderingCounter>();
+            
             if (counters.Count == 0)
             {
                 Debug.LogWarning("No ordering counter in the scene");
                 return false;
             }
 
-            foreach (var counter in counters)
-            {
-                if (counter.IsFree)
-                    return true;
-            }
-            return false;
-
+            return counters.Any(counter => counter.IsFree);
         }
 
-        public void LaunchDelay(float length = 2)
+        
+        /// <summary>
+        /// Launch spawn timer with a delay (or not)
+        /// </summary>
+        void Launch(float delay = 2)
         {
-            _timerManager.StartTimer(timerName, length, () => SpawnClient(), false);
+            _timerManager.StartTimer(timerName, delay, () => SpawnClient(), false);
         }
 
-        float GetRandomizedDelay()
-        {
-            return delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2);
-        }
-
+        
+        /// <summary>
+        /// Spawn a new Client if it is possible
+        /// </summary>
         Action SpawnClient(SO_Client clientSO = null)
         {
-            if (CanSpawnClient() || clientSO != null)
+            // WIP : Choice of the recipe asked is fully random for now
+
+            return () =>
             {
-                if (clientSO == null)
+                if (CanSpawnClient || clientSO != null)
                 {
-                    if (nextClients.Count == 0)
-                        clientSO = NewClient(); 
-                    else
-                        clientSO = nextClients.Dequeue();
+                    // If the queue is empty createsa new client else it dequeues the first one
+                    clientSO ??= nextClients.Count > 0 ? nextClients.Dequeue() : NewClient();
+                    
+                    // Picks a random recipe through the list of recipes
+                    var randomRecipe = recipes.Recipes[Random.Range(0, recipes.Recipes.Count)];
+                    
+                    // Spawns the client in the scene via ClientGenerator method Client.New()
+                    Client client = Client.New(clientSO, randomRecipe, Vector3.zero);
+                    client.SetSplinePath(spline);
+
+                    Launch(GetRandomizedDelay);
                 }
-                
-                Client client = Client.New(clientSO, recipes.Recipes[Random.Range(0,recipes.Recipes.Count)], Vector3.zero);
-
-                client.SetSplinePath(spline);
-                
-                //EnqueueClient(NewClient());
-                
-                LaunchDelay(GetRandomizedDelay());
-            }
-            else
-            {
-                //Debug.Log("Can't spawn client");
-                LaunchDelay(retryDelay);
-            }
-
-            return null;
+                else
+                {
+                    Launch(retryDelay);
+                }
+            };
         }
-
-        SO_Client NewClient() //WIP should check clients history
+        
+        /// <summary>
+        /// Select a random Client of the right type through a referenced list
+        /// </summary>
+        SO_Client NewClient() 
         {
-            int indexType = Random.Range(1, Enum.GetValues(typeof(EClientType)).Length); // not 0 cause => None
+            // WIP : should check clients history
+            // WIP : could generate the entirety of the client instead of selecting
             
-            var filtered = models.Where(m => m.clientType == (EClientType)indexType).ToList();
+            //Picks a random client type
+            int indexType = Random.Range(1, Enum.GetValues(typeof(EClientType)).Length); // not 0 cause => None
+            EClientType chosenType = (EClientType)indexType;
+            
+            // Creates a filtered array according to chosenType
+            var clientsOfType = models.Where(m => m.clientType == chosenType).ToArray();
 
-            if (filtered.Count == 0)
+            if (clientsOfType.Length == 0)
             {
-                Debug.LogWarning("No client of type " + (EClientType)indexType + " found in models!");
+                Debug.LogWarning($"No client of type {chosenType} found in models!");
                 return null;
             }
             
-            return filtered[Random.Range(0, filtered.Count)];
+            return clientsOfType[Random.Range(0, clientsOfType.Length)];
         }
 
-        SO_Client GetNextClient()
-        {
-            return nextClients.Peek();
-        }
-
+        
+        /// <summary>
+        /// Add a client to the queue
+        /// </summary>
         private void EnqueueClient(SO_Client client)
         {
             nextClients.Enqueue(client);
-        }
-        
-        public void Register()
-        {
-            ReferenceManager.Instance.SetManager(this);
         }
 
         #endregion

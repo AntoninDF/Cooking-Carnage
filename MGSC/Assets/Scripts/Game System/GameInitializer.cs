@@ -82,14 +82,12 @@ namespace GameSystem
 
             // Initialize managers
             // Note : It's important to call the ReferenceManager as late as possible, because it scans the scene upon being created (when first called).
-            _orderManager = new OrderManager();
-            _timerManager = new TimerManager();
-            _adaptiveClientSpawner = new AdaptiveClientSpawner();
-            _dataManager = new DataManager();
-            _moneyManager = new MoneyManager();
+             _orderManager = new OrderManager();
+             _timerManager = new TimerManager();
+             _adaptiveClientSpawner = new AdaptiveClientSpawner();
+             _dataManager = new DataManager();
+             _moneyManager = new MoneyManager();
             new UpgradeManager();
-            
-             _adaptiveClientSpawner.LaunchDelay(); // Might be moved to the adaptive client spawner's constructor ?
 
             _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
             ResetPlayer();
