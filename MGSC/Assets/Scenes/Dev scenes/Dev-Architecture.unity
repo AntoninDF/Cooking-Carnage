@@ -119,6 +119,42 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &1819676533 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8565117610854529555, guid: d82f395abc9fef94da56bb9fec18c5ec, type: 3}
+  m_PrefabInstance: {fileID: 6037915432729244667}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1819676536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819676533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: -1
+  OverrideMaxDistance: -1
 --- !u!1001 &6037915432729244667
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -178,7 +214,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8565117610854529555, guid: d82f395abc9fef94da56bb9fec18c5ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1819676536}
   m_SourcePrefab: {fileID: 100100000, guid: d82f395abc9fef94da56bb9fec18c5ec, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
