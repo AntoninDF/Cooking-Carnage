@@ -97,7 +97,7 @@ namespace Clients
             AddLoot(_currentClient.IngredientsToDrop);
             _orderManager.CancelOrder(_currentClient.Order);
             _currentClient.Kill();
-            _currentClient = null;
+            Free();
             _onKill?.Invoke();
 
         }

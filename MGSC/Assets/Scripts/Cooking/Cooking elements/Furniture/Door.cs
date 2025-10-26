@@ -2,6 +2,7 @@ using Controller;
 using System.Collections;
 using System.Data;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -12,6 +13,8 @@ namespace Cooking
     {
         #region Properties
         public bool IsOpen => _open;
+        public UnityEvent OnOpen => _onOpen;
+        public UnityEvent OnClose => _onClose;
         #endregion
 
         #region Fields
@@ -23,6 +26,12 @@ namespace Cooking
         [SerializeField] private int _angle;
         [Tooltip("How long will the door take to open/close, in seconds")]
         [SerializeField] private float _animationDuration = 0.2f;
+        [Space]
+        [Header("Door events")]
+        [Tooltip("Invoked when the door opens")]
+        [SerializeField] private UnityEvent _onOpen;
+        [Tooltip("Invoked when the door closes")]
+        [SerializeField] private UnityEvent _onClose;
 
         private bool _open;
         private float _defaultAngle;
@@ -43,6 +52,11 @@ namespace Cooking
             base.Interact(interactor);
             Animate();
             _open = !_open;
+            if (_open)
+                _onOpen?.Invoke();
+            else
+                _onClose?.Invoke();
+
         }
 
         private void Animate()

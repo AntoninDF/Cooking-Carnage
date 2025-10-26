@@ -64,7 +64,7 @@ namespace GameSystem
         {
             if (!_activeOrders.Contains(order))
             {
-                Debug.LogError("[OrderManager] ResolveOrder : Trying to resolve an order that has either " +
+                Debug.LogError("[OrderManager] ResolveOrder : Trying to stash an order that has either " +
                     "not been created by the OrderManager, or that is not active anymore");
             }
             _activeOrders.Remove(order);

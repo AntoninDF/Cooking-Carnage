@@ -10,7 +10,7 @@ namespace Cooking
     /// <summary>
     /// The plate class manages the contained items, can cook, then transform in a completed recipe
     /// </summary>
-    public class Plate : Item, ICookable
+    public class Plate : Item, ITrashable, ICookable
     {
         #region Properties
         public float TargetCookDuration {get => _targetCookDuration; set => _targetCookDuration = value; }

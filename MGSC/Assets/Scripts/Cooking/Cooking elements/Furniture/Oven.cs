@@ -62,8 +62,7 @@ namespace Cooking
                 OnFailedStartAttempt?.Invoke();
                 return;
             }
-            _isCooking = true;
-            OnStartCooking?.Invoke();
+            StartCooking();
         }
 
         private void TryCook()
@@ -85,7 +84,13 @@ namespace Cooking
             cookItem.Cook(Time.deltaTime * _strength);
         }
 
-        private void StopCooking()
+        public void StartCooking()
+        {
+            _isCooking = true;
+            OnStartCooking?.Invoke();
+        }
+
+        public void StopCooking()
         {
             _isCooking = false;
             ICookable cookItem = _slot.HeldItem as ICookable;

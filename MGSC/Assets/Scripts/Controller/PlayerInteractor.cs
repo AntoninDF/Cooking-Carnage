@@ -185,6 +185,7 @@ namespace Controller
 
         public void Drop()
         {
+            if (_heldItem == null) return;
             _heldItem.Collider.enabled = true;
             OnDrop?.Invoke(_heldItem);
             _heldItem = null;

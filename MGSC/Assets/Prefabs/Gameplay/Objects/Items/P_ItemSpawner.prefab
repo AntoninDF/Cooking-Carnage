@@ -70,6 +70,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.ItemSpawner
   _tooltip: {fileID: 7921481511837142051}
+  _onInteract:
+    m_PersistentCalls:
+      m_Calls: []
   _cooldown: 0
   _itemsToSpawn: []
   _slotsToSpawn:
@@ -549,6 +552,10 @@ PrefabInstance:
     - target: {fileID: 4608249858073014417, guid: 0fc8b19e313cfb844a7a422afcb73ea0, type: 3}
       propertyPath: m_Name
       value: P_InteractableTooltip
+      objectReference: {fileID: 0}
+    - target: {fileID: 8759040907601835681, guid: 0fc8b19e313cfb844a7a422afcb73ea0, type: 3}
+      propertyPath: m_text
+      value: Get new plate
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
