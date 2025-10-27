@@ -134,7 +134,9 @@ namespace GameSystem
                     // Spawns the client in the scene via ClientGenerator method Client.New()
                     Client client = Client.New(clientSO, randomRecipe, Vector3.zero);
                     client.SetSplinePath(spline);
-
+                    
+                    ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(client,false);
+                    
                     Launch(GetRandomizedDelay);
                 }
                 else
