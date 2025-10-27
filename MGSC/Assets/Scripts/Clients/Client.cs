@@ -157,11 +157,20 @@ namespace Clients
         {
             if (_state == EClientState.AtCounter && _hasOrdered)
             {
-                Destroy(gameObject);
+                //Destroy(gameObject);
+                gameObject.SetActive(false);
+                ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,false);
             }
         }
 
         public void Kill()
+        {
+            //Destroy(gameObject);
+            gameObject.SetActive(false);
+            ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,true);
+        }
+
+        public void AutoDestruction()
         {
             Destroy(gameObject);
         }

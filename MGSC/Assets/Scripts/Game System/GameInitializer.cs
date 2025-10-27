@@ -41,6 +41,7 @@ namespace GameSystem
         private AdaptiveClientSpawner _adaptiveClientSpawner;
         private MoneyManager _moneyManager;
         private DataManager _dataManager;
+        private ClientManager _clientManager;
         #endregion
 
         #region Methods
@@ -87,6 +88,8 @@ namespace GameSystem
              _adaptiveClientSpawner = new AdaptiveClientSpawner();
              _dataManager = new DataManager();
              _moneyManager = new MoneyManager();
+             _clientManager = new ClientManager();
+             
             new UpgradeManager();
 
             _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
