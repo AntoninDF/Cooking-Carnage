@@ -145,18 +145,15 @@ namespace GameSystem
                 }
             };
         }
-        
+
         /// <summary>
         /// Select a random Client of the right type through a referenced list
         /// </summary>
-        SO_Client NewClient() 
+        SO_Client NewClient()
         {
-            // WIP : should check clients history
             // WIP : could generate the entirety of the client instead of selecting
             
-            //Picks a random client type
-            int indexType = Random.Range(1, Enum.GetValues(typeof(EClientType)).Length); // not 0 cause => None
-            EClientType chosenType = (EClientType)indexType;
+            EClientType chosenType = GetRandomWeightedType();
             
             // Creates a filtered array according to chosenType
             var clientsOfType = models.Where(m => m.clientType == chosenType).ToArray();
@@ -168,6 +165,52 @@ namespace GameSystem
             }
             
             return clientsOfType[Random.Range(0, clientsOfType.Length)];
+        }
+        
+        /// <summary>
+        /// Picks a random client type according to GD algorithm
+        /// </summary>
+        EClientType GetRandomWeightedType()
+        {
+            Dictionary<EClientType, float> clientTypeAmount =
+                ReferenceManager.Instance.GetManager<ClientManager>().ClientTypeAmount;
+            Dictionary<EClientType, float> weightedTypes = new Dictionary<EClientType, float>();
+
+            var keys = clientTypeAmount.Keys.ToList();
+            int keyCount = keys.Count;
+            
+            //WIP : Works only for 3 types of Alien
+            for (int typeIndex = 0; typeIndex < keyCount; typeIndex++)
+            {
+                int prevIndex = (typeIndex - 1) < 0 ? keyCount - 1 : typeIndex - 1;
+                int nextIndex = (typeIndex + 1) >= keyCount ? 0 : typeIndex + 1;
+
+                EClientType type = keys[typeIndex];
+                weightedTypes[type] =
+                    35 + clientTypeAmount[keys[prevIndex]] * 5 + clientTypeAmount[keys[nextIndex]] * 5;
+            }
+            float sum = weightedTypes[keys[0]] + weightedTypes[keys[1]]+weightedTypes[keys[2]];
+            
+            for (int typeIndex = 0; typeIndex < keyCount; typeIndex++)
+            {
+                EClientType type = keys[typeIndex];
+                weightedTypes[type] /= sum;
+            }
+
+            float randomValue = Random.value;
+            
+            float cumulative = 0f;
+            
+            foreach (var pair in weightedTypes)
+            {
+                cumulative += pair.Value;
+                if (randomValue <= cumulative)
+                {
+                    return pair.Key;
+                }
+            }
+            Debug.LogError("Error with the selection of new client's type");
+            return EClientType.None;
         }
 
         

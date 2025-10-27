@@ -16,7 +16,7 @@ namespace GameSystem
         
         // Public Properties
         public List<Client> CurrentClients => currentClients;
-        public Dictionary<EClientType, float> ClientTypePercentage => UpdateClientTypeData();
+        public Dictionary<EClientType, float> ClientTypeAmount => UpdateClientTypeData();
 
         #endregion
         
@@ -169,10 +169,12 @@ namespace GameSystem
                }
            }
            
-           foreach (var type in clientTypePart.Keys.ToList())
+           /* Percentage Conversion
+            
+            foreach (var type in clientTypePart.Keys.ToList())
            {
                clientTypePart[type] = (float)clientTypePart[type] / total;
-           }
+           }*/
            
            return clientTypePart;
        }
