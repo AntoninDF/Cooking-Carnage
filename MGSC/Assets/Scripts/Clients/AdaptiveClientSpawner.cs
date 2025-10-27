@@ -81,7 +81,7 @@ namespace GameSystem
             _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
             models = ReferenceManager.AssetReferences.clientList;
             recipes = ReferenceManager.AssetReferences.recipeBook;
-            spline = ReferenceManager.Instance.GetManager<PathManager>().SplineComponent;
+            spline = ReferenceManager.Instance.GetManager<PathManager>()?.SplineComponent;
 
             Launch();
         }

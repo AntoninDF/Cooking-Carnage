@@ -59,7 +59,7 @@ namespace Clients
                 Debug.LogError("[Client] Start : No counters were found. Please place at least one of each in the scene.");
 
             if (_splineComp == null)
-                Debug.LogError("[Client] Init : No spline component was referenced. Consider using SetSplinePath.");
+                Debug.LogWarning("[Client] Init : No spline component was referenced. Consider using SetSplinePath.");
 
             _movement.SetSplinePos(0.0f);
 
@@ -71,6 +71,7 @@ namespace Clients
 
         private void Update()
         {
+            if (_gameLoop == null) return;
             if (!_gameLoop.IsRunning) return;
             if (_state == EClientState.Moving || _state == EClientState.None)
             {
@@ -135,7 +136,7 @@ namespace Clients
             return counter != null;
         }
 
-        private void UseCounter(Counter counter)
+        public void UseCounter(Counter counter)
         {
             _state = EClientState.AtCounter;
             _currentCounter = counter;

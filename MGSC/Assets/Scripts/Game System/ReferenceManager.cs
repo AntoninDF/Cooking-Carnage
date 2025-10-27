@@ -33,6 +33,7 @@ namespace GameSystem
             typeof(Item),
             typeof(Ingredient),
             typeof(Furnace),
+            typeof(Oven),
             typeof(TrashCan),
             typeof(Meal),
             typeof(SimpleClientSpawner),
@@ -91,7 +92,7 @@ namespace GameSystem
 
         public T GetElementOfType<T>() where T : class => GetElementsOfType<T>().FirstOrDefault();
 
-        public void ScanHierarchy(bool clearDictBeforeScan=false)
+        public void ScanHierarchy(bool clearDictBeforeScan=true)
         {
             if (clearDictBeforeScan)
                 _elementDict.Clear();

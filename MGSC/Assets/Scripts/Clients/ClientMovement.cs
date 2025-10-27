@@ -11,7 +11,7 @@ namespace Clients
         #region Properties
 
         public SplineContainer SplineComponent { get; set; }
-        public Spline Spline => SplineComponent.Spline;
+        public Spline Spline => SplineComponent?.Spline;
         public float SplinePosition { get; private set; }
         public Transform ControlledTransform { get; set;}
         public float Speed { get;set;}
@@ -20,7 +20,7 @@ namespace Clients
         #endregion
 
         #region Fields
-
+        private bool _validSetup; // true if every component is referenced successfully
 
         #endregion
 
@@ -31,22 +31,40 @@ namespace Clients
             ControlledTransform = controlledTransform;
             SplineComponent = splineComponent;
             Speed = speed;
+            if (ControlledTransform != null && SplineComponent != null)
+                _validSetup = true;
         }
 
         public void MoveAlongSpline()
         {
+            if (!_validSetup)
+            {
+                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
+                return;
+            }
             float length = Spline.GetLength();
             SetSplinePos(SplinePosition + (Speed * Time.deltaTime / length));
         }
 
         public void SetSplinePos(float t)
         {
+            if (!_validSetup)
+            {
+                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
+                return;
+            }
             SplinePosition = t;
             ControlledTransform.position = GetSplinePos(t);
         }
 
         public Vector3 GetSplinePos(float t)
         {
+            if (!_validSetup)
+            {
+                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
+                return Vector3.zero;
+            }
+
             Spline.Evaluate(
                 t,
                 out Unity.Mathematics.float3 pos,
@@ -62,6 +80,8 @@ namespace Clients
 
         private float FindNearestSplinePoint()
         {
+            if (!_validSetup)
+                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
             CheckedPositions.Clear();
             float t = 0;
             float errorMargin = 0.001f;
@@ -110,11 +130,21 @@ namespace Clients
 
         public Vector3 FindNearestSplinePosition()
         {
+            if (!_validSetup)
+            {
+                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
+                return Vector3.zero;
+            }
             return GetSplinePos(FindNearestSplinePoint());
         }
 
         public void GoTo(Vector3 targetPos)
         {
+            if (!_validSetup)
+            {
+                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
+                return;
+            }
             Vector3 startPos = ControlledTransform.position;
             Vector3 offset = targetPos - startPos;
             Vector3 finalPos;

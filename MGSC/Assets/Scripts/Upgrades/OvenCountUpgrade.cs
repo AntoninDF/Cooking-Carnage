@@ -23,6 +23,7 @@ namespace Upgrades
 
         public override void Apply()
         {
+            if (_targetOvenSetup == null) return;
             _targetOvenSetup.Setup(_level +1);
         }
         public override void LevelUp()

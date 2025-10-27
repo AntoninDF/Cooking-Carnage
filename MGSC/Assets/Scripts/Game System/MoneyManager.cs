@@ -26,6 +26,7 @@ namespace GameSystem
             Register();
             EnforceReferences();
             SetSubscriptionToAll(true);
+            MoneyInfo += 1000;
         }
 
         public void Register()
@@ -57,7 +58,7 @@ namespace GameSystem
             AddMoney(order.OrderRating.MoneyGained);
         }
 
-        private void AddMoney(float amount)
+        public void AddMoney(float amount)
         {
             MoneyInfo += amount;
             OnMoneyChange?.Invoke(amount);

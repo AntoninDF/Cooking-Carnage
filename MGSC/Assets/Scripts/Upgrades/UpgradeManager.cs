@@ -15,6 +15,8 @@ namespace Upgrades
 
 
         private List<Upgrade> _upgrades;
+
+        private MoneyManager _moneyManager;
         #endregion
 
         #region Methods
@@ -28,9 +30,15 @@ namespace Upgrades
 
         public void Init()
         {
-            MonoBehaviour.print("Upgrade manager made");
             _upgrades = new List<Upgrade>();
             _upgrades.Add(new OvenCountUpgrade());
+            _upgrades.Add(new CookingSpeedUpgrade());
+
+            _moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
+            if (_moneyManager == null)
+                Debug.Log("[UpgradeManager] : No money manager found");
+
+            ApplyUpgrades();
         }
 
         public void ApplyUpgrades()
@@ -54,6 +62,43 @@ namespace Upgrades
             upgrade = GetUpgradeByType<T>();
             return upgrade != null;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>New level</returns>
+        public int LevelUp<T>() where T : Upgrade
+        {
+            T upgrade;
+            if (!HasUpgradeOfType<T>(out upgrade))
+                Debug.LogError("[UpgradeManager] No upgrade of type " + nameof(T) + " found");
+            LevelUp(upgrade);
+            return upgrade.Level;
+        }
+
+        private void LevelUp<T>(T upgrade) where T : Upgrade
+        {
+            upgrade?.LevelUp();
+        }
+
+        /// <summary>
+        /// If there's enough money, spend it and apply the level up
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>True if the level up happens, false otherwise</returns>
+        public bool TryLevelUp<T>() where T: Upgrade
+        {
+            T upgrade;
+            if (!HasUpgradeOfType<T>(out upgrade))
+                Debug.LogError("[UpgradeManager] No upgrade of type " + nameof(T) + " found");
+            float price = upgrade.GetPrice();
+            if (_moneyManager.MoneyInfo < price)
+                return false;
+            _moneyManager.AddMoney(-price);
+            LevelUp(upgrade);
+            return true;
+        }
+
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);

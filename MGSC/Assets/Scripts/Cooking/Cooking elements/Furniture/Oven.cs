@@ -155,6 +155,7 @@ namespace Cooking
         }
 
         public void SetAnimationMode(bool animate = true) { }
+        public void SetStrength(float strength) { _strength = strength; }
 
         #endregion
     }
