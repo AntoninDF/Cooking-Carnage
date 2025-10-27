@@ -26,7 +26,7 @@ namespace GameSystem
             Register();
             EnforceReferences();
             SetSubscriptionToAll(true);
-            MoneyInfo += 1000;
+            //MoneyInfo += 1000;
         }
 
         public void Register()

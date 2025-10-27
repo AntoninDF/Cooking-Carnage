@@ -39,6 +39,14 @@ namespace Cooking
         [Header("Plate events")]
         [Tooltip("Invoked repeatedly when the plate is cooking")]
         [SerializeField] private UnityEvent<ICookable> _onCook;
+        [Tooltip("Invoked when the base ingredient is added to the plate")]
+        [SerializeField] private UnityEvent _onBaseIngredientAdded;
+        [Tooltip("Invoked when the base ingredient is removed from the plate")]
+        [SerializeField] private UnityEvent _onBaseIngredientRemoved;
+        [Tooltip("Invoked when a normal ingredient is added to the plate")]
+        [SerializeField] private UnityEvent _onIngredientAdded;
+        [Tooltip("Invoked when a normal ingredient is removed from the plate")]
+        [SerializeField] private UnityEvent _onIngredientRemoved;
         #endregion
 
         #region Methods
@@ -60,10 +68,14 @@ namespace Cooking
         {
             _ingredientSlots.SetActive(false);
             _baseIngredientSlot.OnGrab.AddListener((item) => _ingredientSlots.SetActive(true));
+            _baseIngredientSlot.OnGrab.AddListener((item) => _onBaseIngredientAdded?.Invoke());
             _baseIngredientSlot.OnDrop.AddListener((item) => _ingredientSlots.SetActive(false));
+            _baseIngredientSlot.OnDrop.AddListener((item) => _onBaseIngredientRemoved?.Invoke());
 
             _ingredientSlots.OnGrab.AddListener((item) => _baseIngredientSlot.IsLocked = true);
+            _ingredientSlots.OnGrab.AddListener((item) => _onIngredientAdded?.Invoke());
             _ingredientSlots.OnDrop.AddListener((item) => { if (_ingredientSlots.HeldItems.Count == 0) _baseIngredientSlot.IsLocked = false; });
+            _ingredientSlots.OnDrop.AddListener((item) => _onIngredientRemoved?.Invoke());
         }
 
         public void Cook(float dT) 

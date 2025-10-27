@@ -72,7 +72,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &738898631406455371
 Transform:
   m_ObjectHideFlags: 0
@@ -651,6 +651,42 @@ MonoBehaviour:
   _ingredientSlots: {fileID: 4334623239686519242}
   _recipeBook: {fileID: 11400000, guid: 367f956cce92a474abe807c44ec4f8ab, type: 2}
   _onCook:
+    m_PersistentCalls:
+      m_Calls: []
+  _onBaseIngredientAdded:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7316782934266550687}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  _onBaseIngredientRemoved:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7316782934266550687}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _onIngredientAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  _onIngredientRemoved:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &8270064822264966898 stripped
