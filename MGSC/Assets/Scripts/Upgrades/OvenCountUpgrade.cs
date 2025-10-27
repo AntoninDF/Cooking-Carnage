@@ -23,12 +23,17 @@ namespace Upgrades
 
         public override void Apply()
         {
-            _targetOvenSetup.Setup(_level);
+            _targetOvenSetup.Setup(_level +1);
         }
         public override void LevelUp()
         {
             _level++;
             OnLevelUp?.Invoke(_level);
+        }
+
+        public override float GetPrice()
+        {
+            return 5f;
         }
         #endregion
     }

@@ -40,10 +40,26 @@ namespace Upgrades
                 upgrade.Apply();
             }
         }
+
+        public T GetUpgradeByType<T>() where T : Upgrade
+        {
+            foreach (var upgrade in _upgrades)
+                if (upgrade is T)
+                    return upgrade as T;
+            return null;
+        }
+
+        public bool HasUpgradeOfType<T>(out T upgrade) where T : Upgrade
+        {
+            upgrade = GetUpgradeByType<T>();
+            return upgrade != null;
+        }
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
         }
+
+
         #endregion
     }
 }

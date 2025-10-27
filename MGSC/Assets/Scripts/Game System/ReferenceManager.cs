@@ -20,6 +20,7 @@ namespace GameSystem
         public static ReferenceManager Instance { get { if (_instance == null) _instance = new ReferenceManager(); return _instance;}}
         public static SO_AssetReferences AssetReferences { get; set; }
         
+        
         #endregion
 
         #region Fields
@@ -38,6 +39,7 @@ namespace GameSystem
             typeof(PlayerStart),
             typeof(PlayerInterface),
             typeof(OvenSetup),
+            typeof(PlayerInterface),
 
         };
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;
