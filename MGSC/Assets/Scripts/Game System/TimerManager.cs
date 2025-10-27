@@ -47,17 +47,21 @@ namespace GameSystem
         /// </summary>
         public override void Update(float deltaTime)
         {
-            foreach (var timerKey in timers)
+            var keys = new List<string>(timers.Keys);
+            for (int i = 0; i < keys.Count; i++)
             {
-                timerKey.Value.Update(deltaTime);
+                var key = keys[i];
+                timers[key].Update(deltaTime);
             }
         }
 
         public override void FixedUpdate()
         {
-            foreach (var timerKey in frameTimers)
+            var keys = new List<string>(frameTimers.Keys);
+            for (int i = 0; i < keys.Count; i++)
             {
-                timerKey.Value.Update();
+                var key = keys[i];
+                frameTimers[key].Update();
             }
         }
         

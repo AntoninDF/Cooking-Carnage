@@ -14,14 +14,14 @@ using Random = UnityEngine.Random;
 namespace GameSystem
 {
     /// <summary>
-    /// Spawning Manager used to make appear a specific new client at precise timing
+    /// Spawning Manager used to request appearance of a specific new client at precise timing
     /// </summary>
     public class AdaptiveClientSpawner : IManager
     {
         #region Properties
         
         // Public Properties
-        public int NextClientCount => nextClients.Count;
+        public int NextClientsCount => nextClients.Count;
         public SO_Client GetNextClient() => nextClients.Count > 0 ? nextClients.Peek() : null;
         
         // Private Properties
@@ -111,7 +111,7 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
-            _timerManager.StartTimer(timerName, delay, () => SpawnClient(), false);
+            _timerManager.StartTimer(timerName, delay, () => SpawnClient()(), false);
         }
 
         
@@ -121,7 +121,6 @@ namespace GameSystem
         Action SpawnClient(SO_Client clientSO = null)
         {
             // WIP : Choice of the recipe asked is fully random for now
-
             return () =>
             {
                 if (CanSpawnClient || clientSO != null)
