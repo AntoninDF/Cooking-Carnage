@@ -37,7 +37,7 @@ namespace Tutorials
             OrderManager manager= ReferenceManager.Instance.GetManager<OrderManager>();
             Order order = manager.NewOrder(_client, ReferenceManager.AssetReferences.recipeBook.Recipes[0]);
             _client.AcceptOrder(order);
-            _client.UseCounter(_counter);
+            _client.ReserveCounter(_counter);
             Debug.Log(_client.Order);
         }
 

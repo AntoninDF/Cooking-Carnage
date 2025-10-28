@@ -450,6 +450,20 @@ MonoBehaviour:
             with this new green button :D
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 7958820972722461042}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Well done ! You received an order ticket containing the
+            details about the order. You can go on to the next tutorial by interacting
+            with this new green button :D
+          m_BoolArgument: 0
+        m_CallState: 2
   _client: {fileID: 2799306563653193329}
   _counter: {fileID: 5815553739921532495}
 --- !u!1 &5977051938505893648
@@ -1038,38 +1052,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5798759070836590032, guid: 1dffa234aa43b654bbb5eb3064e1c1ef, type: 3}
-      propertyPath: _onUserUnregister.m_PersistentCalls.m_Calls.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5798759070836590032, guid: 1dffa234aa43b654bbb5eb3064e1c1ef, type: 3}
-      propertyPath: _onUserUnregister.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5798759070836590032, guid: 1dffa234aa43b654bbb5eb3064e1c1ef, type: 3}
-      propertyPath: _onUserUnregister.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 4140548222129281355}
-    - target: {fileID: 5798759070836590032, guid: 1dffa234aa43b654bbb5eb3064e1c1ef, type: 3}
-      propertyPath: _onUserUnregister.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5798759070836590032, guid: 1dffa234aa43b654bbb5eb3064e1c1ef, type: 3}
-      propertyPath: _onUserUnregister.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: SetActive
-      objectReference: {fileID: 0}
-    - target: {fileID: 5798759070836590032, guid: 1dffa234aa43b654bbb5eb3064e1c1ef, type: 3}
-      propertyPath: _onUserUnregister.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: UnityEngine.GameObject, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 5798759070836590032, guid: 1dffa234aa43b654bbb5eb3064e1c1ef, type: 3}
-      propertyPath: _onUserUnregister.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_BoolArgument
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5798759070836590032, guid: 1dffa234aa43b654bbb5eb3064e1c1ef, type: 3}
-      propertyPath: _onUserUnregister.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 6957497867542438758, guid: 1dffa234aa43b654bbb5eb3064e1c1ef, type: 3}
       propertyPath: m_Name
       value: P_OrderingArea
@@ -1095,6 +1077,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7634554a5300c41428e4c80b168a9893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.OrderingCounter
+--- !u!1 &7958820972722461042 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7980029407940098797, guid: 1dffa234aa43b654bbb5eb3064e1c1ef, type: 3}
+  m_PrefabInstance: {fileID: 57891446018909087}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &882372008076552264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1296,7 +1283,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 424732036597750088, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.859
       objectReference: {fileID: 0}
     - target: {fileID: 424732036597750088, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
       propertyPath: m_LocalPosition.z

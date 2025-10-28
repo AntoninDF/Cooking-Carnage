@@ -81,7 +81,10 @@ namespace Clients
         private float FindNearestSplinePoint()
         {
             if (!_validSetup)
+            {
                 Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
+                return 0.0f;
+            }
             CheckedPositions.Clear();
             float t = 0;
             float errorMargin = 0.001f;

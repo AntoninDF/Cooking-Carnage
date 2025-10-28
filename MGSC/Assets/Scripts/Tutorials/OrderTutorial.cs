@@ -1,5 +1,6 @@
 
 using Clients;
+using GameSystem;
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Events;
@@ -32,7 +33,9 @@ namespace Tutorials
                 Debug.LogError("[OrderTutorial] : Please reference the default counter in the inspector");
 
             _counter.OnUserUnregister.AddListener(Complete);
-            _client.UseCounter(_counter);
+            _client.ReserveCounter(_counter);
+            AdaptiveClientSpawner spawner = ReferenceManager.Instance.GetManager<AdaptiveClientSpawner>();
+            spawner.canSpawnClient = false;
         }
 
         #endregion
