@@ -140,9 +140,9 @@ namespace Clients
         /// <returns>The first free counter found</returns>
         private T CheckForCounter<T>(bool mustBeFree=true) where T : Counter
         {
+            _counters = ReferenceManager.Instance.GetElementsOfType<Counter>();
             T closestCounter = null;
             float closestDistance = float.MaxValue;
-            
             foreach (var counter in _counters)
             {
                 if (counter == null || counter is not T ) continue;
@@ -201,7 +201,6 @@ namespace Clients
             _hasOrdered = true;
             _state = EClientState.ReachingSpline;
             _order = order;
-            
         }
 
         public void ResolveOrder()

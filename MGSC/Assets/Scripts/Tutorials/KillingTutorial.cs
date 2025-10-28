@@ -33,6 +33,7 @@ namespace Tutorials
             if (_counter == null)
                 Debug.LogError("[OrderTutorial] : Please reference the default counter in the inspector");
 
+            ReferenceManager.Instance.ScanHierarchy();
             _client
                 .SetModel(ReferenceManager.AssetReferences.clientList[0])
                 .SetLoot(_client.Model.loot);
