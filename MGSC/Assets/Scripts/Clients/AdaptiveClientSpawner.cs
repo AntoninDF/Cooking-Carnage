@@ -26,11 +26,13 @@ namespace GameSystem
         
         // Private Properties
         float GetRandomizedDelay => (delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
-        bool CanSpawnClient => OrderingCounterAvailable() && _gameLoop.IsRunning;
+        bool CanSpawnClient => OrderingCounterAvailable() && _gameLoop.IsRunning && canSpawnClient;
         
         #endregion
 
         #region Fields
+        
+        public bool canSpawnClient = true;
         
         // Setup Fields
         private float delayLength = 5;
@@ -40,6 +42,7 @@ namespace GameSystem
         private List<SO_Client> models;
         private SO_RecipeBook recipes;
         private SplineContainer spline;
+        private List<OrderingCounter> counters;
         
         // Reference Fields
         private TimerManager _timerManager;
@@ -82,6 +85,7 @@ namespace GameSystem
             models = ReferenceManager.AssetReferences.clientList;
             recipes = ReferenceManager.AssetReferences.recipeBook;
             spline = ReferenceManager.Instance.GetManager<PathManager>()?.SplineComponent;
+            counters = ReferenceManager.Instance.GetElementsOfType<OrderingCounter>();
 
             Launch();
         }
@@ -92,10 +96,6 @@ namespace GameSystem
         /// </summary>
         bool OrderingCounterAvailable() 
         {
-            // WIP : counter occupation system might change
-            
-            var counters = ReferenceManager.Instance.GetElementsOfType<OrderingCounter>();
-            
             if (counters.Count == 0)
             {
                 Debug.LogWarning("No ordering counter in the scene");
@@ -103,6 +103,20 @@ namespace GameSystem
             }
 
             return counters.Any(counter => counter.IsFree);
+        }
+        
+        /// <summary>
+        /// Assign a Client to the ordering counter when it spawns
+        /// </summary>
+        void AssignClientOrderingCounter(Client client)
+        {
+            foreach (var counter in counters)
+            {
+                if (!counter.IsFree) continue;
+                client.ReserveCounter(counter);
+                return;
+            }
+            Debug.LogWarning("Ordering Counter Occupation error");
         }
 
         
@@ -125,8 +139,9 @@ namespace GameSystem
             {
                 if (CanSpawnClient || clientSO != null)
                 {
-                    // If the queue is empty createsa new client else it dequeues the first one
-                    clientSO ??= nextClients.Count > 0 ? nextClients.Dequeue() : NewClient();
+                    // If the queue is empty enqueues a new client then it dequeues the first one
+                    if (nextClients.Count == 0) { EnqueueClient(NewClient()); }
+                    clientSO = nextClients.Dequeue(); 
                     
                     // Picks a random recipe through the list of recipes
                     var randomRecipe = recipes.Recipes[Random.Range(0, recipes.Recipes.Count)];
@@ -134,6 +149,7 @@ namespace GameSystem
                     // Spawns the client in the scene via ClientGenerator method Client.New()
                     Client client = Client.New(clientSO, randomRecipe, Vector3.zero);
                     client.SetSplinePath(spline);
+                    AssignClientOrderingCounter(client);
                     
                     ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(client,false);
                     

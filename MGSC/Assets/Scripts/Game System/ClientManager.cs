@@ -178,6 +178,15 @@ namespace GameSystem
            
            return clientTypePart;
        }
+
+
+       /// <summary>
+       /// Returns the clientdata wanted if it's a previous client
+       /// </summary>
+       public ClientDataWIP GetClientDataByID(int entityId)
+       {
+           return clientHistory.FirstOrDefault(data => data.id == entityId);
+       }
         
         #endregion
 
