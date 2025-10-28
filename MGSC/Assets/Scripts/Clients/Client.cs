@@ -3,6 +3,7 @@ using GameSystem;
 using Orders;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -86,7 +87,10 @@ namespace Clients
                 
                 case EClientState.Moving:
                     
+                    if(!_currentCounter){ break; }
+                    
                     _movement.MoveAlongSpline();
+                    
                     if (!_hasOrdered)
                     { 
                         if (CheckClientCounterDistance(_currentCounter))
@@ -103,8 +107,11 @@ namespace Clients
                             break;
                         }
                     }
-                    
-
+                    else if (CheckClientCounterDistance(_currentCounter))
+                    {
+                        _state = EClientState.AtCounter;
+                        UseCounter(_currentCounter);
+                    }
                     break;
                 
                 case EClientState.AtCounter:
@@ -124,39 +131,6 @@ namespace Clients
                     }
                     break;
             }
-            
-            // Previous State Machine System ew Antonin ewwwwwww je rigole il était bien
-            
-            /*if (_state == EClientState.Moving|| _state == EClientState.None)
-            {
-                if (_state == EClientState.Moving) _movement.MoveAlongSpline();
-                if (!_hasOrdered)
-                { 
-                    if (CheckForCounter(out OrderingCounter counter, false))
-                    {
-                        if (!counter.IsFree) _state = EClientState.None;
-                        else _state = EClientState.AtCounter;
-                    }
-                }
-                else if (CheckForCounter(out SittingCounter counter))
-                {
-                    UseCounter(counter);
-                }
-            }
-            else if (_state == EClientState.AtCounter)
-            {
-                _movement.GoTo(_currentCounter.UserSpot.position);
-            }
-            else if (_state == EClientState.ReachingSpline)
-            {
-                Vector3 nearestPos = _movement.FindNearestSplinePosition();
-                _movement.GoTo(nearestPos);
-                if (Vector3.Distance(transform.position, nearestPos) <= 0.03f)
-                {
-                    _state = EClientState.Moving;
-                    _movement.SnapToSpline();
-                }
-            }*/
         }
 
         /// <summary>
@@ -166,18 +140,25 @@ namespace Clients
         /// <returns>The first free counter found</returns>
         private T CheckForCounter<T>(bool mustBeFree=true) where T : Counter
         {
+            T closestCounter = null;
+            float closestDistance = float.MaxValue;
+            
             foreach (var counter in _counters)
             {
                 if (counter == null || counter is not T ) continue;
                 
-                if ( CheckClientCounterDistance(counter) )
+                float distance = Vector3.Distance(transform.position, counter.UserSpot.position); 
+
+                if (distance < closestDistance)
                 {
-                    if (!mustBeFree) return counter as T;
-                    if (!counter.IsFree) continue;
-                    return counter as T;
+                    if (!mustBeFree || counter.IsFree)
+                    {
+                        closestDistance = distance;
+                        closestCounter = counter as T;
+                    }
                 }
             }
-            return null;
+            return closestCounter;
         }
         /// <summary>
         /// Detects if a free counter of type T is available nearby.
@@ -190,7 +171,7 @@ namespace Clients
             return counter != null;
         }
 
-        bool CheckClientCounterDistance(Counter counter)
+        public bool CheckClientCounterDistance(Counter counter)
         {
             return Vector3.Distance(transform.position, counter.transform.position) < Mathf.Max(_reachDistance, counter.ReachDistance);
         }
@@ -208,12 +189,19 @@ namespace Clients
 
         public void AcceptOrder(Order order)
         {
-            //if (_state == EClientState.AtCounter && !_hasOrdered)
+            if (CheckForCounter(out SittingCounter counter))
             {
-                _hasOrdered = true;
-                _state = EClientState.ReachingSpline;
-                _order = order;
+                ReserveCounter(counter);
             }
+            else
+            {
+                return; // Pas de Sitting dispo
+            }
+            
+            _hasOrdered = true;
+            _state = EClientState.ReachingSpline;
+            _order = order;
+            
         }
 
         public void ResolveOrder()
