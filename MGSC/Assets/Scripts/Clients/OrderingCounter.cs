@@ -1,3 +1,4 @@
+using System.Linq;
 using Cooking;
 using GameSystem;
 using Orders;
@@ -30,8 +31,14 @@ namespace Clients
         public void TryAcceptOrder()
         {
             if (IsFree) return;
-            AcceptOrder();
-            return;
+
+            if (ReferenceManager.Instance.GetElementsOfType<SittingCounter>().Any(counter => counter.IsFree) 
+                && _currentClient.CheckClientCounterDistance(this))
+            {
+                AcceptOrder(); 
+            }
+            
+            // Order can't be accepted cause there is no sitting counter available
         }
 
         private void AcceptOrder()
