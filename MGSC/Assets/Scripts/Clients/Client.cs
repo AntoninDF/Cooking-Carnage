@@ -145,7 +145,7 @@ namespace Clients
 
         public void AcceptOrder(Order order)
         {
-            if (_state == EClientState.AtCounter && !_hasOrdered)
+            //if (_state == EClientState.AtCounter && !_hasOrdered)
             {
                 _hasOrdered = true;
                 _state = EClientState.ReachingSpline;

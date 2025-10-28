@@ -25,8 +25,8 @@ namespace Cooking
 
         #region Fields
         [Header("Plate references")]
-        [Tooltip("Reference a slot container in which to put the base ingredient.")]
-        [SerializeField] private SlotContainer _baseIngredientSlot;
+        //[Tooltip("Reference a slot container in which to put the base ingredient.")]
+        //[SerializeField] private SlotContainer _baseIngredientSlot;
         [Tooltip("Reference a multi slot container in which to put every ingredient.")]
         [SerializeField] private MultiSlotContainer _ingredientSlots;
         [Tooltip("The recipe book should contain every possible recipe for this object.")]
@@ -54,8 +54,8 @@ namespace Cooking
         protected override void Start()
         {
             base.Start();
-            if (_baseIngredientSlot == null)
-                Debug.LogError("[Plate] : Please reference the base ingredient slot in the inspector");
+            //if (_baseIngredientSlot == null)
+                //Debug.LogError("[Plate] : Please reference the base ingredient slot in the inspector");
             if (_ingredientSlots == null)
                 Debug.LogError("[Plate] : Please reference the ingredient multislot in the inspector");
             if (_ingredientSlots == null)
@@ -66,15 +66,15 @@ namespace Cooking
 
         private void SetupSlots()
         {
-            _ingredientSlots.SetActive(false);
-            _baseIngredientSlot.OnGrab.AddListener((item) => _ingredientSlots.SetActive(true));
-            _baseIngredientSlot.OnGrab.AddListener((item) => _onBaseIngredientAdded?.Invoke());
-            _baseIngredientSlot.OnDrop.AddListener((item) => _ingredientSlots.SetActive(false));
-            _baseIngredientSlot.OnDrop.AddListener((item) => _onBaseIngredientRemoved?.Invoke());
+            _ingredientSlots.SetActive(true);
+            //_baseIngredientSlot.OnGrab.AddListener((item) => _ingredientSlots.SetActive(true));
+            //_baseIngredientSlot.OnGrab.AddListener((item) => _onBaseIngredientAdded?.Invoke());
+            //_baseIngredientSlot.OnDrop.AddListener((item) => _ingredientSlots.SetActive(false));
+            //_baseIngredientSlot.OnDrop.AddListener((item) => _onBaseIngredientRemoved?.Invoke());
 
-            _ingredientSlots.OnGrab.AddListener((item) => _baseIngredientSlot.IsLocked = true);
+            //_ingredientSlots.OnGrab.AddListener((item) => _baseIngredientSlot.IsLocked = true);
             _ingredientSlots.OnGrab.AddListener((item) => _onIngredientAdded?.Invoke());
-            _ingredientSlots.OnDrop.AddListener((item) => { if (_ingredientSlots.HeldItems.Count == 0) _baseIngredientSlot.IsLocked = false; });
+            //_ingredientSlots.OnDrop.AddListener((item) => { if (_ingredientSlots.HeldItems.Count == 0) _baseIngredientSlot.IsLocked = false; });
             _ingredientSlots.OnDrop.AddListener((item) => _onIngredientRemoved?.Invoke());
         }
 
