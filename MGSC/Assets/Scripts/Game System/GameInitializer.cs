@@ -42,6 +42,8 @@ namespace GameSystem
         private MoneyManager _moneyManager;
         private DataManager _dataManager;
         private ClientManager _clientManager;
+        private UpgradeManager _upgradeManager;
+        private ShiftManager _shiftManager;
         #endregion
 
         #region Methods
@@ -89,11 +91,13 @@ namespace GameSystem
              _dataManager = new DataManager();
              _moneyManager = new MoneyManager();
              _clientManager = new ClientManager();
-             
-            new UpgradeManager();
+            _upgradeManager = new UpgradeManager();
 
             _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
             ResetPlayer();
+            
+            //Note : Should always be last
+            _shiftManager = new ShiftManager(); 
         }
 
         /// <summary>

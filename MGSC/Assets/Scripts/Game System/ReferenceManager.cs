@@ -118,6 +118,12 @@ namespace GameSystem
 
             Debug.Log(toPrint);
         }
+        
+        public void ResetInstance()
+        {
+            _instance = null;
+        }
+        
         #endregion
     }
 }
