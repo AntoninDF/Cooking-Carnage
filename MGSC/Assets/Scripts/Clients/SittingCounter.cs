@@ -88,7 +88,11 @@ namespace Clients
         public void TryKill()
         {
             if (IsFree) return;
-            Kill();
+
+            if (_currentClient.CheckClientCounterDistance(this))
+            {
+                Kill();
+            }
         }
 
         private void Kill()
