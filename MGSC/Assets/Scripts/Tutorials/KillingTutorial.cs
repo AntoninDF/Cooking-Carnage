@@ -33,6 +33,7 @@ namespace Tutorials
             if (_counter == null)
                 Debug.LogError("[OrderTutorial] : Please reference the default counter in the inspector");
 
+            ReferenceManager.Instance.ScanHierarchy();
             _client
                 .SetModel(ReferenceManager.AssetReferences.clientList[0])
                 .SetLoot(_client.Model.loot);
@@ -40,7 +41,7 @@ namespace Tutorials
             OrderManager manager = ReferenceManager.Instance.GetManager<OrderManager>();
             Order order = manager.NewOrder(_client, ReferenceManager.AssetReferences.recipeBook.Recipes[0]);
             _client.AcceptOrder(order);
-            _client.UseCounter(_counter);
+            _client.ReserveCounter(_counter);
         }
 
         #endregion
