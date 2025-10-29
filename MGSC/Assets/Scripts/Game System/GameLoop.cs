@@ -62,7 +62,7 @@ namespace GameSystem
         }
 
         /// <summary>
-        /// Starts the game loop
+        /// Resume the game loop
         /// </summary>
         public void StartRunning()
         {
@@ -71,7 +71,7 @@ namespace GameSystem
 
         
         /// <summary>
-        /// Stops the game loop
+        /// Pauses the game loop
         /// </summary>
         public void StopRunning()
         {

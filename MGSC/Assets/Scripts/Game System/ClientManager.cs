@@ -108,9 +108,12 @@ namespace GameSystem
         /// <summary>
         /// Returns a sized-copy of the Clients History 
         /// </summary>
-        public List<ClientDataWIP> GetClientsHistory(int amount)
+        public List<ClientDataWIP> GetClientsHistory(int amount=0)
         {
-            if(amount ==0 || clientHistory.Count == 0) { return null; }
+            if(clientHistory.Count == 0) { return null; }
+            
+            amount = amount == 0 ? clientHistory.Count : amount;
+            
             List<ClientDataWIP> list = new List<ClientDataWIP>();
             
             int possibleAmount = Mathf.Min(amount, clientHistory.Count);
