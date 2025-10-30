@@ -112,7 +112,6 @@ namespace GameSystem
         public List<ClientDataWIP> GetClientsHistory(int amount=-1)
         {
             //if(clientHistory.Count == 0) { return null; }
-            MonoBehaviour.print("Client history count : " + clientHistory.Count);
             
             amount = amount == -1 ? clientHistory.Count : amount;
             
