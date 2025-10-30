@@ -8,7 +8,6 @@ namespace Cooking
     /// <summary>
     /// Defines the set of data needed for a meal
     /// </summary>
-    
     [CreateAssetMenu(fileName = "Recipe", menuName = "Scriptable Objects/Recipe")]
     public class SO_Recipe : ScriptableObject
     {

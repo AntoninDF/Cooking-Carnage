@@ -17,6 +17,8 @@ namespace Clients
         [Tooltip("The client type identifies the client's species")]
         public EClientType clientType;
         [Tooltip("The loot is the list of ingredients dropped upon death.")]
-        public List<SO_Ingredient> loot;
+        public SO_Ingredient loot;
+        [Tooltip("How much ingredients will be spawned ? (generates a random value between min and max, rounded to the nearest whole number.")]
+        public Vector2 dropRate;
     }
 }

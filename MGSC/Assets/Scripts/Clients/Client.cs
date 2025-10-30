@@ -20,13 +20,14 @@ namespace Clients
         public EClientType Type { get; private set; }
         public SO_Recipe RequestedRecipe {  get; private set; }
         public Order Order => _order;
-        public List<SO_Ingredient> IngredientsToDrop { get; private set; }
+        public SO_Ingredient IngredientToDrop { get; private set; }
         public SO_Client Model { get; private set; }
         public float Speed { get => _speed; set => _speed = value; }
         public bool IsMoving => _state == EClientState.Moving;
         public bool IsOrdering => _state == EClientState.Ordering;
         public bool IsSitting => _state == EClientState.Sitting;
         public float ReachDistance { get => _reachDistance; set => _reachDistance = value; }
+        public bool HasOrdered => _hasOrdered;
 
         #endregion
 
