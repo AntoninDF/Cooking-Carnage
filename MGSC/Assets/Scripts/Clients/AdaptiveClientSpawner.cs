@@ -47,6 +47,7 @@ namespace GameSystem
         // Reference Fields
         private TimerManager _timerManager;
         private GameLoop _gameLoop;
+        private ShiftManager _shiftManager;
         
         private Queue<SO_Client> nextClients = new();
         
@@ -61,7 +62,7 @@ namespace GameSystem
         {
             Register();
             _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
-            _timerManager.StartTimer("AdaptiveClientSpawner Init", 0.01f, () => Init(), false);
+            _timerManager.StartFrameTimer("AdaptiveClientSpawner Init", 1, () => Init(), false);
         }
         
         
@@ -96,13 +97,23 @@ namespace GameSystem
         /// </summary>
         bool OrderingCounterAvailable() 
         {
+            if (!ShiftOngoing())
+            {
+                return false;
+            }
+            
             if (counters.Count == 0)
             {
-                Debug.LogWarning("No ordering counter in the scene");
+                Debug.LogError("No ordering counter in the scene");
                 return false;
             }
 
             return counters.Any(counter => counter.IsFree);
+        }
+
+        bool ShiftOngoing()
+        {
+            return ReferenceManager.Instance.GetManager<TimerManager>().IsTimerRunning("shiftDuration");
         }
         
         /// <summary>

@@ -9,6 +9,7 @@ namespace Upgrades
     {
         #region Properties
         public int Level => _level;
+        
         public Action<int> OnLevelUp { get; set; }
         #endregion
 
@@ -23,7 +24,6 @@ namespace Upgrades
 
         public Upgrade()
         {
-
             OnLevelUp += (level) => Apply();
         }
 
