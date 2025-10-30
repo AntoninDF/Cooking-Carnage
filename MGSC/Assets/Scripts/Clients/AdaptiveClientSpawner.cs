@@ -1,108 +1,244 @@
 
-using System.Collections.Generic;
 using Clients;
 using Cooking;
 using GameSystem;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Splines;
+using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 namespace GameSystem
 {
     /// <summary>
-    /// Used to make appear a specific new client at precise timing
+    /// Spawning Manager used to request appearance of a specific new client at precise timing
     /// </summary>
     public class AdaptiveClientSpawner : IManager
     {
         #region Properties
-
-        private float delayLength = 5;
-        private float randomDelayRange = 10;
-        private float retryDelay = 2;
-        private string timerName = "clientSpawn";
         
-        [SerializeField] private List<SO_Client> models;
-        [SerializeField] private SO_RecipeBook recipes;
-        [SerializeField] private SplineContainer spline;
-        private int nextSpawnedClient;
+        // Public Properties
+        public int NextClientsCount => nextClients.Count;
+        public SO_Client GetNextClient() => nextClients.Count > 0 ? nextClients.Peek() : null;
+        
+        // Private Properties
+        float GetRandomizedDelay => (delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
+        bool CanSpawnClient => OrderingCounterAvailable() && _gameLoop.IsRunning && canSpawnClient;
         
         #endregion
 
         #region Fields
         
+        public bool canSpawnClient = true;
+        
+        // Setup Fields
+        private float delayLength = 5;
+        private float randomDelayRange = 10;
+        private float retryDelay = 2;
+        private string timerName = "clientSpawn";
+        private List<SO_Client> models;
+        private SO_RecipeBook recipes;
+        private SplineContainer spline;
+        private List<OrderingCounter> counters;
+        
+        // Reference Fields
+        private TimerManager _timerManager;
+        private GameLoop _gameLoop;
+        
+        private Queue<SO_Client> nextClients = new();
         
         #endregion
 
         #region Methods
-
-        void Initialize() { } //WIP should set the properties base values according to a Settings Data passed by GameInitializer
         
-        bool CanSpawnClient() //missing info on if the game is currently running or not
+        /// <summary>
+        /// Constructor of the script, waiting for the GameInitializer to be ready
+        /// </summary>
+        public AdaptiveClientSpawner()
         {
-            if (OrderingCounterAvailable() && ReferenceManager.Instance.GetManager<GameLoop>().IsRunning)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            Register();
+            _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
+            _timerManager.StartTimer("AdaptiveClientSpawner Init", 0.01f, () => Init(), false);
         }
-
-        bool OrderingCounterAvailable()
-        {
-            if (ReferenceManager.Instance.GetElementsOfType<OrderingCounter>().Count > 0)
-            {
-                foreach (OrderingCounter orderingCounter in ReferenceManager.Instance.GetElementsOfType<OrderingCounter>())
-                {
-                    if (orderingCounter.IsFree)
-                    {
-                        //Debug.LogWarning("Ordering counter is free");
-                        return true;
-                    }
-                }
-            }
-            else
-            {
-                Debug.LogWarning("No ordering counter in the scene");
-            }
-            
-            return false;
-        }
-
-        public void LaunchDelay(float length = 2)
-        {
-            ReferenceManager.Instance.GetManager<TimerManager>().StartTimer(timerName, length, SpawnClient, false);
-        }
-
-        float GetRandomizedDelay()
-        {
-            return delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2);
-        }
-
-        void SpawnClient()
-        {
-            if (CanSpawnClient())
-            {
-                /*Client client = Client.New(models[nextSpawnedClient], recipes.Recipes[nextSpawnedClient% recipes.Recipes.Count], ReferenceManager.Instance.GetElementOfType<SimpleClientSpawner>().transform.position);
-                nextSpawnedClient = (nextSpawnedClient + 1)% models.Count;
-
-                client.SetSplinePath(spline);*/
-                //Debug.Log("Spawning client");
-                
-                LaunchDelay(GetRandomizedDelay());
-            }
-            else
-            {
-                //Debug.Log("Can't spawn client");
-                LaunchDelay(retryDelay);
-            }
-        }
-    
-        #endregion
-
+        
+        
+        /// <summary>
+        /// IManager Interface method to register itself to the ReferenceManager
+        /// </summary>
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
         }
-    }
+        
+        
+        /// <summary>
+        /// Setup the fields according to referenced data and then lauches the cycle
+        /// </summary>
+        void Init() 
+        {
+            // WIP : should also setup floats according to a Settings Data
+            
+            _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
+            models = ReferenceManager.AssetReferences.clientList;
+            recipes = ReferenceManager.AssetReferences.recipeBook;
+            spline = ReferenceManager.Instance.GetManager<PathManager>()?.SplineComponent;
+            counters = ReferenceManager.Instance.GetElementsOfType<OrderingCounter>();
+
+            Launch();
+        }
+        
+        
+        /// <summary>
+        /// Check if a counter is free to order
+        /// </summary>
+        bool OrderingCounterAvailable() 
+        {
+            if (counters.Count == 0)
+            {
+                Debug.LogWarning("No ordering counter in the scene");
+                return false;
+            }
+
+            return counters.Any(counter => counter.IsFree);
+        }
+        
+        /// <summary>
+        /// Assign a Client to the ordering counter when it spawns
+        /// </summary>
+        void AssignClientOrderingCounter(Client client)
+        {
+            foreach (var counter in counters)
+            {
+                if (!counter.IsFree) continue;
+                client.ReserveCounter(counter);
+                return;
+            }
+            Debug.LogWarning("Ordering Counter Occupation error");
+        }
+
+        
+        /// <summary>
+        /// Launch spawn timer with a delay (or not)
+        /// </summary>
+        void Launch(float delay = 2)
+        {
+            _timerManager.StartTimer(timerName, delay, () => SpawnClient()(), false);
+        }
+
+        
+        /// <summary>
+        /// Spawn a new Client if it is possible
+        /// </summary>
+        Action SpawnClient(SO_Client clientSO = null)
+        {
+            // WIP : Choice of the recipe asked is fully random for now
+            return () =>
+            {
+                if (CanSpawnClient || clientSO != null)
+                {
+                    // If the queue is empty enqueues a new client then it dequeues the first one
+                    if (nextClients.Count == 0) { EnqueueClient(NewClient()); }
+                    clientSO = nextClients.Dequeue(); 
+                    
+                    // Picks a random recipe through the list of recipes
+                    var randomRecipe = recipes.Recipes[Random.Range(0, recipes.Recipes.Count)];
+                    
+                    // Spawns the client in the scene via ClientGenerator method Client.New()
+                    Client client = Client.New(clientSO, randomRecipe, Vector3.zero);
+                    client.SetSplinePath(spline);
+                    AssignClientOrderingCounter(client);
+                    
+                    ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(client,false);
+                    
+                    Launch(GetRandomizedDelay);
+                }
+                else
+                {
+                    Launch(retryDelay);
+                }
+            };
+        }
+
+        /// <summary>
+        /// Select a random Client of the right type through a referenced list
+        /// </summary>
+        SO_Client NewClient()
+        {
+            // WIP : could generate the entirety of the client instead of selecting
+            
+            EClientType chosenType = GetRandomWeightedType();
+            
+            // Creates a filtered array according to chosenType
+            var clientsOfType = models.Where(m => m.clientType == chosenType).ToArray();
+
+            if (clientsOfType.Length == 0)
+            {
+                Debug.LogWarning($"No client of type {chosenType} found in models!");
+                return null;
+            }
+            
+            return clientsOfType[Random.Range(0, clientsOfType.Length)];
+        }
+        
+        /// <summary>
+        /// Picks a random client type according to GD algorithm
+        /// </summary>
+        EClientType GetRandomWeightedType()
+        {
+            Dictionary<EClientType, float> clientTypeAmount =
+                ReferenceManager.Instance.GetManager<ClientManager>().ClientTypeAmount;
+            Dictionary<EClientType, float> weightedTypes = new Dictionary<EClientType, float>();
+
+            var keys = clientTypeAmount.Keys.ToList();
+            int keyCount = keys.Count;
+            
+            //WIP : Works only for 3 types of Alien
+            for (int typeIndex = 0; typeIndex < keyCount; typeIndex++)
+            {
+                int prevIndex = (typeIndex - 1) < 0 ? keyCount - 1 : typeIndex - 1;
+                int nextIndex = (typeIndex + 1) >= keyCount ? 0 : typeIndex + 1;
+
+                EClientType type = keys[typeIndex];
+                weightedTypes[type] =
+                    35 + clientTypeAmount[keys[prevIndex]] * 5 + clientTypeAmount[keys[nextIndex]] * 5;
+            }
+            float sum = weightedTypes[keys[0]] + weightedTypes[keys[1]]+weightedTypes[keys[2]];
+            
+            for (int typeIndex = 0; typeIndex < keyCount; typeIndex++)
+            {
+                EClientType type = keys[typeIndex];
+                weightedTypes[type] /= sum;
+            }
+
+            float randomValue = Random.value;
+            
+            float cumulative = 0f;
+            
+            foreach (var pair in weightedTypes)
+            {
+                cumulative += pair.Value;
+                if (randomValue <= cumulative)
+                {
+                    return pair.Key;
+                }
+            }
+            Debug.LogError("Error with the selection of new client's type");
+            return EClientType.None;
+        }
+
+        
+        /// <summary>
+        /// Add a client to the queue
+        /// </summary>
+        private void EnqueueClient(SO_Client client)
+        {
+            nextClients.Enqueue(client);
+        }
+
+        #endregion
+        
+    } 
 }

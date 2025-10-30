@@ -52,6 +52,10 @@ namespace Orders
 
         public void Cancel()
         {
+            if (Container != null)
+            {
+                Container.Drop(this);
+            }
             Destroy(gameObject);
         }
 

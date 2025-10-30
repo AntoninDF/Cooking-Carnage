@@ -13,6 +13,7 @@ namespace Cooking
         public UnityEvent<ICookable> OnCook => _onCook;
         public float CookDuration { get; set; }
         public float CookPercentage => CookDuration / (TargetCookDuration > 0 ? TargetCookDuration : 1.0f);
+        public ECookStatus CookStatus { get; set; }
 
         #endregion
 
@@ -51,6 +52,9 @@ namespace Cooking
                 throw new MissingReferenceException("Please reference the cook indicator in the inspector of " + name);
             _cookIndicator.text = string.Format(_cookIndicatorText, Mathf.Round(CookPercentage * 100) + "%");
         }
+
+        public void Cook(float dT) { CookDuration += dT; OnCook?.Invoke(this); }
+        public void StopCooking() { }
 
         #endregion
 

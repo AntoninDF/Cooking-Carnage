@@ -9,6 +9,7 @@ namespace Cooking
     {
         #region Properties
         public SO_Ingredient Model => _model;
+        public bool IsBaseIngredient => Model.IsBaseIngredient;
         #endregion
 
         #region Fields

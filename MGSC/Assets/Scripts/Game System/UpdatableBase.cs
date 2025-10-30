@@ -10,6 +10,7 @@ namespace GameSystem
         }
 
         public abstract void Update(float deltaTime);
+        public abstract void FixedUpdate();
 
         public virtual void RegisterToGameLoop()
         {

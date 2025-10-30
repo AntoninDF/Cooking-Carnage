@@ -1,6 +1,5 @@
 using Cooking;
 using GameSystem;
-using NUnit.Framework;
 using Orders;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -56,22 +55,22 @@ namespace Clients
             foreach (var slot in _slotsToSpawn)
             {
                 if (slot.Filter == null)
+                {
                     filter = slot.AddComponent<ContainerFilter>();
+                }
                 else
+                {
                     filter = slot.GetComponent<ContainerFilter>();
-                filter.SetAll(false);
-                filter.item = true;
-                filter.ingredient = true;
-                filter.filterOperator = ContainerFilter.ELogicOperator.And;
+                }
+                filter.Clear();
+                filter.AddFilter(ContainerFilter.EFilterCondition.MustBe, ContainerFilter.EItemType.Ingredient);
             }
             if (_mealSlot.Filter == null)
                 filter = _mealSlot.AddComponent<ContainerFilter>();
             else
                 filter = _mealSlot.GetComponent<ContainerFilter>();
-            filter.SetAll(false);
-            filter.item = true;
-            filter.meal = true;
-            filter.filterOperator = ContainerFilter.ELogicOperator.And;
+            filter.Clear();
+            filter.AddFilter(ContainerFilter.EFilterCondition.MustBe, ContainerFilter.EItemType.Meal);
         }
 
         private void Serve(IGrabbable item)
@@ -95,8 +94,9 @@ namespace Clients
         private void Kill()
         {
             AddLoot(_currentClient.IngredientsToDrop);
+            _orderManager.CancelOrder(_currentClient.Order);
             _currentClient.Kill();
-            _currentClient = null;
+            Free();
             _onKill?.Invoke();
 
         }
@@ -121,11 +121,10 @@ namespace Clients
             bool couldBePlaced = false;
             foreach (var slot in _slotsToSpawn)
             {
-                if (!slot.IsEmpty) continue;
+                if (!slot.IsFree) continue;
                 slot.Grab(item);
                 item.transform.position = slot.transform.position;
                 couldBePlaced = true;
-                Debug.Log("Item placed on slot");
                 break;
             }
             if (!couldBePlaced) go.transform.position = transform.position;

@@ -25,8 +25,10 @@ namespace Clients
         [SerializeField] protected float _reachDistance = 1.0f;
         [Space]
         [Header("Counter events")]
-        [Tooltip("Invoked when a user/client uses this counter")]
+        [Tooltip("Invoked when a user/client reserves this counter")]
         [SerializeField] private UnityEvent _onUserRegister;
+        [Tooltip("Invoked when a user/client uses this counter")]
+        [SerializeField] private UnityEvent _onUserInteraction;
         [Tooltip("Invoked when a user/client stops using this counter")]
         [SerializeField] private UnityEvent _onUserUnregister;
 
@@ -44,6 +46,11 @@ namespace Clients
         {
             _currentClient = client;
             _onUserRegister?.Invoke();
+        }
+        
+        public void Interaction()
+        {
+            _onUserInteraction?.Invoke();
         }
 
         public void Free()

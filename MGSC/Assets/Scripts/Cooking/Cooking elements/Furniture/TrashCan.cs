@@ -1,6 +1,4 @@
 using Controller;
-using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,6 +10,7 @@ namespace Cooking
         #region Properties
         public UnityEvent<IGrabbable> OnGrab => _onGrab;
         public UnityEvent<IGrabbable> OnDrop => null; // The trashcan never drops anything for now
+        public bool IsLocked => false;
         #endregion
 
         #region Fields
@@ -31,6 +30,8 @@ namespace Cooking
 
         public void Grab(IGrabbable item)
         {
+            if (!CanGrab(item)) return;
+            item.GetGrabbed(this);
             OnGrab?.Invoke(item);
             Dispose(item);
         }
@@ -39,8 +40,10 @@ namespace Cooking
         {
             base.Interact(interactor);
 
+            Debug.Log("Interacting");
             if (interactor.HeldItem == null) return;
-
+            if (!CanGrab(interactor.HeldItem)) return;
+            Grab(interactor.HeldItem);
             interactor.Drop();
         }
 

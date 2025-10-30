@@ -1,3 +1,4 @@
+using System.Linq;
 using Cooking;
 using GameSystem;
 using Orders;
@@ -30,8 +31,14 @@ namespace Clients
         public void TryAcceptOrder()
         {
             if (IsFree) return;
-            AcceptOrder();
-            return;
+
+            if (ReferenceManager.Instance.GetElementsOfType<SittingCounter>().Any(counter => counter.IsFree) 
+                && _currentClient.CheckClientCounterDistance(this))
+            {
+                AcceptOrder(); 
+            }
+            
+            // Order can't be accepted cause there is no sitting counter available
         }
 
         private void AcceptOrder()
@@ -66,6 +73,7 @@ namespace Clients
             if (_ticketSlot == null)
                 Debug.LogError("[OrderingCounter] : The ticket slot's reference is missing, please assign it in the inspector");
             ticket.SetAnimationMode(false);
+            _ticketSlot.Drop(_ticketSlot.HeldItem);
             _ticketSlot.Grab(ticket);
         }
 
@@ -75,8 +83,9 @@ namespace Clients
         /// <returns></returns>
         private SO_Recipe GetOrder()
         {
-            float r = Random.Range(0,1);
-            int index = Mathf.FloorToInt((_recipeBook.Recipes.Count - 1) * r);
+            if (_recipeBook == null)
+                Debug.LogError("[OrderingCounter] (" + name + ") : Please reference a recipe book in the inspector");
+            int index = Random.Range(0, _recipeBook.Recipes.Count);
             return _recipeBook.Recipes[index];
         }
 

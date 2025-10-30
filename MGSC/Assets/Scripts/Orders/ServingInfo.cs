@@ -1,4 +1,6 @@
 using Cooking;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Orders
@@ -21,5 +23,19 @@ namespace Orders
             Timestamp = Time.time;
         }
 
+        public static bool operator == (ServingInfo left, ServingInfo right) => (left.Meal == right.Meal && left.Timestamp == right.Timestamp);
+        public static bool operator != (ServingInfo left, ServingInfo right) => !(left == right);
+
+        public override bool Equals(object obj)
+        {
+            return obj is ServingInfo info &&
+                   EqualityComparer<Meal>.Default.Equals(Meal, info.Meal) &&
+                   Timestamp == info.Timestamp;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Meal, Timestamp);
+        }
     }
 }

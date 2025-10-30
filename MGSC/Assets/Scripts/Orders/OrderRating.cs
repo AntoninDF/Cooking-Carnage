@@ -10,7 +10,7 @@ namespace Orders
         public Order RatedOrder { get; private set; }
         public SO_Recipe TargetRecipe { get; private set; }
         public SO_Recipe ActualRecipe { get; private set; }
-        public bool IsCorrectRecipe => TargetRecipe == ActualRecipe;
+        public bool IsCorrectRecipe => TargetRecipe == ActualRecipe && ActualRecipe != null;
         public float Rating { get; private set; }
         public float MoneyGained { get; private set; }
         public float ReputationGained { get; private set; }

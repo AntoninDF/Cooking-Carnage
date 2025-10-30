@@ -1,6 +1,7 @@
 using Controller;
 using System;
 using System.Collections;
+using UI;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -35,6 +36,7 @@ namespace Cooking
         [Tooltip("Invoked when this item is grabbed by the player or another container")]
         [SerializeField] private UnityEvent _onGrabbed;
 
+        protected Tooltip _tooltipComponent; 
         private Coroutine _coroutine;
         protected Transform _defaultParent;
         protected Vector3 _targetPos;
@@ -51,6 +53,7 @@ namespace Cooking
         {
             _defaultRotation = transform.rotation;
             _collider = GetComponent<Collider>();
+            _tooltipComponent = _tooltip.GetComponent<Tooltip>();
         }
         protected virtual void Update()
         {

@@ -1,3 +1,6 @@
+
+using Orders;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Cooking
@@ -5,60 +8,103 @@ namespace Cooking
     /// <summary>
     /// The ContainerFilter component should be added to a gameobject with a container component. It filters out which Grabbables can be grabbed.
     /// </summary>
-
     public class ContainerFilter : MonoBehaviour
     {
         #region Fields
-        [SerializeField] public ELogicOperator filterOperator;
-        [SerializeField] public bool item = true;
-        [SerializeField] public bool ingredient = true;
-        [SerializeField] public bool plate = true;
-        [SerializeField] public bool meal = true;
-        [SerializeField] public bool container = true;
+        [SerializeField] public List<Filter> _filters = new();
 
         #endregion
         public bool IsValid(MonoBehaviour comparedItem)
         {
-            if (filterOperator == ELogicOperator.Or)
+            foreach (Filter filter in _filters)
             {
-                if (item && comparedItem is Item) return true;
-                if (item)
+                switch (filter.Condition)
                 {
-                    if (ingredient && comparedItem is Ingredient) return true;
-                    if (plate && comparedItem is Plate) return true;
-                    if (meal && comparedItem is Meal) return true;
+                    case EFilterCondition.MustBe:
+                        if (!IsValid(comparedItem, filter.ItemType)) return false;
+                        break;
+                    case EFilterCondition.MustNotBe:
+                        if (IsValid(comparedItem, filter.ItemType)) return false;
+                        break;
+                    default:
+                        continue;
                 }
-                if (container && comparedItem is IContainer) return true;
-                return false;
             }
-            else if (filterOperator == ELogicOperator.And)
+            return true;
+        }
+        private bool IsValid(MonoBehaviour item, EItemType type)
+        {
+            switch (type)
             {
-                if (item && comparedItem is not Item) return false;
-                if (item)
-                {
-                    if (ingredient && comparedItem is not Ingredient) return false;
-                    if (plate && comparedItem is not Plate) return false;
-                    if (meal && comparedItem is not Meal) return false;
-                }
-                else if (!container) return false;
-                if (container && comparedItem is not IContainer) return false;
-                return true;
+                case EItemType.Ingredient:
+                    return item is Ingredient;
+                case EItemType.BaseIngredient:
+                    return (item is Ingredient && ((Ingredient)item).IsBaseIngredient);
+                case EItemType.Meal:
+                    return item is Meal;
+                case EItemType.Plate:
+                    return item is Plate;
+                case EItemType.Container:
+                    return item is IContainer;
+                case EItemType.OrderTicket:
+                    return item is OrderTicket;
+                case EItemType.Cookable:
+                    return item is ICookable;
+                case EItemType.Trashable:
+                    return item is ITrashable;
+                case EItemType.Oven:
+                    return item is Oven;
+                
+                
             }
             return false;
         }
-        public void SetAll(bool value)
+        public void AddFilter(Filter filter) => _filters.Add(filter);
+        public void AddFilter(EFilterCondition condition, EItemType itemType) => _filters.Add(new Filter(condition, itemType));
+        public void Clear() => _filters.Clear();
+
+        
+        public enum EFilterCondition
         {
-            item = value;
-            ingredient = value;
-            plate = value;
-            meal = value;
-            container = value;
+            MustBe,
+            MustNotBe
         }
 
-        public enum ELogicOperator
+        // When an option is added to this enum, also add the corresponding logic to IsValid(MonoBehaviour, EItemType)
+        // Do not change the IDs !! It will break every existing filter
+        public enum EItemType
         {
-            Or,
-            And
+            Ingredient=0,
+            BaseIngredient=1,
+            Meal=2,
+            Plate=3,
+            Container=4,
+            OrderTicket=5,
+
+            Cookable=6,
+            Trashable=7,
+
+            Oven=8,
         }
+
+        [System.Serializable]
+        public struct Filter
+        {
+            public Filter(EFilterCondition condition, EItemType itemType)
+            {
+                Condition = condition;
+                ItemType = itemType;
+            }
+            public EFilterCondition Condition;
+            public EItemType ItemType;
+
+            public static bool operator ==(Filter left, Filter right) => (left.Condition == right.Condition && left.ItemType == right.ItemType);
+            public static bool operator !=(Filter left, Filter right) => !(left == right);
+
+            public override bool Equals(object obj) => base.Equals(obj);
+            public override int GetHashCode() => base.GetHashCode();
+            public override string ToString() => base.ToString();
+        }
+        
     }
 }

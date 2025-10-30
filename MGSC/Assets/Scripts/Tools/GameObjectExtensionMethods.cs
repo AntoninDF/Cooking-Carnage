@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 /// <summary>
@@ -29,5 +30,4 @@ public static class GameObjectExtensionMethods
         if (valid) comp = temp;
         return valid;
     }
-
 }

@@ -72,7 +72,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &738898631406455371
 Transform:
   m_ObjectHideFlags: 0
@@ -154,19 +154,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.16
+      value: 0.19999999
       objectReference: {fileID: 0}
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.16
+      value: 0.19999999
       objectReference: {fileID: 0}
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.16
+      value: 0.19999999
       objectReference: {fileID: 0}
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.009
+      objectReference: {fileID: 0}
+    - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3156349400350268277, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_Name
@@ -228,6 +232,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7666615031712139230, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5335461947761116018, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
     m_RemovedGameObjects: []
@@ -264,7 +272,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.08
+  m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &244008206974200639
 MonoBehaviour:
@@ -278,12 +286,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557202aa2b7e51340b943eb639e2e5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerFilter
-  filterOperator: 1
-  item: 1
-  ingredient: 1
-  plate: 0
-  meal: 0
-  container: 0
+  _filters:
+  - Condition: 0
+    ItemType: 0
 --- !u!4 &5093425840896064849 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
@@ -310,19 +315,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.16
+      value: 0.19999999
       objectReference: {fileID: 0}
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.16
+      value: 0.19999999
       objectReference: {fileID: 0}
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.16
+      value: 0.19999999
       objectReference: {fileID: 0}
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.009
+      objectReference: {fileID: 0}
+    - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3156349400350268277, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_Name
@@ -384,6 +393,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7666615031712139230, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5335461947761116018, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
     m_RemovedGameObjects: []
@@ -420,7 +433,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.08
+  m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6808126722413581640
 MonoBehaviour:
@@ -434,12 +447,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557202aa2b7e51340b943eb639e2e5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerFilter
-  filterOperator: 1
-  item: 1
-  ingredient: 1
-  plate: 0
-  meal: 0
-  container: 0
+  _filters:
+  - Condition: 0
+    ItemType: 0
 --- !u!4 &5710712298739903893 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
@@ -518,7 +528,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8324880841174000268, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
       propertyPath: m_text
-      value: Empty plate
+      value: Plate
       objectReference: {fileID: 0}
     - target: {fileID: 8446389273013402685, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
       propertyPath: m_LocalScale.x
@@ -565,10 +575,10 @@ PrefabInstance:
       addedObject: {fileID: 5093425840896064849}
     - targetCorrespondingSourceObject: {fileID: 3519798225028237028, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
       insertIndex: 2
-      addedObject: {fileID: 5710712298739903893}
+      addedObject: {fileID: 3860389303538816324}
     - targetCorrespondingSourceObject: {fileID: 3519798225028237028, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
       insertIndex: 3
-      addedObject: {fileID: 3860389303538816324}
+      addedObject: {fileID: 5710712298739903893}
     - targetCorrespondingSourceObject: {fileID: 3519798225028237028, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
       insertIndex: 4
       addedObject: {fileID: 8112800093854690}
@@ -640,8 +650,43 @@ MonoBehaviour:
   _baseIngredientSlot: {fileID: 2637016309878564467}
   _ingredientSlots: {fileID: 4334623239686519242}
   _recipeBook: {fileID: 11400000, guid: 367f956cce92a474abe807c44ec4f8ab, type: 2}
-  _targetCookDuration: 10
   _onCook:
+    m_PersistentCalls:
+      m_Calls: []
+  _onBaseIngredientAdded:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7316782934266550687}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  _onBaseIngredientRemoved:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7316782934266550687}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _onIngredientAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  _onIngredientRemoved:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &8270064822264966898 stripped
@@ -675,7 +720,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3156349400350268277, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_Name
-      value: Top slot (3)
+      value: Base ingredient slot
       objectReference: {fileID: 0}
     - target: {fileID: 3652729348044118466, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_Mesh
@@ -778,12 +823,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557202aa2b7e51340b943eb639e2e5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerFilter
-  filterOperator: 1
-  item: 1
-  ingredient: 1
-  plate: 0
-  meal: 0
-  container: 0
+  _filters:
+  - Condition: 0
+    ItemType: 1
 --- !u!65 &5658860339439240192
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -815,19 +857,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.16
+      value: 0.19999999
       objectReference: {fileID: 0}
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.16
+      value: 0.19999999
       objectReference: {fileID: 0}
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.16
+      value: 0.19999999
       objectReference: {fileID: 0}
     - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.009
+      objectReference: {fileID: 0}
+    - target: {fileID: 672929183589623087, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3156349400350268277, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_Name
@@ -889,6 +935,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7666615031712139230, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5335461947761116018, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
     m_RemovedGameObjects: []
@@ -941,7 +991,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.08
+  m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5735810997756217513
 MonoBehaviour:
@@ -955,9 +1005,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557202aa2b7e51340b943eb639e2e5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerFilter
-  filterOperator: 1
-  item: 1
-  ingredient: 1
-  plate: 0
-  meal: 0
-  container: 0
+  _filters:
+  - Condition: 0
+    ItemType: 0

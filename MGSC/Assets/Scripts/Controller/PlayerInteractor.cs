@@ -1,6 +1,4 @@
 using Cooking;
-using Mono.Cecil;
-using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -25,6 +23,7 @@ namespace Controller
         [field: SerializeField]
         public UnityEvent<IGrabbable> OnDrop { get; set; }
         public PlayerInterface Player { get => _playerInterface; set => _playerInterface = value; }
+        public bool IsLocked => false;
 
         #endregion
 
@@ -136,7 +135,7 @@ namespace Controller
         public void GrabOrDrop(InputAction.CallbackContext context)
         {
             if (HeldItem == null) Grab();
-            else Drop();
+            else DropOnContainer();
         }
 
         public void Grab()
@@ -151,15 +150,17 @@ namespace Controller
         {
             if (item == null) return;
             if (_heldItem != null) return;
+            if (item.Container != null && item.Container.IsLocked) return;
 
             _grabbedItemThisFrame = true;
             item.GetGrabbed(this);
             _heldItem = item;
+            _heldItem.Collider.enabled = false;
             OnGrab?.Invoke(item);
         }
 
         public void Drop(IGrabbable item) => Drop();
-        public void Drop()
+        public void DropOnContainer()
         {
             bool checkOverlap = true;
             if (_heldItem == null) return;
@@ -178,6 +179,12 @@ namespace Controller
 
             //Finally grab
             container.Grab(_heldItem);
+        }
+
+        public void Drop()
+        {
+            if (_heldItem == null) return;
+            _heldItem.Collider.enabled = true;
             OnDrop?.Invoke(_heldItem);
             _heldItem = null;
         }

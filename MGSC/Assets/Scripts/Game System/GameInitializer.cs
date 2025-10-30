@@ -1,5 +1,6 @@
 using Controller;
 using UnityEngine;
+using Upgrades;
 namespace GameSystem
 {
 
@@ -17,21 +18,30 @@ namespace GameSystem
         #region Fields
 
         // SERIALIZED FIELDS
+        [Tooltip("Should this gameobject be destroyed juste after the gazme starts ?")]
+        [SerializeField] private bool _destroyAfterInitialization = true;
+        [Tooltip("Should every other object already present in the scene be destroyed on start ?")]
+        [SerializeField] private bool _destroyEveryOtherObject = false;
         [Header("References")]
 
         [Tooltip("Pass in the scriptable object holding references to every element to spawn on game start")]
         [SerializeField] private SO_ScenePreset _scenePreset;
+
+        [Tooltip("Pass in the scriptable object holding references to every important data asset for the game")]
+        [SerializeField] private SO_AssetReferences _assetReferences;
 
         // Transform at which the player will be spawned
         private Transform _playerStart;
 
         // PRIVATE FIELDS
         private PlayerInterface _player;
-        private bool _destroyAfterInitialization = true;
         
         private OrderManager _orderManager;
         private TimerManager _timerManager;
         private AdaptiveClientSpawner _adaptiveClientSpawner;
+        private MoneyManager _moneyManager;
+        private DataManager _dataManager;
+        private ClientManager _clientManager;
         #endregion
 
         #region Methods
@@ -40,6 +50,7 @@ namespace GameSystem
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Awake()
         {
+            if (_destroyEveryOtherObject) DestroyEverythingMuahaha();
             ResetScene();
             if (_destroyAfterInitialization) Destroy(this.gameObject);
         }
@@ -54,7 +65,11 @@ namespace GameSystem
             // Check scene preset reference
             if (_scenePreset == null)
                 throw new MissingReferenceException("Please assign a scene preset scriptable object in the game initializer's inspector, otherwise it cannot initialize anything :)");
-            
+
+            if (_assetReferences == null)
+                throw new MissingReferenceException("Please assign an asset reference scriptable object in the game initializer's inspector, otherwise many references will be missing :)");
+            ReferenceManager.AssetReferences = _assetReferences; 
+
             // Create a player if none exist yet
             if (_player == null) SpawnPlayer();
 
@@ -71,9 +86,12 @@ namespace GameSystem
              _orderManager = new OrderManager();
              _timerManager = new TimerManager();
              _adaptiveClientSpawner = new AdaptiveClientSpawner();
-            
-             _adaptiveClientSpawner.LaunchDelay();
+             _dataManager = new DataManager();
+             _moneyManager = new MoneyManager();
+             _clientManager = new ClientManager();
              
+            new UpgradeManager();
+
             _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
             ResetPlayer();
         }
@@ -124,6 +142,14 @@ namespace GameSystem
             _player.Interactor.InputHandler = _player.InputHandler;
             _player.Controller.InputHandler = _player.InputHandler;
             _player.InputHandler.SetInputReferences();
+        }
+
+        private void DestroyEverythingMuahaha()
+        {
+            foreach(GameObject go in FindObjectsByType(typeof(GameObject), FindObjectsSortMode.None))
+            {
+                if (go != gameObject) Destroy(go);
+            }
         }
         #endregion
     }

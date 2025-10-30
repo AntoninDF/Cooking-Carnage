@@ -5,6 +5,7 @@ using UnityEngine;
 using Cooking;
 using Clients;
 using UnityEngine.Rendering;
+using Controller;
 
 namespace GameSystem
 {
@@ -17,6 +18,8 @@ namespace GameSystem
         #region Properties
         // Lazy initialization
         public static ReferenceManager Instance { get { if (_instance == null) _instance = new ReferenceManager(); return _instance;}}
+        public static SO_AssetReferences AssetReferences { get; set; }
+        
         
         #endregion
 
@@ -30,10 +33,14 @@ namespace GameSystem
             typeof(Item),
             typeof(Ingredient),
             typeof(Furnace),
+            typeof(Oven),
             typeof(TrashCan),
             typeof(Meal),
             typeof(SimpleClientSpawner),
             typeof(PlayerStart),
+            typeof(PlayerInterface),
+            typeof(OvenSetup),
+            typeof(PlayerInterface),
 
         };
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;
@@ -49,7 +56,7 @@ namespace GameSystem
             _elementDict = new();
             _managers = new();
             ScanHierarchy();
-            DebugTrackedObjectsCount();
+            //DebugTrackedObjectsCount();
         }
 
         public void SetManager<T>(T manager) where T : IManager
@@ -85,7 +92,7 @@ namespace GameSystem
 
         public T GetElementOfType<T>() where T : class => GetElementsOfType<T>().FirstOrDefault();
 
-        public void ScanHierarchy(bool clearDictBeforeScan=false)
+        public void ScanHierarchy(bool clearDictBeforeScan=true)
         {
             if (clearDictBeforeScan)
                 _elementDict.Clear();

@@ -6,15 +6,15 @@ using UnityEngine.Splines;
 namespace Clients
 {
     /// <summary>
-    /// Just for tests. Pharrell, it belongs to you to make it clean <3
+    /// Will be deleted very very soon/ or used only for game spawner location
     /// </summary>
     public class SimpleClientSpawner : MonoBehaviour
     {
-        [SerializeField] private List<SO_Client> models;
-        [SerializeField] private SO_RecipeBook recipes;
-        [SerializeField] private SplineContainer spline;
+        public List<SO_Client> models;
+        public SO_RecipeBook recipes;
+        public SplineContainer spline;
 
-        [SerializeField] private float timeBetweenSpawn = 10f;
+        /*[SerializeField] private float timeBetweenSpawn = 10f;
         private float timeOfLastSpawn = float.MinValue;
         private int nextSpawnedClient;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -40,6 +40,6 @@ namespace Clients
 
             client.SetSplinePath(spline);
         }
+    }*/
     }
-
 }

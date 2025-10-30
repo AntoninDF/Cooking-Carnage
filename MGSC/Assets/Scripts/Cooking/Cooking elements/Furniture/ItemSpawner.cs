@@ -53,7 +53,7 @@ namespace Cooking
                     bool couldBePlaced= false;
                     foreach (var slot in _slotsToSpawn)
                     {
-                        if (!slot.IsEmpty) continue;
+                        if (!slot.IsFree) continue;
                         item.SetAnimationMode(false);
                         slot.Grab(item);
                         item.transform.position = slot.transform.position;
