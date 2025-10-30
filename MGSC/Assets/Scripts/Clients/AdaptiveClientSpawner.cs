@@ -26,7 +26,7 @@ namespace GameSystem
         
         // Private Properties
         float GetRandomizedDelay => (delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
-        bool CanSpawnClient => OrderingCounterAvailable() && _gameLoop.IsRunning && canSpawnClient;
+        bool CanSpawnClient => OrderingCounterAvailable() && _gameLoop.IsRunning && canSpawnClient && spline!=null;
         
         #endregion
 
