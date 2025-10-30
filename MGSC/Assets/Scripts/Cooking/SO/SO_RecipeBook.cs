@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Cooking
@@ -13,6 +14,8 @@ namespace Cooking
         public List<SO_Recipe> Recipes { get => recipes;set=>recipes =value; }
         [Tooltip("List all the recipes that can be made here")]
         [SerializeField] private List<SO_Recipe> recipes;
+
+        public float TotalProbabilityRate => recipes.Select((r) => r.probabilityRate).Sum();
     }
 
 }

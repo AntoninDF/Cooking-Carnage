@@ -8,6 +8,7 @@ namespace Cooking
     /// <summary>
     /// Defines the set of data needed for a meal
     /// </summary>
+    
     [CreateAssetMenu(fileName = "Recipe", menuName = "Scriptable Objects/Recipe")]
     public class SO_Recipe : ScriptableObject
     {
@@ -25,6 +26,10 @@ namespace Cooking
         public float timeToCook = 10f;
         [Tooltip("How long does it take to go from cooked to overcooked ?")]
         public float timeToOvercook = 12f;
+        [Tooltip("How likely this recipe is to be ordered by default. The unit is arbitrary and depends on the other recipes' probability rates.")]
+        public float probabilityRate = 1f;
+        [Tooltip("How much higher the probability rate will get each time a corresponding client is seen.")]
+        public float probabilityRateIncrement = 1f;
         [Tooltip("The list of ingredients that are needed to complete the recipe")]
         public List<SO_Ingredient> itemsNeeded;
         [Tooltip("Do the ingredients need to be ordered to complete the recipe ?")]
