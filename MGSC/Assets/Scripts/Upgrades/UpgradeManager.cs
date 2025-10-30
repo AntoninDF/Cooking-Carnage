@@ -1,5 +1,7 @@
+using System;
 using GameSystem;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Upgrades
@@ -55,6 +57,11 @@ namespace Upgrades
                 if (upgrade is T)
                     return upgrade as T;
             return null;
+        }
+        
+        public Upgrade GetUpgradeByType(Type type)
+        {
+            return _upgrades.FirstOrDefault(u => u.GetType() == type);
         }
 
         public bool HasUpgradeOfType<T>(out T upgrade) where T : Upgrade

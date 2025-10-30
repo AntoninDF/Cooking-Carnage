@@ -41,7 +41,7 @@ namespace Clients
         /// <param name="name">The name that will be used for the gameobject</param>
         /// <param name="position">The position at which the gameobject will be instantiated</param>
         /// <returns></returns>
-        public static Client New(GameObject prefab, EClientType type, List<SO_Ingredient> ingredientsDroppedOnKill, SO_Recipe order, string name = null, Vector3 position = default(Vector3), float speed = 1.0f)
+        public static Client New(GameObject prefab, EClientType type, SO_Ingredient ingredientDroppedOnKill, SO_Recipe order, string name = null, Vector3 position = default(Vector3), float speed = 1.0f)
         {
             if (prefab == null)
             {
@@ -62,7 +62,7 @@ namespace Clients
             client
                 .SetType(type)
                 .SetOrder(order)
-                .SetLoot(ingredientsDroppedOnKill)
+                .SetLoot(ingredientDroppedOnKill)
                 .SetSpeed(speed);
 
             if (name != null)
@@ -87,9 +87,9 @@ namespace Clients
             return this;
         }
 
-        public Client SetLoot(List<SO_Ingredient> loot)
+        public Client SetLoot(SO_Ingredient loot)
         {
-            IngredientsToDrop = loot;
+            IngredientToDrop = loot;
             return this;
         }
 

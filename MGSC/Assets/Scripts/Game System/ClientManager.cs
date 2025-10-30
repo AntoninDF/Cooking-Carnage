@@ -4,6 +4,7 @@ using Clients;
 using Orders;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace GameSystem
 {
@@ -108,9 +109,13 @@ namespace GameSystem
         /// <summary>
         /// Returns a sized-copy of the Clients History 
         /// </summary>
-        public List<ClientDataWIP> GetClientsHistory(int amount)
+        public List<ClientDataWIP> GetClientsHistory(int amount=-1)
         {
-            if(amount ==0 || clientHistory.Count == 0) { return null; }
+            //if(clientHistory.Count == 0) { return null; }
+            MonoBehaviour.print("Client history count : " + clientHistory.Count);
+            
+            amount = amount == -1 ? clientHistory.Count : amount;
+            
             List<ClientDataWIP> list = new List<ClientDataWIP>();
             
             int possibleAmount = Mathf.Min(amount, clientHistory.Count);
@@ -122,6 +127,25 @@ namespace GameSystem
             return list;
         }
 
+        public Dictionary<EClientType, int> GetSeenClientTypesCount(int amount = -1)
+        {
+            List<EClientType> seenTypes = currentClients.Where((client) => client.HasOrdered).Select((client) => client.Type).ToList();
+            seenTypes.InsertRange(0, clientHistory.Select((data) => data.ClientType).ToList());
+            if (amount < -1) throw new ArgumentException("[ClientManager] : You cannot ask for a negative amount of client types. Only use -1 to get all of the seen types.");
+            if (amount != -1)
+            {
+                int startIndex = Mathf.Max(0, seenTypes.Count - 1 - amount);
+                int count = seenTypes.Count - startIndex;
+                seenTypes = seenTypes.GetRange(startIndex, count);
+            }
+            Dictionary<EClientType, int> output = new();
+            foreach (EClientType type in seenTypes)
+            {
+                if (!output.ContainsKey(type)) output[type] = 0;
+                output[type]++;
+            }
+            return output;
+        }
 
        /// <summary>
        /// Updates the percentages of clients types received

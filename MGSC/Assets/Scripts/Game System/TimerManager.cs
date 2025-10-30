@@ -11,7 +11,8 @@ namespace GameSystem
     {
         #region Properties
         
-        
+        public Dictionary<string, Timer> Timers => timers;
+        public Dictionary<string, FrameTimer> Frametimers => frameTimers;
         
         #endregion
 

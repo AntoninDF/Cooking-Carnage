@@ -83,10 +83,15 @@ namespace Clients
         /// <returns></returns>
         private SO_Recipe GetOrder()
         {
+            SO_Recipe output;
+            /*
             if (_recipeBook == null)
                 Debug.LogError("[OrderingCounter] (" + name + ") : Please reference a recipe book in the inspector");
             int index = Random.Range(0, _recipeBook.Recipes.Count);
-            return _recipeBook.Recipes[index];
+            output = _recipeBook.Recipes[index];
+            */
+            output = OrderPicker.Pick();
+            return output;
         }
 
         private bool EnforceReferences()
