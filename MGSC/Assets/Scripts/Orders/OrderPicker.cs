@@ -46,7 +46,7 @@ namespace Orders
             float randomTarget = UnityEngine.Random.Range(0f, sum);
 
             //MonoBehaviour.print("[OrderPicker] : Random target is " + randomTarget + ".");
-            DebugWeights(weights);
+            //DebugWeights(weights);
             float current = 0;
             foreach (var kvp in weights)
             {
@@ -94,7 +94,6 @@ namespace Orders
                 {
                     if (matchyMatchy[recipe].Contains(kvp.Key))
                     {
-                        MonoBehaviour.print(kvp.Key + " : " + kvp.Value);
                         increment = Mathf.Min(increment, kvp.Value * recipe.probabilityRateIncrement);
                     }
                 }
