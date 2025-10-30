@@ -2,6 +2,8 @@ using UnityEngine;
 using Cooking;
 using System.Collections.Generic;
 using UnityEngine.Splines;
+using Upgrades;
+using GameSystem;
 
 namespace Clients
 {
@@ -28,8 +30,10 @@ namespace Clients
                 return null;
             }
             return
-                Client.New(model.prefab, model.clientType, model.loot, model.dropRate, order, model.name, position, speed)
-                .SetModel(model);
+                Client
+                .New(model.prefab, model.clientType, model.loot, model.dropRate, order, model.name, position, speed)
+                .SetModel(model)
+                .TryUseUpgrades();
         }
         /// <summary>
         /// If you spawn a client this way, you should probably use SetModel on it afterwards.
@@ -63,7 +67,8 @@ namespace Clients
                 .SetType(type)
                 .SetOrder(order)
                 .SetLoot(ingredientDroppedOnKill, dropRate)
-                .SetSpeed(speed);
+                .SetSpeed(speed)
+                .TryUseUpgrades();
 
             if (name != null)
                 go.name = name;
@@ -72,6 +77,16 @@ namespace Clients
         }
         #endregion
 
+        private Client TryUseUpgrades()
+        {
+            if (!_useUpgrades) return this;
+            UpgradeManager uMan = ReferenceManager.Instance.GetManager<UpgradeManager>();
+            if (uMan == null) return this;
+            IngredientDropUpgrade upgrade = uMan.GetUpgradeByType<IngredientDropUpgrade>();
+            if (upgrade == null) return this;
+            upgrade.Apply(this);
+            return this;
+        }
 
 
         #region Client properties

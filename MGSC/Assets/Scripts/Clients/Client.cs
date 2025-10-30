@@ -49,6 +49,7 @@ namespace Clients
         private Order _order;
 
         private GameLoop _gameLoop;
+        private bool _useUpgrades = true;
         #endregion
 
         #region Methods
