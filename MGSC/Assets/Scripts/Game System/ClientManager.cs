@@ -87,7 +87,7 @@ namespace GameSystem
             if (HistoryContainsClient(client.GetEntityId())) { return; }
             
             // WIP : Clearly incomplete
-            ClientDataWIP clientData = new ClientDataWIP(client.GetEntityId(),client.Type,killed,-1,Time.time,null,null,-1);
+            ClientDataWIP clientData = new ClientDataWIP(client.GetEntityId(),client.Type,killed,-1,Time.time,client.Order,null,-1);
             
             clientHistory.Add(clientData);
 
