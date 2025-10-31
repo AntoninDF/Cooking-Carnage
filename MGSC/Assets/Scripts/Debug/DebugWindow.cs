@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using GameSystem;
+using Orders;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -281,7 +282,7 @@ public class DebugWindow : MonoBehaviour
         {
             string name = c.name ?? "Unknown";
             string type = c.Type.ToString() ?? "Unknown";
-            string order = "None"; // Could be replaced by c.GetOrder()?.ToString()
+            string order = c.Order?.Recipe.Name ?? "None";
 
             GUILayout.BeginHorizontal(cleanBox);
             GUILayout.Label($"{name} ({type}) — Order: {order}");
@@ -305,13 +306,14 @@ public class DebugWindow : MonoBehaviour
         {
             string id = c.id.ToString() ?? "Unknown";
             string type = c.ClientType.ToString() ?? "Unknown";
-            string order = "None";
+            string order = c.order?.Recipe.Name ?? "None";
+            string plate= c.order?.ServingInfo!=null ? "None" : c.order.ServingInfo.Recipe.Name;
 
             GUIStyle statusStyle = c.killed ? redStyle : greenStyle;
             string statusText = c.killed ? "Killed" : "Served";
 
             GUILayout.BeginHorizontal(cleanBox);
-            GUILayout.Label($"{id} ({type}) — Order: {order}");
+            GUILayout.Label($"{id} ({type}) — Order: {order} — Plate Received: {plate} ");
             GUILayout.FlexibleSpace();
             GUILayout.Label($"Status: {statusText}", statusStyle);
             GUILayout.EndHorizontal();
