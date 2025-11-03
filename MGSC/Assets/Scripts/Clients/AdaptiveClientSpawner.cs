@@ -39,6 +39,7 @@ namespace GameSystem
         private float randomDelayRange = 10;
         private float retryDelay = 2;
         private string timerName = "clientSpawn";
+        private float clientSpeed = 1;
         private List<SO_Client> models;
         private SO_RecipeBook recipes;
         private SplineContainer spline;
@@ -113,7 +114,7 @@ namespace GameSystem
 
         bool ShiftOngoing()
         {
-            return ReferenceManager.Instance.GetManager<TimerManager>().IsTimerRunning("shiftDuration");
+            return !ReferenceManager.Instance.GetManager<TimerManager>().IsTimerRunning("shiftEndDelay");
         }
         
         /// <summary>
@@ -158,7 +159,7 @@ namespace GameSystem
                     var randomRecipe = recipes.Recipes[Random.Range(0, recipes.Recipes.Count)];
                     
                     // Spawns the client in the scene via ClientGenerator method Client.New()
-                    Client client = Client.New(clientSO, randomRecipe, Vector3.zero);
+                    Client client = Client.New(clientSO, randomRecipe, Vector3.zero,clientSpeed);
                     client.SetSplinePath(spline);
                     AssignClientOrderingCounter(client);
                     
@@ -238,6 +239,11 @@ namespace GameSystem
             }
             Debug.LogError("Error with the selection of new client's type");
             return EClientType.None;
+        }
+
+        public void SetClientSpeed(float speed)
+        {
+            clientSpeed = speed;
         }
 
         

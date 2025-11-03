@@ -2,6 +2,8 @@ using UnityEngine;
 using Cooking;
 using System.Collections.Generic;
 using UnityEngine.Splines;
+using Upgrades;
+using GameSystem;
 
 namespace Clients
 {
@@ -28,8 +30,10 @@ namespace Clients
                 return null;
             }
             return
-                Client.New(model.prefab, model.clientType, model.loot, order, model.name, position, speed)
-                .SetModel(model);
+                Client
+                .New(model.prefab, model.clientType, model.loot, model.dropRate, order, model.name, position, speed)
+                .SetModel(model)
+                .TryUseUpgrades();
         }
         /// <summary>
         /// If you spawn a client this way, you should probably use SetModel on it afterwards.
@@ -41,7 +45,7 @@ namespace Clients
         /// <param name="name">The name that will be used for the gameobject</param>
         /// <param name="position">The position at which the gameobject will be instantiated</param>
         /// <returns></returns>
-        public static Client New(GameObject prefab, EClientType type, SO_Ingredient ingredientDroppedOnKill, SO_Recipe order, string name = null, Vector3 position = default(Vector3), float speed = 1.0f)
+        public static Client New(GameObject prefab, EClientType type, SO_Ingredient ingredientDroppedOnKill, Vector2 dropRate, SO_Recipe order, string name = null, Vector3 position = default(Vector3), float speed = 1.0f)
         {
             if (prefab == null)
             {
@@ -62,8 +66,9 @@ namespace Clients
             client
                 .SetType(type)
                 .SetOrder(order)
-                .SetLoot(ingredientDroppedOnKill)
-                .SetSpeed(speed);
+                .SetLoot(ingredientDroppedOnKill, dropRate)
+                .SetSpeed(speed)
+                .TryUseUpgrades();
 
             if (name != null)
                 go.name = name;
@@ -72,6 +77,16 @@ namespace Clients
         }
         #endregion
 
+        private Client TryUseUpgrades()
+        {
+            if (!_useUpgrades) return this;
+            UpgradeManager uMan = ReferenceManager.Instance.GetManager<UpgradeManager>();
+            if (uMan == null) return this;
+            IngredientDropUpgrade upgrade = uMan.GetUpgradeByType<IngredientDropUpgrade>();
+            if (upgrade == null) return this;
+            upgrade.Apply(this);
+            return this;
+        }
 
 
         #region Client properties
@@ -87,9 +102,10 @@ namespace Clients
             return this;
         }
 
-        public Client SetLoot(SO_Ingredient loot)
+        public Client SetLoot(SO_Ingredient loot, Vector2 dropRate)
         {
             IngredientToDrop = loot;
+            DropRate = dropRate;
             return this;
         }
 
