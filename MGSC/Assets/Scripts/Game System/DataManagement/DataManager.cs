@@ -51,9 +51,9 @@ namespace GameSystem
         /// <summary>
         /// Save multiple data (money, upgrades, daycount) into a file
         /// </summary>
-        public void SaveGameData()
+        public void SaveGameData(GameData gameData = null)
         {
-            Debug.Log("SAVE : Saving global data");
+            //Debug.Log("SAVE : Saving global data");
             if (_moneyManager == null || _upgradeManager == null || _clientManager == null || _shiftManager == null)
             {
                 EnforceReferences();
@@ -61,9 +61,9 @@ namespace GameSystem
             
             currentGameData = new GameData()
             {
-                money = MoneyInfo,
-                upgrades = ConvertUpgradeData(),
-                shiftCount = ShiftCount
+                money = gameData?.money ?? MoneyInfo,
+                upgrades = gameData?.upgrades ?? ConvertUpgradeData(),
+                shiftCount = gameData?.shiftCount ?? ShiftCount
             };
             
             string json = JsonUtility.ToJson(currentGameData, true);
@@ -81,7 +81,7 @@ namespace GameSystem
         /// </summary>
         public void LoadGlobalData()
         {
-            Debug.Log("SAVE : Loading global data");
+            //Debug.Log("SAVE : Loading global data");
             
             if (_moneyManager == null || _upgradeManager == null || _clientManager == null || _shiftManager == null)
             {
@@ -97,16 +97,17 @@ namespace GameSystem
             currentGameData = JsonUtility.FromJson<GameData>(json);
             
             _moneyManager.MoneyInfo = new MoneyInfo(currentGameData.money);
-            Debug.Log("Money : "+_moneyManager.MoneyInfo);
+            //Debug.Log("Money : "+_moneyManager.MoneyInfo);
             
             LoadUpgradeData();
             
             _shiftManager.SetShiftCount(currentGameData.shiftCount);
         }
 
-        void ResetSave()
+        public void ResetSave()
         {
             currentGameData = DefaultData();
+            SaveGameData(currentGameData);
         }
 
         Dictionary<string, int> ConvertUpgradeData()

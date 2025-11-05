@@ -21,6 +21,7 @@ namespace Clients
         public SO_Recipe RequestedRecipe {  get; private set; }
         public Order Order => _order;
         public SO_Ingredient IngredientToDrop { get; private set; }
+        public Vector2 DropRate { get; private set; }
         public SO_Client Model { get; private set; }
         public float Speed { get => _speed; set => _speed = value; }
         public bool IsMoving => _state == EClientState.Moving;
@@ -48,6 +49,7 @@ namespace Clients
         private Order _order;
 
         private GameLoop _gameLoop;
+        private bool _useUpgrades = true;
         #endregion
 
         #region Methods

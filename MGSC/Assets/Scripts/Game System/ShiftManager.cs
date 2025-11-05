@@ -39,7 +39,7 @@ namespace GameSystem
     public void SetShiftCount(int count)
     {
         shiftCount = count;
-        Debug.Log($"[ShiftManager] Shift count set to {shiftCount}");
+        //Debug.Log($"[ShiftManager] Shift count set to {shiftCount}");
     }
 
     void LaunchShift(float duration)

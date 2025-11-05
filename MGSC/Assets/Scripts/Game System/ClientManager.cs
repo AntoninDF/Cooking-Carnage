@@ -87,7 +87,7 @@ namespace GameSystem
             if (HistoryContainsClient(client.GetEntityId())) { return; }
             
             // WIP : Clearly incomplete
-            ClientDataWIP clientData = new ClientDataWIP(client.GetEntityId(),client.Type,killed,-1,Time.time,null,null,-1);
+            ClientDataWIP clientData = new ClientDataWIP(client.GetEntityId(),client.Type,killed,-1,Time.time,client.Order,ReferenceManager.Instance.GetManager<ShiftManager>().ShiftCount);
             
             clientHistory.Add(clientData);
 
@@ -112,7 +112,6 @@ namespace GameSystem
         public List<ClientDataWIP> GetClientsHistory(int amount=-1)
         {
             //if(clientHistory.Count == 0) { return null; }
-            MonoBehaviour.print("Client history count : " + clientHistory.Count);
             
             amount = amount == -1 ? clientHistory.Count : amount;
             
@@ -221,8 +220,7 @@ namespace GameSystem
             public bool killed;
             public float moneyGave;
             public float timeWhenDone;
-            public Order orderWanted;
-            public Order orderReceived;
+            public Order order;
             public int serviceIndex;
             // Graphic data ? idk if needed, maybe a face icon for UI
             
@@ -232,8 +230,7 @@ namespace GameSystem
                 bool killed = false,
                 float moneyGave = 0f,
                 float timeWhenDone = 0f,
-                Order orderWanted = null,
-                Order orderReceived = null,
+                Order order = null,
                 int serviceIndex = 0
             )
             {
@@ -242,8 +239,7 @@ namespace GameSystem
                 this.killed = killed;
                 this.moneyGave = moneyGave;
                 this.timeWhenDone = timeWhenDone;
-                this.orderWanted = orderWanted;
-                this.orderReceived = orderReceived;
+                this.order = order;
                 this.serviceIndex = serviceIndex;
             }
 

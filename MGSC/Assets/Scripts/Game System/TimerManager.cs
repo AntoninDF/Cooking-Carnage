@@ -203,6 +203,11 @@ namespace GameSystem
                 }
             }
         }
+        
+        public void End()
+        {
+            Elapsed = Duration;
+        }
 
         public void Pause() => paused = true;
         public void Resume() => paused = false;
@@ -263,6 +268,11 @@ namespace GameSystem
                     _onComplete?.Invoke();
                 }
             }
+        }
+
+        public void End()
+        {
+            ElapsedFrames = FrameDuration;
         }
 
         public void Pause() => _paused = true;
