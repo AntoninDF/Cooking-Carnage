@@ -19,14 +19,6 @@ namespace GameSystem
         [SerializeField] private bool _destroyEveryOtherObject = false;
         public bool DestroyEveryOtherObject => _destroyEveryOtherObject;
 
-        [Tooltip("Wheter or not a player is required. It will try to snap to the playerStart")]
-        [SerializeField] private bool _addPlayer;
-        public bool AddPlayer => _addPlayer;
-
-        [Tooltip("Wheter or not a gameloop is required.")]
-        [SerializeField] private bool _requireGameLoop;
-        public bool RequireGameLoop => _requireGameLoop;
-
         [Tooltip("Whether or not the scene preset should be used to instantiate scene elements")]
         [SerializeField] private bool _applyScenePreset;
         public bool ApplyScenePreset => _applyScenePreset;
@@ -46,6 +38,26 @@ namespace GameSystem
         [Tooltip("The name of the menu that will be enabled by default. It should match with a menu from the UIManager.")]
         [SerializeField] private string _defaultMenu;
         public string DefaultMenu => _defaultMenu;
+
+        [Space]
+        [Header("Managers & customization")]
+
+        [Tooltip("Whether or not a player is required. It will try to snap to the playerStart")]
+        [SerializeField] private bool _addPlayer;
+        public bool AddPlayer => _addPlayer;
+
+        [Tooltip("Whether or not a gameloop is required.")]
+        [SerializeField] private bool _addGameLoop;
+        public bool RequireGameLoop => _addGameLoop;
+
+        [Tooltip("Whether or not a client spawner is required.")]
+        [SerializeField] private bool _addClientSpawner;
+        public bool AddClientSpawner => _addClientSpawner;
+
+        [Tooltip("Whether or not the UI is required.")]
+        [SerializeField] private bool _addUI;
+        public bool AddUI => _addUI;
+
 
 
         [Space]

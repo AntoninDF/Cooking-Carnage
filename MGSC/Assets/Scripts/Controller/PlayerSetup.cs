@@ -60,21 +60,30 @@ namespace Controller
         public static bool TryResetPlayer(PlayerInterface player)
         {
             PlayerStart playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>();
-            if (!EnforceReference(playerStart,
-                "[Player Setup] : No player start found in the scene, couldn't reset the player"))
-                return false;
+            Vector3 pos;
+            Quaternion rot;
+            if (playerStart == null)
+            {
+                pos = Vector3.zero;
+                rot = Quaternion.identity;
+            }
+            else
+            {
+                pos = playerStart.transform.position;
+                rot = playerStart.transform.rotation;
+            }
             if (!EnforceReference(player,
                 "[Player Setup] : The player to be reset was null"))
                 return false;
 
-            ResetPlayer(player, playerStart.transform);
+            ResetPlayer(player, pos, rot);
             return true;
         }
 
-        private static void ResetPlayer(PlayerInterface player, Transform playerStart)
+        private static void ResetPlayer(PlayerInterface player, Vector3 position, Quaternion rotation)
         {
-            player.transform.position = playerStart.position;
-            player.transform.rotation = playerStart.rotation;
+            player.transform.position = position;
+            player.transform.rotation = rotation;
             SetPlayerReferences(player);
         }
 

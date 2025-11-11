@@ -58,11 +58,12 @@ namespace GameSystem
             new OrderManager();
             new ClientManager();
             new TimerManager();
-            new AdaptiveClientSpawner();
+            if (_gameProfile.AddClientSpawner) new AdaptiveClientSpawner();
             new ShiftManager(_gameProfile.ShiftDuration, _gameProfile.RentPrice);
             new MoneyManager();
             new UpgradeManager();
             new DataManager();
+            if (_gameProfile.AddUI) AddUI();
 
             // Create the player
             ReferenceManager.Instance.ScanHierarchy();
@@ -74,7 +75,7 @@ namespace GameSystem
             PostInitManagers();
 
             if (_gameProfile.ResetSaveFile) ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
-            if (_gameProfile.ResetSaveFile) ReferenceManager.Instance.GetManager<UIManager>().EnableMenu(_gameProfile.DefaultMenu);
+            ReferenceManager.Instance.GetManager<UIManager>().EnableMenu(_gameProfile.DefaultMenu);
 
             if (_gameProfile.DestroyAfterInitialization) Destroy(this.gameObject);
         }
@@ -104,11 +105,21 @@ namespace GameSystem
                 Instantiate(go);
         }
 
-        private static void MakeGameLoop()
+        private void MakeGameLoop()
         {
             // Init GameLoop
             GameObject gameLoop = new GameObject("GameLoop");
             gameLoop.AddComponent<GameLoop>();
+        }
+
+        private void AddUI()
+        {
+            if (ReferenceManager.AssetReferences.UI == null)
+                Debug.LogWarning("[GameInitializer] : Couldn't add the UI prefab because it was not referenced in the asset references object");
+            else
+            {
+                Instantiate(ReferenceManager.AssetReferences.UI);
+            }
         }
     
 
