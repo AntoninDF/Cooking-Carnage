@@ -1,4 +1,8 @@
 using Controller;
+using NaughtyAttributes;
+using System.Collections.Generic;
+using TMPro;
+using UI;
 using UnityEngine;
 using Upgrades;
 namespace GameSystem
@@ -10,40 +14,15 @@ namespace GameSystem
     /// </summary>
     public class GameInitializer : MonoBehaviour
     {
-        #region Properties
-        public PlayerInterface Player {  get=>_player; private set => _player=value; }
-
-        #endregion
-
         #region Fields
 
         // SERIALIZED FIELDS
-        [Tooltip("Should this gameobject be destroyed juste after the gazme starts ?")]
-        [SerializeField] private bool _destroyAfterInitialization = true;
-        [Tooltip("Should every other object already present in the scene be destroyed on start ?")]
-        [SerializeField] private bool _destroyEveryOtherObject = false;
-        [Header("References")]
-
-        [Tooltip("Pass in the scriptable object holding references to every element to spawn on game start")]
-        [SerializeField] private SO_ScenePreset _scenePreset;
-
-        [Tooltip("Pass in the scriptable object holding references to every important data asset for the game")]
-        [SerializeField] private SO_AssetReferences _assetReferences;
-
-        // Transform at which the player will be spawned
-        private Transform _playerStart;
+        [Tooltip("The game profile specifies what  will be created on start, and how")]
+        [Expandable]
+        [SerializeField] private SO_GameProfile _gameProfile;
 
         // PRIVATE FIELDS
-        private PlayerInterface _player;
-        
-        private OrderManager _orderManager;
-        private TimerManager _timerManager;
-        private AdaptiveClientSpawner _adaptiveClientSpawner;
-        private MoneyManager _moneyManager;
-        private DataManager _dataManager;
-        private ClientManager _clientManager;
-        private UpgradeManager _upgradeManager;
-        private ShiftManager _shiftManager;
+
         #endregion
 
         #region Methods
@@ -52,9 +31,7 @@ namespace GameSystem
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Awake()
         {
-            if (_destroyEveryOtherObject) DestroyEverythingMuahaha();
             ResetScene();
-            if (_destroyAfterInitialization) Destroy(this.gameObject);
         }
 
         /// <summary>
@@ -64,97 +41,85 @@ namespace GameSystem
         /// <exception cref="MissingComponentException"></exception>
         public void ResetScene()
         {
+            ReferenceManager.Instance.RemoveAllManagers();
+            if (_gameProfile == null)
+                Debug.LogError("[GameInitializer] : Please reference a game profile in the inspector.");
+
+            if (_gameProfile.DestroyEveryOtherObject) DestroyEverything();
+
+            ReferenceManager.AssetReferences = _gameProfile.AssetReferences;
+
+            if (_gameProfile.RequireGameLoop) MakeGameLoop();
+
+            // Instantiate the scene and create all the MonoBehaviour managers
+            if (_gameProfile.ApplyScenePreset) ApplyScenePreset();
+
+            // Create all the pure managers
+            new OrderManager();
+            new ClientManager();
+            new TimerManager();
+            new AdaptiveClientSpawner();
+            new ShiftManager(_gameProfile.ShiftDuration, _gameProfile.RentPrice);
+            new MoneyManager();
+            new UpgradeManager();
+            new DataManager();
+
+            // Create the player
+            ReferenceManager.Instance.ScanHierarchy();
+            if (_gameProfile.AddPlayer) PlayerSetup.TrySetupPlayer();
+
+            // Setup the managers' references
+            InitManagers();
+            // Apply the base logic to ensure all managers are setup to work correctly
+            PostInitManagers();
+
+            if (_gameProfile.ResetSaveFile) ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
+            if (_gameProfile.ResetSaveFile) ReferenceManager.Instance.GetManager<UIManager>().EnableMenu(_gameProfile.DefaultMenu);
+
+            if (_gameProfile.DestroyAfterInitialization) Destroy(this.gameObject);
+        }
+
+        private void InitManagers()
+        {
+            foreach (var kvp in ReferenceManager.Instance.Managers)
+            {
+                //Debug.Log("[GameInitializer] : Initializing " + kvp.Key + ", object is " + kvp.Value);
+                (kvp.Value).Init();
+            }
+        }
+        private void PostInitManagers()
+        {
+            foreach (var kvp in ReferenceManager.Instance.Managers)
+            {
+                (kvp.Value).PostInit();
+            }
+        }
+        private void ApplyScenePreset()
+        {
             // Check scene preset reference
-            if (_scenePreset == null)
-                throw new MissingReferenceException("Please assign a scene preset scriptable object in the game initializer's inspector, otherwise it cannot initialize anything :)");
-
-            if (_assetReferences == null)
-                throw new MissingReferenceException("Please assign an asset reference scriptable object in the game initializer's inspector, otherwise many references will be missing :)");
-            ReferenceManager.AssetReferences = _assetReferences; 
-
-            // Create a player if none exist yet
-            if (_player == null) SpawnPlayer();
-
+            if (_gameProfile.ScenePreset == null)
+                Debug.LogError("[GameInitializer] : No scene preset referenced. Couldn't instantiate the scene.");
             // Create all the objects as requested in the scene preset
-            foreach (var go in _scenePreset.Objects)
+            foreach (var go in _gameProfile.ScenePreset.Objects)
                 Instantiate(go);
-            
+        }
+
+        private static void MakeGameLoop()
+        {
             // Init GameLoop
             GameObject gameLoop = new GameObject("GameLoop");
             gameLoop.AddComponent<GameLoop>();
-
-            // Initialize managers
-            // Note : It's important to call the ReferenceManager as late as possible, because it scans the scene upon being created (when first called).
-             _orderManager = new OrderManager();
-             _timerManager = new TimerManager();
-             _adaptiveClientSpawner = new AdaptiveClientSpawner();
-             _dataManager = new DataManager();
-             _moneyManager = new MoneyManager();
-             _clientManager = new ClientManager();
-            _upgradeManager = new UpgradeManager();
-
-            _playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform;
-            ResetPlayer();
-            
-            //Note : Should always be last
-            _shiftManager = new ShiftManager(); 
-        }
-
-        /// <summary>
-        /// Instantiate the player prefab in the scene
-        /// </summary>
-        private void SpawnPlayer()
-        {
-            if (_scenePreset.Player == null)
-                throw new MissingReferenceException("Please assign a player prefab in the scene preset's dedicated field :)");
-            GameObject playerGo = GameObject.Instantiate(_scenePreset.Player);
-            playerGo.name = "Player";
-
-            if (!playerGo.HasComponent<PlayerInterface>())
-            {
-                throw new MissingComponentException("Please provide a PlayerInterface component on the player prefab :)");
-            }
-            _player = playerGo.GetComponent<PlayerInterface>();
-        }
-
-        /// <summary>
-        /// Place the player at the player start position
-        /// </summary>
-        private void ResetPlayer()
-        {
-            if (_playerStart != null)
-            {
-                _player.transform.position = _playerStart.position;
-                _player.transform.rotation = _playerStart.rotation;
-            }
-            else
-            {
-                Debug.LogWarning("[GameInitializer] ResetPlayer : Couldn't reset the player's position because the player start's transform's reference is missing.");
-            }
-            SetPlayerReferences();
         }
     
-        /// <summary>
-        /// Assign the input action from the scene preset to the player
-        /// </summary>
-        /// <exception cref="MissingReferenceException"></exception>
-        private void SetPlayerReferences()
-        {
-            if (_scenePreset.InputActions == null)
-                throw new MissingReferenceException("Please assign the input action asset in the scene preset SO");
-            _player.InputHandler.PlayerControls = _scenePreset.InputActions;
-            _player.Interactor.InputHandler = _player.InputHandler;
-            _player.Controller.InputHandler = _player.InputHandler;
-            _player.InputHandler.SetInputReferences();
-        }
 
-        private void DestroyEverythingMuahaha()
+        private void DestroyEverything()
         {
             foreach(GameObject go in FindObjectsByType(typeof(GameObject), FindObjectsSortMode.None))
             {
                 if (go != gameObject) Destroy(go);
             }
         }
+
         #endregion
     }
 

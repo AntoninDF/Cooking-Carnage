@@ -7,7 +7,7 @@ namespace Controller
     {
         #region Properties
         public PlayerInterface Player { get => _playerInterface; set => _playerInterface = value; }
-        public PlayerInputHandler InputHandler { get => _playerInputHandler; set => _playerInputHandler = value; }
+        public PlayerInputHandler InputHandler => Player.InputHandler;
         public float CurrentSpeed => _walkSpeed;
         #endregion
 
@@ -33,8 +33,6 @@ namespace Controller
         [SerializeField] private CharacterController _characterController; 
         [SerializeField] private Camera _mainCamera;
         private PlayerInterface _playerInterface;
-        
-        private PlayerInputHandler _playerInputHandler;
 
         private Vector3 _currentMovement;
         private float _verticalRotation;
@@ -60,7 +58,7 @@ namespace Controller
 
         private Vector3 CalculateWorldDirection()
         {
-            Vector3 inputDirection = new Vector3(_playerInputHandler.MovementInput.x, 0f, _playerInputHandler.MovementInput.y);
+            Vector3 inputDirection = new Vector3(InputHandler.MovementInput.x, 0f, InputHandler.MovementInput.y);
             Vector3 worldDirection = transform.TransformDirection(inputDirection);
             return worldDirection.normalized;
         }
@@ -100,8 +98,8 @@ namespace Controller
 
         private void HandleRotation()
         {
-            float mouseXRotation = _playerInputHandler.RotationInput.x * _mouseSensitivity;
-            float mouseYRotation = _playerInputHandler.RotationInput.y * _mouseSensitivity;
+            float mouseXRotation = InputHandler.RotationInput.x * _mouseSensitivity;
+            float mouseYRotation = InputHandler.RotationInput.y * _mouseSensitivity;
 
             ApplyHorizontalRotation(mouseXRotation);
             ApplyVerticalRotation(mouseYRotation);

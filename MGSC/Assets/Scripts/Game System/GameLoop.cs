@@ -30,6 +30,11 @@ namespace GameSystem
         {
             ReferenceManager.Instance.SetManager(this);
         }
+        public void Unregister()
+        {
+            ReferenceManager.Instance.RemoveManager(this);
+        }
+        public void Init() { }
 
         public void OnEnable()
         {
@@ -43,7 +48,7 @@ namespace GameSystem
         void Update()
         {
             if (!IsRunning) return;
-            
+            //Debug.Log("GameLoop updating");
             float deltaTime = Time.deltaTime;
             foreach (var updatable in _updatables)
             {

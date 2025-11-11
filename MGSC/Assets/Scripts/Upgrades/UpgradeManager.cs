@@ -26,9 +26,7 @@ namespace Upgrades
         public UpgradeManager()
         {
             Register();
-            Init();
         }
-
 
         public void Init()
         {
@@ -109,6 +107,10 @@ namespace Upgrades
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
+        }
+        public void Unregister()
+        {
+            ReferenceManager.Instance.RemoveManager(this);
         }
 
 

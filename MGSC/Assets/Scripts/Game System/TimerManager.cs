@@ -41,8 +41,13 @@ namespace GameSystem
         {
             ReferenceManager.Instance.SetManager(this);
         }
-        
-        
+        public void Unregister()
+        {
+            ReferenceManager.Instance.RemoveManager(this);
+        }
+        public void Init() { }
+
+
         /// <summary>
         /// Updates all active timers (provided by the UpdatableBase inheritance)
         /// </summary>

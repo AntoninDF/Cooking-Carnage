@@ -24,14 +24,21 @@ namespace GameSystem
         public MoneyManager()
         {
             Register();
-            EnforceReferences();
-            SetSubscriptionToAll(true);
-            //MoneyInfo += 1000;
         }
 
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
+        }
+        public void Unregister()
+        {
+            ReferenceManager.Instance.RemoveManager(this);
+        }
+
+        public void Init()
+        {
+            EnforceReferences();
+            SetSubscriptionToAll(true);
         }
 
         private void EnforceReferences()

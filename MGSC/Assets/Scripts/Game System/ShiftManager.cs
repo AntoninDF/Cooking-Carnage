@@ -5,105 +5,132 @@ using UnityEngine.SceneManagement;
 
 namespace GameSystem
 {
-   public class ShiftManager : IManager
-{
-    #region Properties
+    public class ShiftManager : IManager
+    {
+        #region Properties
 
-    public int ShiftCount => shiftCount;
+        public int ShiftCount => _shiftCount;
     
-    #endregion
+        #endregion
 
-    #region Fields
+        #region Fields
     
-    private DataManager _dataManager;
+        private DataManager _dataManager;
     
-    private int shiftCount;
-    private float rentPrice = 0 ;
-    private float shiftDuration = 30;
+        private int _shiftCount;
+        private float _currentRentPrice = 0 ;
+        private AnimationCurve _rentPriceCurve;
+        private float _shiftDuration = 120;
     
-    #endregion
+        #endregion
 
-    #region Methods
+        #region Methods
    
-    public ShiftManager()
-    {
-        Register();
-        //Debug.Log($"[ShiftManager] Initialized. Shift duration = {shiftDuration}s");
-
-        _dataManager = ReferenceManager.Instance.GetManager<DataManager>();
-        _dataManager.LoadGlobalData();
-        
-        LaunchShift(shiftDuration);
-    }
-
-    public void SetShiftCount(int count)
-    {
-        shiftCount = count;
-        //Debug.Log($"[ShiftManager] Shift count set to {shiftCount}");
-    }
-
-    void LaunchShift(float duration)
-    {
-        //Debug.Log($"[ShiftManager] Launching new shift for {duration}s...");
-        ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("shiftDuration", duration, () => EndShift()(), false);
-    }
-
-    void DelayEndShift()
-    {
-        //Debug.Log("[ShiftManager] Clients still active — delaying end of shift by 2s.");
-        ReferenceManager.Instance
-            .GetManager<TimerManager>()
-            .StartTimer("shiftEndDelay", 2, () => EndShift()(), false);
-    }
-
-    Action EndShift()
-    {
-        return () =>
+        public ShiftManager()
         {
-            var clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
-            int activeClients = clientManager.CurrentClients.Count;
+            Register();
+        }
+        public ShiftManager(float shiftDuration)
+        {
+            Register();
+            SetShiftDuration(shiftDuration);
+        }
+        public ShiftManager(float shiftDuration, AnimationCurve rentPriceCurve)
+        {
+            Register();
+            SetShiftDuration(shiftDuration);
+            SetRentPriceCurve(rentPriceCurve);
+        }
 
-            //Debug.Log($"[ShiftManager] EndShift triggered. Active clients: {activeClients}");
+        public void SetShiftCount(int count) => _shiftCount = count;
+        public void SetShiftDuration(float duration) => _shiftDuration = duration;
+        public void SetRentPriceCurve(AnimationCurve rentPriceCurve) => _rentPriceCurve = rentPriceCurve;
+        public void SetRentPrice(float price) => _currentRentPrice = price;
+        public float GetCurrentRentPrice() => GetRentPrice(_shiftCount);
+        public float GetRentPrice(int shiftCount)
+        {
+            return _rentPriceCurve.Evaluate(shiftCount);
+        }
 
-            if (activeClients != 0)
+        void LaunchShift(float duration)
+        {
+            //Debug.Log($"[ShiftManager] Launching new shift for {duration}s...");
+            ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("shiftDuration", duration, () => EndShift()(), false);
+        }
+
+        void DelayEndShift()
+        {
+            //Debug.Log("[ShiftManager] Clients still active — delaying end of shift by 2s.");
+            ReferenceManager.Instance
+                .GetManager<TimerManager>()
+                .StartTimer("shiftEndDelay", 2, () => EndShift()(), false);
+        }
+
+        Action EndShift()
+        {
+            return () =>
             {
-                DelayEndShift();
-            }
-            else
-            {
-                //Debug.Log("[ShiftManager] No clients remaining — ending shift and reloading scene.");
-                ReferenceManager.Instance.GetManager<GameLoop>().StopRunning();
+                var clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
+                int activeClients = clientManager.CurrentClients.Count;
 
-                if (ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo < rentPrice)
+                //Debug.Log($"[ShiftManager] EndShift triggered. Active clients: {activeClients}");
+
+                if (activeClients != 0)
                 {
-                    Debug.Log("Defeat");
-                    return;
+                    DelayEndShift();
                 }
-                
-                Debug.Log("WIP : Devrait ouvrir le menu recap puis amélioration");
-                
-                NextShift();
-            }
-        };
-    }
+                else
+                {
+                    //Debug.Log("[ShiftManager] No clients remaining — ending shift and reloading scene.");
+                    ReferenceManager.Instance.GetManager<GameLoop>().StopRunning();
 
-    public void NextShift()
-    {
-        shiftCount++;
-        
-        ReferenceManager.Instance.GetManager<DataManager>().SaveGameData();
-        ReferenceManager.Instance.ResetInstance();
-        
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+                    if (ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo < GetCurrentRentPrice())
+                    {
+                        Debug.Log("Defeat");
+                        return;
+                    }
+                
+                    Debug.Log("WIP : Devrait ouvrir le menu recap puis amélioration");
+                
+                    NextShift();
+                }
+            };
+        }
 
-    public void Register()
-    {
-        ReferenceManager.Instance.SetManager(this);
-        //Debug.Log("[ShiftManager] Registered in ReferenceManager.");
+        public void NextShift()
+        {
+            _shiftCount++;
+            _currentRentPrice = _rentPriceCurve.Evaluate(_shiftCount);
+
+            ReferenceManager.Instance.GetManager<DataManager>().SaveGameData();
+            ReferenceManager.Instance.ResetInstance();
+        
+            // REFACTO : Arrêter de reload la scène, et ne reload que ce qui doit être reload
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        public void Register()
+        {
+            ReferenceManager.Instance.SetManager(this);
+            //Debug.Log("[ShiftManager] Registered in ReferenceManager.");
+        }
+        public void Unregister()
+        {
+            ReferenceManager.Instance.RemoveManager(this);
+        }
+
+        public void Init()
+        {
+            _dataManager = ReferenceManager.Instance.GetManager<DataManager>();
+        }
+
+        public void PostInit()
+        {
+            //Debug.Log("[ShiftManager] : PostInit running (shift duration set to " + shiftDuration + "s)."); 
+            _dataManager.LoadGlobalData();
+            LaunchShift(_shiftDuration);
+        }
+        #endregion
     }
-    
-    #endregion
-}
 
 }

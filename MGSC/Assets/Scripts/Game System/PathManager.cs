@@ -11,7 +11,7 @@ namespace GameSystem
         
         [SerializeField] private SplineContainer _splineComponent;
 
-        void Start()
+        void Awake()
         {
             if (_splineComponent == null)
             {
@@ -25,5 +25,10 @@ namespace GameSystem
         {
             ReferenceManager.Instance.SetManager(this);
         }
+        public void Unregister()
+        {
+            ReferenceManager.Instance.RemoveManager(this);
+        }
+        public void Init() { }
     }
 }
