@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using GameSystem;
+using Orders;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,7 +25,8 @@ public class DebugWindow : MonoBehaviour
     
     private Dictionary<Type, bool> _managerDebugToggles = new Dictionary<Type, bool>();
     private Vector2 _clientScrollPos;
-
+    
+    #region Methods
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F12))
@@ -86,7 +88,9 @@ public class DebugWindow : MonoBehaviour
         GUILayout.EndVertical();
         GUI.DragWindow(new Rect(0, 0, 10000, 20));
     }
-
+    
+    #endregion
+    
     #region Tabs
     private void DrawGeneralTab()
     {
@@ -288,7 +292,7 @@ public class DebugWindow : MonoBehaviour
         {
             string name = c.name ?? "Unknown";
             string type = c.Type.ToString() ?? "Unknown";
-            string order = "None"; // Could be replaced by c.GetOrder()?.ToString()
+            string order = c.Order?.Recipe.Name ?? "None";
 
             GUILayout.BeginHorizontal(cleanBox);
             GUILayout.Label($"{name} ({type}) — Order: {order}");
@@ -312,13 +316,24 @@ public class DebugWindow : MonoBehaviour
         {
             string id = c.id.ToString() ?? "Unknown";
             string type = c.ClientType.ToString() ?? "Unknown";
-            string order = "None";
-
+            string order = c.order?.Recipe.Name ?? "None";
+            
             GUIStyle statusStyle = c.killed ? redStyle : greenStyle;
             string statusText = c.killed ? "Killed" : "Served";
+            
+            if (!c.killed)
+            {
+                string plate = c.order?.ServingInfo == null ? "None" : c.order.ServingInfo.Recipe.Name;
 
-            GUILayout.BeginHorizontal(cleanBox);
-            GUILayout.Label($"{id} ({type}) — Order: {order}");
+                GUILayout.BeginHorizontal(cleanBox);
+                GUILayout.Label($"{id}({type}) Order: {order} Plate Received: {plate} ");
+            }
+            else
+            {
+                GUILayout.BeginHorizontal(cleanBox);
+                GUILayout.Label($"{id} ({type}) Order: {order}");
+            }
+
             GUILayout.FlexibleSpace();
             GUILayout.Label($"Status: {statusText}", statusStyle);
             GUILayout.EndHorizontal();
