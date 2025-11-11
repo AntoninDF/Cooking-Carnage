@@ -170,6 +170,20 @@ namespace GameSystem
             #endregion
         }
 
+        public string GetDataAsString(EDataInfo info)
+        {
+            string result = "";
+
+            switch (info)
+            {
+                case EDataInfo.TimeElapsedSinceStartup:
+                    return (Time.time).ToString();
+            }
+            // REFACTO : To be implemented
+
+            return result;
+        }
+
         [System.Serializable]
         public class GameData
         {

@@ -20,7 +20,7 @@ namespace UI
             "Pause\n" +
             "Upgrades\n" +
             "Game\n" +
-            "ShiftInfo", EInfoBoxType.Normal)]
+            "ShiftRecap", EInfoBoxType.Normal)]
 
         //[Header("References")]
         [SerializeField] private List<UIMenu> _menus = new List<UIMenu>();
@@ -160,7 +160,7 @@ namespace UI
         private void SubscribeToEvents()
         {
             if (_player != null)
-                _player.InputHandler.OnPause += (ctx) => EnableMenu("Main");
+                _player.InputHandler.OnPause += (ctx) => EnableMenu("ShiftRecap");
         }
 
         public void Register()
