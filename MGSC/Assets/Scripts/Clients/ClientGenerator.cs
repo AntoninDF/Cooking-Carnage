@@ -22,7 +22,7 @@ namespace Clients
         /// <param name="order">What the client will order at the counter</param>
         /// <param name="position">The position at which the gameobject will be instantiated</param>
         /// <returns></returns>
-        public static Client New(SO_Client model, SO_Recipe order, Vector3 position = default(Vector3), float speed=1.0f)
+        public static Client New(SO_Client model, Vector3 position = default(Vector3), float speed=1.0f)
         {
             if (model == null)
             {
@@ -31,7 +31,7 @@ namespace Clients
             }
             return
                 Client
-                .New(model.prefab, model.clientType, model.loot, model.dropRate, order, model.name, position, speed)
+                .New(model.prefab, model.clientType, model.loot, model.dropRate, model.name, position, speed)
                 .SetModel(model)
                 .TryUseUpgrades();
         }
@@ -45,7 +45,7 @@ namespace Clients
         /// <param name="name">The name that will be used for the gameobject</param>
         /// <param name="position">The position at which the gameobject will be instantiated</param>
         /// <returns></returns>
-        public static Client New(GameObject prefab, EClientType type, SO_Ingredient ingredientDroppedOnKill, Vector2 dropRate, SO_Recipe order, string name = null, Vector3 position = default(Vector3), float speed = 1.0f)
+        public static Client New(GameObject prefab, EClientType type, SO_Ingredient ingredientDroppedOnKill, Vector2 dropRate, string name = null, Vector3 position = default(Vector3), float speed = 1.0f)
         {
             if (prefab == null)
             {
@@ -65,7 +65,6 @@ namespace Clients
             // Setup the client
             client
                 .SetType(type)
-                .SetOrder(order)
                 .SetLoot(ingredientDroppedOnKill, dropRate)
                 .SetSpeed(speed)
                 .TryUseUpgrades();

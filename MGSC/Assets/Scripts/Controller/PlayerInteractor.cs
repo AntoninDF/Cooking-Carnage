@@ -9,7 +9,7 @@ namespace Controller
     public class PlayerInteractor : MonoBehaviour, ISoloContainer
     {
         #region Properties
-        public PlayerInputHandler InputHandler { get => _playerInputs; set => _playerInputs = value; }
+        public PlayerInputHandler InputHandler => Player.InputHandler;
         public GameObject LookTarget { get; private set; }
         public RaycastHit LookInfo { get; private set; }
         public IContainer LookContainer { get; private set; }
@@ -39,7 +39,6 @@ namespace Controller
         [SerializeField] private float _reachDistance = 3f;
 
         private PlayerInterface _playerInterface;
-        private PlayerInputHandler _playerInputs;
         private IGrabbable _heldItem;
         private bool _grabbedItemThisFrame;
         #endregion
@@ -49,11 +48,11 @@ namespace Controller
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            if (_playerInputs == null)
+            if (InputHandler == null)
                 throw new MissingReferenceException("The player input handler wasn't assigned by the GameInitializer.");
 
-            _playerInputs.OnInteract += Interact;
-            _playerInputs.OnGrab += GrabOrDrop;
+            InputHandler.OnInteract += Interact;
+            InputHandler.OnGrab += GrabOrDrop;
 
             if (_handSlot == null)
                 throw new MissingReferenceException("Please assign the hand slot reference in the player interactor :)");

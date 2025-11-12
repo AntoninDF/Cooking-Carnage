@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using Cooking;
 using Clients;
-using UnityEngine.Rendering;
 using Controller;
 
 namespace GameSystem
@@ -18,7 +17,16 @@ namespace GameSystem
         #region Properties
         // Lazy initialization
         public static ReferenceManager Instance { get { if (_instance == null) _instance = new ReferenceManager(); return _instance;}}
-        public static SO_AssetReferences AssetReferences { get; set; }
+        public static SO_AssetReferences AssetReferences
+        { 
+            get
+            {
+                if (_assetReferences == null)
+                    Debug.LogError("[ReferenceManager] : No asset references SO found. Make sure it was correctly referenced.");
+                return _assetReferences;
+            }
+            set => _assetReferences = value;
+        }
         
         public Dictionary<Type, IManager> Managers => _managers;
         
@@ -49,6 +57,7 @@ namespace GameSystem
         private Dictionary<Type, IManager> _managers;
 
         private static ReferenceManager _instance;
+        private static SO_AssetReferences _assetReferences;
         #endregion
 
         #region Methods
@@ -71,11 +80,28 @@ namespace GameSystem
             _managers[typeof(T)] = manager;
         }
 
+        public void RemoveManager<T>() where T : IManager
+        {
+            if (!(_managers.ContainsKey(typeof(T)) && _managers[typeof(T)] != null))
+            {
+                Debug.LogWarning("A manager '" + typeof(T).FullName + "' tried to unregister on the ReferenceManager, but no instance was already registered.");
+            }
+            _managers[typeof(T)] = null;
+        }
+        public void RemoveManager<T>(T manager) where T: IManager
+        {
+            RemoveManager<T>();
+        }
+        public void RemoveAllManagers()
+        {
+            _managers.Clear();
+        }
+
         public T GetManager<T>() where T : class, IManager
         {
             if (!_managers.ContainsKey(typeof(T)) || _managers[typeof(T)] == null)
             {
-                Debug.LogWarning("No manager of type " + nameof(T) + " was found. Key contained : " + (_managers.ContainsKey(typeof(T))?"true":"false"));
+                Debug.LogWarning("No manager of type " + typeof(T).FullName + " was found. Key contained : " + (_managers.ContainsKey(typeof(T))?"true":"false"));
                 return default(T);
             }
             return _managers[typeof(T)] as T;
@@ -93,6 +119,14 @@ namespace GameSystem
         }
 
         public T GetElementOfType<T>() where T : class => GetElementsOfType<T>().FirstOrDefault();
+
+        public void TryAddElement<T>(T element) where T : MonoBehaviour
+        {
+            if (!_elementDict.ContainsKey(typeof(T)))
+                _elementDict.Add(typeof(T), new List<MonoBehaviour>());
+            if (!_elementDict[typeof(T)].Contains(element))
+                _elementDict[typeof(T)].Add(element);
+        }
 
         public void ScanHierarchy(bool clearDictBeforeScan=true)
         {

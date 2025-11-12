@@ -50,7 +50,11 @@ namespace GameSystem
         {
             ReferenceManager.Instance.SetManager(this);
         }
-
+        public void Unregister()
+        {
+            ReferenceManager.Instance.RemoveManager(this);
+        }
+        public void Init() { }
         
         /// <summary>
         /// Add client data to the lists (creates a copy in case gameobject gets destroyed)

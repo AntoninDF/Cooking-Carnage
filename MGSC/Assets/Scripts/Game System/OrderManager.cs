@@ -75,7 +75,11 @@ namespace GameSystem
         {
             ReferenceManager.Instance.SetManager(this);
         }
-
+        public void Unregister()
+        {
+            ReferenceManager.Instance.RemoveManager(this);
+        }
+        public void Init() { }
         #endregion
 
     }

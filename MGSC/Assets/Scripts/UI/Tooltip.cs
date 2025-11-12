@@ -31,18 +31,25 @@ namespace UI
             _textComponent.text = text;
         }
 
-        private void EnforceReferences()
+        private bool EnforceReferences()
         {
             if (_textComponent == null)
             {
                 Debug.LogError("[Tooltip] (" + name + ") : Please reference a text component in the inspector");
+                return false;
             }
-            _camera = Camera.main.transform;
+            if (Camera.main != null)
+            {
+                _camera = Camera.main.transform;
+            }
+            else return false;
+            return true;
         }
 
         private void Update()
         {
             if (_camera == null) EnforceReferences();
+            if (_camera == null) return;
             if (_billboard)
             {
                 transform.rotation = Quaternion.LookRotation(_camera.position - transform.position, Vector3.up);

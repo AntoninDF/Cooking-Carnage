@@ -40,12 +40,19 @@ namespace GameSystem
         public DataManager()
         {
             Register();
-            filePath = Path.Combine(Application.persistentDataPath, "gameData.json");
         }
 
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
+        }
+        public void Unregister()
+        {
+            ReferenceManager.Instance.RemoveManager(this);
+        }
+        public void Init()
+        {
+            filePath = Path.Combine(Application.persistentDataPath, "gameData.json");
         }
         
         /// <summary>
@@ -68,6 +75,10 @@ namespace GameSystem
             
             string json = JsonUtility.ToJson(currentGameData, true);
             
+            if (filePath == null)
+            {
+                Debug.LogWarning("[DataManager] : The specified file path for the save file is null. Make sure the manager was initialized properly");
+            }
             File.WriteAllText(filePath, json);
         }
     
@@ -157,6 +168,20 @@ namespace GameSystem
             };
 
             #endregion
+        }
+
+        public string GetDataAsString(EDataInfo info)
+        {
+            string result = "";
+
+            switch (info)
+            {
+                case EDataInfo.TimeElapsedSinceStartup:
+                    return (Time.time).ToString();
+            }
+            // REFACTO : To be implemented
+
+            return result;
         }
 
         [System.Serializable]

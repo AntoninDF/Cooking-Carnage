@@ -32,14 +32,16 @@ namespace Clients
             SplineComponent = splineComponent;
             Speed = speed;
             if (ControlledTransform != null && SplineComponent != null)
+            {
                 _validSetup = true;
+            }
+            else Debug.LogWarning("[ClientMovement] : The client's movement was not initialized properly");
         }
 
         public void MoveAlongSpline()
         {
             if (!_validSetup)
             {
-                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
                 return;
             }
             float length = Spline.GetLength();
@@ -50,7 +52,6 @@ namespace Clients
         {
             if (!_validSetup)
             {
-                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
                 return;
             }
             SplinePosition = t;
@@ -61,7 +62,6 @@ namespace Clients
         {
             if (!_validSetup)
             {
-                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
                 return Vector3.zero;
             }
 
@@ -82,7 +82,6 @@ namespace Clients
         {
             if (!_validSetup)
             {
-                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
                 return 0.0f;
             }
             CheckedPositions.Clear();
@@ -135,7 +134,6 @@ namespace Clients
         {
             if (!_validSetup)
             {
-                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
                 return Vector3.zero;
             }
             return GetSplinePos(FindNearestSplinePoint());
@@ -143,9 +141,9 @@ namespace Clients
 
         public void GoTo(Vector3 targetPos)
         {
-            if (!_validSetup)
+            if (ControlledTransform == null)
             {
-                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was initialized properly");
+                Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was not initialized properly");
                 return;
             }
             Vector3 startPos = ControlledTransform.position;

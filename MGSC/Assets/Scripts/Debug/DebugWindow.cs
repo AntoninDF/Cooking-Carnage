@@ -15,7 +15,7 @@ public class DebugWindow : MonoBehaviour
     private readonly string[] _tabs = { "General", "Settings", "Timers", "Clients", "Upgrades","Managers" };
     
     private float _gameSpeed = 1f;
-    private float _clientSpeed = 1f;
+    //private float _clientSpeed = 1f;
     private float _deltaTime;
     private float newMoney ;
 
@@ -32,7 +32,7 @@ public class DebugWindow : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F12))
         {
             _visible = !_visible;
-            Cursor.lockState = CursorLockMode.None;
+            Cursor.lockState = _visible ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = _visible;
         }
 
@@ -103,8 +103,15 @@ public class DebugWindow : MonoBehaviour
         DataManager.GameData data = ReferenceManager.Instance.GetManager<DataManager>().Data;
 
         GUILayout.Space(10);
-        GUILayout.Label($"Current Shift :{data.shiftCount:F1}");
-        GUILayout.Label($"Current Money :{data.money:F1}€");
+        if (data != null)
+        {
+            GUILayout.Label($"Current Shift :{data.shiftCount:F1}");
+            GUILayout.Label($"Current Money :{data.money:F1}€");
+        }
+        else
+        {
+            GUILayout.Label($"No game data loaded");
+        }
 
         if (GUILayout.Button("Reload Scene"))
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);

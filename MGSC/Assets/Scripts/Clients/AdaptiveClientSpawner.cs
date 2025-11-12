@@ -1,14 +1,11 @@
 
 using Clients;
 using Cooking;
-using GameSystem;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Splines;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 namespace GameSystem
@@ -26,7 +23,7 @@ namespace GameSystem
         
         // Private Properties
         float GetRandomizedDelay => (delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
-        bool CanSpawnClient => OrderingCounterAvailable() && _gameLoop.IsRunning && canSpawnClient && spline!=null;
+        bool CanSpawnClient => OrderingCounterAvailable() && canSpawnClient && spline!=null;
         
         #endregion
 
@@ -47,8 +44,6 @@ namespace GameSystem
         
         // Reference Fields
         private TimerManager _timerManager;
-        private GameLoop _gameLoop;
-        private ShiftManager _shiftManager;
         
         private Queue<SO_Client> nextClients = new();
         
@@ -62,8 +57,6 @@ namespace GameSystem
         public AdaptiveClientSpawner()
         {
             Register();
-            _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
-            _timerManager.StartFrameTimer("AdaptiveClientSpawner Init", 1, () => Init(), false);
         }
         
         
@@ -74,22 +67,26 @@ namespace GameSystem
         {
             ReferenceManager.Instance.SetManager(this);
         }
-        
-        
+        public void Unregister()
+        {
+            ReferenceManager.Instance.RemoveManager(this);
+        }
+
+
         /// <summary>
         /// Setup the fields according to referenced data and then lauches the cycle
         /// </summary>
-        void Init() 
+        public void Init()
         {
             // WIP : should also setup floats according to a Settings Data
-            
-            _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
+
             models = ReferenceManager.AssetReferences.clientList;
             recipes = ReferenceManager.AssetReferences.recipeBook;
             spline = ReferenceManager.Instance.GetManager<PathManager>()?.SplineComponent;
             counters = ReferenceManager.Instance.GetElementsOfType<OrderingCounter>();
 
-            Launch();
+            _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
+            _timerManager.StartFrameTimer("AdaptiveClientSpawner Init", 1, () => Launch(), false);
         }
         
         
@@ -137,41 +134,43 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
-            _timerManager.StartTimer(timerName, delay, () => SpawnClient()(), false);
+            _timerManager.StartTimer(timerName, delay, () => TrySpawnClient(), false);
         }
 
-        
+        bool TrySpawnClient(SO_Client clientSO = null)
+        {
+            if (CanSpawnClient || clientSO != null)
+            {
+                SpawnClient(clientSO);
+                return true;
+            }
+            else
+            {
+                Launch(retryDelay);
+                return false;
+            }
+        }
+
         /// <summary>
         /// Spawn a new Client if it is possible
         /// </summary>
-        Action SpawnClient(SO_Client clientSO = null)
-        {
-            // WIP : Choice of the recipe asked is fully random for now
-            return () =>
+        void SpawnClient(SO_Client clientSO = null)
+        {     
+            if (clientSO == null)
             {
-                if (CanSpawnClient || clientSO != null)
-                {
-                    // If the queue is empty enqueues a new client then it dequeues the first one
-                    if (nextClients.Count == 0) { EnqueueClient(NewClient()); }
-                    clientSO = nextClients.Dequeue(); 
+                // If the queue is empty enqueues a new client then it dequeues the first one
+                if (nextClients.Count == 0) { EnqueueClient(NewClient()); }
+                clientSO = nextClients.Dequeue();
+            }
                     
-                    // Picks a random recipe through the list of recipes
-                    var randomRecipe = recipes.Recipes[Random.Range(0, recipes.Recipes.Count)];
+            // Spawns the client in the scene via ClientGenerator method Client.New()
+            Client client = Client.New(clientSO, Vector3.zero,clientSpeed);
+            client.SetSplinePath(spline);
+            AssignClientOrderingCounter(client);
                     
-                    // Spawns the client in the scene via ClientGenerator method Client.New()
-                    Client client = Client.New(clientSO, randomRecipe, Vector3.zero,clientSpeed);
-                    client.SetSplinePath(spline);
-                    AssignClientOrderingCounter(client);
+            ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(client,false);
                     
-                    ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(client,false);
-                    
-                    Launch(GetRandomizedDelay);
-                }
-                else
-                {
-                    Launch(retryDelay);
-                }
-            };
+            Launch(GetRandomizedDelay);
         }
 
         /// <summary>
