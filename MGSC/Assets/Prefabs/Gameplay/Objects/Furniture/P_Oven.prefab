@@ -351,6 +351,7 @@ GameObject:
   - component: {fileID: 5761713516370686214}
   - component: {fileID: 5887507579780967680}
   - component: {fileID: 7823081379449817563}
+  - component: {fileID: 1443299288928130752}
   m_Layer: 0
   m_Name: P_Oven
   m_TagString: Untagged
@@ -374,6 +375,7 @@ Transform:
   - {fileID: 2866971020474240851}
   - {fileID: 2757554509230201038}
   - {fileID: 3595836957330755083}
+  - {fileID: 1686292879088261785}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5887507579780967680
@@ -394,7 +396,7 @@ MonoBehaviour:
   _onStartCooking:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2946299903408656957}
+      - m_Target: {fileID: 4362567210639510521}
         m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
         m_MethodName: Play
         m_Mode: 1
@@ -535,6 +537,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1443299288928130752}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: SetTrigger
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onItemOvercooked:
     m_PersistentCalls:
       m_Calls:
@@ -548,6 +562,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1443299288928130752}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: SetTrigger
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: OvercookedAnimation
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!65 &7823081379449817563
@@ -571,6 +597,28 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.01, y: 0.01, z: 0.01}
   m_Center: {x: 0, y: 0.175, z: 0}
+--- !u!95 &1443299288928130752
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3284549085174270630}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e0e474337403f7949a7f2e5b9d87d239, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3474467786170539555
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,6 +1669,73 @@ ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 7984595801885848368, guid: 2a1f11cb31aa8c14ea40c4e59d3aa1db, type: 3}
   m_PrefabInstance: {fileID: 902345235150888225}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1052013143688219658
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5761713516370686214}
+    m_Modifications:
+    - target: {fileID: 1873332591487587987, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.003
+      objectReference: {fileID: 0}
+    - target: {fileID: 1873332591487587987, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.17084
+      objectReference: {fileID: 0}
+    - target: {fileID: 1873332591487587987, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.0266
+      objectReference: {fileID: 0}
+    - target: {fileID: 1873332591487587987, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1873332591487587987, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1873332591487587987, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1873332591487587987, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1873332591487587987, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1873332591487587987, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1873332591487587987, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2491545052355588649, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+      propertyPath: m_Name
+      value: VFX_CookingMicrowave
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+--- !u!4 &1686292879088261785 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1873332591487587987, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+  m_PrefabInstance: {fileID: 1052013143688219658}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &4362567210639510521 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 3608354869338654707, guid: ba61affb2b80710459f1efef7b8ab004, type: 3}
+  m_PrefabInstance: {fileID: 1052013143688219658}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1565121845319542445
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1742,6 +1857,38 @@ PrefabInstance:
     - target: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1443299288928130752}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEngine.Animator, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: StopOvercooked
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1961,11 +2108,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a1f11cb31aa8c14ea40c4e59d3aa1db, type: 3}
---- !u!198 &2946299903408656957 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 7984595801885848368, guid: 2a1f11cb31aa8c14ea40c4e59d3aa1db, type: 3}
-  m_PrefabInstance: {fileID: 5056882353344602381}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7312582428023813037 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2546263648931975840, guid: 2a1f11cb31aa8c14ea40c4e59d3aa1db, type: 3}
