@@ -86,7 +86,7 @@ namespace GameSystem
             counters = ReferenceManager.Instance.GetElementsOfType<OrderingCounter>();
 
             _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
-            _timerManager.StartFrameTimer("AdaptiveClientSpawner Init", 1, () => Launch(), false);
+            _timerManager.StartTimer( "AdaptiveClientSpawner Init", 1, () => Launch(),true);
         }
         
         
@@ -134,7 +134,7 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
-            _timerManager.StartTimer(timerName, delay, () => TrySpawnClient(), false);
+            _timerManager.StartTimer(timerName, delay, () => TrySpawnClient());
         }
 
         bool TrySpawnClient(SO_Client clientSO = null)

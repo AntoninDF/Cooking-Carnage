@@ -172,37 +172,19 @@ public class DebugWindow : MonoBehaviour
             if (isOver)
                 style.normal.textColor = Color.green;
 
-            GUILayout.Label($"⏱ Timer: {t.Key} — Remaining: {(isOver ? "Over" : $"{remaining:F1}s")}", style);
+            if (!t.Value.FrameBased)
+            {
+                GUILayout.Label($"⏱ Timer: {t.Key} — Remaining: {(isOver ? "Over" : $"{remaining:F1}s")}", style);
+            }
+            else
+            {
+                GUILayout.Label($"⏱ Timer: {t.Key} — Remaining: {(isOver ? "Over" : $"{remaining:F1} frames")}", style);
+            }
 
             // Buttons for this timer
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Pause", GUILayout.Width(60)))
                 t.Value.Pause(); 
-            if (GUILayout.Button("Resume", GUILayout.Width(60)))
-                t.Value.Resume();
-            if (GUILayout.Button("Achieve", GUILayout.Width(60)))
-                t.Value.End();
-            GUILayout.EndHorizontal();
-
-            GUILayout.Space(5);
-        }
-
-        // Frame Timers
-        foreach (var t in timerManager.Frametimers)
-        {
-            float remaining = t.Value.FrameDuration - t.Value.ElapsedFrames;
-            bool isOver = remaining <= 0.01f;
-
-            GUIStyle style = new GUIStyle(GUI.skin.label);
-            if (isOver)
-                style.normal.textColor = Color.green;
-
-            GUILayout.Label($"🎞 FrameTimer: {t.Key} — Remaining: {(isOver ? "Over" : $"{remaining:F1} frame(s)")}", style);
-
-            // Buttons for this frame timer
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Pause", GUILayout.Width(60)))
-                t.Value.Pause();
             if (GUILayout.Button("Resume", GUILayout.Width(60)))
                 t.Value.Resume();
             if (GUILayout.Button("Achieve", GUILayout.Width(60)))
