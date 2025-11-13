@@ -8,7 +8,9 @@ namespace GameSystem
     public class ShiftManager : IManager
     {
         #region Properties
-
+        public Action OnShiftFailed { get; set; }
+        public Action OnNextShift { get; set; }
+        public Action OnShiftEnded { get; set; }
         public int ShiftCount => _shiftCount;
     
         #endregion
@@ -55,7 +57,7 @@ namespace GameSystem
         void LaunchShift(float duration)
         {
             //Debug.Log($"[ShiftManager] Launching new shift for {duration}s...");
-            ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("shiftDuration", duration, () => EndShift()(), false);
+            ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("shiftDuration", duration, () => EndShift(), false);
         }
 
         void DelayEndShift()
@@ -63,40 +65,40 @@ namespace GameSystem
             //Debug.Log("[ShiftManager] Clients still active — delaying end of shift by 2s.");
             ReferenceManager.Instance
                 .GetManager<TimerManager>()
-                .StartTimer("shiftEndDelay", 2, () => EndShift()(), false);
+                .StartTimer("shiftEndDelay", 2, () => EndShift(), false);
         }
 
-        Action EndShift()
+        void EndShift()
         {
-            return () =>
+            var clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
+            int activeClients = clientManager.CurrentClients.Count;
+
+            //Debug.Log($"[ShiftManager] EndShift triggered. Active clients: {activeClients}");
+
+            if (activeClients != 0)
             {
-                var clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
-                int activeClients = clientManager.CurrentClients.Count;
+                DelayEndShift();
+            }
+            else
+            {
+                OnShiftEnded?.Invoke();
+                //Debug.Log("[ShiftManager] No clients remaining — ending shift and reloading scene.");
+                ReferenceManager.Instance.GetManager<GameLoop>().StopRunning();
 
-                //Debug.Log($"[ShiftManager] EndShift triggered. Active clients: {activeClients}");
-
-                if (activeClients != 0)
+                if (ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo < GetCurrentRentPrice())
                 {
-                    DelayEndShift();
+                    Debug.Log("Defeat");
+                    OnShiftFailed?.Invoke();
+                    return;
                 }
-                else
-                {
-                    //Debug.Log("[ShiftManager] No clients remaining — ending shift and reloading scene.");
-                    ReferenceManager.Instance.GetManager<GameLoop>().StopRunning();
-
-                    if (ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo < GetCurrentRentPrice())
-                    {
-                        Debug.Log("Defeat");
-                        return;
-                    }
                 
-                    Debug.Log("WIP : Devrait ouvrir le menu recap puis amélioration");
+                Debug.Log("WIP : Devrait ouvrir le menu recap puis amélioration");
                 
-                    NextShift();
-                }
-            };
+                //NextShift();
+            }
         }
 
+        // REFACTO
         public void NextShift()
         {
             _shiftCount++;
@@ -104,7 +106,8 @@ namespace GameSystem
 
             ReferenceManager.Instance.GetManager<DataManager>().SaveGameData();
             ReferenceManager.Instance.ResetInstance();
-        
+            
+            OnNextShift?.Invoke();
             // REFACTO : Arrêter de reload la scène, et ne reload que ce qui doit être reload
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }

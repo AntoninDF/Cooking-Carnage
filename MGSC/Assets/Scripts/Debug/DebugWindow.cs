@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using GameSystem;
-using Orders;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Upgrades;
@@ -25,15 +23,29 @@ public class DebugWindow : MonoBehaviour
     
     private Dictionary<Type, bool> _managerDebugToggles = new Dictionary<Type, bool>();
     private Vector2 _clientScrollPos;
+
+    private bool _previousMouseVisibility;
+    private CursorLockMode _previousMouseLockMode;
     
     #region Methods
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F12))
         {
+            if (!_visible)
+            {
+                _previousMouseVisibility = Cursor.visible;
+                _previousMouseLockMode = Cursor.lockState;
+
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Cursor.lockState = _previousMouseLockMode;
+                Cursor.visible = _previousMouseVisibility;
+            }
             _visible = !_visible;
-            Cursor.lockState = _visible ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = _visible;
         }
 
         _deltaTime += (Time.unscaledDeltaTime - _deltaTime) * 0.1f;
@@ -172,37 +184,19 @@ public class DebugWindow : MonoBehaviour
             if (isOver)
                 style.normal.textColor = Color.green;
 
-            GUILayout.Label($"⏱ Timer: {t.Key} — Remaining: {(isOver ? "Over" : $"{remaining:F1}s")}", style);
+            if (!t.Value.FrameBased)
+            {
+                GUILayout.Label($"⏱ Timer: {t.Key} — Remaining: {(isOver ? "Over" : $"{remaining:F1}s")}", style);
+            }
+            else
+            {
+                GUILayout.Label($"⏱ Timer: {t.Key} — Remaining: {(isOver ? "Over" : $"{remaining:F1} frames")}", style);
+            }
 
             // Buttons for this timer
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Pause", GUILayout.Width(60)))
                 t.Value.Pause(); 
-            if (GUILayout.Button("Resume", GUILayout.Width(60)))
-                t.Value.Resume();
-            if (GUILayout.Button("Achieve", GUILayout.Width(60)))
-                t.Value.End();
-            GUILayout.EndHorizontal();
-
-            GUILayout.Space(5);
-        }
-
-        // Frame Timers
-        foreach (var t in timerManager.Frametimers)
-        {
-            float remaining = t.Value.FrameDuration - t.Value.ElapsedFrames;
-            bool isOver = remaining <= 0.01f;
-
-            GUIStyle style = new GUIStyle(GUI.skin.label);
-            if (isOver)
-                style.normal.textColor = Color.green;
-
-            GUILayout.Label($"🎞 FrameTimer: {t.Key} — Remaining: {(isOver ? "Over" : $"{remaining:F1} frame(s)")}", style);
-
-            // Buttons for this frame timer
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Pause", GUILayout.Width(60)))
-                t.Value.Pause();
             if (GUILayout.Button("Resume", GUILayout.Width(60)))
                 t.Value.Resume();
             if (GUILayout.Button("Achieve", GUILayout.Width(60)))
