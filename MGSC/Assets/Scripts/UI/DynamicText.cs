@@ -27,7 +27,10 @@ namespace UI
         #endregion
 
         #region Methods
-
+        private void Start()
+        {
+            if (_textObject == null) _textObject = GetComponent<TMP_Text>();
+        }
         private void Update()
         {
             UpdateUI();
