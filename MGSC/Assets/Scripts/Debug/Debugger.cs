@@ -22,6 +22,8 @@ public class Debugger
     }
 
     #endregion
+    
+    
 
     #region Fields
 
@@ -38,7 +40,7 @@ public class Debugger
         //Instancier la fenetre de console
     }
 
-    public void Log(bool isErrorLog, object message1, object message2 = null, object message3 = null,
+    public void Log(object message1, object message2 = null, object message3 = null,
         object message4 = null, object message5 = null) 
     {
         
@@ -116,7 +118,7 @@ public class Debugger
             SO_RecipeBook rb             => $"{Decrypt(rb.Recipes)} ",
             MoneyInfo mi                 => $"{mi} $ ",
             Upgrade up                   => $"Upgrade {up.GetType().Name} - lvl {up.Level} ",
-            _                            => type.FullName + " "
+            _                            => type.ToString() + " "
         };
     }
 
