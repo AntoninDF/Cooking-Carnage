@@ -1,6 +1,7 @@
 
 using Orders;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace GameSystem
         #region Fields
         private DataManager _dataManager;
         private OrderManager _orderManager;
+        private Dictionary<int, MoneyInfo> _moneyGainedPerShift = new();
         #endregion
 
         #region Methods
@@ -54,9 +56,8 @@ namespace GameSystem
 
         private void SetSubscriptionToServings(bool subscribe)
         {
-            OrderManager orderManager = ReferenceManager.Instance.GetManager<OrderManager>();
-            if (subscribe) orderManager.OnOrderResolved += OnOrderResolved;
-            else orderManager.OnOrderResolved -= OnOrderResolved;
+            if (subscribe) _orderManager.OnOrderResolved += OnOrderResolved;
+            else _orderManager.OnOrderResolved -= OnOrderResolved;
         }
 
         private void OnOrderResolved(Order order)
@@ -65,9 +66,13 @@ namespace GameSystem
             AddMoney(order.OrderRating.MoneyGained);
         }
 
+        public float GetMoneyGainedOnShift(int shiftCount) => _moneyGainedPerShift.ContainsKey(shiftCount) ? _moneyGainedPerShift[shiftCount] : 0;
+        public float GetMoneyGainedThisShift() => GetMoneyGainedOnShift(_dataManager.ShiftCount);
+
         public void AddMoney(float amount)
         {
             MoneyInfo += amount;
+            _moneyGainedPerShift[_dataManager.ShiftCount] += amount;
             OnMoneyChange?.Invoke(amount);
         }
         #endregion

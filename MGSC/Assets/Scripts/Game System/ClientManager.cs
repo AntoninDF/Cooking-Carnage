@@ -17,6 +17,8 @@ namespace GameSystem
         
         // Public Properties
         public List<Client> CurrentClients => currentClients;
+        public int ClientsServedThisShift {  get; private set; }
+        public int ClientsKilledThisShift {  get; private set; }
         public Dictionary<EClientType, float> ClientTypeAmount => UpdateClientTypeData();
 
         #endregion
@@ -94,6 +96,8 @@ namespace GameSystem
             ClientDataWIP clientData = new ClientDataWIP(client.GetEntityId(),client.Type,killed,-1,Time.time,client.Order,ReferenceManager.Instance.GetManager<ShiftManager>().ShiftCount);
             
             clientHistory.Add(clientData);
+            if (killed) ClientsKilledThisShift++;
+            else ClientsServedThisShift++;
 
             if (client.gameObject)
             {
@@ -164,6 +168,7 @@ namespace GameSystem
                clientTypePart[type] = 0;
            }
 
+           // This part can likely be replaced by the next commented snippet of code
            foreach (var t in clientHistory)
            {
                switch (t.ClientType)
@@ -179,8 +184,12 @@ namespace GameSystem
                        break;
                }
            }
+           /*
 
-           foreach (var t in currentClients)
+            foreach (var t in clientHistory)
+                clientTypePart[t.ClientType]++;
+           */
+            foreach (var t in currentClients)
            {
                switch (t.Type)
                {
