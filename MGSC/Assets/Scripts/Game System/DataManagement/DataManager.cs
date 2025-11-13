@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using Upgrades;
 
@@ -15,7 +16,7 @@ namespace GameSystem
 
         public MoneyInfo MoneyInfo { get { EnforceReferences(); return _moneyManager.MoneyInfo; } }
         
-        int ShiftCount => _shiftManager.ShiftCount;
+        public int ShiftCount => _shiftManager.ShiftCount;
 
         public GameData Data => currentGameData;
 
@@ -170,14 +171,33 @@ namespace GameSystem
             #endregion
         }
 
+        private int GetCorrectOrdersCount()
+        {
+            if (_clientManager.GetClientsHistory() == null) return 0;
+            return _clientManager.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe == c.order.Recipe).Count();
+        }
+
+        private int GetWrongOrdersCount()
+        {
+            if (_clientManager.GetClientsHistory() == null) return 0;
+            return _clientManager.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe != c.order.Recipe).Count();
+        }
+
         public string GetDataAsString(EDataInfo info)
         {
             string result = "";
 
             switch (info)
             {
-                case EDataInfo.TimeElapsedSinceStartup:
-                    return (Time.time).ToString();
+                case EDataInfo.TimeElapsedSinceStartup:     return (Time.time).ToString();
+                case EDataInfo.ShiftDuration:               return _shiftManager.ShiftDuration.ToString();
+                case EDataInfo.RentPayedThisShift:          return _shiftManager.CurrentRentPrice.ToString();
+                case EDataInfo.ShiftCount:                  return _shiftManager.ShiftCount.ToString();
+                case EDataInfo.CorrectOrdersThisShift:      return GetCorrectOrdersCount().ToString();
+                case EDataInfo.WrongOrdersThisShift:        return GetWrongOrdersCount().ToString();
+                case EDataInfo.ClientsKilledThisShift:      return _clientManager.ClientsKilledThisShift.ToString();
+                case EDataInfo.MoneyGainedThisShift:        return _moneyManager.GetMoneyGainedThisShift().ToString();
+                case EDataInfo.MoneyAmount:                 return _moneyManager.MoneyInfo.ToString();
             }
             // REFACTO : To be implemented
 

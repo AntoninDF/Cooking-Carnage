@@ -17,6 +17,8 @@ namespace GameSystem
         
         // Public Properties
         public List<Client> CurrentClients => currentClients;
+        public int ClientsServedThisShift {  get; private set; }
+        public int ClientsKilledThisShift {  get; private set; }
         public Dictionary<EClientType, float> ClientTypeAmount => UpdateClientTypeData();
 
         #endregion
@@ -25,7 +27,7 @@ namespace GameSystem
         
         // Clients Data Fields
         List<Client> currentClients = new List<Client>(); // script linked to entities
-        List<ClientDataWIP> clientHistory =  new List<ClientDataWIP>(); // script copy
+        List<ClientData> clientHistory =  new List<ClientData>(); // script copy
         
         Dictionary<EClientType, float> clientTypePart = new Dictionary<EClientType, float>(){
             { EClientType.A, 0f },
@@ -91,9 +93,11 @@ namespace GameSystem
             if (HistoryContainsClient(client.GetEntityId())) { return; }
             
             // WIP : Clearly incomplete
-            ClientDataWIP clientData = new ClientDataWIP(client.GetEntityId(),client.Type,killed,-1,Time.time,client.Order,ReferenceManager.Instance.GetManager<ShiftManager>().ShiftCount);
+            ClientData clientData = new ClientData(client.GetEntityId(),client.Type,killed,-1,Time.time,client.Order,ReferenceManager.Instance.GetManager<ShiftManager>().ShiftCount);
             
             clientHistory.Add(clientData);
+            if (killed) ClientsKilledThisShift++;
+            else ClientsServedThisShift++;
 
             if (client.gameObject)
             {
@@ -113,13 +117,13 @@ namespace GameSystem
         /// <summary>
         /// Returns a sized-copy of the Clients History 
         /// </summary>
-        public List<ClientDataWIP> GetClientsHistory(int amount=-1)
+        public List<ClientData> GetClientsHistory(int amount=-1)
         {
             //if(clientHistory.Count == 0) { return null; }
             
             amount = amount == -1 ? clientHistory.Count : amount;
             
-            List<ClientDataWIP> list = new List<ClientDataWIP>();
+            List<ClientData> list = new List<ClientData>();
             
             int possibleAmount = Mathf.Min(amount, clientHistory.Count);
             
@@ -164,6 +168,7 @@ namespace GameSystem
                clientTypePart[type] = 0;
            }
 
+           // This part can likely be replaced by the next commented snippet of code
            foreach (var t in clientHistory)
            {
                switch (t.ClientType)
@@ -179,8 +184,12 @@ namespace GameSystem
                        break;
                }
            }
+           /*
 
-           foreach (var t in currentClients)
+            foreach (var t in clientHistory)
+                clientTypePart[t.ClientType]++;
+           */
+            foreach (var t in currentClients)
            {
                switch (t.Type)
                {
@@ -210,14 +219,14 @@ namespace GameSystem
        /// <summary>
        /// Returns the clientdata wanted if it's a previous client
        /// </summary>
-       public ClientDataWIP GetClientDataByID(int entityId)
+       public ClientData GetClientDataByID(int entityId)
        {
            return clientHistory.FirstOrDefault(data => data.id == entityId);
        }
         
         #endregion
 
-        public class ClientDataWIP
+        public class ClientData
         {
             public int id;
             public EClientType ClientType;
@@ -228,7 +237,7 @@ namespace GameSystem
             public int serviceIndex;
             // Graphic data ? idk if needed, maybe a face icon for UI
             
-            public ClientDataWIP(
+            public ClientData(
                 int id,
                 EClientType clientType = EClientType.None,
                 bool killed = false,

@@ -12,6 +12,8 @@ namespace GameSystem
         public Action OnNextShift { get; set; }
         public Action OnShiftEnded { get; set; }
         public int ShiftCount => _shiftCount;
+        public float ShiftDuration => _shiftDuration;
+        public float CurrentRentPrice => _currentRentPrice;
     
         #endregion
 
@@ -49,10 +51,8 @@ namespace GameSystem
         public void SetRentPriceCurve(AnimationCurve rentPriceCurve) => _rentPriceCurve = rentPriceCurve;
         public void SetRentPrice(float price) => _currentRentPrice = price;
         public float GetCurrentRentPrice() => GetRentPrice(_shiftCount);
-        public float GetRentPrice(int shiftCount)
-        {
-            return _rentPriceCurve.Evaluate(shiftCount);
-        }
+        public float GetRentPrice(int shiftCount) => _rentPriceCurve.Evaluate(shiftCount);
+        public void UpdateRentPrice() { SetRentPrice(GetCurrentRentPrice()); }
 
         void LaunchShift(float duration)
         {
@@ -84,8 +84,9 @@ namespace GameSystem
                 OnShiftEnded?.Invoke();
                 //Debug.Log("[ShiftManager] No clients remaining — ending shift and reloading scene.");
                 ReferenceManager.Instance.GetManager<GameLoop>().StopRunning();
-
-                if (ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo < GetCurrentRentPrice())
+                
+                UpdateRentPrice();
+                if (ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo < _currentRentPrice)
                 {
                     Debug.Log("Defeat");
                     OnShiftFailed?.Invoke();
