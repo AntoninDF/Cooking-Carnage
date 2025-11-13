@@ -12,15 +12,13 @@ namespace GameSystem
         #region Properties
         
         public Dictionary<string, Timer> Timers => timers;
-        public Dictionary<string, FrameTimer> Frametimers => frameTimers;
         
         #endregion
 
         #region Fields
         
         private readonly Dictionary<string, Timer> timers = new();
-        private readonly Dictionary<string, FrameTimer> frameTimers = new();
-        
+       
         #endregion
 
         #region Methods
@@ -57,17 +55,23 @@ namespace GameSystem
             for (int i = 0; i < keys.Count; i++)
             {
                 var key = keys[i];
-                timers[key].Update(deltaTime);
+                if (!timers[key].FrameBased)
+                {
+                    timers[key].Update(deltaTime);
+                }
             }
         }
 
         public override void FixedUpdate()
         {
-            var keys = new List<string>(frameTimers.Keys);
+            var keys = new List<string>(timers.Keys);
             for (int i = 0; i < keys.Count; i++)
             {
                 var key = keys[i];
-                frameTimers[key].Update();
+                if (timers[key].FrameBased)
+                {
+                    timers[key].Update();
+                }
             }
         }
         
@@ -75,42 +79,21 @@ namespace GameSystem
         /// <summary>
         /// Starts a timer with the given name, duration, callback, and loop option
         /// </summary>
-        public Timer StartTimer(string name, float duration, Action onComplete, bool loop = false)
+        public Timer StartTimer( string name, float duration, Action onComplete ,bool frameBased = false)
         {
             // If the timer already exist, replaces it by the new one
             if (timers.TryGetValue(name, out var existingTimer))
             {
-                existingTimer.Reset(name, duration, onComplete, loop);
+                existingTimer.Reset( name, duration, onComplete, frameBased );
                 existingTimer.Resume();
                 return existingTimer;
             }
             
             // Creates a new timer
-            var t = new Timer(name, duration, onComplete, loop);
+            var t = new Timer( name, duration, onComplete, frameBased );
             timers[name] = t;
             return t;
         }
-        
-        /// <summary>
-        /// Starts a frame timer with the given name, amount of frames, callback, and loop option
-        /// </summary>
-        public FrameTimer StartFrameTimer(string name, int frames, Action onComplete, bool loop = false)
-        {
-            // If the timer already exist, replaces it by the new one
-            if (frameTimers.TryGetValue(name, out var existingTimer))
-            {
-                existingTimer.Reset(name, frames, onComplete, loop);
-                existingTimer.Resume();
-                return existingTimer;
-            }
-            
-            // Creates a new timer
-            var t = new FrameTimer(name, frames, onComplete, loop);
-            frameTimers[name] = t;
-            return t;
-        }
-        
-        
         
         /// <summary>
         /// Pauses a timer
@@ -163,7 +146,8 @@ namespace GameSystem
         public string Name { get; private set; }
         public float Duration { get; private set; }
         public float Elapsed { get; private set; }
-        public bool IsLooping { get; private set; }
+        
+        public bool FrameBased { get; private set; }
         public bool IsComplete { get; private set; }
         public bool IsPaused => paused;
         
@@ -173,38 +157,45 @@ namespace GameSystem
         #endregion
 
         #region Methods
-        public Timer(string name, float duration, Action onComplete, bool loop)
+        public Timer(string name, float duration, Action onComplete, bool frameBased)
         {
-            Reset(name, duration, onComplete, loop);
+            Reset(name, duration, onComplete, frameBased);
         }
         
-        public void Reset(string name, float duration, Action actionOnComplete, bool loop)
+        public void Reset( string name, float duration, Action actionOnComplete, bool frameBased)
         {
             Name = name;
-            Duration = duration;
             this.onComplete = actionOnComplete;
-            IsLooping = loop;
+            FrameBased = frameBased;
+            Duration = frameBased ? Mathf.RoundToInt(duration) : duration;
             Elapsed = 0f;
             IsComplete = false;
             paused = false;
         }
         
-        public void Update(float deltaTime)
+        public void Update(float deltaTime=0)
         {
             if (paused || IsComplete)
                 return;
 
-            Elapsed += deltaTime;
-            if (Elapsed >= Duration)
+            if (!FrameBased)
             {
-                if (IsLooping)
-                {
-                    Elapsed = 0f;
-                }
-                else
+
+                Elapsed += deltaTime;
+                if (Elapsed >= Duration)
                 {
                     IsComplete = true;
-                    onComplete.Invoke();
+                    onComplete?.Invoke();
+                }
+            }
+            else
+            {
+                Elapsed+=1;
+
+                if (Elapsed >= Duration)
+                {
+                    IsComplete = true;
+                    onComplete?.Invoke();
                 }
             }
         }
@@ -217,72 +208,6 @@ namespace GameSystem
         public void Pause() => paused = true;
         public void Resume() => paused = false;
         
-        #endregion
-    }
-
-    public class FrameTimer
-    {
-        #region Properties
-
-        public string Name { get; private set; }
-        public int FrameDuration { get; private set; }
-        public int ElapsedFrames { get; private set; }
-        public bool IsLooping { get; private set; }
-        public bool IsComplete { get; private set; }
-        public bool IsPaused => _paused;
-
-        private Action _onComplete;
-        private bool _paused;
-
-        #endregion
-
-        #region Methods
-
-        public FrameTimer(string name, int frames, Action onComplete, bool loop)
-        {
-            Reset(name, frames, onComplete, loop);
-        }
-
-        public void Reset(string name, int frames, Action onComplete, bool loop)
-        {
-            Name = name;
-            FrameDuration = frames;
-            _onComplete = onComplete;
-            IsLooping = loop;
-            ElapsedFrames = 0;
-            IsComplete = false;
-            _paused = false;
-        }
-
-        public void Update()
-        {
-            if (_paused || IsComplete)
-                return;
-
-            ElapsedFrames++;
-
-            if (ElapsedFrames >= FrameDuration)
-            {
-                if (IsLooping)
-                {
-                    ElapsedFrames = 0;
-                }
-                else
-                {
-                    IsComplete = true;
-                    _onComplete?.Invoke();
-                }
-            }
-        }
-
-        public void End()
-        {
-            ElapsedFrames = FrameDuration;
-        }
-
-        public void Pause() => _paused = true;
-        public void Resume() => _paused = false;
-
         #endregion
     }
 
