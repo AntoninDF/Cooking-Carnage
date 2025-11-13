@@ -3,6 +3,7 @@ using NaughtyAttributes;
 using System.Collections.Generic;
 using TMPro;
 using UI;
+using Unity.VisualScripting;
 using UnityEngine;
 using Upgrades;
 namespace GameSystem
@@ -75,7 +76,7 @@ namespace GameSystem
             PostInitManagers();
 
             if (_gameProfile.ResetSaveFile) ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
-            ReferenceManager.Instance.GetManager<UIManager>().EnableMenu(_gameProfile.DefaultMenu);
+            SetupUI();
 
             if (_gameProfile.DestroyAfterInitialization) Destroy(this.gameObject);
         }
@@ -120,6 +121,13 @@ namespace GameSystem
             {
                 Instantiate(ReferenceManager.AssetReferences.UI);
             }
+        }
+
+        private void SetupUI()
+        {
+            var ui = ReferenceManager.Instance.GetManager<UIManager>();
+            ui.EnableMenu(_gameProfile.DefaultMenu);
+            ReferenceManager.Instance.GetManager<ShiftManager>().OnShiftEnded += () => ui.EnableMenu("ShiftRecap");
         }
     
 
