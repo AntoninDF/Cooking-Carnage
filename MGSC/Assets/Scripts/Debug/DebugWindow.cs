@@ -224,12 +224,12 @@ public class DebugWindow : MonoBehaviour
     int killedCount = 0;
     int servedCount = 0;
 
-    List<ClientManager.ClientDataWIP> history = null;
+    List<ClientManager.ClientData> history = null;
 
     try
     {
         currentCount = clientManager.CurrentClients?.Count ?? 0;
-        history = clientManager.GetClientsHistory() ?? new List<ClientManager.ClientDataWIP>();
+        history = clientManager.GetClientsHistory() ?? new List<ClientManager.ClientData>();
         historyCount = history.Count;
 
         foreach (var c in history)
