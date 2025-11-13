@@ -207,7 +207,6 @@ public class DebugWindow : MonoBehaviour
         }
     }
 
-
     private void DrawClientsTab()
 {
     GUILayout.Label("Client Information", GUI.skin.box);
@@ -341,7 +340,6 @@ public class DebugWindow : MonoBehaviour
     GUILayout.EndScrollView(); 
 }
 
-
     private void DrawUpgradesTab()
     {
         GUILayout.Label("Upgrades", GUI.skin.box);
@@ -383,10 +381,14 @@ public class DebugWindow : MonoBehaviour
         foreach (var kvp in managers)
         {
             Type type = kvp.Key;
-            IManager manager = kvp.Value;
 
             if (!_managerDebugToggles.ContainsKey(type))
                 _managerDebugToggles[type] = false;
+
+            if (Debugger.Instance.CheckDebug(type))
+            {
+                _managerDebugToggles[type] = true;
+            }
 
             GUILayout.BeginHorizontal(GUI.skin.box);
             GUILayout.Label($"{type.Name}", GUILayout.Width(250));
@@ -397,14 +399,7 @@ public class DebugWindow : MonoBehaviour
             {
                 _managerDebugToggles[type] = newState;
 
-                // Si le manager possède une propriété ou méthode DebugMode, on la met à jour automatiquement
-                var debugField = type.GetField("DebugMode");
-                var debugProp = type.GetProperty("DebugMode");
-
-                if (debugField != null && debugField.FieldType == typeof(bool))
-                    debugField.SetValue(manager, newState);
-                else if (debugProp != null && debugProp.CanWrite && debugProp.PropertyType == typeof(bool))
-                    debugProp.SetValue(manager, newState);
+                Debugger.Instance.ToggleDebugManager(type);
             }
 
             GUILayout.EndHorizontal();
