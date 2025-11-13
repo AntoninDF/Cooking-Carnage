@@ -118,7 +118,7 @@ public class Debugger
             SO_RecipeBook rb             => $"{Decrypt(rb.Recipes)} ",
             MoneyInfo mi                 => $"{mi} $ ",
             Upgrade up                   => $"Upgrade {up.GetType().Name} - lvl {up.Level} ",
-            _                            => type.ToString() + " "
+            _                            => toDecrypt.ToString() + " "
         };
     }
 
