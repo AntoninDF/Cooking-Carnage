@@ -1,16 +1,10 @@
+using GameSystem;
 using UnityEngine;
 
 public class TriggerNextShift : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void RequestNextShift()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        ReferenceManager.Instance.GetManager<ShiftManager>().NextShift();
     }
 }
