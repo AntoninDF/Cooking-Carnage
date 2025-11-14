@@ -70,7 +70,7 @@ namespace Clients
                 out Unity.Mathematics.float3 pos,
                 out Unity.Mathematics.float3 tangent,
                 out Unity.Mathematics.float3 upVector);
-            return pos;
+            return (Vector3)pos + SplineComponent.transform.position;
         }
 
         public void SnapToSpline()
