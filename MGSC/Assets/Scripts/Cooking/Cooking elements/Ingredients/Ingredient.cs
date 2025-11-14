@@ -1,3 +1,4 @@
+using UI;
 using UnityEngine;
 
 namespace Cooking
@@ -27,6 +28,12 @@ namespace Cooking
             base.Start();
             if (_model == null)
                 throw new MissingReferenceException("Please assign an ingredient model in the inspector : " + name);
+        }
+
+        protected override void UpdateUI()
+        {
+            base.UpdateUI();
+            _tooltipComponent.SetText(Model.Name);
         }
 
         #endregion

@@ -49,6 +49,7 @@ namespace UI
                 result = result.Replace(textInfo.markup, dataManager.GetDataAsString(textInfo.info));
             }
             _textObject.text = result;
+            Debugger.Instance.Log(dataManager, "Data replacement is ", _dataReplacement);
         }
 
         #endregion
@@ -60,6 +61,11 @@ namespace UI
             [Tooltip("This text will be replaced by the requested info type")]
             public string markup;
             public EDataInfo info;
+
+            public override string ToString()
+            {
+                return markup + " as " + info.ToString();
+            }
         }
 
     }
