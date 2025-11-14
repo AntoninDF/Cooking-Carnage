@@ -16,6 +16,8 @@ namespace Cooking
         #region Properties
 
         public UnityEvent OnGrabbed => _onGrabbed;
+        public UnityEvent OnLookAt => _onLookAt;
+        public UnityEvent OnStopLookAt => _onStopLookAt;
         public IContainer Container { get; set; }
         public PlayerInterface Player { get; set; }
         public Collider Collider => _collider;
@@ -35,6 +37,10 @@ namespace Cooking
         [Header("Item events")]
         [Tooltip("Invoked when this item is grabbed by the player or another container")]
         [SerializeField] private UnityEvent _onGrabbed;
+        [Tooltip("Invoked when this item is looked at by the player")]
+        [SerializeField] private UnityEvent _onLookAt;
+        [Tooltip("Invoked when this item stops being looked at by the player")]
+        [SerializeField] private UnityEvent _onStopLookAt;
 
         protected Tooltip _tooltipComponent; 
         private Coroutine _coroutine;
@@ -109,6 +115,12 @@ namespace Cooking
         public void LookAt(PlayerInteractor interactor)
         {
             Player = interactor.Player;
+            _onLookAt?.Invoke();
+            
+        }
+        public void StopLookAt()
+        {
+
         }
         /// <summary>
         /// Automatically sets the target slot to the container being looked at
