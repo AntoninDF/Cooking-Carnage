@@ -49,7 +49,7 @@ namespace UI
                 result = result.Replace(textInfo.markup, dataManager.GetDataAsString(textInfo.info));
             }
             _textObject.text = result;
-            Debugger.Instance.Log("Data replacement is ", _dataReplacement);
+            Debugger.Instance.Log(dataManager, "Data replacement is ", _dataReplacement);
         }
 
         #endregion
