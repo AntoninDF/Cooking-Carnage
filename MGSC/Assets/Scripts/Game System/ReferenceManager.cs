@@ -51,6 +51,7 @@ namespace GameSystem
             typeof(PlayerInterface),
             typeof(OvenSetup),
             typeof(PlayerInterface),
+            typeof(Entrance)
 
         };
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;

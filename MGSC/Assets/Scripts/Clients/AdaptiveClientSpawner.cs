@@ -169,6 +169,7 @@ namespace GameSystem
             AssignClientOrderingCounter(client);
                     
             ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(client,false);
+            ReferenceManager.Instance.GetElementOfType<Entrance>().OnClientEnter.Invoke();
                     
             Launch(GetRandomizedDelay);
         }
