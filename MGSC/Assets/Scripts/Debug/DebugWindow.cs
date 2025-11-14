@@ -21,7 +21,6 @@ public class DebugWindow : MonoBehaviour
     private int _lastHistoryClientsCount;
     private int newShift;
     
-    private Dictionary<Type, bool> _managerDebugToggles = new Dictionary<Type, bool>();
     private Vector2 _clientScrollPos;
 
     private bool _previousMouseVisibility;
@@ -382,24 +381,15 @@ public class DebugWindow : MonoBehaviour
         {
             Type type = kvp.Key;
 
-            if (!_managerDebugToggles.ContainsKey(type))
-                _managerDebugToggles[type] = false;
-
-            if (Debugger.Instance.CheckDebug(type))
-            {
-                _managerDebugToggles[type] = true;
-            }
-
+            
             GUILayout.BeginHorizontal(GUI.skin.box);
             GUILayout.Label($"{type.Name}", GUILayout.Width(250));
-            bool newState = GUILayout.Toggle(_managerDebugToggles[type], "Debug", GUILayout.Width(80));
+            bool newState = GUILayout.Toggle(Debugger.CheckDebug(type), "Debug", GUILayout.Width(80));
 
             // Detect toggle changes
-            if (newState != _managerDebugToggles[type])
+            if (newState != Debugger.CheckDebug(type))
             {
-                _managerDebugToggles[type] = newState;
-
-                Debugger.Instance.ToggleDebugManager(type);
+               Debugger.ToggleDebugManager(type);
             }
 
             GUILayout.EndHorizontal();

@@ -8,29 +8,19 @@ using GameSystem;
 using UnityEngine;
 using Upgrades;
 
-public class Debugger
+public static class Debugger
 {
     #region Properties
 
-    // Lazy initialization
-    public static Debugger Instance
-    {
-        get
-        {
-            if (_instance == null) _instance = new Debugger();
-            return _instance;
-        }
-    }
+    public static bool CheckDebug(Type type) => debugManagers.Contains(type);
 
     #endregion
     
-    
 
     #region Fields
-
-    private static Debugger _instance;
-    private readonly List<string> logHistory = new();
-    private List<Type> debugManagers = new();
+    
+    private static readonly List<string> logHistory = new();
+    private static List<Type> debugManagers = new();
     
     public enum LogType
     {
@@ -44,22 +34,18 @@ public class Debugger
 
     #region Methods
 
-    public Debugger()
-    {
-        //Instancier la fenetre de console
-    }
     
-    public void Log(IManager emitter, params object[] messages)
+    
+    public static void Log(this IManager emitter, params object[] messages)
     {
         Log(emitter,LogType.Info, messages);
     }
 
-    public void Log(IManager emitter, LogType logType , params object[] messages) 
+    public static void Log(this IManager emitter, LogType logType ,  params object[] messages) 
     {
-        if (messages == null || messages.Length == 0|| !debugManagers.Contains(emitter.GetType()))
+        if (messages == null || !debugManagers.Contains(emitter.GetType()))
             return;
-        
-        string prefix = $"[{DateTime.Now:HH:mm:ss}]  [Debugger] : ";
+        string prefix = $"[{DateTime.Now:HH:mm:ss}] [{emitter.GetType().Name}] : ";
         string message = string.Join(" ", messages.Where(m => m != null).Select(Decrypt));
 
         switch (logType) 
@@ -80,7 +66,7 @@ public class Debugger
         logHistory.Add(message);
     }
 
-    string Decrypt<T>(T toDecrypt)
+    static string Decrypt<T>(T toDecrypt)
     {
         if (toDecrypt == null)
             return string.Empty;
@@ -129,11 +115,11 @@ public class Debugger
             SO_RecipeBook rb             => $"{Decrypt(rb.Recipes)} ",
             MoneyInfo mi                 => $"{mi} $ ",
             Upgrade up                   => $"Upgrade {up.GetType().Name} - lvl {up.Level} ",
-            _                            => toDecrypt.ToString() + " "
+            _                            => toDecrypt.ToString() + " something "
         };
     }
 
-    public void ToggleDebugManager(Type type)
+    public static void ToggleDebugManager(Type type)
     {
         if (debugManagers.Contains(type))
         {
@@ -142,18 +128,6 @@ public class Debugger
         else
         {
             debugManagers.Add(type);
-        }
-    }
-
-    public bool CheckDebug(Type type)
-    {
-        if (debugManagers.Contains(type))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
 
