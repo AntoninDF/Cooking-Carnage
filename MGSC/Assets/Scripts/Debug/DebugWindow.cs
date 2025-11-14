@@ -26,6 +26,9 @@ public class DebugWindow : MonoBehaviour
     private bool _previousMouseVisibility;
     private CursorLockMode _previousMouseLockMode;
     
+    private readonly Vector2 referenceWindowSize = new Vector2(450, 500); 
+
+    
     #region Methods
     private void Update()
     {
@@ -57,8 +60,20 @@ public class DebugWindow : MonoBehaviour
             DrawPressHint();
             return;
         }
-
-        _windowRect = GUI.Window(0, _windowRect, DrawWindow, "Debug Window");
+        
+        float scaleX = _windowRect.width / referenceWindowSize.x;
+        float scaleY = _windowRect.height / referenceWindowSize.y;
+        Vector2 scale = new Vector2(scaleX, scaleY);
+        
+        Matrix4x4 oldMatrix = GUI.matrix;
+        
+        Vector2 pos = new Vector2(_windowRect.x, _windowRect.y);
+        GUI.matrix = Matrix4x4.TRS(pos, Quaternion.identity, new Vector3(scale.x, scale.y, 1f));
+        
+        GUI.Window(0, new Rect(0, 0, referenceWindowSize.x, referenceWindowSize.y), DrawWindow, "Debug Window");
+        
+        GUI.matrix = oldMatrix;
+        
     }
 
     private void DrawPressHint()
@@ -383,14 +398,23 @@ public class DebugWindow : MonoBehaviour
 
             
             GUILayout.BeginHorizontal(GUI.skin.box);
-            GUILayout.Label($"{type.Name}", GUILayout.Width(250));
-            bool newState = GUILayout.Toggle(Debugger.CheckDebug(type), "Debug", GUILayout.Width(80));
+            GUILayout.Label($"{type.Name}", GUILayout.Width(150));
+            
+            bool info = Debugger.CheckDebug(type, Debugger.LogType.Info);
+            bool warning = Debugger.CheckDebug(type, Debugger.LogType.Warning);
+            bool error = Debugger.CheckDebug(type, Debugger.LogType.Error);
 
-            // Detect toggle changes
-            if (newState != Debugger.CheckDebug(type))
-            {
-               Debugger.ToggleDebugManager(type);
-            }
+            bool newInfo = GUILayout.Toggle(info, "Info", GUILayout.Width(50));
+            bool newWarning = GUILayout.Toggle(warning, "Warning", GUILayout.Width(70));
+            bool newError = GUILayout.Toggle(error, "Error", GUILayout.Width(50));
+
+            
+            if (newInfo != info)
+                Debugger.ToggleDebugManager(type, Debugger.LogType.Info);
+            if (newWarning != warning)
+                Debugger.ToggleDebugManager(type, Debugger.LogType.Warning);
+            if (newError != error)
+                Debugger.ToggleDebugManager(type, Debugger.LogType.Error);
 
             GUILayout.EndHorizontal();
         }

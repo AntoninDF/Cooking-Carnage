@@ -12,7 +12,7 @@ public static class Debugger
 {
     #region Properties
 
-    public static bool CheckDebug(Type type) => debugManagers.Contains(type);
+    public static bool CheckDebug(Type type, LogType info) => debugManagers[info].Contains(type);
 
     #endregion
     
@@ -20,7 +20,13 @@ public static class Debugger
     #region Fields
     
     private static readonly List<string> logHistory = new();
-    private static List<Type> debugManagers = new();
+    private static Dictionary<LogType, List<Type>> debugManagers = new()
+    {
+        { LogType.Info,    new List<Type>() },
+        { LogType.Warning, new List<Type>() },
+        { LogType.Error,   new List<Type>() }
+    };
+    public static event Action<string,LogType> OnLogAdded;
     
     public enum LogType
     {
@@ -43,8 +49,9 @@ public static class Debugger
 
     public static void Log(this IManager emitter, LogType logType ,  params object[] messages) 
     {
-        if (messages == null || !debugManagers.Contains(emitter.GetType()))
+        if (messages == null || !CheckDebug(emitter.GetType(), logType))
             return;
+
         string prefix = $"[{DateTime.Now:HH:mm:ss}] [{emitter.GetType().Name}] : ";
         string message = string.Join(" ", messages.Where(m => m != null).Select(Decrypt));
 
@@ -63,7 +70,8 @@ public static class Debugger
                 //ajouter la fonction pour mettre dans la console directement
                 break;
         }
-        logHistory.Add(message);
+        logHistory.Add(prefix+message);
+        OnLogAdded?.Invoke(prefix+message, logType);
     }
 
     static string Decrypt<T>(T toDecrypt)
@@ -119,15 +127,15 @@ public static class Debugger
         };
     }
 
-    public static void ToggleDebugManager(Type type)
+    public static void ToggleDebugManager(Type type, LogType info)
     {
-        if (debugManagers.Contains(type))
+        if (debugManagers[info].Contains(type))
         {
-            debugManagers.Remove(type);
+            debugManagers[info].Remove(type);
         }
         else
         {
-            debugManagers.Add(type);
+            debugManagers[info].Add(type);
         }
     }
 
