@@ -36,7 +36,7 @@ namespace GameSystem
 
         public static implicit operator float(MoneyInfo mi) => mi._amount;
         public static implicit operator string(MoneyInfo mi) => MathF.Round(mi._amount, 2).ToString() + "€";
-        public override string ToString() => _amount.ToString() + "€";
+        public override string ToString() => MathF.Round(_amount, 2).ToString() + "€";
         
 
         #endregion

@@ -66,12 +66,13 @@ namespace GameSystem
             AddMoney(order.OrderRating.MoneyGained);
         }
 
-        public float GetMoneyGainedOnShift(int shiftCount) => _moneyGainedPerShift.ContainsKey(shiftCount) ? _moneyGainedPerShift[shiftCount] : 0;
-        public float GetMoneyGainedThisShift() => GetMoneyGainedOnShift(_dataManager.ShiftCount);
+        public MoneyInfo GetMoneyGainedOnShift(int shiftCount) => _moneyGainedPerShift.ContainsKey(shiftCount) ? _moneyGainedPerShift[shiftCount] : new MoneyInfo();
+        public MoneyInfo GetMoneyGainedThisShift() => GetMoneyGainedOnShift(_dataManager.ShiftCount);
 
         public void AddMoney(float amount)
         {
             MoneyInfo += amount;
+            if (!_moneyGainedPerShift.ContainsKey(_dataManager.ShiftCount)) _moneyGainedPerShift[_dataManager.ShiftCount] = new MoneyInfo();
             _moneyGainedPerShift[_dataManager.ShiftCount] += amount;
             OnMoneyChange?.Invoke(amount);
         }

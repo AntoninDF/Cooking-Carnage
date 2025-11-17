@@ -134,7 +134,7 @@ namespace Cooking
             }
             if (Container is IMultiContainer)
             {
-                _targetPos = Player.LookInfo.point - FindLowestPoint() - Container.transform.position;
+                _targetPos = Quaternion.Inverse(Container.transform.rotation) * (Player.LookInfo.point - FindLowestPoint() - Container.transform.position);
                 _targetRot = _defaultRotation;
             }
         }
