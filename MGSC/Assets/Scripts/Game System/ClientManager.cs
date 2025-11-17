@@ -66,20 +66,30 @@ namespace GameSystem
             if (isDone)
             {
                 // WIP : Pour l'instant un client doit forcément venir de currentClients pour aller vers History
-                
-                if (!currentClients.Contains(client)) return;
+
+                if (!currentClients.Contains(client))
+                {
+                    this.Log(LogType.Warning, "Client"+client.GetEntityId()+" is not a current client and cannot be archived");
+                    return;
+                }
                 
                 currentClients.Remove(client);
                 AddToHistory(client,killed);
                 UpdateClientTypeData();
-                //Debug.Log("Client"+client.GetEntityId()+" has been added to the history");
+                
+                this.Log(LogType.Log, "Client"+client.GetEntityId()+" Data has been archived");
+                
             }
             else
             {
                 if (!currentClients.Contains(client))
                 {
                     currentClients.Add(client);
-                    //Debug.Log("Client"+client.GetEntityId()+" is a current client");
+                    this.Log(LogType.Log, "Client"+client.GetEntityId()+" is now a current client");
+                }
+                else
+                {
+                    this.Log(LogType.Warning, "Client"+client.GetEntityId()+" is already a current client");
                 }
             }
         }
@@ -90,17 +100,33 @@ namespace GameSystem
         /// </summary>
         void AddToHistory(Client client, bool killed)
         {
-            if (HistoryContainsClient(client.GetEntityId())) { return; }
+            if (HistoryContainsClient(client.GetEntityId()))
+            {
+                this.Log(LogType.Warning, "Data for Client"+client.GetEntityId()+" has already been archived");
+                
+                return;
+            }
             
-            // WIP : Clearly incomplete
             ClientData clientData = new ClientData(client.GetEntityId(),client.Type,killed,-1,Time.time,client.Order,ReferenceManager.Instance.GetManager<ShiftManager>().ShiftCount);
             
             clientHistory.Add(clientData);
-            if (killed) ClientsKilledThisShift++;
-            else ClientsServedThisShift++;
+            if (killed)
+            {
+                ClientsKilledThisShift++;
+                
+                this.Log(LogType.Log, "Client"+client.GetEntityId()+" is the "+ ClientsKilledThisShift+"th client killed during this shift");
+            }
+            else
+            {
+                ClientsServedThisShift++;
+                
+                this.Log(LogType.Log, "Client"+client.GetEntityId()+" is the "+ ClientsServedThisShift+"th client served during this shift");
+            }
 
             if (client.gameObject)
             {
+                this.Log(LogType.Log, "Client"+client.GetEntityId()+" gameobject is being destroyed");
+                
                 client.AutoDestruction();
             }
         }
@@ -157,8 +183,8 @@ namespace GameSystem
        /// <summary>
        /// Updates the percentages of clients types received
        /// </summary>
-       Dictionary<EClientType, float> UpdateClientTypeData()
-       {
+        Dictionary<EClientType, float> UpdateClientTypeData()
+        {
            int total = currentClients.Count + clientHistory.Count;
            
            if (total == 0) { return clientTypePart; }
@@ -167,62 +193,29 @@ namespace GameSystem
            {
                clientTypePart[type] = 0;
            }
-
-           // This part can likely be replaced by the next commented snippet of code
+           
            foreach (var t in clientHistory)
            {
-               switch (t.ClientType)
-               {
-                   case EClientType.A:
-                       clientTypePart[EClientType.A]++;
-                       break;
-                   case EClientType.B:
-                       clientTypePart[EClientType.B]++;
-                       break;
-                   case EClientType.C:
-                       clientTypePart[EClientType.C]++;
-                       break;
-               }
+               clientTypePart[t.ClientType]++;
            }
-           /*
 
-            foreach (var t in clientHistory)
-                clientTypePart[t.ClientType]++;
-           */
-            foreach (var t in currentClients)
+           foreach (var t in currentClients)
            {
-               switch (t.Type)
-               {
-                   case EClientType.A:
-                       clientTypePart[EClientType.A]++;
-                       break;
-                   case EClientType.B:
-                       clientTypePart[EClientType.B]++;
-                       break;
-                   case EClientType.C:
-                       clientTypePart[EClientType.C]++;
-                       break;
-               }
+                clientTypePart[t.Type]++;
            }
            
-           /* Percentage Conversion
+           this.Log(LogType.Log, "Client type Data has been updated : " + clientTypePart);
             
-            foreach (var type in clientTypePart.Keys.ToList())
-           {
-               clientTypePart[type] = (float)clientTypePart[type] / total;
-           }*/
-           
-           return clientTypePart;
-       }
+            return clientTypePart;
+        }
 
-
-       /// <summary>
-       /// Returns the clientdata wanted if it's a previous client
-       /// </summary>
-       public ClientData GetClientDataByID(int entityId)
-       {
+        /// <summary>
+        /// Returns the clientdata wanted if it's a previous client
+        /// </summary>
+        public ClientData GetClientDataByID(int entityId)
+        {
            return clientHistory.FirstOrDefault(data => data.id == entityId);
-       }
+        }
         
         #endregion
 

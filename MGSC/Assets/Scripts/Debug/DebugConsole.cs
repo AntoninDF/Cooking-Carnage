@@ -43,7 +43,7 @@ public class DebugConsole : MonoBehaviour
         }
     }
 
-    private void HandleNewLog(string message, Debugger.LogType logType)
+    private void HandleNewLog(string message, LogType logType)
     {
         _displayedLogs.Add(new LogEntry
         {
@@ -96,12 +96,12 @@ public class DebugConsole : MonoBehaviour
         }
     }
 
-    private Color GetColorForLogType(Debugger.LogType type)
+    private Color GetColorForLogType(LogType type)
     {
         return type switch
         {
-            Debugger.LogType.Warning => Color.yellow,
-            Debugger.LogType.Error => Color.red,
+            LogType.Warning => Color.yellow,
+            LogType.Error => Color.red,
             _ => Color.white
         };
     }
@@ -109,7 +109,7 @@ public class DebugConsole : MonoBehaviour
     private class LogEntry
     {
         public string Message;
-        public Debugger.LogType Type;
+        public LogType Type;
         public float TimeCreated;
     }
 }

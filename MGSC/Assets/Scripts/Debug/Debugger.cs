@@ -22,18 +22,11 @@ public static class Debugger
     private static readonly List<string> logHistory = new();
     private static Dictionary<LogType, List<Type>> debugManagers = new()
     {
-        { LogType.Info,    new List<Type>() },
+        { LogType.Log,    new List<Type>() },
         { LogType.Warning, new List<Type>() },
         { LogType.Error,   new List<Type>() }
     };
     public static event Action<string,LogType> OnLogAdded;
-    
-    public enum LogType
-    {
-        Info,
-        Warning,
-        Error
-    }
 
 
     #endregion
@@ -44,7 +37,7 @@ public static class Debugger
     
     public static void Log(this IManager emitter, params object[] messages)
     {
-        Log(emitter,LogType.Info, messages);
+        Log(emitter,LogType.Log, messages);
     }
 
     public static void Log(this IManager emitter, LogType logType ,  params object[] messages) 
@@ -57,7 +50,7 @@ public static class Debugger
 
         switch (logType) 
         {
-            case LogType.Info:
+            case LogType.Log:
                 Debug.Log(prefix + message);
                 //ajouter la fonction pour mettre dans la console directement
                 break;

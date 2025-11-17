@@ -87,6 +87,15 @@ namespace GameSystem
 
             _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
             _timerManager.StartTimer( "AdaptiveClientSpawner Init", 1, () => Launch(),true);
+
+            if (models.Count <= 0 || !recipes || !spline || counters.Count <= 0)
+            {
+                this.Log(LogType.Warning," Initialization is incomplete");
+            }
+            else
+            {
+                this.Log(" has been initialized");
+            }
         }
         
         
@@ -102,7 +111,7 @@ namespace GameSystem
             
             if (counters.Count == 0)
             {
-                Debug.LogError("No ordering counter in the scene");
+                this.Log(LogType.Error," No ordering counter has been detected");
                 return false;
             }
 
@@ -125,7 +134,7 @@ namespace GameSystem
                 client.ReserveCounter(counter);
                 return;
             }
-            Debug.LogWarning("Ordering Counter Occupation error");
+            this.Log(LogType.Warning," No counter has been found to assign a client to");
         }
 
         

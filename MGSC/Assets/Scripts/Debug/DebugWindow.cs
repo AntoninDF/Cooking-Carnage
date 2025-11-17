@@ -400,9 +400,9 @@ public class DebugWindow : MonoBehaviour
             GUILayout.BeginHorizontal(GUI.skin.box);
             GUILayout.Label($"{type.Name}", GUILayout.Width(150));
             
-            bool info = Debugger.CheckDebug(type, Debugger.LogType.Info);
-            bool warning = Debugger.CheckDebug(type, Debugger.LogType.Warning);
-            bool error = Debugger.CheckDebug(type, Debugger.LogType.Error);
+            bool info = Debugger.CheckDebug(type, LogType.Log);
+            bool warning = Debugger.CheckDebug(type, LogType.Warning);
+            bool error = Debugger.CheckDebug(type, LogType.Error);
 
             bool newInfo = GUILayout.Toggle(info, "Info", GUILayout.Width(50));
             bool newWarning = GUILayout.Toggle(warning, "Warning", GUILayout.Width(70));
@@ -410,11 +410,11 @@ public class DebugWindow : MonoBehaviour
 
             
             if (newInfo != info)
-                Debugger.ToggleDebugManager(type, Debugger.LogType.Info);
+                Debugger.ToggleDebugManager(type, LogType.Log);
             if (newWarning != warning)
-                Debugger.ToggleDebugManager(type, Debugger.LogType.Warning);
+                Debugger.ToggleDebugManager(type, LogType.Warning);
             if (newError != error)
-                Debugger.ToggleDebugManager(type, Debugger.LogType.Error);
+                Debugger.ToggleDebugManager(type, LogType.Error);
 
             GUILayout.EndHorizontal();
         }
