@@ -23,6 +23,8 @@ namespace UI
             "ShiftRecap", EInfoBoxType.Normal)]
 
         //[Header("References")]
+        [SerializeField] private string _pauseMenuName = "Pause";
+        [SerializeField] private string _gameMenuName = "Game";
         [SerializeField] private List<UIMenu> _menus = new List<UIMenu>();
 
         [Header("UI Manager events")]
@@ -98,6 +100,11 @@ namespace UI
         {
             DisableMenu(_currentMenu);
             //Debug.Log("Enabling menu '" + menu.name + "'");
+            if (menu.menu == null)
+            {
+                Debug.LogWarning("[UIManager] : Couldn't enable the menu '" + menu.name + "' because the gameobject was null");
+                return;
+            }
             _currentMenu = menu;
             _currentMenu.menu.SetActive(true);
             _currentMenu.onEnable.Invoke();
@@ -108,6 +115,12 @@ namespace UI
         {
             if (menu == default) return;
             //Debug.Log("Disabling menu '" + menu.name + "'");
+
+            if (menu.menu == null)
+            {
+                Debug.LogWarning("[UIManager] : Couldn't enable the menu '" + menu.name + "' because the gameobject was null");
+                return;
+            }
             menu.menu.SetActive(false);
             menu.onDisable.Invoke();
         }
@@ -136,7 +149,7 @@ namespace UI
         {
             _gameLoop.StartRunning();
             _playerInputs.Enable();
-            _UIInputs.Disable();
+            _UIInputs.Enable();
         }
 
         private void SetCursorFreedom(bool freedom)
@@ -159,8 +172,17 @@ namespace UI
 
         private void SubscribeToEvents()
         {
-            if (_player != null)
-                _player.InputHandler.OnPause += (ctx) => EnableMenu("ShiftRecap");
+            if (_UIInputs != null)
+                _UIInputs.FindAction("Pause").performed += (ctx) => TogglePause();
+        }
+
+        private void TogglePause()
+        {
+            //Debug.Log("[UIManager] : Current menu is : " + _currentMenu.name);
+            if (_currentMenu.name == _pauseMenuName)
+                EnableMenu(_gameMenuName);
+            else
+                EnableMenu(_pauseMenuName);
         }
 
         public void Register()

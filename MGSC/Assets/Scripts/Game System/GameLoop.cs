@@ -72,6 +72,8 @@ namespace GameSystem
         public void StartRunning()
         {
             IsRunning = true;
+            
+            this.Log("is now running");
         }
 
         
@@ -81,6 +83,8 @@ namespace GameSystem
         public void StopRunning()
         {
             IsRunning = false;
+            
+            this.Log("is not running anymore");
         }
         
         /// <summary>
@@ -89,7 +93,15 @@ namespace GameSystem
         public void RegisterUpdatable(UpdatableBase updatable)
         {
             if (!_updatables.Contains(updatable))
+            {
                 _updatables.Add(updatable);
+                
+                this.Log(updatable.ToString() + " has been registered");
+            }
+            else
+            {
+                this.Log(LogType.Warning ,updatable.ToString() + " has already been registered");
+            }
         }
 
         /// <summary>
@@ -98,6 +110,8 @@ namespace GameSystem
         public void UnregisterUpdatable(UpdatableBase manager)
         {
             _updatables.Remove(manager);
+            
+            this.Log(manager.ToString() + " has been removed");
         }
         
         #endregion

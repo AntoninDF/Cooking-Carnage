@@ -86,12 +86,18 @@ namespace GameSystem
             {
                 existingTimer.Reset( name, duration, onComplete, frameBased );
                 existingTimer.Resume();
+                
+                this.Log(LogType.Log, "Timer " + name + " has been reset");
+
                 return existingTimer;
             }
             
             // Creates a new timer
             var t = new Timer( name, duration, onComplete, frameBased );
             timers[name] = t;
+            
+            this.Log(LogType.Log, "Timer " + name + " has been launched");
+            
             return t;
         }
         
@@ -103,6 +109,12 @@ namespace GameSystem
             if (timers.TryGetValue(name, out var t))
             {
                 t.Pause();
+                
+                this.Log(LogType.Log, "Timer " + name + " is paused ");
+            }
+            else
+            {
+                this.Log(LogType.Warning, "Timer " + name + "cannot be paused, it doesn't exist");
             }
         }
         
@@ -114,6 +126,12 @@ namespace GameSystem
             if (timers.TryGetValue(name, out var t))
             {
                 t.Resume();
+                
+                this.Log(LogType.Log, "Timer " + name + " is now resumed ");
+            }
+            else
+            {
+                this.Log(LogType.Warning, "Timer " + name + "cannot be paused, it doesn't exist");
             }
         }
         
@@ -131,6 +149,8 @@ namespace GameSystem
         public void RemoveTimer(string name)
         {
             timers.Remove(name);
+            
+            this.Log(LogType.Log, "Timer " + name + " has been erased");
         }
 
         #endregion

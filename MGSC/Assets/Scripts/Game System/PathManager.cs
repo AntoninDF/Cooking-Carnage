@@ -15,7 +15,7 @@ namespace GameSystem
         {
             if (_splineComponent == null)
             {
-                Debug.LogError("Please reference a spline component in the path manager's inspector :)");
+                this.Log(LogType.Error, "Please reference a spline component in the path manager's inspector :)");
             }
             Register();
 

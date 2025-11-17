@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -58,6 +59,15 @@ namespace Clients
             _currentClient = null;
             _onUserUnregister?.Invoke();
         }
+
+        #if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            if (!Selection.Contains(this.gameObject)) return;
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, _reachDistance);
+        }
+        #endif
         #endregion
 
     }

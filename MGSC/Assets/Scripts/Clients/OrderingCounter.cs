@@ -106,11 +106,6 @@ namespace Clients
             return true;
         }
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, _reachDistance);
-        }
 
         #endregion
 

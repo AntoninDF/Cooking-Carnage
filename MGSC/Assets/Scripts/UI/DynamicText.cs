@@ -41,7 +41,10 @@ namespace UI
             if (_textObject == null) return;
             DataManager dataManager = ReferenceManager.Instance.GetManager<DataManager>();
             if (dataManager == null)
-                Debug.LogError("[ShiftRecap] : Couldn't update the UI, no DataManager found");
+            {
+                Debug.LogWarning("[DynamicText] : Couldn't update the UI, no DataManager found");
+                return;
+            }
             string result = string.Copy(_baseText);
             foreach (var textInfo in _dataReplacement)
             {

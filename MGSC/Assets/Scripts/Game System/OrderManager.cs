@@ -34,8 +34,14 @@ namespace GameSystem
         {
             int id = _pastOrders.Count + _activeOrders.Count + 1;
             Order order = new Order(client, recipe, id);
+            
+            this.Log(LogType.Log, "Order n°"+id+ "generated for "+client.ToString()+", Recipe : "+recipe);
+            
             _activeOrders.Add(order);
             OnNewOrder?.Invoke(order);
+            
+            this.Log(LogType.Log, "*New Order* Feedbacks Invoked");
+            
             return order;
         }
 
@@ -44,9 +50,19 @@ namespace GameSystem
             order.ServingInfo = info;
             OrderRating rating = OrderEvaluator.Evaluate(order);
             order.Resolve(info, rating);
+            
+            this.Log(LogType.Log, "Order n°"+ order.ID+ " Resolved " + 
+                                  (order.OrderRating.IsCorrectRecipe ? "successfully": "poorly") 
+                                  + " completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 
+                                  + "s for client " + order.Owner.name + ". Money gained : " 
+                                  + MoneyEvaluator.Evaluate(order) + ". Expected '" + order.Recipe.Name 
+                                  + "', received '" + info.Meal.Recipe.Name + "'.");
+            
+            
             OnOrderResolved?.Invoke(order);
-            Debug.Log("[OrderManager] ResolveOrder : Order " + (order.OrderRating.IsCorrectRecipe ? "successfully": "poorly") + " completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 + "s for client " + order.Owner.name
-                + ". Money gained : " + MoneyEvaluator.Evaluate(order) + ". Expected '" + order.Recipe.Name + "', received '" + info.Meal.Recipe.Name + "'.");
+            
+            this.Log(LogType.Log, "*Order Resolved* Feedbacks Invoked");
+            
             // Tell the money manager that money's been made
             StashOrder(order);
         }
@@ -55,6 +71,7 @@ namespace GameSystem
         {
             StashOrder(order);
             order.Cancel();
+            this.Log(LogType.Log, "*Order Cancelled* Feedbacks Invoked");
         }
 
         /// <summary>
@@ -65,11 +82,13 @@ namespace GameSystem
         {
             if (!_activeOrders.Contains(order))
             {
-                Debug.LogError("[OrderManager] ResolveOrder : Trying to stash an order that has either " +
-                    "not been created by the OrderManager, or that is not active anymore");
+                this.Log(LogType.Error, "Trying to stash an order that has either not been created by the OrderManager, or that is not active anymore");
+                return;
             }
             _activeOrders.Remove(order);
             _pastOrders.Add(order);
+            
+            this.Log(LogType.Log, "Order n°"+order.ID+ " has been stashed");
         }
         public void Register()
         {

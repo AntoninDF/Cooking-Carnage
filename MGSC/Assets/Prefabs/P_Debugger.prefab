@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5751473540756957139}
   - component: {fileID: 6831939441435062807}
+  - component: {fileID: 8675386428665736618}
   m_Layer: 0
   m_Name: P_Debugger
   m_TagString: Untagged
@@ -44,3 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e99d183b79923e47ba72750db401783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebugWindow
+--- !u!114 &8675386428665736618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6736839208811345545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1835644f7d7e7b4418f28a82dafd4410, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DebugConsole
+  maxVisibleLines: 6
+  padding: {x: 8.83, y: 10}
+  fontSize: 14
+  logLifetime: 5
