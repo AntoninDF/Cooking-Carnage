@@ -50,8 +50,8 @@ namespace Clients
                 Debug.LogError("[OrderingCounter] AcceptOrder : The newly created order was null. Please look into that");
             }
             _currentClient.AcceptOrder(newOrder);
-            OrderTicket ticket = MakeTicket(newOrder);
-            StoreTicket(ticket);
+            //OrderTicket ticket = MakeTicket(newOrder);
+            //StoreTicket(ticket);
             Free();
         }
 

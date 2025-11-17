@@ -13,7 +13,7 @@ namespace GameSystem
         public Action OnShiftEnded { get; set; }
         public int ShiftCount => _shiftCount;
         public float ShiftDuration => _shiftDuration;
-        public float CurrentRentPrice => _currentRentPrice;
+        public MoneyInfo CurrentRentPrice => new MoneyInfo(_currentRentPrice);
     
         #endregion
 
