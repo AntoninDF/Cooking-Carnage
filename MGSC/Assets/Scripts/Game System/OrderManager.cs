@@ -14,6 +14,7 @@ namespace GameSystem
         public List<Order> PastOrders => _pastOrders;
         public Action<Order> OnNewOrder;
         public Action<Order> OnOrderResolved;
+        public Action<Order> OnOrderCancelled;
 
         #endregion
 
@@ -71,6 +72,7 @@ namespace GameSystem
         {
             StashOrder(order);
             order.Cancel();
+            OnOrderCancelled?.Invoke(order);
             this.Log(LogType.Log, "*Order Cancelled* Feedbacks Invoked");
         }
 

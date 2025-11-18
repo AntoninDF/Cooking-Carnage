@@ -120,7 +120,7 @@ namespace Cooking
         }
         public void StopLookAt()
         {
-
+            OnStopLookAt?.Invoke();
         }
         /// <summary>
         /// Automatically sets the target slot to the container being looked at
@@ -188,9 +188,12 @@ namespace Cooking
                 throw new MissingReferenceException("Please reference the tooltip gameobject in the inspector of " + name);
             if (Player == null || !IsLookedAt)
             {
+                if (_wasLookedAtThisFrame) StopLookAt();
+                _wasLookedAtThisFrame = false;
                 _tooltip.SetActive(false);
                 return;
             }
+            _wasLookedAtThisFrame = true;
             _tooltip.SetActive(true);
         }
         #endregion

@@ -1,8 +1,10 @@
+using Controller;
 using Cooking;
 using GameSystem;
 using Orders;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Splines;
 
 namespace Clients
@@ -12,7 +14,7 @@ namespace Clients
     /// Movement is handled externally : See ClientMovement.cs
     /// The client generation is defined in ClientGenerator.cs. It is joined to the Client through partial class
     /// </summary>
-    public partial class Client : MonoBehaviour
+    public partial class Client : MonoBehaviour, IWatchable
     {
         #region Properties
         public EClientType Type { get; private set; }
@@ -28,9 +30,25 @@ namespace Clients
         public float ReachDistance { get => _reachDistance; set => _reachDistance = value; }
         public bool HasOrdered => _hasOrdered;
 
+        public bool IsLookedAt => throw new System.NotImplementedException();
+
+        public Collider Collider => _collider;
+
+        public PlayerInterface Player { get => _player; set => _player = value; }
+
         #endregion
 
         #region Fields
+
+        [Header("Client events")]
+        [SerializeField] private UnityEvent _onLookAt;
+        [SerializeField] private UnityEvent _onStopLookAt;
+        [SerializeField] private UnityEvent _onStartEating;
+        [SerializeField] private UnityEvent _onStartWalking;
+        [SerializeField] private UnityEvent _onEndWalking;
+        [SerializeField] private UnityEvent _onCounterRegister;
+
+
         private float _speed = 1f;
         private SplineContainer _splineComp;
         private List<Counter> _counters;
@@ -48,6 +66,10 @@ namespace Clients
 
         private GameLoop _gameLoop;
         private bool _useUpgrades = true;
+
+        private Collider _collider;
+        private PlayerInterface _player;
+        private bool _wasLookedAtThisFrame;
         #endregion
 
         #region Methods
@@ -55,6 +77,7 @@ namespace Clients
         private void Start()
         {
             _movement = new(transform, _speed, _splineComp);
+            _collider = GetComponent<Collider>();
 
             _counters = ReferenceManager.Instance.GetElementsOfType<Counter>();
             if (_counters == null || _counters.Count == 0)
@@ -81,6 +104,7 @@ namespace Clients
 
                     if (_currentCounter)
                     {
+                        _onStartWalking?.Invoke();
                         _state = EClientState.Moving;
                     }
                     
@@ -92,23 +116,7 @@ namespace Clients
                     
                     _movement.MoveAlongSpline();
                     
-                    if (!_hasOrdered)
-                    { 
-                        if (CheckClientCounterDistance(_currentCounter))
-                        {
-                            _state = EClientState.AtCounter;
-                            UseCounter(_currentCounter);
-                            
-                            // le currentCounter est forcément occupé par this 
-                            /*if (!_currentCounter.IsFree)
-                            {
-                                _state = EClientState.None;
-                            }*/
-
-                            break;
-                        }
-                    }
-                    else if (CheckClientCounterDistance(_currentCounter))
+                    if (CheckClientCounterDistance(_currentCounter))
                     {
                         _state = EClientState.AtCounter;
                         UseCounter(_currentCounter);
@@ -132,6 +140,8 @@ namespace Clients
                     }
                     break;
             }
+
+            
         }
 
         /// <summary>
@@ -181,6 +191,7 @@ namespace Clients
         {
             _currentCounter = counter;
             _currentCounter.Register(this);
+            _onCounterRegister?.Invoke();
         }
 
         public void UseCounter(Counter counter)
@@ -192,6 +203,10 @@ namespace Clients
         {
             if (CheckForCounter(out SittingCounter counter))
             {
+                _hasOrdered = true;
+                _state = EClientState.ReachingSpline;
+                _order = order;
+                //Debug.Log("[Client] : Order is " + _order);
                 ReserveCounter(counter);
             }
             else
@@ -199,16 +214,15 @@ namespace Clients
                 return; // Pas de Sitting dispo
             }
             
-            _hasOrdered = true;
-            _state = EClientState.ReachingSpline;
-            _order = order;
+            
         }
 
         public void ResolveOrder()
         {
             if (_state == EClientState.AtCounter && _hasOrdered)
             {
-                //Destroy(gameObject);
+                _onStartEating?.Invoke();
+                //Refacto : Faire que le client mange et parte du resto
                 gameObject.SetActive(false);
                 ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,false);
             }
@@ -238,6 +252,11 @@ namespace Clients
             {
                 Gizmos.DrawSphere(pos, 0.02f);
             }
+        }
+
+        public void LookAt(PlayerInteractor interactor)
+        {
+            throw new System.NotImplementedException();
         }
         #endregion
 

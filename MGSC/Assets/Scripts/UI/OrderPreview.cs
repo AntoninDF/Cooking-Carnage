@@ -60,15 +60,16 @@ namespace UI
                 Debug.LogWarning("[OrderPreview] : An order preview script tried to setup, but there is no OrderManager to be found");
                 return;
             }
-            if (!_filterByClient) _orderManager.OnNewOrder += SetOrder;
+            if (!_filterByClient)  _orderManager.OnNewOrder += SetOrder;
             else
             {
                 if (_counter != null)
                 {
-                    _counter.OnUserRegister.AddListener(() => SetOrder(_counter.CurrentClient?.Order));
+                    _counter.OnUserRegister.AddListener(() => SetOrder());
                 }
             }
             _orderManager.OnOrderResolved += OrderResolved;
+            _orderManager.OnOrderCancelled += OrderResolved;
 
         }
 
@@ -93,17 +94,24 @@ namespace UI
             _onOrderResolved?.Invoke();
         }
 
-        public void SetOrder(Order order)
+        public void SetOrder(Order order=null)
         {
             if (order == null)
             {
+                Client client = _counter.CurrentClient;
+                order = client.Order;
+            }
+            if (order == null)
+            {
                 Debug.LogWarning("[OrderPreview] : Order was null during setup. Setup didn't occur");
+                return;
             }
             _currentOrder = order;
             _onOrderReceived?.Invoke();
             UpdateRecipe(order.Recipe);
             if (_timerManager != null && _resetDelay != 0)
             {
+                //Debug.Log("[OrderPreview] : Timer started for resetting the order");
                 _timerManager.StartTimer("ResetOrderPreview", _resetDelay, Reset);
             }
 
@@ -119,6 +127,7 @@ namespace UI
 
         public void UpdateRecipe(SO_Recipe recipe)
         {
+            ResetSprites();
             if (_ingredientSprites == null)
             {
                 Debug.LogWarning("[OrderPreview] : The ingredient list was null");
