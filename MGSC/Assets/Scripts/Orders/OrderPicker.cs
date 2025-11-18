@@ -1,10 +1,8 @@
 using Clients;
 using Cooking;
 using GameSystem;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 
@@ -22,7 +20,7 @@ namespace Orders
 
             SO_Recipe output;
             Dictionary<EClientType, int> clientCount = clientManager.GetSeenClientTypesCount();
-            IEnumerable<SO_Recipe> recipes = ReferenceManager.AssetReferences.recipeBook.Recipes;
+            IEnumerable<SO_Recipe> recipes = FindCurrentRecipeBook().Recipes;
             if (recipes == null)
                 throw new NullReferenceException("[OrderPicker] : No recipe list found");
             List<SO_Client> clientModels = ReferenceManager.AssetReferences.clientList;
@@ -34,6 +32,21 @@ namespace Orders
             output = PickRandomRecipe(weights);
 
             return output;
+        }
+
+        private static SO_RecipeBook FindCurrentRecipeBook()
+        {
+            var ar = ReferenceManager.AssetReferences;
+            var sm = ReferenceManager.Instance.GetManager<ShiftManager>() ;
+            SO_RecipeBook book = ar.defaultRecipeBook;
+
+            if (sm != null)
+                foreach (var elm in ar.recipeBookByShiftCount)
+                    if (sm.ShiftCount >= elm.shift) book = elm.recipeBook;
+
+            OrderManager om = ReferenceManager.Instance.GetManager<OrderManager>();
+            if (om != null) om.Log("The current recipe book is '" + book.name + "'");
+            return book;
         }
 
         private static SO_Recipe PickRandomRecipe(Dictionary<SO_Recipe, float> weights)
@@ -119,7 +132,7 @@ namespace Orders
                 foreach(SO_Client client in clients)
                 {
                     if (output[recipe].Contains(client.clientType)) continue;
-                    if(!recipe.itemsNeeded.Contains(client.loot)) continue;
+                    if(!recipe.Ingredients.Contains(client.loot)) continue;
                     output[recipe].Add(client.clientType);
                 }
             }

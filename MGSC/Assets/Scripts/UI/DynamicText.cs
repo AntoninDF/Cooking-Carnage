@@ -82,8 +82,23 @@ namespace UI
                     var client = _dataSource.GetComponent<Client>();
                     if (client != null) result = client.Model.name;
                     break;
+                case (EDataInfo.MealIngredients):
+                    var mel = _dataSource.GetComponent<Meal>();
+                    if (mel != null) result = ToString(mel.Recipe.Ingredients);
+                    break;
             }
 
+            return result;
+        }
+
+        private string ToString<T>(IEnumerable<T> items)
+        {
+            string result = "";
+            foreach (T item in items)
+            {
+                result += item.ToString();
+                result += ", ";
+            }
             return result;
         }
 

@@ -44,7 +44,7 @@ namespace GameSystem
         {
             ReferenceManager.Instance.RemoveAllManagers();
             if (_gameProfile == null)
-                Debug.LogError("[GameInitializer] : Please reference a game profile in the inspector.");
+                throw new MissingReferenceException("[GameInitializer] : Please reference a game profile in the inspector.");
 
             if (_gameProfile.DestroyEveryOtherObject) DestroyEverything();
 
@@ -77,6 +77,7 @@ namespace GameSystem
 
             if (_gameProfile.ResetSaveFile) ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
             if (_gameProfile.AddUI) SetupUI();
+            SetupMealPrices();
 
             if (_gameProfile.DestroyAfterInitialization) Destroy(this.gameObject);
         }
@@ -127,7 +128,15 @@ namespace GameSystem
         {
             var ui = ReferenceManager.Instance.GetManager<UIManager>();
             ui.EnableMenu(_gameProfile.DefaultMenu);
-            ReferenceManager.Instance.GetManager<ShiftManager>().OnShiftEnded += () => ui.EnableMenu("ShiftRecap");
+            ReferenceManager.Instance.GetManager<ShiftManager>().OnShiftSucceeded += () => ui.EnableMenu("ShiftRecap");
+            ReferenceManager.Instance.GetManager<ShiftManager>().OnShiftFailed += () => ui.EnableMenu("FailedShiftRecap");
+        }
+
+        private void SetupMealPrices()
+        {
+            MoneyEvaluator.RawMealPrice = _gameProfile.DefaultRecipePrices.rawMealPrice;
+            MoneyEvaluator.WrongMealPrice = _gameProfile.DefaultRecipePrices.wrongMealPrice;
+            MoneyEvaluator.OvercookedMealPrice = _gameProfile.DefaultRecipePrices.overcookedMealPrice;
         }
     
 

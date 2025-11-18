@@ -20,6 +20,11 @@ namespace Cooking
         public Sprite Sprite => _sprite;
         [Tooltip("The ingredient sprite that should be displayed on UI")]
         [SerializeField] private Sprite _sprite;
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
 }

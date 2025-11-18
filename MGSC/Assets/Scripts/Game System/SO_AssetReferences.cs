@@ -18,9 +18,20 @@ public class SO_AssetReferences : ScriptableObject
     [Tooltip("The input action asset for the player")]
     [SerializeField] private InputActionAsset _inputActions;
 
-    public SO_RecipeBook recipeBook;
+    public SO_RecipeBook defaultRecipeBook;
+
+    public SO_RecipeBook CurrentRecipeBook { get; set; }
+
+    public List<RecipeBookByShiftCount> recipeBookByShiftCount;
 
 
     public List<SO_Client> clientList;
 
+}
+
+[System.Serializable]
+public struct RecipeBookByShiftCount
+{
+    public int shift;
+    public SO_RecipeBook recipeBook;
 }

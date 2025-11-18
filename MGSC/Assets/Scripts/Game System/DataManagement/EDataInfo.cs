@@ -20,6 +20,7 @@ namespace GameSystem
         ClientName = 50,
         IngredientName = 51,
         MealName = 52,
+        MealIngredients = 53,
 
     }
 }

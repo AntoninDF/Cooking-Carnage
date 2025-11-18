@@ -73,7 +73,7 @@ namespace Orders
 
         private string IngredientsToString()
         {
-            List<SO_Ingredient> ingredients = _targetOrder.Recipe.itemsNeeded;
+            List<SO_Ingredient> ingredients = _targetOrder.Recipe.Ingredients;
 
             string output = string.Empty;
             foreach (var ingredient in ingredients)

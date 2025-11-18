@@ -9,6 +9,7 @@ namespace GameSystem
     {
         #region Properties
         public Action OnShiftFailed { get; set; }
+        public Action OnShiftSucceeded { get; set; }
         public Action OnNextShift { get; set; }
         public Action OnShiftEnded { get; set; }
         public int ShiftCount => _shiftCount;
@@ -86,13 +87,15 @@ namespace GameSystem
                 ReferenceManager.Instance.GetManager<GameLoop>().StopRunning();
                 
                 UpdateRentPrice();
-                if (ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo < _currentRentPrice)
+                var moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
+                if (moneyManager.MoneyInfo < _currentRentPrice)
                 {
                     Debug.Log("Defeat");
                     OnShiftFailed?.Invoke();
                     return;
                 }
-                
+                moneyManager.AddMoney(-_currentRentPrice);
+                OnShiftSucceeded?.Invoke();
                 Debug.Log("WIP : Devrait ouvrir le menu recap puis amélioration");
                 
                 //NextShift();

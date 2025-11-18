@@ -38,7 +38,6 @@ namespace GameSystem
         private string timerName = "clientSpawn";
         private float clientSpeed = 1;
         private List<SO_Client> models;
-        private SO_RecipeBook recipes;
         private SplineContainer spline;
         private List<OrderingCounter> counters;
         
@@ -81,14 +80,13 @@ namespace GameSystem
             // WIP : should also setup floats according to a Settings Data
 
             models = ReferenceManager.AssetReferences.clientList;
-            recipes = ReferenceManager.AssetReferences.recipeBook;
             spline = ReferenceManager.Instance.GetManager<PathManager>()?.SplineComponent;
             counters = ReferenceManager.Instance.GetElementsOfType<OrderingCounter>();
 
             _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
             _timerManager.StartTimer( "AdaptiveClientSpawner Init", 1, () => Launch(),true);
 
-            if (models.Count <= 0 || !recipes || !spline || counters.Count <= 0)
+            if (models.Count <= 0 || !spline || counters.Count <= 0)
             {
                 this.Log(LogType.Warning," Initialization is incomplete");
             }

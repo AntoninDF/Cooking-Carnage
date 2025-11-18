@@ -133,14 +133,14 @@ namespace UI
                 Debug.LogWarning("[OrderPreview] : The ingredient list was null");
                 return;
             }
-            if (recipe.itemsNeeded.Count > _ingredientSprites.Count)
+            if (recipe.Ingredients.Count > _ingredientSprites.Count)
             {
                 Debug.LogWarning("[OrderPreview] : The requested recipe had more ingredients than there are image slots referenced. Please add more image slots.");
                 return;
             }
-            for (int i = 0; i < recipe.itemsNeeded.Count; i++)
+            for (int i = 0; i < recipe.Ingredients.Count; i++)
             {
-                SO_Ingredient ingredient = recipe.itemsNeeded[i];
+                SO_Ingredient ingredient = recipe.Ingredients[i];
                 Image image = _ingredientSprites[i];
                 if (ingredient == null) continue;
                 if (image == null) continue;

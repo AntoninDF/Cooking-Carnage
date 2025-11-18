@@ -1,7 +1,6 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class LookAtSphere : MonoBehaviour
 {
@@ -24,7 +23,7 @@ public class LookAtSphere : MonoBehaviour
     private void CheckLookAt()
     {
         bool viewIntersects = RayIntersectsSphere(Camera.main.transform.position, Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2)).direction.normalized, transform.position, _radius / 2);
-        Debug.Log("View intesects sphere is " + viewIntersects);
+        //Debug.Log("View intesects sphere is " + viewIntersects);
         if ((viewIntersects && !_wasLookedAtThisFrame))
         {
             _onLookAt?.Invoke();
@@ -56,6 +55,7 @@ public class LookAtSphere : MonoBehaviour
         return (D < sphereRadius);
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (Selection.Contains(this.gameObject))
@@ -64,4 +64,5 @@ public class LookAtSphere : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position, _radius);
         }
     }
+#endif
 }

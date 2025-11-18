@@ -38,6 +38,9 @@ namespace GameSystem
         [Tooltip("The name of the menu that will be enabled by default. It should match with a menu from the UIManager.")]
         [SerializeField] private string _defaultMenu;
         public string DefaultMenu => _defaultMenu;
+        [Tooltip("Failed recipe prices")]
+        [SerializeField] private DefaultRecipePrices _defaultRecipePrices;
+        public DefaultRecipePrices DefaultRecipePrices => _defaultRecipePrices;
 
         [Space]
         [Header("Managers & customization")]
@@ -73,6 +76,18 @@ namespace GameSystem
         public SO_AssetReferences AssetReferences => _assetReferences;
 
         #endregion
+
+        
     }
 
+    [System.Serializable]
+    public struct DefaultRecipePrices
+    {
+        [Tooltip("How much money does an overcooked meal give")]
+        public float overcookedMealPrice;
+        [Tooltip("How much money does a raw meal give")]
+        public float rawMealPrice;
+        [Tooltip("How much money does a meal give if it's not the one ordered")]
+        public float wrongMealPrice;
+    }
 }
