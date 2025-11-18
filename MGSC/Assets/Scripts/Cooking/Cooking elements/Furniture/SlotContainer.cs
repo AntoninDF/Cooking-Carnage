@@ -24,6 +24,8 @@ namespace Cooking
 
         public IContainer Container { get; set; }
         public UnityEvent OnGrabbed { get; set; }
+        public UnityEvent OnLookAt => _onLookAt;
+        public UnityEvent OnStopLookAt => _onStopLookAt;
 
         public Collider Collider => _collider;
         public ContainerFilter Filter => _filter;
@@ -41,12 +43,15 @@ namespace Cooking
         [SerializeField] private UnityEvent<IGrabbable> _onGrab;
         [Tooltip("Invoked when an item is taken out of the slot")]
         [SerializeField] private UnityEvent<IGrabbable> _onDrop;
+        [SerializeField] private UnityEvent _onLookAt;
+        [SerializeField] private UnityEvent _onStopLookAt;
 
 
         private Collider _collider;
         private IGrabbable _heldItem;
         private ContainerFilter _filter;
         private bool _locked;
+        private bool _wasLookedAtThisFrame;
         #endregion
 
         #region Methods
@@ -60,6 +65,16 @@ namespace Cooking
         private void Update()
         {
             UpdateCollider();
+            CheckIfLookedAt();
+        }
+        private void CheckIfLookedAt()
+        {
+            bool lookedAt = (Player != null && Player.LookTarget == this.gameObject);
+            if (lookedAt && !_wasLookedAtThisFrame)
+                _onLookAt?.Invoke();
+            else if (!lookedAt && _wasLookedAtThisFrame)
+                _onStopLookAt?.Invoke();
+            _wasLookedAtThisFrame = lookedAt;
         }
 
         public void Drop(IGrabbable item)

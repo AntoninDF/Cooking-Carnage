@@ -1,4 +1,7 @@
+using Clients;
+using Cooking;
 using GameSystem;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
@@ -21,6 +24,8 @@ namespace UI
         [SerializeField] private TMP_Text _textObject;
         [Tooltip("This is the text that will be displayed. Place the markups in it for them to get replaced by actual data")]
         [SerializeField] private string _baseText;
+        [Tooltip("Optional gameobject that can provide data")]
+        [SerializeField] private GameObject _dataSource;
         [Tooltip("Each element specifies which markup to replace with which value")]
         [SerializeField] private List<UIDataReplacement> _dataReplacement = new();
 
@@ -49,10 +54,37 @@ namespace UI
             foreach (var textInfo in _dataReplacement)
             {
                 if (textInfo.markup == "") continue;
-                result = result.Replace(textInfo.markup, dataManager.GetDataAsString(textInfo.info));
+                string data = "";
+                if (textInfo.info.GetHashCode() > 49)
+                    data = GetDataFromGameObject(textInfo.info);
+                else 
+                    data = dataManager.GetDataAsString(textInfo.info);
+                result = result.Replace(textInfo.markup, data);
             }
             _textObject.text = result;
             dataManager.Log( "Data replacement is ", _dataReplacement);
+        }
+
+        private string GetDataFromGameObject(EDataInfo info)
+        {
+            string result = "";
+            switch (info)
+            {
+                case (EDataInfo.IngredientName):
+                    var ing = _dataSource.GetComponent<Ingredient>();
+                    if (ing != null) result = ing.Model.Name;
+                    break;
+                case (EDataInfo.MealName):
+                    var meal = _dataSource.GetComponent<Meal>();
+                    if (meal != null) result = meal.Recipe.Name;
+                    break;
+                case (EDataInfo.ClientName):
+                    var client = _dataSource.GetComponent<Client>();
+                    if (client != null) result = client.Model.name;
+                    break;
+            }
+
+            return result;
         }
 
         #endregion

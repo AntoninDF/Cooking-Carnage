@@ -76,7 +76,7 @@ namespace GameSystem
             PostInitManagers();
 
             if (_gameProfile.ResetSaveFile) ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
-            SetupUI();
+            if (_gameProfile.AddUI) SetupUI();
 
             if (_gameProfile.DestroyAfterInitialization) Destroy(this.gameObject);
         }

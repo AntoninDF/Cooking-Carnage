@@ -168,6 +168,10 @@ PrefabInstance:
       propertyPath: m_Radius
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 1342152093421386868, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.1908
+      objectReference: {fileID: 0}
     - target: {fileID: 3519798225028237028, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -249,12 +253,38 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7170905765528334822, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4990184055612716204}
+    - targetCorrespondingSourceObject: {fileID: 6115734882424733973, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8013101465663206135}
   m_SourcePrefab: {fileID: 100100000, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
 --- !u!4 &1307444429732919453 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5896125322217884917, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
   m_PrefabInstance: {fileID: 4897602428472439912}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1668780529808635261 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6115734882424733973, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
+  m_PrefabInstance: {fileID: 4897602428472439912}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8013101465663206135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668780529808635261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3532c7cdf9b674998e5c7f537dbe4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.DynamicText
+  _textObject: {fileID: 0}
+  _baseText: X
+  _dataSource: {fileID: 2338471812145169806}
+  _dataReplacement:
+  - markup: X
+    info: 52
 --- !u!1 &2338471812145169806 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7170905765528334822, guid: c2bcb4284195c78459ae6aa7efa7fd21, type: 3}
@@ -275,6 +305,12 @@ MonoBehaviour:
   _tooltip: {fileID: 8506661882781126868}
   _grabAnimationDuration: 0.2
   _onGrabbed:
+    m_PersistentCalls:
+      m_Calls: []
+  _onLookAt:
+    m_PersistentCalls:
+      m_Calls: []
+  _onStopLookAt:
     m_PersistentCalls:
       m_Calls: []
   _recipe: {fileID: 11400000, guid: 3b043d5ba27faa14f8bb9a6cf6ed3c49, type: 2}

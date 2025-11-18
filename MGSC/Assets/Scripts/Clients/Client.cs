@@ -3,6 +3,8 @@ using Cooking;
 using GameSystem;
 using Orders;
 using System.Collections.Generic;
+using Unity.Cinemachine;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Splines;
@@ -14,7 +16,7 @@ namespace Clients
     /// Movement is handled externally : See ClientMovement.cs
     /// The client generation is defined in ClientGenerator.cs. It is joined to the Client through partial class
     /// </summary>
-    public partial class Client : MonoBehaviour, IWatchable
+    public partial class Client : MonoBehaviour
     {
         #region Properties
         public EClientType Type { get; private set; }
@@ -30,11 +32,7 @@ namespace Clients
         public float ReachDistance { get => _reachDistance; set => _reachDistance = value; }
         public bool HasOrdered => _hasOrdered;
 
-        public bool IsLookedAt => throw new System.NotImplementedException();
-
         public Collider Collider => _collider;
-
-        public PlayerInterface Player { get => _player; set => _player = value; }
 
         #endregion
 
@@ -68,8 +66,6 @@ namespace Clients
         private bool _useUpgrades = true;
 
         private Collider _collider;
-        private PlayerInterface _player;
-        private bool _wasLookedAtThisFrame;
         #endregion
 
         #region Methods
@@ -100,37 +96,37 @@ namespace Clients
 
             switch (_state)
             {
-                case EClientState.None :
+                case EClientState.None:
 
                     if (_currentCounter)
                     {
                         _onStartWalking?.Invoke();
                         _state = EClientState.Moving;
                     }
-                    
+
                     break;
-                
+
                 case EClientState.Moving:
-                    
-                    if(!_currentCounter){ break; }
-                    
+
+                    if (!_currentCounter) { break; }
+
                     _movement.MoveAlongSpline();
-                    
+
                     if (CheckClientCounterDistance(_currentCounter))
                     {
                         _state = EClientState.AtCounter;
                         UseCounter(_currentCounter);
                     }
                     break;
-                
+
                 case EClientState.AtCounter:
-                    
+
                     _movement.GoTo(_currentCounter.UserSpot.position);
-                    
+
                     break;
-                
+
                 case EClientState.ReachingSpline:
-                    
+
                     Vector3 nearestPos = _movement.FindNearestSplinePosition();
                     _movement.GoTo(nearestPos);
                     if (Vector3.Distance(transform.position, nearestPos) <= 0.03f)
@@ -140,8 +136,6 @@ namespace Clients
                     }
                     break;
             }
-
-            
         }
 
         /// <summary>
@@ -243,21 +237,20 @@ namespace Clients
 
         public void OnDrawGizmos()
         {
-            if (!_debugSplinePosition) return;
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(_movement.FindNearestSplinePosition(), 0.1f);
-
-            Gizmos.color = Color.white;
-            foreach (var pos in _movement.CheckedPositions)
+            if (_debugSplinePosition)
             {
-                Gizmos.DrawSphere(pos, 0.02f);
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(_movement.FindNearestSplinePosition(), 0.1f);
+
+                Gizmos.color = Color.white;
+                foreach (var pos in _movement.CheckedPositions)
+                {
+                    Gizmos.DrawSphere(pos, 0.02f);
+                }
             }
+
         }
 
-        public void LookAt(PlayerInteractor interactor)
-        {
-            throw new System.NotImplementedException();
-        }
         #endregion
 
         private enum EClientState
