@@ -75,6 +75,8 @@ namespace GameSystem
             if (!_moneyGainedPerShift.ContainsKey(_dataManager.ShiftCount)) _moneyGainedPerShift[_dataManager.ShiftCount] = new MoneyInfo();
             _moneyGainedPerShift[_dataManager.ShiftCount] += amount;
             OnMoneyChange?.Invoke(amount);
+            
+            this.Log(LogType.Log, $"{amount}€ update");
         }
         #endregion
     }

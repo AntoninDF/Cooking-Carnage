@@ -215,6 +215,8 @@ public class DebugWindow : MonoBehaviour
                 t.Value.Resume();
             if (GUILayout.Button("Achieve", GUILayout.Width(60)))
                 t.Value.End();
+            if (GUILayout.Button("Reset", GUILayout.Width(60)))
+                t.Value.Reset(t.Value.Name,t.Value.Duration,t.Value.onComplete,t.Value.FrameBased);
             GUILayout.EndHorizontal();
 
             GUILayout.Space(5);

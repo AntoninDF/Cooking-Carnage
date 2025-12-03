@@ -54,6 +54,7 @@ namespace GameSystem
         public void Init()
         {
             filePath = Path.Combine(Application.persistentDataPath, "gameData.json");
+            
         }
         
         /// <summary>
@@ -61,7 +62,7 @@ namespace GameSystem
         /// </summary>
         public void SaveGameData(GameData gameData = null)
         {
-            //Debug.Log("SAVE : Saving global data");
+            this.Log(LogType.Log, "Saving game data");
             if (_moneyManager == null || _upgradeManager == null || _clientManager == null || _shiftManager == null)
             {
                 EnforceReferences();
@@ -78,9 +79,10 @@ namespace GameSystem
             
             if (filePath == null)
             {
-                Debug.LogWarning("[DataManager] : The specified file path for the save file is null. Make sure the manager was initialized properly");
+                this.Log(LogType.Warning, "The specified file path for the save file is null. Make sure the manager was initialized properly");
             }
             File.WriteAllText(filePath, json);
+            this.Log(LogType.Log, "Saved successfully");
         }
     
         bool SaveFileExists()
@@ -93,7 +95,7 @@ namespace GameSystem
         /// </summary>
         public void LoadGlobalData()
         {
-            //Debug.Log("SAVE : Loading global data");
+            this.Log(LogType.Log, "Loading global data");
             
             if (_moneyManager == null || _upgradeManager == null || _clientManager == null || _shiftManager == null)
             {
@@ -102,6 +104,8 @@ namespace GameSystem
             
             if (!SaveFileExists())
             {
+                this.Log(LogType.Warning, "No save file found");
+                
                 ResetSave();
                 return;
             }
@@ -109,11 +113,12 @@ namespace GameSystem
             currentGameData = JsonUtility.FromJson<GameData>(json);
             
             _moneyManager.MoneyInfo = new MoneyInfo(currentGameData.money);
-            //Debug.Log("Money : "+_moneyManager.MoneyInfo);
             
             LoadUpgradeData();
             
             _shiftManager.SetShiftCount(currentGameData.shiftCount);
+            
+            this.Log(LogType.Log, $"Save loaded successfully, shift : {currentGameData.shiftCount},  money : {currentGameData.money}");
         }
 
         public void ResetSave()
@@ -137,6 +142,7 @@ namespace GameSystem
         {
             if (currentGameData.upgrades == null)
             {
+                this.Log(LogType.Error, "No Upgrade data found");
                 return;
             }
             foreach (var upgradeData in currentGameData.upgrades)
@@ -211,7 +217,7 @@ namespace GameSystem
             public Dictionary<string, int> upgrades;
 
             public int shiftCount;
-            // WIP : Player Settings
+            // REFACTO : Player Settings
         }
     }
 }

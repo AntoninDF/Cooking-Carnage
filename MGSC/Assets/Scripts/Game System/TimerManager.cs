@@ -171,7 +171,7 @@ namespace GameSystem
         public bool IsComplete { get; private set; }
         public bool IsPaused => paused;
         
-        private Action onComplete;
+        public Action onComplete;
         private bool paused;
         
         #endregion
