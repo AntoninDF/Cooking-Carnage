@@ -52,15 +52,12 @@ public static class Debugger
         {
             case LogType.Log:
                 Debug.Log(prefix + message);
-                //ajouter la fonction pour mettre dans la console directement
                 break;
             case LogType.Warning:
                 Debug.LogWarning(prefix + message);
-                //ajouter la fonction pour mettre dans la console directement
                 break;
             case LogType.Error:
                 Debug.LogError(prefix + message);
-                //ajouter la fonction pour mettre dans la console directement
                 break;
         }
         logHistory.Add(prefix+message);

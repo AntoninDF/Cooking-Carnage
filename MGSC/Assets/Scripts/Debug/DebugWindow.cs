@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Upgrades;
 
+[ExecuteInEditMode]
 public class DebugWindow : MonoBehaviour
 {
     private bool _visible;

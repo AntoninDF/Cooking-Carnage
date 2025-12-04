@@ -1,3 +1,4 @@
+using System;
 using Controller;
 using NaughtyAttributes;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace GameSystem
         [Tooltip("The game profile specifies what  will be created on start, and how")]
         [Expandable]
         [SerializeField] private SO_GameProfile _gameProfile;
+        
+        [SerializeField] private SO_DebugProfile _debugProfile;
 
         // PRIVATE FIELDS
 
@@ -64,6 +67,7 @@ namespace GameSystem
             new MoneyManager();
             new UpgradeManager();
             new DataManager();
+            new CameraManager();
             if (_gameProfile.AddUI) AddUI();
 
             // Create the player
@@ -74,6 +78,8 @@ namespace GameSystem
             InitManagers();
             // Apply the base logic to ensure all managers are setup to work correctly
             PostInitManagers();
+            
+            SetupDebug();
 
             if (_gameProfile.ResetSaveFile) ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
             if (_gameProfile.AddUI) SetupUI();
@@ -137,6 +143,39 @@ namespace GameSystem
             MoneyEvaluator.RawMealPrice = _gameProfile.DefaultRecipePrices.rawMealPrice;
             MoneyEvaluator.WrongMealPrice = _gameProfile.DefaultRecipePrices.wrongMealPrice;
             MoneyEvaluator.OvercookedMealPrice = _gameProfile.DefaultRecipePrices.overcookedMealPrice;
+        }
+
+        private void SetupDebug()
+        {
+            var refManagers = ReferenceManager.Instance.Managers;
+            
+            foreach (var debugSetting in _debugProfile.managerSettings)
+            {
+                Type type = null;
+                
+                foreach (var manager in refManagers)
+                {
+                    if (manager.Key.Name == debugSetting.managerTypeName)
+                    {
+                        type = manager.Key;
+                        break;
+                    }
+                }
+                
+                if (type == null)
+                {
+                    continue;
+                }
+                
+                if (debugSetting.debugInfo)
+                    Debugger.ToggleDebugManager(type, LogType.Log);
+                
+                if (debugSetting.debugWarning)
+                    Debugger.ToggleDebugManager(type, LogType.Warning);
+                
+                if (debugSetting.debugError)
+                    Debugger.ToggleDebugManager(type, LogType.Error);
+            }
         }
     
 
