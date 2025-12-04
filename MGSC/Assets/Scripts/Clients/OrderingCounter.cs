@@ -15,12 +15,14 @@ namespace Clients
 
         #region Fields
         [Header("OrderingCounter references")]
+        [Tooltip("List of all the available recipes")]
+        [SerializeField] private SO_RecipeBook _recipeBook;
+        [Tooltip("Should order tickets be spawned on order validation ? If not, the references are useless")]
+        [SerializeField] private bool _spawnTickets;
         [Tooltip("Prefab that will be instantiated as an order ticket")]
         [SerializeField] private GameObject _ticketPrefab;
         [Tooltip("Slot on which to put the order ticket")]
         [SerializeField] private SlotContainer _ticketSlot;
-        [Tooltip("List of all the available recipes")]
-        [SerializeField] private SO_RecipeBook _recipeBook;
 
         private OrderManager _orderManager;
 
@@ -50,8 +52,11 @@ namespace Clients
                 Debug.LogError("[OrderingCounter] AcceptOrder : The newly created order was null. Please look into that");
             }
             _currentClient.AcceptOrder(newOrder);
-            OrderTicket ticket = MakeTicket(newOrder);
-            StoreTicket(ticket);
+            if (_spawnTickets)
+            {
+                OrderTicket ticket = MakeTicket(newOrder);
+                StoreTicket(ticket);
+            }
             Free();
         }
 

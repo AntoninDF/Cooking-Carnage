@@ -14,6 +14,8 @@ namespace Cooking
     {
         #region Properties
         public UnityEvent OnInteract => _onInteract;
+        public UnityEvent OnLookAt => _onLookAt;
+        public UnityEvent OnStopLookAt => _onStopLookAt;
 
         public PlayerInterface Player { get; set; }
         public bool IsLookedAt => Player.LookTarget == gameObject;
@@ -27,8 +29,11 @@ namespace Cooking
         [SerializeField] private GameObject _tooltip;
         [Tooltip("Invoked when the interactable is interacted with")]
         [SerializeField] private UnityEvent _onInteract;
+        [SerializeField] private UnityEvent _onLookAt;
+        [SerializeField] private UnityEvent _onStopLookAt;
 
         private Collider _collider;
+        private bool _wasLookedAtThisFrame;
         #endregion
 
         #region Methods
@@ -41,8 +46,18 @@ namespace Cooking
         void Update()
         {
             UpdateUI();
+            CheckIfLookedAt();
         }
 
+        private void CheckIfLookedAt()
+        {
+            bool lookedAt = (Player != null && Player.LookTarget == this.gameObject);
+            if (lookedAt && !_wasLookedAtThisFrame)
+                _onLookAt?.Invoke();
+            else if (!lookedAt && _wasLookedAtThisFrame)
+                _onStopLookAt?.Invoke();
+            _wasLookedAtThisFrame = lookedAt;
+        }
         /// <summary>
         /// Simply invokes OnInteract
         /// </summary>

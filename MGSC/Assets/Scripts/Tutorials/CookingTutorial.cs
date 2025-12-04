@@ -34,7 +34,7 @@ namespace Tutorials
             if (_oven == null)
                 Debug.LogError("[OrderTutorial] : Please reference the default oven in the inspector");
 
-            SO_Ingredient ingredient = ReferenceManager.AssetReferences.recipeBook.Recipes[0].itemsNeeded[0];
+            SO_Ingredient ingredient = ReferenceManager.AssetReferences.defaultRecipeBook.Recipes[0].Ingredients[0];
             _counter.Spawn(ingredient);
             _counter.Spawn(ingredient);
         }

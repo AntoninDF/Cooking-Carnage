@@ -11,7 +11,7 @@ namespace Orders
     public struct ServingInfo
     {
         public Meal Meal { get; private set; }
-        public SO_Recipe Recipe => Meal.Recipe;
+        public SO_Recipe Recipe => Meal?.Recipe;
         public float Timestamp { get; private set; }
 
         public ServingInfo

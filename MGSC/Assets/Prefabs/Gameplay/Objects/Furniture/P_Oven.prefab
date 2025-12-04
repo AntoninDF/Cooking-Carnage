@@ -392,6 +392,7 @@ MonoBehaviour:
   _slot: {fileID: 7503949388816502130}
   _door: {fileID: 4143289457847768278}
   _strength: 1
+  _requireClosedDoor: 0
   _onStartCooking:
     m_PersistentCalls:
       m_Calls:
@@ -1844,7 +1845,7 @@ Transform:
   m_GameObject: {fileID: 7650827693802632122}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.367, y: 0.217, z: -0.146}
+  m_LocalPosition: {x: -0.367, y: 0.217, z: -0.2152}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1867,7 +1868,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.59159577, y: 0.42514578, z: 0.030000087}
   m_Center: {x: 0.29579622, y: 0.035933748, z: -0.00000010430813}
@@ -1885,6 +1886,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.Door
   _tooltip: {fileID: 8764803100969707827}
   _onInteract:
+    m_PersistentCalls:
+      m_Calls: []
+  _onLookAt:
+    m_PersistentCalls:
+      m_Calls: []
+  _onStopLookAt:
     m_PersistentCalls:
       m_Calls: []
   _axis: 1
@@ -2710,7 +2717,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5335461947761116018, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_Center.x
-      value: -0.0653871
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 5335461947761116018, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_Center.y
@@ -2718,11 +2725,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5335461947761116018, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_Center.z
-      value: 0.050764114
+      value: -0.04
       objectReference: {fileID: 0}
     - target: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.01033
+      value: -0.094
       objectReference: {fileID: 0}
     - target: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2730,7 +2737,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.017999995
+      value: 0.065
       objectReference: {fileID: 0}
     - target: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2765,15 +2772,31 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onGrab.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onGrab.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1443299288928130752}
     - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onGrab.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4143289457847768278}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onGrab.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
@@ -2781,8 +2804,16 @@ PrefabInstance:
       value: SetTrigger
       objectReference: {fileID: 0}
     - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onGrab.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleDoor
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: UnityEngine.Animator, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onGrab.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cooking.Door, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
@@ -2790,6 +2821,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      propertyPath: _onGrab.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []

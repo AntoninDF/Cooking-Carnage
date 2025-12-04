@@ -50,13 +50,17 @@ namespace Cooking
         public override void Interact(PlayerInteractor interactor)
         {
             base.Interact(interactor);
+            ToggleDoor();
+        }
+
+        public void ToggleDoor()
+        {
             Animate();
             _open = !_open;
             if (_open)
                 _onOpen?.Invoke();
             else
                 _onClose?.Invoke();
-
         }
 
         private void Animate()

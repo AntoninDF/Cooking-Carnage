@@ -39,7 +39,7 @@ namespace Tutorials
                 .SetLoot(_client.Model.loot, Vector2.one);
             _counter.OnUserUnregister.AddListener(Complete);
             OrderManager manager = ReferenceManager.Instance.GetManager<OrderManager>();
-            Order order = manager.NewOrder(_client, ReferenceManager.AssetReferences.recipeBook.Recipes[0]);
+            Order order = manager.NewOrder(_client, ReferenceManager.AssetReferences.defaultRecipeBook.Recipes[0]);
             _client.AcceptOrder(order);
             _client.ReserveCounter(_counter);
         }

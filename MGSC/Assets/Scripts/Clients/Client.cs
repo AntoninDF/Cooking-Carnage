@@ -1,8 +1,12 @@
+using Controller;
 using Cooking;
 using GameSystem;
 using Orders;
 using System.Collections.Generic;
+using Unity.Cinemachine;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Splines;
 
 namespace Clients
@@ -28,9 +32,21 @@ namespace Clients
         public float ReachDistance { get => _reachDistance; set => _reachDistance = value; }
         public bool HasOrdered => _hasOrdered;
 
+        public Collider Collider => _collider;
+
         #endregion
 
         #region Fields
+
+        [Header("Client events")]
+        [SerializeField] private UnityEvent _onLookAt;
+        [SerializeField] private UnityEvent _onStopLookAt;
+        [SerializeField] private UnityEvent _onStartEating;
+        [SerializeField] private UnityEvent _onStartWalking;
+        [SerializeField] private UnityEvent _onEndWalking;
+        [SerializeField] private UnityEvent _onCounterRegister;
+
+
         private float _speed = 1f;
         private SplineContainer _splineComp;
         private List<Counter> _counters;
@@ -48,6 +64,8 @@ namespace Clients
 
         private GameLoop _gameLoop;
         private bool _useUpgrades = true;
+
+        private Collider _collider;
         #endregion
 
         #region Methods
@@ -55,6 +73,7 @@ namespace Clients
         private void Start()
         {
             _movement = new(transform, _speed, _splineComp);
+            _collider = GetComponent<Collider>();
 
             _counters = ReferenceManager.Instance.GetElementsOfType<Counter>();
             if (_counters == null || _counters.Count == 0)
@@ -77,52 +96,37 @@ namespace Clients
 
             switch (_state)
             {
-                case EClientState.None :
+                case EClientState.None:
 
                     if (_currentCounter)
                     {
+                        _onStartWalking?.Invoke();
                         _state = EClientState.Moving;
                     }
-                    
-                    break;
-                
-                case EClientState.Moving:
-                    
-                    if(!_currentCounter){ break; }
-                    
-                    _movement.MoveAlongSpline();
-                    
-                    if (!_hasOrdered)
-                    { 
-                        if (CheckClientCounterDistance(_currentCounter))
-                        {
-                            _state = EClientState.AtCounter;
-                            UseCounter(_currentCounter);
-                            
-                            // le currentCounter est forcément occupé par this 
-                            /*if (!_currentCounter.IsFree)
-                            {
-                                _state = EClientState.None;
-                            }*/
 
-                            break;
-                        }
-                    }
-                    else if (CheckClientCounterDistance(_currentCounter))
+                    break;
+
+                case EClientState.Moving:
+
+                    if (!_currentCounter) { break; }
+
+                    _movement.MoveAlongSpline();
+
+                    if (CheckClientCounterDistance(_currentCounter))
                     {
                         _state = EClientState.AtCounter;
                         UseCounter(_currentCounter);
                     }
                     break;
-                
+
                 case EClientState.AtCounter:
-                    
+
                     _movement.GoTo(_currentCounter.UserSpot.position);
-                    
+
                     break;
-                
+
                 case EClientState.ReachingSpline:
-                    
+
                     Vector3 nearestPos = _movement.FindNearestSplinePosition();
                     _movement.GoTo(nearestPos);
                     if (Vector3.Distance(transform.position, nearestPos) <= 0.03f)
@@ -181,6 +185,7 @@ namespace Clients
         {
             _currentCounter = counter;
             _currentCounter.Register(this);
+            _onCounterRegister?.Invoke();
         }
 
         public void UseCounter(Counter counter)
@@ -192,6 +197,10 @@ namespace Clients
         {
             if (CheckForCounter(out SittingCounter counter))
             {
+                _hasOrdered = true;
+                _state = EClientState.ReachingSpline;
+                _order = order;
+                //Debug.Log("[Client] : Order is " + _order);
                 ReserveCounter(counter);
             }
             else
@@ -199,16 +208,15 @@ namespace Clients
                 return; // Pas de Sitting dispo
             }
             
-            _hasOrdered = true;
-            _state = EClientState.ReachingSpline;
-            _order = order;
+            
         }
 
         public void ResolveOrder()
         {
             if (_state == EClientState.AtCounter && _hasOrdered)
             {
-                //Destroy(gameObject);
+                _onStartEating?.Invoke();
+                //Refacto : Faire que le client mange et parte du resto
                 gameObject.SetActive(false);
                 ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,false);
             }
@@ -229,16 +237,20 @@ namespace Clients
 
         public void OnDrawGizmos()
         {
-            if (!_debugSplinePosition) return;
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(_movement.FindNearestSplinePosition(), 0.1f);
-
-            Gizmos.color = Color.white;
-            foreach (var pos in _movement.CheckedPositions)
+            if (_debugSplinePosition)
             {
-                Gizmos.DrawSphere(pos, 0.02f);
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(_movement.FindNearestSplinePosition(), 0.1f);
+
+                Gizmos.color = Color.white;
+                foreach (var pos in _movement.CheckedPositions)
+                {
+                    Gizmos.DrawSphere(pos, 0.02f);
+                }
             }
+
         }
+
         #endregion
 
         private enum EClientState

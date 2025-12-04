@@ -39,6 +39,8 @@ namespace Cooking
         [Header("Oven parameters")]
         [Tooltip("Speed modifier for the oven")]
         [SerializeField] private float _strength = 1.0f;
+        [Tooltip("Does the door's state impact whether the oven can cook or not")]
+        [SerializeField] private bool _requireClosedDoor = true;
         [Space]
         [Header("Oven events")]
         [Tooltip("Invoked when the furnace starts cooking")]
@@ -80,7 +82,7 @@ namespace Cooking
                 StopCooking();
                 return;
             }
-            if (_door.IsOpen || _slot.IsFree)
+            if ((_requireClosedDoor && _door.IsOpen) || _slot.IsFree)
             {
                 OnFailedStartAttempt?.Invoke();
                 return;
@@ -92,7 +94,7 @@ namespace Cooking
         {
             if (!_isCooking) return;
 
-            if (_door.IsOpen || _slot.IsFree)
+            if ((_requireClosedDoor && _door.IsOpen) || _slot.IsFree)
             {
                 StopCooking();
                 return;

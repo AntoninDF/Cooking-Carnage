@@ -1,5 +1,6 @@
 using Controller;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -9,6 +10,9 @@ namespace Cooking
         public bool IsLookedAt {get;}
         public void LookAt(PlayerInteractor interactor);
         public Collider Collider { get; }
+        public UnityEvent OnLookAt { get; }
+        public UnityEvent OnStopLookAt { get; }
+
     }
 
 }

@@ -13,6 +13,7 @@ namespace Clients
         public bool IsFree => _currentClient == null;
         public UnityEvent OnUserRegister => _onUserRegister;
         public UnityEvent OnUserUnregister => _onUserUnregister;
+        public Client CurrentClient => _currentClient;
 
         #endregion
 

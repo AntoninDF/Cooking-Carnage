@@ -14,6 +14,7 @@ namespace GameSystem
         public List<Order> PastOrders => _pastOrders;
         public Action<Order> OnNewOrder;
         public Action<Order> OnOrderResolved;
+        public Action<Order> OnOrderCancelled;
 
         #endregion
 
@@ -49,6 +50,7 @@ namespace GameSystem
         {
             order.ServingInfo = info;
             OrderRating rating = OrderEvaluator.Evaluate(order);
+            this.Log("Money gained : " + rating.MoneyGained);
             order.Resolve(info, rating);
             
             this.Log(LogType.Log, "Order n°"+ order.ID+ " Resolved " + 
@@ -56,7 +58,7 @@ namespace GameSystem
                                   + " completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 
                                   + "s for client " + order.Owner.name + ". Money gained : " 
                                   + MoneyEvaluator.Evaluate(order) + ". Expected '" + order.Recipe.Name 
-                                  + "', received '" + info.Meal.Recipe.Name + "'.");
+                                  + "', received '" + info.Meal?.Recipe.Name + "'.");
             
             
             OnOrderResolved?.Invoke(order);
@@ -71,6 +73,7 @@ namespace GameSystem
         {
             StashOrder(order);
             order.Cancel();
+            OnOrderCancelled?.Invoke(order);
             this.Log(LogType.Log, "*Order Cancelled* Feedbacks Invoked");
         }
 

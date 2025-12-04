@@ -110,6 +110,7 @@ namespace Cooking
         private SO_Recipe GetMatchingRecipe()
         {
             var ingredients = _ingredientSlots.HeldItems.Select((item) => ((Ingredient)item).Model);
+            if (ingredients.Count() == 0) return _recipeBook.DefaultRecipe; // If empty recipe
             foreach (var r in _recipeBook.Recipes)
             {
                 if (SO_Recipe.Compare(ingredients, r))

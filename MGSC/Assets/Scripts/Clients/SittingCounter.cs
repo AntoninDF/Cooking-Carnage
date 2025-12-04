@@ -77,6 +77,7 @@ namespace Clients
         {
             if (_currentClient == null) return;
             Meal meal = item as Meal;
+            //Debug.Log("Meal is " + (meal==null?"null":meal));
             _onServe?.Invoke();
             ServingInfo info = new ServingInfo(meal);
             _orderManager.ResolveOrder(_currentClient.Order, info);
