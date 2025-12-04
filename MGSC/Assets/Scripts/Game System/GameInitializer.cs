@@ -149,6 +149,9 @@ namespace GameSystem
         {
             var refManagers = ReferenceManager.Instance.Managers;
             
+            if(_debugProfile == null)
+                return;
+            
             foreach (var debugSetting in _debugProfile.managerSettings)
             {
                 Type type = null;

@@ -1,6 +1,7 @@
 using Controller;
 using GameSystem;
 using Unity.Cinemachine;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
 
 public class CameraManager : IManager
@@ -11,8 +12,15 @@ public class CameraManager : IManager
 
         #region Fields
 
-        private bool fpvMode = true;
-        private CinemachineCamera cam;
+        
+        private CinemachineVirtualCameraBase camFPV;
+        private CinemachineVirtualCameraBase camFocus;
+
+        private GameObject focusPivot;
+        
+        private CameraState currentState = CameraState.FirstPerson;
+        
+        private float blendTime = 0.1f;
     
         #endregion
 
@@ -35,20 +43,91 @@ public class CameraManager : IManager
         public void Init()
         {
             var player = ReferenceManager.Instance.GetElementOfType<PlayerInterface>();
-            cam = player.GetComponentInChildren<CinemachineCamera>();
+
+            foreach (var cam in player.GetComponentsInChildren<CinemachineVirtualCameraBase>())
+            {
+                if (cam.Name == "FP Camera")
+                {
+                    camFPV = cam;
+                }
+                else if (cam.Name == "Focus Camera")
+                {
+                    camFocus = cam;
+                }
+            }
             
-            if (cam == null)
-                this.Log(LogType.Error, "No Camera found");
+            if (camFocus == null || camFPV == null)
+                this.Log(LogType.Error, "No Camera found, please fix this");
+            
+            focusPivot = new GameObject("Focus Pivot");
         }
 
-        void LaunchShift(float duration)
+        public void LookAt(Transform target, float duration = 0, bool showMouse = false)
         {
-            //ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("shiftDuration", duration, () => EndShift(), false);
+            Vector3 targetPos = target.transform.position + target.transform.forward * -(0.5f);
+            focusPivot.transform.position = targetPos;
+            
+            camFocus.Follow = focusPivot.transform;
+            camFocus.LookAt = target;
+            
+            ChangeState(CameraState.Focus);
+
+            if (showMouse)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+
+            if (duration > 0)
+            {
+                ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("camFocus", duration, () => EnableFirstPersonView(), false);
+                this.Log(LogType.Log, $"Camera will focus on {target.name} for {duration}s");
+            }
+            else
+            {
+                this.Log(LogType.Log, $"Camera will focus on {target.name}");
+            }
+            
         }
 
-        
+        public void EnableFirstPersonView()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            ChangeState(CameraState.FirstPerson);
+        }
+
+        void ChangeState(CameraState newState)
+        {
+            if (currentState != newState)
+            {
+                switch (newState)
+                {
+                    case CameraState.FirstPerson :
+                        (camFocus.Priority,camFPV.Priority) = (10,20);
+                        
+                        break;
+                    case CameraState.Focus :
+                        (camFocus.Priority,camFPV.Priority) = (20,10);
+                        break;
+                }
+                
+                currentState = newState;
+                this.Log(LogType.Log, $"Camera mode updated to {newState}");
+            }
+            else
+            {
+                this.Log(LogType.Warning, $"Camera was already in {currentState} mode");
+            }
+        }
 
         
     
         #endregion
+
+        enum CameraState
+        {
+            FirstPerson,
+            Focus,
+        }
 }
