@@ -160,7 +160,13 @@ public class DebugWindow : MonoBehaviour
         
         GUILayout.Label($"Set Money: {newMoney:F2}€");
         newMoney = GUILayout.HorizontalSlider(newMoney, 0.0f, 999f);
-        
+
+        if (GUILayout.Button("Reset Camera", GUILayout.Width(160)))
+        {
+            ReferenceManager.Instance.GetManager<CameraManager>().EnableFirstPersonView();
+        }
+        GUILayout.Space(10);
+
         if (GUILayout.Button("Save and reload", GUILayout.Width(160)))
         {
             DataManager.GameData data = new DataManager.GameData();

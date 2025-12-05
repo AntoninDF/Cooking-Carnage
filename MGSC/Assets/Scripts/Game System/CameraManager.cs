@@ -1,5 +1,6 @@
 using Controller;
 using GameSystem;
+using UI;
 using Unity.Cinemachine;
 using UnityEditor.ShaderGraph;
 using UnityEngine;
@@ -87,7 +88,7 @@ public class CameraManager : IManager
             {
                 this.Log(LogType.Log, $"Camera will focus on {target.name}");
             }
-            
+            ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
         }
 
         public void EnableFirstPersonView()
@@ -95,6 +96,7 @@ public class CameraManager : IManager
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             ChangeState(CameraState.FirstPerson);
+            ReferenceManager.Instance.GetManager<UIManager>().ResumeGame();
         }
 
         void ChangeState(CameraState newState)
