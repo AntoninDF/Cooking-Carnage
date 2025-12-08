@@ -31,7 +31,7 @@ namespace Controller
 
         [Header ("References")] /*REFACTO : needs to be referenced automatically by GameInitializer*/
         [SerializeField] private CharacterController _characterController; 
-        [SerializeField] private Camera _mainCamera;
+        [SerializeField] private Transform headTransform;
         private PlayerInterface _playerInterface;
 
         private Vector3 _currentMovement;
@@ -95,7 +95,7 @@ namespace Controller
         private void ApplyVerticalRotation(float rotationAmount)
         {
             _verticalRotation = Mathf.Clamp(_verticalRotation - rotationAmount, -_upDownLookRange, _upDownLookRange);
-            _mainCamera.transform.localRotation = Quaternion.Euler(_verticalRotation, 0, 0);
+            headTransform.localRotation = Quaternion.Euler(_verticalRotation, 0, 0);
         }
 
         private void HandleRotation()

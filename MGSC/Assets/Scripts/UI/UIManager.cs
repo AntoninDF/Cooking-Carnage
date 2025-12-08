@@ -60,18 +60,18 @@ namespace UI
             _player = ReferenceManager.Instance.GetElementOfType<PlayerInterface>();
 
             if (_gameLoop == null)
-                Debug.LogWarning("An error occured during the initialization of the UIManager : No gameloop found");
+                this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No gameloop found");
             if (_inputActionAsset == null)
-                Debug.LogWarning("An error occured during the initialization of the UIManager : No input action asset found");
+                this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No input action asset found");
             if (_playerInputs == null)
-                Debug.LogWarning("An error occured during the initialization of the UIManager : No player action map found");
+                this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No player action map found");
             if (_UIInputs == null)
-                Debug.LogWarning("An error occured during the initialization of the UIManager : No UI action map found");
+                this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No UI action map found");
             if (_player == null)
-                Debug.LogWarning("An error occured during the initialization of the UIManager : No player found");
+                this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No player found");
 
             if (_gameLoop == null || _inputActionAsset == null || _playerInputs == null || _UIInputs == null || _player == null)
-                Debug.LogError("[UIManager] : The UIManager cannot run because it has not been initialized correctly");
+                this.Log(LogType.Error,"UIManager cannot run because it has not been initialized correctly");
 
             SetupMenuDictionary();
             DisableAllMenus();
@@ -85,12 +85,14 @@ namespace UI
             _menusByName.Clear();
             foreach (var menu in _menus)
                 _menusByName[menu.name] = menu;
+            
+            this.Log(LogType.Log, $"{_menus.Count} UI menus has been setup");
         }
 
         public void EnableMenu(string menuName)
         {
             if (!_menusByName.ContainsKey(menuName))
-                Debug.LogError("[UIManager] : No such menu could be found : " + menuName + ". Please make sure you have the correct spelling");
+                this.Log(LogType.Warning, $"No such menu could be found {menuName}");
             
             EnableMenu(_menusByName[menuName]);
         }
@@ -99,10 +101,11 @@ namespace UI
         public void EnableMenu(UIMenu menu)
         {
             DisableMenu(_currentMenu);
-            //Debug.Log("Enabling menu '" + menu.name + "'");
+            
+            this.Log(LogType.Log, $"Enabling menu {menu.name}");
             if (menu.menu == null)
             {
-                Debug.LogWarning("[UIManager] : Couldn't enable the menu '" + menu.name + "' because the gameobject was null");
+                this.Log(LogType.Warning,"Couldn't enable menu '" + menu.name + "' because the gameobject was null");
                 return;
             }
             _currentMenu = menu;
@@ -110,23 +113,27 @@ namespace UI
             _currentMenu.onEnable.Invoke();
             SetGameState(!_currentMenu.pauseGame);
             SetCursorFreedom(_currentMenu.mouseFreedom);
+            
+            this.Log(LogType.Log, $"{menu.name} menu has been enabled");
         }
         public void DisableMenu(UIMenu menu)
         {
             if (menu == default) return;
-            //Debug.Log("Disabling menu '" + menu.name + "'");
+            this.Log(LogType.Log, $"Disabling menu {menu.name}");
 
             if (menu.menu == null)
             {
-                Debug.LogWarning("[UIManager] : Couldn't enable the menu '" + menu.name + "' because the gameobject was null");
+                this.Log(LogType.Warning,"Couldn't enable menu '" + menu.name + "' because the gameobject was null");
                 return;
             }
             menu.menu.SetActive(false);
             menu.onDisable.Invoke();
+            this.Log(LogType.Log, $"{menu.name} menu has been disabled");
         }
 
         public void DisableAllMenus()
         {
+            this.Log(LogType.Log, $"Disabling all menus");
             foreach(var menu in _menus)
             {
                 DisableMenu(menu);
@@ -143,6 +150,8 @@ namespace UI
             _gameLoop.StopRunning();
             _playerInputs.Disable();
             _UIInputs.Enable();
+            
+            this.Log(LogType.Log, $"Game has been paused");
         }
 
         public void ResumeGame()
@@ -150,6 +159,8 @@ namespace UI
             _gameLoop.StartRunning();
             _playerInputs.Enable();
             _UIInputs.Enable();
+            
+            this.Log(LogType.Log, $"Game has been resumed");
         }
 
         private void SetCursorFreedom(bool freedom)
@@ -179,6 +190,7 @@ namespace UI
         private void TogglePause()
         {
             //Debug.Log("[UIManager] : Current menu is : " + _currentMenu.name);
+            this.Log(LogType.Log, $"Toggleing pause");
             if (_currentMenu.name == _pauseMenuName)
                 EnableMenu(_gameMenuName);
             else

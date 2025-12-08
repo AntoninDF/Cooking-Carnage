@@ -14,8 +14,7 @@ namespace Upgrades
         #endregion
 
         #region Fields
-
-
+        
         private List<Upgrade> _upgrades;
 
         private MoneyManager _moneyManager;
@@ -36,7 +35,13 @@ namespace Upgrades
 
             _moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
             if (_moneyManager == null)
-                Debug.Log("[UpgradeManager] : No money manager found");
+            {
+                this.Log(LogType.Warning, "No money manager found");
+            }
+            else
+            {
+                this.Log(LogType.Log, "UpgradeManager correctly initialized");
+            }
 
             ApplyUpgrades();
         }
@@ -76,7 +81,10 @@ namespace Upgrades
         {
             T upgrade;
             if (!HasUpgradeOfType<T>(out upgrade))
-                Debug.LogError("[UpgradeManager] No upgrade of type " + nameof(T) + " found");
+            {
+                this.Log(LogType.Error, "No upgrade of type " + nameof(T) + " found");
+            }
+
             LevelUp(upgrade);
             return upgrade.Level;
         }
@@ -84,6 +92,10 @@ namespace Upgrades
         private void LevelUp<T>(T upgrade) where T : Upgrade
         {
             upgrade?.LevelUp();
+            if (upgrade != null)
+            {
+                this.Log(LogType.Log, $"{upgrade} level up");
+            }
         }
 
         /// <summary>
@@ -95,10 +107,16 @@ namespace Upgrades
         {
             T upgrade;
             if (!HasUpgradeOfType<T>(out upgrade))
-                Debug.LogError("[UpgradeManager] No upgrade of type " + nameof(T) + " found");
+            {
+                this.Log(LogType.Error, "No upgrade of type " + nameof(T) + " found");
+            }
             float price = upgrade.GetPrice();
             if (_moneyManager.MoneyInfo < price)
+            {
+                this.Log(LogType.Log, $"No enough money for {upgrade}");
                 return false;
+            }
+                
             _moneyManager.AddMoney(-price);
             LevelUp(upgrade);
             return true;

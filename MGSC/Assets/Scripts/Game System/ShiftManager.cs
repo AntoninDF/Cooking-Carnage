@@ -57,13 +57,13 @@ namespace GameSystem
 
         void LaunchShift(float duration)
         {
-            //Debug.Log($"[ShiftManager] Launching new shift for {duration}s...");
+            this.Log(LogType.Log, $"Launching new shift for {duration}s");
+            
             ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("shiftDuration", duration, () => EndShift(), false);
         }
 
         void DelayEndShift()
         {
-            //Debug.Log("[ShiftManager] Clients still active — delaying end of shift by 2s.");
             ReferenceManager.Instance
                 .GetManager<TimerManager>()
                 .StartTimer("shiftEndDelay", 2, () => EndShift(), false);
@@ -73,8 +73,8 @@ namespace GameSystem
         {
             var clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
             int activeClients = clientManager.CurrentClients.Count;
-
-            //Debug.Log($"[ShiftManager] EndShift triggered. Active clients: {activeClients}");
+            
+            this.Log(LogType.Log, $"End of the Shift triggered. Active clients: {activeClients}");
 
             if (activeClients != 0)
             {
@@ -83,22 +83,21 @@ namespace GameSystem
             else
             {
                 OnShiftEnded?.Invoke();
-                //Debug.Log("[ShiftManager] No clients remaining — ending shift and reloading scene.");
+                
                 ReferenceManager.Instance.GetManager<GameLoop>().StopRunning();
                 
                 UpdateRentPrice();
                 var moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
                 if (moneyManager.MoneyInfo < _currentRentPrice)
                 {
-                    Debug.Log("Defeat");
+                    this.Log(LogType.Log, $"Not enough money ({moneyManager.MoneyInfo}) to pay the rent ({_currentRentPrice}€)");
                     OnShiftFailed?.Invoke();
                     return;
                 }
                 moneyManager.AddMoney(-_currentRentPrice);
                 OnShiftSucceeded?.Invoke();
-                Debug.Log("WIP : Devrait ouvrir le menu recap puis amélioration");
                 
-                //NextShift();
+                Debug.Log("WIP : Devrait ouvrir le menu recap puis amélioration");
             }
         }
 
@@ -112,6 +111,9 @@ namespace GameSystem
             ReferenceManager.Instance.ResetInstance();
             
             OnNextShift?.Invoke();
+            
+            this.Log(LogType.Log, $"Shift {_shiftCount-1} is over, launching shift {_shiftCount}");
+            
             // REFACTO : Arrêter de reload la scène, et ne reload que ce qui doit être reload
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
@@ -119,7 +121,6 @@ namespace GameSystem
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
-            //Debug.Log("[ShiftManager] Registered in ReferenceManager.");
         }
         public void Unregister()
         {
@@ -134,6 +135,7 @@ namespace GameSystem
         public void PostInit()
         {
             //Debug.Log("[ShiftManager] : PostInit running (shift duration set to " + shiftDuration + "s)."); 
+            this.Log(LogType.Log, $"PostInit running (shift duration set to {_shiftDuration}s)");
             _dataManager.LoadGlobalData();
             LaunchShift(_shiftDuration);
         }

@@ -147,6 +147,11 @@ namespace UI
                 image.sprite = ingredient.Sprite;
             }
         }
+        
+        public void CameraFocus(float duration)
+        {
+            ReferenceManager.Instance.GetManager<CameraManager>().LookAt(GetComponentInChildren<Canvas>().transform,duration,true);
+        }
 
 
         #endregion

@@ -36,7 +36,7 @@ namespace UI
         {
             if (_textObject == null) _textObject = GetComponent<TMP_Text>();
         }
-        private void Update()
+        private void FixedUpdate()
         {
             UpdateUI();
         }
@@ -62,7 +62,7 @@ namespace UI
                 result = result.Replace(textInfo.markup, data);
             }
             _textObject.text = result;
-            dataManager.Log( "Data replacement is ", _dataReplacement);
+            //dataManager.Log( "Data replacement is ", _dataReplacement);
         }
 
         private string GetDataFromGameObject(EDataInfo info)
