@@ -163,6 +163,18 @@ namespace UI
             this.Log(LogType.Log, $"Game has been resumed");
         }
 
+        public void SwitchPlayerInputs(bool enabled)
+        {
+            if (enabled)
+            {
+                _playerInputs.Enable();
+            }
+            else
+            {
+                _playerInputs.Disable();
+            }
+        }
+
         private void SetCursorFreedom(bool freedom)
         {
             if (freedom)
