@@ -141,7 +141,6 @@ namespace Controller
         public bool TryGrabIndirectly()
         {
             if (HeldItem == null) return false;
-            Debug.Log("TryGrabIndirectly");
             Component target;
             if (!LookTargetImplements<IGrabbable>(out target)) return false;
             IGrabbable t = target as IGrabbable;
@@ -159,7 +158,6 @@ namespace Controller
                 }
                 if (container != null)
                 {
-                    Debug.Log("Grabbing as content");
                     container.Grab(t);
                 }
             }

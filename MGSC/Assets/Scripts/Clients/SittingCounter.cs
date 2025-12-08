@@ -65,14 +65,14 @@ namespace Clients
                     filter = slot.GetComponent<ContainerFilter>();
                 }
                 filter.Clear();
-                filter.AddFilter(ContainerFilter.EFilterCondition.MustBe, ContainerFilter.EItemType.Ingredient);
+                filter.AddFilter(EFilterCondition.MustBe, EItemType.Ingredient);
             }
             if (_mealSlot.Filter == null)
                 filter = _mealSlot.AddComponent<ContainerFilter>();
             else
                 filter = _mealSlot.GetComponent<ContainerFilter>();
             filter.Clear();
-            filter.AddFilter(ContainerFilter.EFilterCondition.MustBe, ContainerFilter.EItemType.Meal);
+            filter.AddFilter(EFilterCondition.MustBe, EItemType.Meal);
         }
 
         private void Serve(IGrabbable item)

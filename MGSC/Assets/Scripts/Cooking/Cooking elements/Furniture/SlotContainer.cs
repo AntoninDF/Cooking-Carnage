@@ -9,7 +9,7 @@ namespace Cooking
     /// The slot container can receive up to one IGrabbable object
     /// </summary>
     [RequireComponent(typeof(Collider))]
-    public class SlotContainer : MonoBehaviour, ISoloContainer, IGrabbable, IWatchable
+    public class SlotContainer : MonoBehaviour, ISoloContainer, IWatchable
     {
         #region Properties
         public IGrabbable HeldItem => _heldItem;
@@ -34,6 +34,9 @@ namespace Cooking
         #endregion
 
         #region Fields
+        [Header("Parameters")]
+        [SerializeField]
+        private bool _disableColliderIfHandEmpty = true;
         [Header("Slot references")]
         [Tooltip("Transform designating where the contained item should go")]
         [SerializeField] private Transform _itemSlot;
@@ -126,8 +129,8 @@ namespace Cooking
         {
             if (_collider == null) return;
             if (Player == null) return;
-
-            SetActive(Player.HeldItem != null && !_locked);
+            if (_disableColliderIfHandEmpty)
+                SetActive(Player.HeldItem != null && !_locked);
         }
 
         public void SetAnimationMode(bool animate = true)
@@ -147,6 +150,20 @@ namespace Cooking
             if (_collider == null)
                 _collider = GetComponent<Collider>();
             _collider.enabled = active;
+        }
+
+        public void SetFilter(params Filter[] filters)
+        {
+            if (_filter != null)
+            {
+                _filter.Clear();
+            }
+            else
+            {
+                _filter = gameObject.AddComponent<ContainerFilter>();
+            }
+            foreach (var filter in filters)
+                _filter.AddFilter(filter);
         }
     }
 
