@@ -36,7 +36,7 @@ namespace GameSystem
             int id = _pastOrders.Count + _activeOrders.Count + 1;
             Order order = new Order(client, recipe, id);
             
-            this.Log(LogType.Log, "Order n°"+id+ "generated for "+client.ToString()+", Recipe : "+recipe);
+            this.Log(LogType.Log, "Order n°"+id+ " generated for "+client.ToString()+", Recipe : "+recipe);
             
             _activeOrders.Add(order);
             OnNewOrder?.Invoke(order);

@@ -153,6 +153,7 @@ namespace GameSystem
             }
             else
             {
+                this.Log(LogType.Log," Client couldn't be spawned so it will try again in "+retryDelay+" seconds");
                 Launch(retryDelay);
                 return false;
             }
@@ -166,14 +167,24 @@ namespace GameSystem
             if (clientSO == null)
             {
                 // If the queue is empty enqueues a new client then it dequeues the first one
-                if (nextClients.Count == 0) { EnqueueClient(NewClient()); }
+                if (nextClients.Count == 0)
+                {
+                    EnqueueClient(NewClient());
+                    
+                    this.Log(LogType.Log," No client in queue so, a new one has been generated");
+                }
                 clientSO = nextClients.Dequeue();
             }
                     
             // Spawns the client in the scene via ClientGenerator method Client.New()
+            
             Client client = Client.New(clientSO, Vector3.zero,clientSpeed);
             client.SetSplinePath(spline);
+            
+            this.Log(LogType.Log,clientSO.name +" has been spawned into scene");
+            
             AssignClientOrderingCounter(client);
+            
                     
             ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(client,false);
             ReferenceManager.Instance.GetElementOfType<Entrance>()?.OnClientEnter.Invoke();
@@ -195,7 +206,7 @@ namespace GameSystem
 
             if (clientsOfType.Length == 0)
             {
-                Debug.LogWarning($"No client of type {chosenType} found in models!");
+                this.Log(LogType.Warning,$"No client of type {chosenType} found in models!");
                 return null;
             }
             
@@ -244,7 +255,8 @@ namespace GameSystem
                     return pair.Key;
                 }
             }
-            Debug.LogError("Error with the selection of new client's type");
+            this.Log(LogType.Error, "Error with the selection of new client's type");
+            
             return EClientType.None;
         }
 
