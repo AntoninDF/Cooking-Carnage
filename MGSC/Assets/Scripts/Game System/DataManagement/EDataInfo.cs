@@ -22,5 +22,7 @@ namespace GameSystem
         MealName = 52,
         MealIngredients = 53,
 
+        // Data passed by script
+        ExternalData = 255
     }
 }

@@ -30,6 +30,8 @@ namespace Clients
         [SerializeField] private UnityEvent _onKill;
         [Tooltip("This event will be invoked when a client is served")]
         [SerializeField] private UnityEvent _onServe;
+        [Tooltip("This event will be invoked when a client is served, passing the order's ID as a parameter")]
+        [SerializeField] private UnityEvent<int> _onServeOrder;
 
         private OrderManager _orderManager;
         #endregion

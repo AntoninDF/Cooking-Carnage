@@ -14,7 +14,7 @@ namespace UI
     public class DynamicText : MonoBehaviour
     {
         #region Properties
-
+        public string Data { get => _data; set => _data = value; }
         #endregion
 
         #region Fields
@@ -29,12 +29,16 @@ namespace UI
         [Tooltip("Each element specifies which markup to replace with which value")]
         [SerializeField] private List<UIDataReplacement> _dataReplacement = new();
 
+        private DataManager _dataManager;
+        private string _data;
         #endregion
 
         #region Methods
         private void Start()
         {
             if (_textObject == null) _textObject = GetComponent<TMP_Text>();
+
+            _dataManager = ReferenceManager.Instance.GetManager<DataManager>();
         }
         private void Update()
         {
@@ -44,8 +48,7 @@ namespace UI
         public void UpdateUI()
         {
             if (_textObject == null) return;
-            DataManager dataManager = ReferenceManager.Instance.GetManager<DataManager>();
-            if (dataManager == null)
+            if (_dataManager == null)
             {
                 Debug.LogWarning("[DynamicText] : Couldn't update the UI, no DataManager found");
                 return;
@@ -54,16 +57,26 @@ namespace UI
             foreach (var textInfo in _dataReplacement)
             {
                 if (textInfo.markup == "") continue;
-                string data = "";
-                if (textInfo.info.GetHashCode() > 49)
-                    data = GetDataFromGameObject(textInfo.info);
-                else 
-                    data = dataManager.GetDataAsString(textInfo.info);
+                string data = GetData(textInfo.info);
                 result = result.Replace(textInfo.markup, data);
             }
             _textObject.text = result;
-            dataManager.Log( "Data replacement is ", _dataReplacement);
+            _dataManager.Log( "Data replacement is ", _dataReplacement);
         }
+
+        private string GetData(EDataInfo info)
+        {
+            string data = "";
+            if (info == EDataInfo.ExternalData)
+                data = _data;
+            else if (info.GetHashCode() > 49)
+                data = GetDataFromGameObject(info);
+            else
+                data = _dataManager.GetDataAsString(info);
+            return data;
+        }
+
+        public void SetData(string data) => _data = data;
 
         private string GetDataFromGameObject(EDataInfo info)
         {

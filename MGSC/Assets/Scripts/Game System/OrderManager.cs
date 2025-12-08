@@ -93,6 +93,17 @@ namespace GameSystem
             
             this.Log(LogType.Log, "Order n°"+order.ID+ " has been stashed");
         }
+
+        public Order GetOrderByID(int id)
+        {
+            foreach (Order order in _pastOrders)
+                if (order.ID == id)
+                    return order;
+            foreach (Order order in _activeOrders)
+                if (order.ID == id)
+                    return order;
+            return null;
+        }
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
