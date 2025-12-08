@@ -102,6 +102,16 @@ namespace Cooking
                 slot.IsLocked = !active;
             }
         }
+
+        public SlotContainer GetFirstAvailableSlot()
+        {
+            foreach(SlotContainer slot in _slots)
+            {
+                if (slot.IsFree && !slot.IsLocked) return slot;
+            }
+
+            return null;
+        }
         #endregion
     }
 
