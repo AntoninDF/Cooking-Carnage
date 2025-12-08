@@ -150,7 +150,9 @@ namespace UI
         
         public void CameraFocus(float duration)
         {
-            ReferenceManager.Instance.GetManager<CameraManager>().LookAt(GetComponentInChildren<Canvas>().transform,duration,true);
+            bool revealMouse = duration == 0;
+            
+            ReferenceManager.Instance.GetManager<CameraManager>().LookAt(GetComponentInChildren<Canvas>().transform,duration,revealMouse);
         }
 
 

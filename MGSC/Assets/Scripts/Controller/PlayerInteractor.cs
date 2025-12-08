@@ -134,7 +134,37 @@ namespace Controller
         public void GrabOrDrop(InputAction.CallbackContext context)
         {
             if (HeldItem == null) Grab();
-            else DropOnContainer();
+            else if (!TryGrabIndirectly())
+                DropOnContainer();
+        }
+
+        public bool TryGrabIndirectly()
+        {
+            if (HeldItem == null) return false;
+            Component target;
+            if (!LookTargetImplements<IGrabbable>(out target)) return false;
+            IGrabbable t = target as IGrabbable;
+            t.SetAnimationMode(true);
+
+            IContainer container = HeldItem as IContainer;
+            MultiSlotContainer multislot;
+            HeldItem.transform.TryGetComponent<MultiSlotContainer>(out multislot);
+            if (multislot != null || container != null)
+            {
+                if (multislot != null)
+                {
+                    SlotContainer slot = multislot.GetFirstAvailableSlot();
+                    container = slot;
+                }
+                if (container != null)
+                {
+                    container.Grab(t);
+                }
+            }
+
+
+
+            return false;
         }
 
         public void Grab()

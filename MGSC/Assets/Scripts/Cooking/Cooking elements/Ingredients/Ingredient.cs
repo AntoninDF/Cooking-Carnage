@@ -1,5 +1,6 @@
 using UI;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -11,6 +12,8 @@ namespace Cooking
         #region Properties
         public SO_Ingredient Model => _model;
         public bool IsBaseIngredient => Model.IsBaseIngredient;
+        public bool IsCut {  get; set; }
+        public UnityEvent OnCut { get => _onCut; set => _onCut = value; }
         #endregion
 
         #region Fields
@@ -18,6 +21,10 @@ namespace Cooking
         [Header("Ingredient references")]
         [Tooltip("Data model for this ingredient")]
         [SerializeField] protected SO_Ingredient _model;
+
+        [SerializeField]
+        private UnityEvent _onCut;
+
 
         #endregion
 
@@ -34,6 +41,12 @@ namespace Cooking
         {
             base.UpdateUI();
             _tooltipComponent.SetText(Model.Name);
+        }
+
+        public void Cut()
+        {
+            IsCut = true;
+            _onCut?.Invoke();
         }
 
         #endregion
