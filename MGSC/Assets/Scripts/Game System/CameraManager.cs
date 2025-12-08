@@ -21,7 +21,7 @@ public class CameraManager : IManager
         
         private CameraState currentState = CameraState.FirstPerson;
         
-        private float blendTime = 0.1f;
+        private float blendTime = 0;
     
         #endregion
 
@@ -63,9 +63,9 @@ public class CameraManager : IManager
             focusPivot = new GameObject("Focus Pivot");
         }
 
-        public void LookAt(Transform target, float duration = 0, bool showMouse = false)
+        public void LookAt(Transform target, float duration = 0, bool showMouse = false, float distance = 0.5f)
         {
-            Vector3 targetPos = target.transform.position + target.transform.forward * -(0.5f);
+            Vector3 targetPos = target.transform.position + target.transform.forward * -distance;
             focusPivot.transform.position = targetPos;
             
             camFocus.Follow = focusPivot.transform;
@@ -82,21 +82,24 @@ public class CameraManager : IManager
             if (duration > 0)
             {
                 ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("camFocus", duration, () => EnableFirstPersonView(), false);
+                ReferenceManager.Instance.GetManager<UIManager>().SwitchPlayerInputs(false);
                 this.Log(LogType.Log, $"Camera will focus on {target.name} for {duration}s");
             }
             else
             {
+				ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
                 this.Log(LogType.Log, $"Camera will focus on {target.name}");
             }
-            ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
+            
         }
 
         public void EnableFirstPersonView()
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            
             ChangeState(CameraState.FirstPerson);
-            ReferenceManager.Instance.GetManager<UIManager>().ResumeGame();
+            ReferenceManager.Instance.GetManager<UIManager>().SwitchPlayerInputs(true);
         }
 
         void ChangeState(CameraState newState)

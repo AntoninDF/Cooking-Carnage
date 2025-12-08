@@ -58,7 +58,7 @@ namespace Cooking
                     filter = slot.Filter;
 
                 filter.Clear();
-                filter.AddFilter(ContainerFilter.EFilterCondition.MustBe, ContainerFilter.EItemType.Oven);
+                filter.AddFilter(EFilterCondition.MustBe, EItemType.Oven);
             }
         }
 

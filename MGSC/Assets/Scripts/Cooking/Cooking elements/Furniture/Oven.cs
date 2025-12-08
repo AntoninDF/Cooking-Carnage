@@ -127,14 +127,22 @@ namespace Cooking
             OnStartCooking?.Invoke();
         }
 
-        public void StopCooking()
+        private void StopCooking()
         {
             _isCooking = false;
             _currentStatus = ECookStatus.Raw;
             ICookable cookItem = _slot.HeldItem as ICookable;
+            OnStopCooking?.Invoke();
             if (cookItem == null) return;
             cookItem.StopCooking();
-            OnStopCooking?.Invoke();
+        }
+
+        public void StopCooking(IGrabbable item)
+        {
+            Debug.Log("Stop cooking as IGrabbable");
+            StopCooking();
+            if (item is ICookable)
+                (item as ICookable).StopCooking();
         }
 
         public void GetGrabbed(IContainer newContainer)
