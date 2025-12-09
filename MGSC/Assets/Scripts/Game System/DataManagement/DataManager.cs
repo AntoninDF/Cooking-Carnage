@@ -125,6 +125,7 @@ namespace GameSystem
         {
             currentGameData = DefaultData();
             SaveGameData(currentGameData);
+            LoadGlobalData();
         }
 
         Dictionary<string, int> ConvertUpgradeData()
