@@ -4,6 +4,7 @@ using GameSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Orders
@@ -51,19 +52,25 @@ namespace Orders
 
         private static SO_Recipe PickRandomRecipe(Dictionary<SO_Recipe, float> weights)
         {
+            bool emptyWeights = false;
             float sum = 0;
             foreach (var kvp  in weights)
             {
                 sum += kvp.Value;
             }
+            // Rendre aléatoire entre les 3 premières recettes si la somme des poids en 0 (aucun client vu)
+            if (sum == 0)
+            {
+                sum = 3;
+                emptyWeights = true;
+            }
             float randomTarget = UnityEngine.Random.Range(0f, sum);
 
-            //MonoBehaviour.print("[OrderPicker] : Random target is " + randomTarget + ".");
-            //DebugWeights(weights);
+            
             float current = 0;
             foreach (var kvp in weights)
             {
-                current += kvp.Value;
+                current += (!emptyWeights) ? kvp.Value : 1;
                 if (current >= randomTarget)
                     return kvp.Key;
             }
