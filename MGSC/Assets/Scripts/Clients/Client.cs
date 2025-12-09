@@ -45,6 +45,9 @@ namespace Clients
         [SerializeField] private UnityEvent _onStartWalking;
         [SerializeField] private UnityEvent _onEndWalking;
         [SerializeField] private UnityEvent _onCounterRegister;
+        [SerializeField] private UnityEvent _onKilled;
+        [SerializeField] private UnityEvent _onSatisfactoryOrder;
+        [SerializeField] private UnityEvent _onWrongOrder;
 
 
         private float _speed = 1f;
@@ -211,20 +214,41 @@ namespace Clients
             
         }
 
-        public void ResolveOrder()
+        public void ResolveOrder(ServingInfo info, OrderRating rating)
         {
+            Debug.Log("Order R3esolved");
             if (_state == EClientState.AtCounter && _hasOrdered)
             {
                 _onStartEating?.Invoke();
-                //Refacto : Faire que le client mange et parte du resto
-                gameObject.SetActive(false);
+
+                var tm = ReferenceManager.Get<TimerManager>();
+                if (tm != null)
+                    tm.StartTimer("Eating", 2f, () => Eat(info, rating));
                 ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,false);
+            }
+        }
+
+        private void Eat(ServingInfo info, OrderRating rating)
+        {
+            Debug.Log("Eating");
+            if (rating.IsCorrectRecipe)
+                _onSatisfactoryOrder?.Invoke();
+            else
+                _onWrongOrder?.Invoke();
+
+            //Refacto : Faire que le client mange et parte du resto
+            var tm = ReferenceManager.Get<TimerManager>();
+            if (tm != null)
+            {
+                Debug.Log("Timer started");
+                tm.StartTimer("Disable client", 2f, () => gameObject.SetActive(false));
             }
         }
 
         public void Kill()
         {
             //Destroy(gameObject);
+            _onKilled?.Invoke();
             gameObject.SetActive(false);
             ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,true);
         }
