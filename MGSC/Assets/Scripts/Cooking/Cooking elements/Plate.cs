@@ -24,6 +24,9 @@ namespace Cooking
         #endregion
 
         #region Fields
+        
+        [SerializeField] string _itemID;
+        
         [Header("Plate references")]
         //[Tooltip("Reference a slot container in which to put the base ingredient.")]
         //[SerializeField] private SlotContainer _baseIngredientSlot;
@@ -48,6 +51,8 @@ namespace Cooking
         [Tooltip("Invoked when a normal ingredient is removed from the plate")]
         [SerializeField] private UnityEvent _onIngredientRemoved;
         #endregion
+        
+        
 
         #region Methods
 
@@ -62,6 +67,13 @@ namespace Cooking
                 Debug.LogError("[Plate] : Please reference the ingredient multislot in the inspector");
 
             SetupSlots();
+            base.SetID(_itemID);
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            
         }
 
         private void SetupSlots()

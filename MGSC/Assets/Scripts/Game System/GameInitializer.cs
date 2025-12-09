@@ -68,6 +68,7 @@ namespace GameSystem
             new UpgradeManager();
             new DataManager();
             new CameraManager();
+            new ItemManager();
             if (_gameProfile.AddUI) AddUI();
 
             // Create the player

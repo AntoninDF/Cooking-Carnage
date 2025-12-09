@@ -22,6 +22,9 @@ namespace Cooking
         public PlayerInterface Player { get; set; }
         public Collider Collider => _collider;
         public bool IsLookedAt => Player.LookTarget == gameObject;
+
+        public string ID => itemID;
+   
         #endregion
 
         #region Fields
@@ -51,19 +54,35 @@ namespace Cooking
         private Collider _collider;
         private bool _wasLookedAtThisFrame;
         private bool _animate=true;
+
+        private string itemID;
+        private Vector3 _defaultPos;
         #endregion
 
         #region Methods
 
         protected virtual void Start()
         {
+            _defaultPos = transform.position;
             _defaultRotation = transform.rotation;
             _collider = GetComponent<Collider>();
             _tooltipComponent = _tooltip.GetComponent<Tooltip>();
         }
+        
         protected virtual void Update()
         {
             UpdateUI();
+        }
+
+        protected  void SetID(string id)
+        {
+            itemID = id;
+        }
+
+        public virtual void Reset()
+        {
+            transform.position = _defaultPos;
+            transform.rotation = _defaultRotation;
         }
 
         public void GetGrabbed(IContainer newContainer)
