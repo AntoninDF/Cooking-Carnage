@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -84,7 +85,7 @@ namespace GameSystem
             {
                 OnShiftEnded?.Invoke();
                 
-                ReferenceManager.Instance.GetManager<GameLoop>().StopRunning();
+                ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
                 
                 UpdateRentPrice();
                 var moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
@@ -96,26 +97,23 @@ namespace GameSystem
                 }
                 moneyManager.AddMoney(-_currentRentPrice);
                 OnShiftSucceeded?.Invoke();
-                
-                Debug.Log("WIP : Devrait ouvrir le menu recap puis amélioration");
             }
         }
-
-        // REFACTO
+        
         public void NextShift()
         {
             _shiftCount++;
             _currentRentPrice = _rentPriceCurve.Evaluate(_shiftCount);
 
             ReferenceManager.Instance.GetManager<DataManager>().SaveGameData();
-            ReferenceManager.Instance.ResetInstance();
             
             OnNextShift?.Invoke();
             
             this.Log(LogType.Log, $"Shift {_shiftCount-1} is over, launching shift {_shiftCount}");
             
-            // REFACTO : Arrêter de reload la scène, et ne reload que ce qui doit être reload
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            ReferenceManager.Instance.GetManager<UIManager>().ResumeGame();
+            
+            LaunchShift(_shiftDuration);
         }
 
         public void Register()
