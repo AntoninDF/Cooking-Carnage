@@ -84,7 +84,7 @@ namespace Clients
             ServingInfo info = new ServingInfo(meal);
             _orderManager.ResolveOrder(_currentClient.Order, info);
             _mealSlot.Drop(item);
-            Destroy(meal.gameObject);
+            ReferenceManager.Instance.GetManager<ItemManager>().Despawn(meal);
             Free();
         }
 
@@ -123,7 +123,7 @@ namespace Clients
                 Debug.LogError("[SittingCounter] Spawn : Couldn't find any slot to put the ingredients. Please reference them in the inspector");
             }
 
-            GameObject go = GameObject.Instantiate(ingredient.Prefab);
+            GameObject go = ReferenceManager.Instance.GetManager<ItemManager>().TrySpawn(ingredient.Prefab);
             Ingredient item = go.GetComponent<Ingredient>();
             item.SetAnimationMode(false);
             bool couldBePlaced = false;

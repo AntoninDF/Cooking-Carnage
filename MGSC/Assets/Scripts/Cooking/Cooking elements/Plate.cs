@@ -50,6 +50,8 @@ namespace Cooking
         [SerializeField] private UnityEvent _onIngredientAdded;
         [Tooltip("Invoked when a normal ingredient is removed from the plate")]
         [SerializeField] private UnityEvent _onIngredientRemoved;
+
+        private ItemManager itemManager;
         #endregion
         
         
@@ -67,7 +69,8 @@ namespace Cooking
                 Debug.LogError("[Plate] : Please reference the ingredient multislot in the inspector");
 
             SetupSlots();
-            base.SetID(_itemID);
+            base.SetID(_itemID); 
+            itemManager = GameSystem.ReferenceManager.Instance.GetManager<ItemManager>();
         }
 
         public override void Reset()
@@ -136,15 +139,13 @@ namespace Cooking
 
         private void TransformToMeal(SO_Recipe recipe)
         {
-            var go = GameObject.Instantiate(recipe.mealPrefab, transform.parent);
-            go.transform.localPosition = transform.localPosition;
-            go.transform.rotation = transform.rotation;
+            var go = itemManager.TrySpawn(recipe.mealPrefab, transform.position, transform.rotation, transform.parent);
             go.name = this.name + " as meal";
             Meal meal = go.GetComponent<Meal>();
             meal.Recipe = recipe;
             Container.Drop(this);
             Container.Grab(meal);
-            Destroy(this.gameObject);
+            itemManager.Despawn(this);
         }
 
         private void UpdateTooltip()
