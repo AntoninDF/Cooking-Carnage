@@ -20,8 +20,6 @@ public class CameraManager : IManager
         private GameObject focusPivot;
         
         private CameraState currentState = CameraState.FirstPerson;
-        
-        private float blendTime = 0;
     
         #endregion
 
