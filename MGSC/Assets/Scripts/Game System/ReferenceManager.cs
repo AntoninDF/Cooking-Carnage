@@ -107,6 +107,8 @@ namespace GameSystem
             }
             return _managers[typeof(T)] as T;
         }
+        public static T Get<T>() where T : class, IManager => Instance.GetManager<T>();
+
         public bool TryGetManager<T>(out T manager) where T : class, IManager
         {
             manager = GetManager<T>();

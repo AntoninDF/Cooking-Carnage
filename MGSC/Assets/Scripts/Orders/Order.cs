@@ -52,7 +52,7 @@ namespace Orders
             OrderRating = rating;
             _onResolve?.Invoke();
             IsResolved = true;
-            _owner.ResolveOrder();
+            _owner.ResolveOrder(info, rating);
         }
 
         public void Cancel()

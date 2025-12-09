@@ -139,7 +139,6 @@ namespace Cooking
 
         public void StopCooking(IGrabbable item)
         {
-            Debug.Log("Stop cooking as IGrabbable");
             StopCooking();
             if (item is ICookable)
                 (item as ICookable).StopCooking();
