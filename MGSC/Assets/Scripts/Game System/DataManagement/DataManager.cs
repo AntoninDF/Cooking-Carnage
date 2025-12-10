@@ -143,7 +143,7 @@ namespace GameSystem
         {
             if (currentGameData.upgrades == null)
             {
-                this.Log(LogType.Error, "No Upgrade data found");
+                this.Log(LogType.Warning, "No Upgrade data found");
                 return;
             }
             foreach (var upgradeData in currentGameData.upgrades)

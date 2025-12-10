@@ -86,6 +86,7 @@ namespace GameSystem
                 OnShiftEnded?.Invoke();
                 
                 ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
+                ReferenceManager.Instance.GetManager<ItemManager>().StoreAllActive();
                 
                 UpdateRentPrice();
                 var moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
@@ -97,6 +98,7 @@ namespace GameSystem
                 }
                 moneyManager.AddMoney(-_currentRentPrice);
                 OnShiftSucceeded?.Invoke();
+                
             }
         }
         
@@ -106,6 +108,8 @@ namespace GameSystem
             _currentRentPrice = _rentPriceCurve.Evaluate(_shiftCount);
 
             ReferenceManager.Instance.GetManager<DataManager>().SaveGameData();
+            
+            ReferenceManager.Instance.GetManager<ItemManager>().SpawnInitialItems();
             
             OnNextShift?.Invoke();
             

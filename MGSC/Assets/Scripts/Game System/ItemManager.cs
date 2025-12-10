@@ -13,6 +13,10 @@ public class ItemManager : IManager
     
     Dictionary<string, List<Item>> _itemsByID = new Dictionary<string, List<Item>>();
     
+    List<Item> spawnItems =new List<Item>();
+    
+    List<Item> activeItems = new List<Item>();
+    
     private Transform _itemsPooled;
     
     
@@ -38,7 +42,40 @@ public class ItemManager : IManager
         GameObject newRoot = new GameObject("Items Pool");
         _itemsPooled = newRoot.transform;
     }
-    
+
+    public void PostInit()
+    {
+        spawnItems = ReferenceManager.Instance.GetElementsOfType<Item>();
+        for (var index = spawnItems.Count-1; index > 0; index--)
+        {
+            var initialItem = spawnItems[index];
+            StoreCopy(initialItem);
+
+            UpdateActiveList(initialItem);
+        }
+    }
+
+    private void UpdateActiveList(Item item)
+    {
+        if (item.gameObject != null)
+        {
+            if (item.gameObject.activeSelf)
+            {
+                if (!activeItems.Contains(item))
+                {
+                    activeItems.Add(item);
+                }
+            }
+            else
+            {
+                if (activeItems.Contains(item))
+                {
+                    activeItems.Remove(item);
+                }
+            }
+        }
+        
+    }
 
     private void TryStore(Item item, string id =null)
     {
@@ -73,7 +110,6 @@ public class ItemManager : IManager
         }
         
     }
-
     private void TryRemove(Item item, string id=null)
     {
         if (item == null)
@@ -100,7 +136,6 @@ public class ItemManager : IManager
             }
         }
     }
-
     List<Item> GetItemsByID(string id)
     {
         if (_itemsByID.ContainsKey(id))
@@ -116,7 +151,6 @@ public class ItemManager : IManager
     private List<Item> correspondingItems;
     public GameObject TrySpawn(GameObject prefab ,Vector3 position = default, Quaternion rotation = default, Transform parent = null)
     {
-        
         if (!prefab.TryGetComponent<Item>(out Item prefabItem))
         {
             this.Log(LogType.Error, prefab.name + " cannot be spawned because it isn't an item");
@@ -159,8 +193,11 @@ public class ItemManager : IManager
         {
             this.Log(LogType.Warning, prefabItem.name + " has no ID specified");
         }
-
-        return GameObject.Instantiate(prefab,position, rotation, parent);
+        GameObject spawned = GameObject.Instantiate(prefab,position, rotation, parent);
+        
+        UpdateActiveList(spawned.GetComponent<Item>());
+        
+        return spawned;
     }
     GameObject Spawn(Item item, Vector3 position, Quaternion rotation, Transform parent)
     {
@@ -168,6 +205,8 @@ public class ItemManager : IManager
         item.transform.position = position;
         item.transform.rotation = rotation;
         item.gameObject.SetActive(true);
+        
+        UpdateActiveList(item);
         
         this.Log(LogType.Log, "Spawned " + item.name);
         
@@ -180,24 +219,52 @@ public class ItemManager : IManager
             this.Log(LogType.Error, itemToStore.name + " gameobject not found, probably destroyed ?");
             return;
         }
-
         if (!itemToStore.gameObject.activeSelf)
         {
             this.Log(LogType.Warning, itemToStore.name + " is not active and probably shouldn't be stored now at ID "+itemToStore.ID);
         }
-        
         itemToStore.gameObject.SetActive(false);
-        if (reset)
-            itemToStore.Reset();
+        UpdateActiveList(itemToStore);
         
+        if (reset || spawnItems.Contains(itemToStore))
+            itemToStore.Reset();
         this.Log(LogType.Log, "Despawned " + itemToStore.name + ", will now try to store it at ID "+itemToStore.ID);
 
         TryStore(itemToStore);
     }
-
-
     public void StoreCopy(Item item)
     {
-        Despawn(GameObject.Instantiate(item,item.transform.position, item.transform.rotation, null),true);
+        if (spawnItems.Contains(item))
+        {
+            spawnItems.Remove(item);
+            GameObject copy = GameObject.Instantiate(item.gameObject, item.transform.position, item.transform.rotation, _itemsPooled);
+            
+            Item itemCopy = copy.GetComponent<Item>();
+            Despawn(itemCopy);
+            
+            spawnItems.Add(itemCopy);
+        }
+        else
+        {
+            Despawn(GameObject.Instantiate(item, item.transform.position, item.transform.rotation, _itemsPooled), true);
+        }
+    }
+
+    public void StoreAllActive()
+    {
+        for (var index = activeItems.Count-1; index > 0; index--)
+        {
+            var item = activeItems[index];
+            Despawn(item);
+        }
+    }
+
+    public void SpawnInitialItems()
+    {
+        Debug.Log(spawnItems.Count);
+        foreach (var item in spawnItems)
+        {
+            TrySpawn(item.gameObject, item.transform.position, item.transform.rotation, item.transform.parent);
+        }
     }
 }
