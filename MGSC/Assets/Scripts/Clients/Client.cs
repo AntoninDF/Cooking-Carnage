@@ -147,7 +147,8 @@ namespace Clients
 
         private void FaceDirection()
         {
-            transform.rotation = Quaternion.LookRotation(transform.position - _previousPos, Vector3.up);
+            if (transform.position != _previousPos)
+                transform.rotation = Quaternion.LookRotation(transform.position - _previousPos, Vector3.up);
         }
 
         /// <summary>

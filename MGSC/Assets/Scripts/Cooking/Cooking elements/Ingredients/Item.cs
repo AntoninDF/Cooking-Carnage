@@ -159,6 +159,7 @@ namespace Cooking
             if (Container is IMultiContainer)
             {
                 _targetPos = Quaternion.Inverse(Container.transform.rotation) * (Player.LookInfo.point - FindLowestPoint() - Container.transform.position);
+                Debug.Log("Target pos is " + _targetPos + "\nDistance to player is " + Vector3.Distance(Player.transform.position, _targetPos));
                 _targetRot = _defaultRotation;
             }
         }
@@ -202,7 +203,9 @@ namespace Cooking
             Ray ray = new Ray(transform.position + Vector3.down * 3, Vector3.up);
             RaycastHit hitInfo;
             Collider.Raycast(ray, out hitInfo, 3);
-            return hitInfo.point - transform.position;
+            var lowestPoint = hitInfo.point - transform.position;
+            Debug.Log("Lowest point is " + lowestPoint);
+            return lowestPoint;
         }
 
 
