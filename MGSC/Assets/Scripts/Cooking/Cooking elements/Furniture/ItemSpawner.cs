@@ -1,5 +1,6 @@
 using Controller;
 using System.Collections.Generic;
+using GameSystem;
 using UnityEngine;
 
 namespace Cooking
@@ -57,7 +58,7 @@ namespace Cooking
             {
                 for (int i = 0; i < request.count; i++)
                 {
-                    GameObject go = GameObject.Instantiate(request.item.transform.gameObject);
+                    GameObject go = ReferenceManager.Instance.GetManager<ItemManager>().TrySpawn(request.item.transform.gameObject);
                     Item item = go.GetComponent<Item>();
                     bool couldBePlaced= false;
                     foreach (var slot in _slotsToSpawn)

@@ -23,6 +23,7 @@ namespace GameSystem
         [Expandable]
         [SerializeField] private SO_GameProfile _gameProfile;
         
+        [Expandable]
         [SerializeField] private SO_DebugProfile _debugProfile;
 
         // PRIVATE FIELDS
@@ -68,6 +69,7 @@ namespace GameSystem
             new UpgradeManager();
             new DataManager();
             new CameraManager();
+            new ItemManager();
             if (_gameProfile.AddUI) AddUI();
 
             // Create the player

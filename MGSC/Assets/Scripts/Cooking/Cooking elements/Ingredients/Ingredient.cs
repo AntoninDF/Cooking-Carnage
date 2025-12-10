@@ -1,3 +1,4 @@
+using GameSystem;
 using UI;
 using UnityEngine;
 using UnityEngine.Events;
@@ -17,6 +18,8 @@ namespace Cooking
         #endregion
 
         #region Fields
+        
+        [SerializeField] string _itemID;
 
         [Header("Ingredient references")]
         [Tooltip("Data model for this ingredient")]
@@ -35,7 +38,9 @@ namespace Cooking
             base.Start();
             if (_model == null)
                 throw new MissingReferenceException("Please assign an ingredient model in the inspector : " + name);
+            base.SetID(_itemID);
         }
+        
 
         protected override void UpdateUI()
         {
@@ -47,6 +52,10 @@ namespace Cooking
         {
             IsCut = true;
             _onCut?.Invoke();
+
+            _itemID +=" Cut";
+            ReferenceManager.Instance.GetManager<ItemManager>().UpdateStorage(this, _itemID);
+            base.SetID(_itemID);
         }
 
         #endregion

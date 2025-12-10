@@ -19,9 +19,13 @@ namespace Cooking
 
         public UnityEvent<ICookable> OnCook => _onCook;
         public UnityEvent OnOvercooked => _onOvercooked;
+        
         #endregion
 
         #region Fields
+        
+        [SerializeField] string _itemID;
+        
         [Header("Meal references")]
         [Tooltip("Set what recipe this meal represents")]
         [SerializeField] private SO_Recipe _recipe;
@@ -41,7 +45,9 @@ namespace Cooking
             base.Start();
             if (Recipe == null) Debug.LogWarning("Recipe field was not set to an instance of an object");
             _tooltipComponent.SetText(Recipe.Name);
+            SetID(_itemID);
         }
+        
 
         public void Cook(float dT)
         {
