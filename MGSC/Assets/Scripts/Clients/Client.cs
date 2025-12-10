@@ -69,6 +69,7 @@ namespace Clients
         private bool _useUpgrades = true;
 
         private Collider _collider;
+        private Vector3 _previousPos = Vector3.zero;
         #endregion
 
         #region Methods
@@ -139,6 +140,14 @@ namespace Clients
                     }
                     break;
             }
+
+            FaceDirection();
+            _previousPos = transform.position;
+        }
+
+        private void FaceDirection()
+        {
+            transform.rotation = Quaternion.LookRotation(transform.position - _previousPos, Vector3.up);
         }
 
         /// <summary>
