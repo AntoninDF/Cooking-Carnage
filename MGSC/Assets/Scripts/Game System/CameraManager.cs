@@ -2,7 +2,6 @@ using Controller;
 using GameSystem;
 using UI;
 using Unity.Cinemachine;
-using UnityEditor.ShaderGraph;
 using UnityEngine;
 
 public class CameraManager : IManager

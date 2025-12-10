@@ -23,7 +23,7 @@ namespace Cooking
         public Collider Collider => _collider;
         public bool IsLookedAt => Player.LookTarget == gameObject;
 
-        public string ID => itemID;
+        public string ID => UpdateID();
    
         #endregion
 
@@ -74,9 +74,14 @@ namespace Cooking
             UpdateUI();
         }
 
-        protected  void SetID(string id)
+        protected void SetID(string id)
         {
             itemID = id;
+        }
+
+        protected virtual string UpdateID()
+        {
+            return itemID;
         }
 
         public virtual void Reset()

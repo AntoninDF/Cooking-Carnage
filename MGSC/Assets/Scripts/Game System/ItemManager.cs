@@ -13,6 +13,8 @@ public class ItemManager : IManager
     
     Dictionary<string, List<Item>> _itemsByID = new Dictionary<string, List<Item>>();
     
+    private Transform _itemsPooled;
+    
     
     #endregion
     
@@ -31,30 +33,43 @@ public class ItemManager : IManager
         ReferenceManager.Instance.RemoveManager(this);
     }
 
-    public void Init(){}
-
-    private void TryStore(Item item)
+    public void Init()
     {
-        if (item == null)
+        GameObject newRoot = new GameObject("Items Pool");
+        _itemsPooled = newRoot.transform;
+    }
+    
+
+    private void TryStore(Item item, string id =null)
+    {
+        if (item == null )
         {
             this.Log(LogType.Error, item.name + " can't be stored because it is null");
             return;
         }
-        
-        if (!_itemsByID.ContainsKey(item.ID))
+
+        if (id == null)
         {
-            _itemsByID.Add(item.ID, new List<Item>());
-            this.Log(LogType.Log, item.ID + " has been added");
+            if (item.ID != null)
+            {
+                id = item.ID;
+            }
         }
         
-        if (!_itemsByID[item.ID].Contains(item))
+        if (!_itemsByID.ContainsKey(id))
         {
-            _itemsByID[item.ID].Add(item);
-            this.Log(LogType.Log, "There is now "+ _itemsByID[item.ID].Count + " item of ID "+ item.ID);
+            _itemsByID.Add(id, new List<Item>());
+            this.Log(LogType.Log, id + " has been added");
+        }
+        
+        if (!_itemsByID[id].Contains(item))
+        {
+            _itemsByID[id].Add(item);
+            this.Log(LogType.Log, "There is now "+ _itemsByID[id].Count + " item of ID "+ id);
         }
         else
         {
-            this.Log(LogType.Log, item.name+ " has already been added");
+            this.Log(LogType.Log, item.name+ " has already been added at ID "+id);
         }
         
     }
@@ -77,11 +92,11 @@ public class ItemManager : IManager
             if (_itemsByID[id].Contains(item))
             {
                 _itemsByID[id].Remove(item);
-                this.Log(LogType.Log, item.name +" has been removed, there is"+ _itemsByID[item.ID].Count+" left");
+                this.Log(LogType.Log, item.name +" has been removed, there is "+ _itemsByID[item.ID].Count+" left");
             }
             else
             {
-                this.Log(LogType.Warning, item.name + " can't be removed because it wasn't stored");
+                this.Log(LogType.Warning, item.name + " can't be removed because it wasn't stored at ID "+item.ID);
             }
         }
     }
@@ -93,7 +108,7 @@ public class ItemManager : IManager
             return _itemsByID[id];
         }
         
-        this.Log(LogType.Warning, "No item of ID "+id+ "has ever been stored");
+        this.Log(LogType.Warning, "No item of ID "+id+ " has ever been stored");
         
         return null;
     }
@@ -118,6 +133,11 @@ public class ItemManager : IManager
                 foreach (Item item in correspondingItems)
                 {
                     TryRemove(item);
+                    
+                    if (parent == null)
+                    {
+                        parent = _itemsPooled;
+                    }
 
                     return Spawn(item, position, rotation, parent);
                     
@@ -137,7 +157,7 @@ public class ItemManager : IManager
         }
         else
         {
-            this.Log(LogType.Error, prefabItem.name + " has no ID specified");
+            this.Log(LogType.Warning, prefabItem.name + " has no ID specified");
         }
 
         return GameObject.Instantiate(prefab,position, rotation, parent);
@@ -163,22 +183,21 @@ public class ItemManager : IManager
 
         if (!itemToStore.gameObject.activeSelf)
         {
-            this.Log(LogType.Warning, itemToStore.name + " is not active and probably shouldn't be stored now");
+            this.Log(LogType.Warning, itemToStore.name + " is not active and probably shouldn't be stored now at ID "+itemToStore.ID);
         }
         
         itemToStore.gameObject.SetActive(false);
         if (reset)
             itemToStore.Reset();
         
-        this.Log(LogType.Log, "Despawned " + itemToStore.name + ", will now try to store it");
+        this.Log(LogType.Log, "Despawned " + itemToStore.name + ", will now try to store it at ID "+itemToStore.ID);
 
         TryStore(itemToStore);
     }
 
 
-    public void UpdateStorage(Item item, string previousID)
+    public void StoreCopy(Item item)
     {
-        TryRemove(item, previousID);
-        TryStore(item);
+        Despawn(GameObject.Instantiate(item,item.transform.position, item.transform.rotation, null),true);
     }
 }
