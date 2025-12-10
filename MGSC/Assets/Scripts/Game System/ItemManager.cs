@@ -31,55 +31,58 @@ public class ItemManager : IManager
         ReferenceManager.Instance.RemoveManager(this);
     }
 
-    public void Init()
-    {
-        foreach (Item item in ReferenceManager.Instance.GetElementsOfType<Item>())
-        {
-            if (!_itemsByID.ContainsKey(item.ID))
-            {
-                _itemsByID.Add(item.ID, new List<Item>());
-            }
-        }
-        
-    }
+    public void Init(){}
 
     private void TryStore(Item item)
     {
         if (item == null)
         {
+            this.Log(LogType.Error, item.name + " can't be stored because it is null");
             return;
         }
         
         if (!_itemsByID.ContainsKey(item.ID))
         {
             _itemsByID.Add(item.ID, new List<Item>());
+            this.Log(LogType.Log, item.ID + " has been added");
+        }
+        
+        if (!_itemsByID[item.ID].Contains(item))
+        {
+            _itemsByID[item.ID].Add(item);
+            this.Log(LogType.Log, "There is now "+ _itemsByID[item.ID].Count + " item of ID "+ item.ID);
         }
         else
         {
-            if (!_itemsByID[item.ID].Contains(item))
-            {
-                _itemsByID[item.ID].Add(item);
-            }
+            this.Log(LogType.Log, item.name+ " has already been added");
         }
+        
     }
 
-    private void TryRemove(Item item)
+    private void TryRemove(Item item, string id=null)
     {
         if (item == null)
         {
+            this.Log(LogType.Error, item.name + " can't be removed because it is null");
             return;
         }
 
-        if (_itemsByID.ContainsKey(item.ID))
+        if (id == null)
         {
-            if (_itemsByID[item.ID].Contains(item))
-            {
-                _itemsByID[item.ID].Remove(item);
-            }
+            id = item.ID;
         }
-        else
+
+        if (_itemsByID.ContainsKey(id))
         {
-            this.Log(LogType.Error, item.name +" ID probably changed, should not be possible");
+            if (_itemsByID[id].Contains(item))
+            {
+                _itemsByID[id].Remove(item);
+                this.Log(LogType.Log, item.name +" has been removed, there is"+ _itemsByID[item.ID].Count+" left");
+            }
+            else
+            {
+                this.Log(LogType.Warning, item.name + " can't be removed because it wasn't stored");
+            }
         }
     }
 
@@ -90,47 +93,53 @@ public class ItemManager : IManager
             return _itemsByID[id];
         }
         
+        this.Log(LogType.Warning, "No item of ID "+id+ "has ever been stored");
+        
         return null;
     }
 
     private List<Item> correspondingItems;
     public GameObject TrySpawn(GameObject prefab ,Vector3 position = default, Quaternion rotation = default, Transform parent = null)
     {
-        Item prefabItem = prefab.GetComponent<Item>();
         
-        if (prefabItem == null)
+        if (!prefab.TryGetComponent<Item>(out Item prefabItem))
         {
             this.Log(LogType.Error, prefab.name + " cannot be spawned because it isn't an item");
-        }
-        
-        correspondingItems.Clear();
-        correspondingItems = GetItemsByID(prefabItem.ID);
-
-        if (correspondingItems != null)
-        {
-            foreach (Item item in correspondingItems)
-            {
-                if (true)
-                {
-                    // Ajouter conditions si besoins
-                    TryRemove(item);
-                    
-                    return Spawn(item, position, rotation, parent);
-                }
-            }
-        }
-
-        if (position == default)
-        {
-            this.Log(LogType.Error, prefabItem.name + " has no position to be instantiated");
+            
             return null;
         }
 
-        if (rotation == default)
+        if (prefabItem.ID != "")
         {
-            rotation =new Quaternion(0,0,0,1);
+            correspondingItems = GetItemsByID(prefabItem.ID);
+
+            if (correspondingItems != null)
+            {
+                foreach (Item item in correspondingItems)
+                {
+                    TryRemove(item);
+
+                    return Spawn(item, position, rotation, parent);
+                    
+                }
+            }
+
+            if (position == default)
+            {
+                this.Log(LogType.Warning, prefabItem.name + " has no position specified");
+                position = new Vector3(0f, 0f, 0f);
+            }
+
+            if (rotation == default)
+            {
+                rotation = new Quaternion(0, 0, 0, 1);
+            }
         }
-        
+        else
+        {
+            this.Log(LogType.Error, prefabItem.name + " has no ID specified");
+        }
+
         return GameObject.Instantiate(prefab,position, rotation, parent);
     }
     GameObject Spawn(Item item, Vector3 position, Quaternion rotation, Transform parent)
@@ -139,10 +148,12 @@ public class ItemManager : IManager
         item.transform.position = position;
         item.transform.rotation = rotation;
         item.gameObject.SetActive(true);
+        
+        this.Log(LogType.Log, "Spawned " + item.name);
+        
         return item.gameObject;
     }
-    
-    public void Despawn(Item itemToStore)
+    public void Despawn(Item itemToStore, bool reset = false)
     {
         if (itemToStore.gameObject == null)
         {
@@ -156,8 +167,18 @@ public class ItemManager : IManager
         }
         
         itemToStore.gameObject.SetActive(false);
-        itemToStore.Reset();
+        if (reset)
+            itemToStore.Reset();
+        
+        this.Log(LogType.Log, "Despawned " + itemToStore.name + ", will now try to store it");
 
         TryStore(itemToStore);
+    }
+
+
+    public void UpdateStorage(Item item, string previousID)
+    {
+        TryRemove(item, previousID);
+        TryStore(item);
     }
 }

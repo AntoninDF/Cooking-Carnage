@@ -1,3 +1,4 @@
+using GameSystem;
 using UI;
 using UnityEngine;
 using UnityEngine.Events;
@@ -51,6 +52,10 @@ namespace Cooking
         {
             IsCut = true;
             _onCut?.Invoke();
+
+            _itemID +=" Cut";
+            ReferenceManager.Instance.GetManager<ItemManager>().UpdateStorage(this, _itemID);
+            base.SetID(_itemID);
         }
 
         #endregion
