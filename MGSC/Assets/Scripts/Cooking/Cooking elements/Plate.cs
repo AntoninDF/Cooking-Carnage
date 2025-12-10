@@ -69,8 +69,13 @@ namespace Cooking
                 Debug.LogError("[Plate] : Please reference the ingredient multislot in the inspector");
 
             SetupSlots();
-            base.SetID(_itemID); 
             itemManager = GameSystem.ReferenceManager.Instance.GetManager<ItemManager>();
+        }
+        
+        protected override string UpdateID()
+        {
+            base.SetID(_itemID);
+            return _itemID;
         }
 
         public override void Reset()
@@ -145,6 +150,11 @@ namespace Cooking
             meal.Recipe = recipe;
             Container.Drop(this);
             Container.Grab(meal);
+            
+            foreach (var ingredient in _ingredientSlots.HeldItems)
+            {
+                itemManager.Despawn(ingredient as Item);
+            }
             itemManager.Despawn(this);
         }
 

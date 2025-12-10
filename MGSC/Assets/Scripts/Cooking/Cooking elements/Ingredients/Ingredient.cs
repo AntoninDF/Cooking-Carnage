@@ -38,7 +38,13 @@ namespace Cooking
             base.Start();
             if (_model == null)
                 throw new MissingReferenceException("Please assign an ingredient model in the inspector : " + name);
+            UpdateID();
+        }
+
+        protected override string UpdateID()
+        {
             base.SetID(_itemID);
+            return _itemID;
         }
         
 
@@ -50,12 +56,16 @@ namespace Cooking
 
         public void Cut()
         {
+            ReferenceManager.Instance.GetManager<ItemManager>().StoreCopy(this);
+           
             IsCut = true;
             _onCut?.Invoke();
-
-            _itemID +=" Cut";
-            ReferenceManager.Instance.GetManager<ItemManager>().UpdateStorage(this, _itemID);
-            base.SetID(_itemID);
+            
+            if (!_itemID.Contains(" Cut"))
+            {
+                _itemID += " Cut";
+                base.SetID(_itemID);
+            }
         }
 
         #endregion
