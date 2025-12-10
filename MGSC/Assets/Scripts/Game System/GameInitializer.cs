@@ -76,12 +76,13 @@ namespace GameSystem
             ReferenceManager.Instance.ScanHierarchy();
             if (_gameProfile.AddPlayer) PlayerSetup.TrySetupPlayer();
 
+            SetupDebug();
+            
             // Setup the managers' references
             InitManagers();
+            
             // Apply the base logic to ensure all managers are setup to work correctly
             PostInitManagers();
-            
-            SetupDebug();
 
             if (_gameProfile.ResetSaveFile) ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
             if (_gameProfile.AddUI) SetupUI();
