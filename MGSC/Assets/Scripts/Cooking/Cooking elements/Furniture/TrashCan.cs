@@ -49,7 +49,7 @@ namespace Cooking
 
         private void Dispose(IGrabbable item)
         {
-            Destroy(item.transform.gameObject);
+            GameSystem.ReferenceManager.Instance.GetManager<ItemManager>().Despawn(item as Item);
         }
     }
 

@@ -19,6 +19,7 @@ namespace Cooking
 
         public UnityEvent<ICookable> OnCook => _onCook;
         public UnityEvent OnOvercooked => _onOvercooked;
+        
         #endregion
 
         #region Fields

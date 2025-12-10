@@ -23,6 +23,7 @@ namespace GameSystem
         [Expandable]
         [SerializeField] private SO_GameProfile _gameProfile;
         
+        [Expandable]
         [SerializeField] private SO_DebugProfile _debugProfile;
 
         // PRIVATE FIELDS
