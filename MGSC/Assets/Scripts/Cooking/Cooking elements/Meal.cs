@@ -45,7 +45,12 @@ namespace Cooking
             base.Start();
             if (Recipe == null) Debug.LogWarning("Recipe field was not set to an instance of an object");
             _tooltipComponent.SetText(Recipe.Name);
-            SetID(_itemID);
+        }
+        
+        protected override string UpdateID()
+        {
+            base.SetID(_itemID);
+            return _itemID;
         }
         
 
