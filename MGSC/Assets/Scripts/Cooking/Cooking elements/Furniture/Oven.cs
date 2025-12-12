@@ -166,6 +166,15 @@ namespace Cooking
         public void SetAnimationMode(bool animate = true) { }
         public void SetStrength(float strength) { _strength = strength; }
 
+        public void Reset()
+        {
+            if (_slot != null && _slot.HeldItem != null)
+            {
+                GameSystem.ReferenceManager.Instance.GetManager<ItemManager>().Despawn(_slot.HeldItem as Item);
+                _slot.HeldItem = null;
+            }
+        }
+
         #endregion
     }
 }

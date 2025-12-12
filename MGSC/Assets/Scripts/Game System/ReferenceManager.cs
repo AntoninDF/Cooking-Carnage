@@ -46,12 +46,14 @@ namespace GameSystem
             typeof(Oven),
             typeof(TrashCan),
             typeof(Meal),
+            typeof(Blender),
             typeof(SimpleClientSpawner),
             typeof(PlayerStart),
             typeof(PlayerInterface),
             typeof(OvenSetup),
             typeof(PlayerInterface),
-            typeof(Entrance)
+            typeof(Entrance),
+            typeof(PlayerController)
 
         };
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;
