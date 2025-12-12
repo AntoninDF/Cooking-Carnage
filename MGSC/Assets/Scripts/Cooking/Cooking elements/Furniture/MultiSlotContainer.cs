@@ -43,6 +43,12 @@ namespace Cooking
 
         private void Start()
         {
+            Init();
+
+        }
+
+        private void Init()
+        {
             if (_slots.Count == 0)
             {
                 if (!_detectSlots)
@@ -58,9 +64,7 @@ namespace Cooking
                 slot.OnGrab.AddListener(Grab);
                 slot.OnDrop.AddListener(Drop);
             }
-                
         }
-
 
         public void Drop(IGrabbable item)
         {
@@ -111,6 +115,15 @@ namespace Cooking
             }
 
             return null;
+        }
+
+        public void Reset()
+        {
+            Player = null;
+            _items = new();
+            foreach (var slot in Slots)
+                slot.HeldItem = null;
+
         }
         #endregion
     }
