@@ -12,7 +12,7 @@ namespace Cooking
     public class SlotContainer : MonoBehaviour, ISoloContainer, IWatchable
     {
         #region Properties
-        public IGrabbable HeldItem => _heldItem;
+        public IGrabbable HeldItem { get => _heldItem; set => _heldItem = value; }
 
         public Transform ItemSlot => _itemSlot;
 

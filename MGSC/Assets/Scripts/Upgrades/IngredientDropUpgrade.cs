@@ -46,7 +46,7 @@ namespace Upgrades
 
         public override float GetPrice()
         {
-            return 5f;
+            return 50f;
         }
         #endregion
     }

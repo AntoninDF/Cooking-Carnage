@@ -151,10 +151,14 @@ namespace Cooking
             Container.Drop(this);
             Container.Grab(meal);
             
-            foreach (var ingredient in _ingredientSlots.HeldItems)
+            foreach (var obj in _ingredientSlots.HeldItems)
             {
-                itemManager.Despawn(ingredient as Item);
+                var ingredient = obj as Item;
+                if (ingredient != null)
+                    itemManager.Despawn(ingredient);
             }
+            _ingredientSlots.Reset();
+
             itemManager.Despawn(this);
         }
 

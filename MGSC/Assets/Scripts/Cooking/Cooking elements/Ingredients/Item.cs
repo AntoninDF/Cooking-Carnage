@@ -32,6 +32,8 @@ namespace Cooking
         [Header("Item references")]
         [Tooltip("Reference the canvas or panel game object that must show when the ingredient is hovered.")]
         [SerializeField] protected GameObject _tooltip;
+        [Tooltip("The lowest point of the object")]
+        [SerializeField] protected Transform _lowestPoint;
         [Space]
         [Header("Item parameters")]
         [Tooltip("How long wil the ingredient take to go from a place to another when grabbed")]
@@ -54,6 +56,7 @@ namespace Cooking
         private Collider _collider;
         private bool _wasLookedAtThisFrame;
         private bool _animate=true;
+        
 
         private string itemID;
         private Vector3 _defaultPos;
@@ -200,11 +203,11 @@ namespace Cooking
         /// <returns>The offset vector from the pivot point towards the lowest point</returns>
         protected Vector3 FindLowestPoint()
         {
-            Ray ray = new Ray(transform.position + Vector3.down * 3, Vector3.up);
-            RaycastHit hitInfo;
-            Collider.Raycast(ray, out hitInfo, 3);
-            var lowestPoint = hitInfo.point - transform.position;
-            Debug.Log("Lowest point is " + lowestPoint);
+            Vector3 lowestPoint;
+            if (_lowestPoint == null)
+                lowestPoint = Vector3.zero;
+            else
+                lowestPoint = _lowestPoint.position - transform.position;
             return lowestPoint;
         }
 
