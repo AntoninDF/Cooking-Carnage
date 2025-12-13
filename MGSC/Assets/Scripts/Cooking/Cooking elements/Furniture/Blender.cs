@@ -1,3 +1,4 @@
+using System;
 using Controller;
 using GameSystem;
 using UI;
@@ -82,9 +83,11 @@ namespace Cooking
         {
             if (_slotContainer != null && _slotContainer.HeldItem != null)
             {
-                if (_slotContainer.HeldItem != null && _slotContainer.HeldItem is Ingredient)
-                _timerManager.StartTimer("Cutting", _cutDuration, () => TryCutIngredient(_slotContainer.HeldItem as Ingredient));
-                _onInteract?.Invoke();
+                if (_slotContainer.HeldItem is Ingredient)
+                {
+                    _timerManager.StartTimer("Cutting", _cutDuration, () => TryCutIngredient(_slotContainer.HeldItem as Ingredient));
+                    _onInteract?.Invoke();
+                }
             }
         }
 
@@ -129,6 +132,16 @@ namespace Cooking
             _wasLookedAtThisFrame = true;
             _tooltip.SetActive(true);
         }
+
+        public void Reset()
+        {
+            if (_slotContainer != null && _slotContainer.HeldItem != null)
+            {
+                ReferenceManager.Instance.GetManager<ItemManager>().Despawn(_slotContainer.HeldItem as Ingredient);
+                _slotContainer.HeldItem = null;
+            }
+        }
+
         #endregion
     }
 

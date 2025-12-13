@@ -13,11 +13,16 @@ public class ItemManager : IManager
     
     Dictionary<string, List<Item>> _itemsByID = new Dictionary<string, List<Item>>();
     
-    List<Item> spawnItems =new List<Item>();
+    List<Item> spawnItems = new List<Item>();
+    
+    List<Vector3> spawnPositions = new List<Vector3>(); //REFACTO
+    private Transform spawnParent; // REFACTO
     
     List<Item> activeItems = new List<Item>();
     
     private Transform _itemsPooled;
+    
+    
     
     
     #endregion
@@ -45,7 +50,13 @@ public class ItemManager : IManager
 
     public void PostInit()
     {
-        spawnItems = ReferenceManager.Instance.GetElementsOfType<Item>();
+        foreach (var item in ReferenceManager.Instance.GetElementsOfType<Item>())
+        {
+            spawnItems.Add(item);
+            spawnPositions.Add(item.transform.position);
+        }
+        spawnParent = spawnItems.Count > 0 ? spawnItems[0].transform.parent : null; 
+        
         for (var index = spawnItems.Count-1; index > 0; index--)
         {
             var initialItem = spawnItems[index];
@@ -224,6 +235,7 @@ public class ItemManager : IManager
             this.Log(LogType.Warning, itemToStore.name + " is not active and probably shouldn't be stored now at ID "+itemToStore.ID);
         }
         itemToStore.gameObject.SetActive(false);
+        itemToStore.transform.parent = _itemsPooled;
         UpdateActiveList(itemToStore);
         
         if (reset || spawnItems.Contains(itemToStore))
@@ -261,10 +273,9 @@ public class ItemManager : IManager
 
     public void SpawnInitialItems()
     {
-        Debug.Log(spawnItems.Count);
-        foreach (var item in spawnItems)
+        for (var index = 0; index < spawnItems.Count; index++)
         {
-            TrySpawn(item.gameObject, item.transform.position, item.transform.rotation, item.transform.parent);
+            TrySpawn(spawnItems[index].gameObject, spawnPositions[index], new Quaternion(0,0,0,1), spawnParent);
         }
     }
 }

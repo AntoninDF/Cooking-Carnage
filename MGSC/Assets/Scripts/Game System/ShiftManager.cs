@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Controller;
 using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -87,6 +88,19 @@ namespace GameSystem
                 
                 ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
                 ReferenceManager.Instance.GetManager<ItemManager>().StoreAllActive();
+                
+                foreach (var blender in ReferenceManager.Instance.GetElementsOfType<Cooking.Blender>())
+                {
+                    blender.Reset();
+                }
+
+                foreach (var oven in ReferenceManager.Instance.GetElementsOfType<Cooking.Oven>())
+                {
+                    oven.Reset();
+                }
+                
+                ReferenceManager.Instance.GetElementOfType<PlayerController>().transform.position = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform.position;
+                ReferenceManager.Instance.GetElementOfType<PlayerController>().transform.rotation = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform.rotation;
                 
                 UpdateRentPrice();
                 var moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
