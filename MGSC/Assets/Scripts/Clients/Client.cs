@@ -1,10 +1,7 @@
-using Controller;
 using Cooking;
 using GameSystem;
 using Orders;
 using System.Collections.Generic;
-using Unity.Cinemachine;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Splines;
@@ -37,6 +34,10 @@ namespace Clients
         #endregion
 
         #region Fields
+        [Header("Client parameters")]
+        [SerializeField] private float _timeToEat = 2f;
+        [SerializeField] private float _timeBeforeDisappearingAfterLeaving = 15f;
+        [SerializeField] private float _timeBeforeDisappearingAfterDying = 3f;
 
         [Header("Client events")]
         [SerializeField] private UnityEvent _onLookAt;
@@ -60,6 +61,7 @@ namespace Clients
         // It's not a clean state machine for now. To be refactored later, probably. It's quite messy as is
         private EClientState _state = EClientState.None;
         private bool _hasOrdered = false;
+        private bool _hasEaten;
 
         private ClientMovement _movement;
         private bool _debugSplinePosition;
@@ -116,7 +118,7 @@ namespace Clients
 
                     _movement.MoveAlongSpline();
 
-                    if (CheckClientCounterDistance(_currentCounter))
+                    if (CheckClientCounterDistance(_currentCounter) && !_hasEaten)
                     {
                         _state = EClientState.AtCounter;
                         UseCounter(_currentCounter);
@@ -126,6 +128,9 @@ namespace Clients
                 case EClientState.AtCounter:
 
                     _movement.GoTo(_currentCounter.UserSpot.position);
+
+                    if (_currentCounter is OrderingCounter counter)
+                        counter.TryAcceptOrder();
 
                     break;
 
@@ -250,16 +255,20 @@ namespace Clients
             var tm = ReferenceManager.Get<TimerManager>();
             if (tm != null)
             {
-                Debug.Log("Timer started");
-                tm.StartTimer("Disable client", 2f, () => gameObject.SetActive(false));
+                tm.StartTimer("Leave", _timeToEat, () => _state = EClientState.ReachingSpline);
+                tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => gameObject.SetActive(false));
             }
+            _hasEaten = true;
         }
 
         public void Kill()
         {
-            //Destroy(gameObject);
-            _onKilled?.Invoke();
-            gameObject.SetActive(false);
+            _onKilled?.Invoke(); 
+
+            var tm = ReferenceManager.Get<TimerManager>();
+            if (tm != null)
+                tm.StartTimer("Dying", _timeBeforeDisappearingAfterDying, () => gameObject.SetActive(false));
+            
             ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,true);
         }
 
