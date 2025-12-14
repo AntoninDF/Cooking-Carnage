@@ -1,4 +1,6 @@
 using Cooking;
+using System;
+using System.Collections.Generic;
 
 namespace Orders
 {
@@ -32,5 +34,24 @@ namespace Orders
             ReputationGained = reputationGained;
         }
 
+        public static bool operator ==( OrderRating left, OrderRating right ) { return left.Equals( right ); }
+        public static bool operator !=( OrderRating left, OrderRating right ) { return !left.Equals( right ); }
+
+        public override bool Equals(object obj)
+        {
+            return obj is OrderRating rating &&
+                   EqualityComparer<Order>.Default.Equals(RatedOrder, rating.RatedOrder) &&
+                   EqualityComparer<SO_Recipe>.Default.Equals(TargetRecipe, rating.TargetRecipe) &&
+                   EqualityComparer<SO_Recipe>.Default.Equals(ActualRecipe, rating.ActualRecipe) &&
+                   IsCorrectRecipe == rating.IsCorrectRecipe &&
+                   Rating == rating.Rating &&
+                   MoneyGained == rating.MoneyGained &&
+                   ReputationGained == rating.ReputationGained;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(RatedOrder, TargetRecipe, ActualRecipe, IsCorrectRecipe, Rating, MoneyGained, ReputationGained);
+        }
     }
 }

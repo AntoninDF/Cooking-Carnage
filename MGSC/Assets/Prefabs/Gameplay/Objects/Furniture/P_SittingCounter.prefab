@@ -329,6 +329,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8453170322894649566}
+        m_TargetAssemblyTypeName: UI.FadingTooltip, Assembly-CSharp
+        m_MethodName: EnableAndFadeOut
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onServeOrder:
     m_PersistentCalls:
       m_Calls: []
@@ -1597,11 +1609,68 @@ PrefabInstance:
       propertyPath: m_Name
       value: P_ObjectTooltip
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3983459069095305191, guid: a327db39c1b60544fb9488aeb51ef930, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8460792982267849191, guid: a327db39c1b60544fb9488aeb51ef930, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8453170322894649566}
+    - targetCorrespondingSourceObject: {fileID: 8460792982267849191, guid: a327db39c1b60544fb9488aeb51ef930, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5241331521114108045}
   m_SourcePrefab: {fileID: 100100000, guid: a327db39c1b60544fb9488aeb51ef930, type: 3}
+--- !u!114 &2057792677118416514 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3681501359920000983, guid: a327db39c1b60544fb9488aeb51ef930, type: 3}
+  m_PrefabInstance: {fileID: 3430034767753328981}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!1 &6553625937728786610 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8460792982267849191, guid: a327db39c1b60544fb9488aeb51ef930, type: 3}
+  m_PrefabInstance: {fileID: 3430034767753328981}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8453170322894649566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553625937728786610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aa6134b176244c4fa83fbfa2a179fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.FadingTooltip
+  _textComponent: {fileID: 2057792677118416514}
+  _billboard: 1
+  _reverseZ: 1
+  _duration: 3
+--- !u!114 &5241331521114108045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553625937728786610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3532c7cdf9b674998e5c7f537dbe4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.DynamicText
+  _textObject: {fileID: 2057792677118416514}
+  _baseText: "MONEY\u20AC gained"
+  _dataSource: {fileID: 3313232724240203138}
+  _dataReplacement:
+  - markup: MONEY
+    info: 54
 --- !u!4 &9054800114623121530 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5922500452467487023, guid: a327db39c1b60544fb9488aeb51ef930, type: 3}

@@ -15,6 +15,7 @@ namespace Clients
         public UnityEvent OnKill => _onKill;
         public UnityEvent OnServe => _onServe;
         public Meal ServedMeal => _mealSlot?.HeldItem as Meal;
+        public Order LastServedOrder {  get; set; }
 
         #endregion
 
@@ -83,6 +84,7 @@ namespace Clients
             _onServe?.Invoke();
             ServingInfo info = new ServingInfo(meal);
             _orderManager.ResolveOrder(_currentClient.Order, info);
+            LastServedOrder = _currentClient.Order;
             _mealSlot.Drop(item);
             ReferenceManager.Instance.GetManager<ItemManager>().Despawn(meal);
             Free();

@@ -86,6 +86,13 @@ namespace UI
                     var mel = _dataSource.GetComponent<Meal>();
                     if (mel != null) result = ToString(mel.Recipe.Ingredients);
                     break;
+                case (EDataInfo.MoneyGainedOnLastOrder):
+                    var counter = _dataSource.GetComponent<SittingCounter>();
+                    if (counter != null && counter.LastServedOrder != null && counter.LastServedOrder.OrderRating != default)
+                    {
+                        result = counter.LastServedOrder.OrderRating.MoneyGained.ToString();
+                    }
+                    break;
             }
 
             return result;
