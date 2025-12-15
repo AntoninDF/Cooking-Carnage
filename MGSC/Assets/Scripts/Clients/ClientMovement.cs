@@ -139,13 +139,16 @@ namespace Clients
             return GetSplinePos(FindNearestSplinePoint());
         }
 
-        public void GoTo(Vector3 targetPos)
+        public void GoTo(Vector3 targetPos, float yOffset = 0)
         {
             if (ControlledTransform == null)
             {
                 Debug.LogWarning("[ClientMovement] : Couldn't move the client because it was not initialized properly");
                 return;
             }
+            
+            targetPos.y += yOffset;
+            
             Vector3 startPos = ControlledTransform.position;
             Vector3 offset = targetPos - startPos;
             Vector3 finalPos;

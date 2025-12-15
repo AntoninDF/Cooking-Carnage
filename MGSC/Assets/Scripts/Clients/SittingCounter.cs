@@ -14,6 +14,8 @@ namespace Clients
         #region Properties
         public UnityEvent OnKill => _onKill;
         public UnityEvent OnServe => _onServe;
+        public UnityEvent OnPlatformUp => _onPlatformUp;
+        public UnityEvent OnPlatformDown => _onPlatformDown;
         public Meal ServedMeal => _mealSlot?.HeldItem as Meal;
         public Order LastServedOrder {  get; set; }
 
@@ -33,8 +35,12 @@ namespace Clients
         [SerializeField] private UnityEvent _onServe;
         [Tooltip("This event will be invoked when a client is served, passing the order's ID as a parameter")]
         [SerializeField] private UnityEvent<int> _onServeOrder;
+        
+        [SerializeField] private UnityEvent _onPlatformUp;
+        [SerializeField] private UnityEvent _onPlatformDown;
 
         private OrderManager _orderManager;
+        [SerializeField]private Transform deathTrap;
         #endregion
 
         #region Methods
@@ -139,6 +145,13 @@ namespace Clients
             }
             if (!couldBePlaced) go.transform.position = transform.position;
         }
+
+        public void HeightDeathTrap(float height)
+        {
+            deathTrap.position = new Vector3(deathTrap.position.x,-height+1.5f,deathTrap.position.z);
+        }
+
+
         #endregion
 
     }

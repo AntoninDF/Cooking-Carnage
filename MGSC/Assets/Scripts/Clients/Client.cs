@@ -54,6 +54,7 @@ namespace Clients
 
 
         private float _speed = 1f;
+        private float height;
         private SplineContainer _splineComp;
         private List<Counter> _counters;
 
@@ -82,6 +83,7 @@ namespace Clients
         {
             _movement = new(transform, _speed, _splineComp);
             _collider = GetComponent<Collider>();
+            height = _collider.bounds.size.y;
 
             _counters = ReferenceManager.Instance.GetElementsOfType<Counter>();
             if (_counters == null || _counters.Count == 0)
@@ -95,7 +97,6 @@ namespace Clients
             _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
             if (_gameLoop == null)
                 Debug.LogError("[Client] Init : No gameloop found.");
-
         }
 
         private void Update()
@@ -105,13 +106,7 @@ namespace Clients
             switch (_state)
             {
                 case EClientState.None:
-
-                    if (_currentCounter)
-                    {
-                        _onStartWalking?.Invoke();
-                        _state = EClientState.Moving;
-                    }
-
+                    
                     break;
 
                 case EClientState.Moving:
@@ -124,18 +119,22 @@ namespace Clients
                     {
                         _state = EClientState.AtCounter;
                         UseCounter(_currentCounter);
-                        if (_currentCounter.GetComponent<OrderingCounter>() == null)
-                            _onCounterArrival?.Invoke();
                     }
                     break;
 
                 case EClientState.AtCounter:
-
-                    _movement.GoTo(_currentCounter.UserSpot.position);
-
+                    
                     if (_currentCounter is OrderingCounter counter)
+                    { 
                         counter.TryAcceptOrder();
-
+                    }
+                    else
+                    {
+                        _state = EClientState.PlatformElevation;
+                        _currentCounter.GetComponent<SittingCounter>().HeightDeathTrap(height); 
+                        _currentCounter.GetComponent<SittingCounter>().OnPlatformUp?.Invoke(); 
+                        _onCounterArrival?.Invoke();
+                    }
                     break;
 
                 case EClientState.ReachingSpline:
@@ -148,6 +147,25 @@ namespace Clients
                         _movement.SnapToSpline();
                     }
                     break;
+                
+                case EClientState.PlatformElevation:
+
+                    Vector3 sizeMattersUserSpot = _currentCounter.UserSpot.position;
+                    if (sizeMattersUserSpot.y < 0)
+                    {
+                        sizeMattersUserSpot.y = 0;
+                    }
+                    
+                    if (transform.position != sizeMattersUserSpot)
+                    {
+                        _movement.GoTo(sizeMattersUserSpot);
+                    }
+                    else
+                    {
+                        transform.forward = _currentCounter.UserSpot.forward;
+                        _state = EClientState.None;
+                    }
+                    break;
             }
 
             FaceDirection();
@@ -155,9 +173,14 @@ namespace Clients
         }
 
         private void FaceDirection()
-        {
+        { 
             if (transform.position != _previousPos)
-                transform.rotation = Quaternion.LookRotation(transform.position - _previousPos, Vector3.up);
+            {
+                Vector3 direction = new Vector3(transform.position.x - _previousPos.x, 0, transform.position.z - _previousPos.z);
+                if (direction != Vector3.zero)
+                    transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+            }
+            
         }
 
         /// <summary>
@@ -208,6 +231,8 @@ namespace Clients
             _currentCounter = counter;
             _currentCounter.Register(this);
             _onCounterRegister?.Invoke();
+            
+            _state = EClientState.Moving;
         }
 
         public void UseCounter(Counter counter)
@@ -229,13 +254,11 @@ namespace Clients
             {
                 return; // Pas de Sitting dispo
             }
-            
-            
         }
 
         public void ResolveOrder(ServingInfo info, OrderRating rating)
         {
-            if (_state == EClientState.AtCounter && _hasOrdered)
+            if (_state == EClientState.None && _hasOrdered && _currentCounter)
             {
                 _onStartEating?.Invoke();
 
@@ -248,7 +271,6 @@ namespace Clients
 
         private void Eat(ServingInfo info, OrderRating rating)
         {
-            Debug.Log("Eating");
             if (rating.IsCorrectRecipe)
                 _onSatisfactoryOrder?.Invoke();
             else
@@ -267,6 +289,7 @@ namespace Clients
         private void LeaveCounterFeedback()
         {
             _onCounterDeparture?.Invoke();
+            _currentCounter.GetComponent<SittingCounter>().OnPlatformDown?.Invoke(); 
             _state = EClientState.ReachingSpline;
         }
 
@@ -285,7 +308,6 @@ namespace Clients
         {
             Destroy(gameObject);
         }
-
 
         public void OnDrawGizmos()
         {
@@ -313,6 +335,7 @@ namespace Clients
             Sitting = 3,
             ReachingSpline = 4,
             AtCounter = 5,
+            PlatformElevation = 6,
 
         }
 
