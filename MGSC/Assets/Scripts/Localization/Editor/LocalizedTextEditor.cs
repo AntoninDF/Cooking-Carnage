@@ -9,13 +9,19 @@ public class LocalizedTextEditor : Editor
     {
         base.OnInspectorGUI();
 
+        var data = (LocalizedText)target;
+
+
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Refresh text"))
         {
-
+            data.UpdateText();
         }
         if (GUILayout.Button("Refresh localization data"))
         {
-
+            if (data.Database != null)
+                data.Database.Load();
         }
+        GUILayout.EndHorizontal();
     }
 }

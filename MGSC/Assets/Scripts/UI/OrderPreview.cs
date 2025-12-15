@@ -3,11 +3,8 @@ using Cooking;
 using GameSystem;
 using Orders;
 using System.Collections.Generic;
-using System.Net;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.UI;
 
 namespace UI
@@ -40,6 +37,7 @@ namespace UI
         private List<OrderingCounter> _orderingCounters;
         private TimerManager _timerManager;
         private OrderManager _orderManager;
+        private AdaptiveClientSpawner _spawner;
 
         #endregion
 
@@ -60,7 +58,10 @@ namespace UI
                 Debug.LogWarning("[OrderPreview] : An order preview script tried to setup, but there is no OrderManager to be found");
                 return;
             }
-            if (!_filterByClient)  _orderManager.OnNewOrder += SetOrder;
+            if (!_filterByClient)
+            {
+                _orderManager.OnNewOrder += SetOrder;
+            }
             else
             {
                 if (_counter != null)

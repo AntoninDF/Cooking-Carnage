@@ -22,6 +22,7 @@ namespace Cooking
         [SerializeField] private List<ItemSpawnRequest> _itemsToSpawn;
         [Tooltip("Slots on which the items will be spawned. If no more slot is available, they will spawn on the spawner's transform. The slots should be ordered")]
         [SerializeField] private List<SlotContainer> _slotsToSpawn;
+        [SerializeField] private int _startSpawnIterations = 1;
 
         private float _timeOfLastSpawn = float.MinValue;
         #endregion
@@ -30,11 +31,8 @@ namespace Cooking
 
         private void Start()
         {
-            TrySpawn();
-            foreach (var slot in _slotsToSpawn)
-            {
-                slot.OnDrop.AddListener((item) => TrySpawn());
-            }
+            for (int i = 0; i < _startSpawnIterations; i++)
+                TrySpawn();
         }
 
         public override void Interact(PlayerInteractor interactor)

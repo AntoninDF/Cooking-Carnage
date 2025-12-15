@@ -1,10 +1,7 @@
-using Controller;
 using Cooking;
 using GameSystem;
 using Orders;
 using System.Collections.Generic;
-using Unity.Cinemachine;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Splines;
@@ -37,6 +34,10 @@ namespace Clients
         #endregion
 
         #region Fields
+        [Header("Client parameters")]
+        [SerializeField] private float _timeToEat = 2f;
+        [SerializeField] private float _timeBeforeDisappearingAfterLeaving = 15f;
+        [SerializeField] private float _timeBeforeDisappearingAfterDying = 3f;
 
         [Header("Client events")]
         [SerializeField] private UnityEvent _onLookAt;
@@ -45,6 +46,8 @@ namespace Clients
         [SerializeField] private UnityEvent _onStartWalking;
         [SerializeField] private UnityEvent _onEndWalking;
         [SerializeField] private UnityEvent _onCounterRegister;
+        [SerializeField] private UnityEvent _onCounterArrival;
+        [SerializeField] private UnityEvent _onCounterDeparture;
         [SerializeField] private UnityEvent _onKilled;
         [SerializeField] private UnityEvent _onSatisfactoryOrder;
         [SerializeField] private UnityEvent _onWrongOrder;
@@ -60,6 +63,7 @@ namespace Clients
         // It's not a clean state machine for now. To be refactored later, probably. It's quite messy as is
         private EClientState _state = EClientState.None;
         private bool _hasOrdered = false;
+        private bool _hasEaten;
 
         private ClientMovement _movement;
         private bool _debugSplinePosition;
@@ -116,16 +120,21 @@ namespace Clients
 
                     _movement.MoveAlongSpline();
 
-                    if (CheckClientCounterDistance(_currentCounter))
+                    if (CheckClientCounterDistance(_currentCounter) && !_hasEaten)
                     {
                         _state = EClientState.AtCounter;
                         UseCounter(_currentCounter);
+                        if (_currentCounter.GetComponent<OrderingCounter>() == null)
+                            _onCounterArrival?.Invoke();
                     }
                     break;
 
                 case EClientState.AtCounter:
 
                     _movement.GoTo(_currentCounter.UserSpot.position);
+
+                    if (_currentCounter is OrderingCounter counter)
+                        counter.TryAcceptOrder();
 
                     break;
 
@@ -226,7 +235,6 @@ namespace Clients
 
         public void ResolveOrder(ServingInfo info, OrderRating rating)
         {
-            Debug.Log("Order R3esolved");
             if (_state == EClientState.AtCounter && _hasOrdered)
             {
                 _onStartEating?.Invoke();
@@ -250,16 +258,26 @@ namespace Clients
             var tm = ReferenceManager.Get<TimerManager>();
             if (tm != null)
             {
-                Debug.Log("Timer started");
-                tm.StartTimer("Disable client", 2f, () => gameObject.SetActive(false));
+                tm.StartTimer("Leave", _timeToEat, () => LeaveCounterFeedback() );
+                tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => gameObject.SetActive(false));
             }
+            _hasEaten = true;
+        }
+
+        private void LeaveCounterFeedback()
+        {
+            _onCounterDeparture?.Invoke();
+            _state = EClientState.ReachingSpline;
         }
 
         public void Kill()
         {
-            //Destroy(gameObject);
-            _onKilled?.Invoke();
-            gameObject.SetActive(false);
+            _onKilled?.Invoke(); 
+
+            var tm = ReferenceManager.Get<TimerManager>();
+            if (tm != null)
+                tm.StartTimer("Dying", _timeBeforeDisappearingAfterDying, () => gameObject.SetActive(false));
+            
             ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,true);
         }
 

@@ -20,6 +20,7 @@ namespace GameSystem
         // Public Properties
         public int NextClientsCount => nextClients.Count;
         public SO_Client GetNextClient() => nextClients.Count > 0 ? nextClients.Peek() : null;
+        public Action<Client> OnNewClient;
         
         // Private Properties
         float GetRandomizedDelay => (delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
@@ -190,6 +191,7 @@ namespace GameSystem
             ReferenceManager.Instance.GetElementOfType<Entrance>()?.OnClientEnter.Invoke();
                     
             Launch(GetRandomizedDelay);
+            OnNewClient?.Invoke(client);
         }
 
         /// <summary>

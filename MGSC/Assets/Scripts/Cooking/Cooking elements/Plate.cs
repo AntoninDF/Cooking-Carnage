@@ -105,6 +105,7 @@ namespace Cooking
             CookDuration += dT; 
             OnCook?.Invoke(this);
             UpdateTooltip();
+            SetItemColliders(false);
 
             if (CookPercentage >= 1)
             {
@@ -115,6 +116,7 @@ namespace Cooking
         {
             CookDuration = 0f;
             UpdateTooltip();
+            SetItemColliders(true);
         }
         /// <summary>
         /// Checks if the current ingredient list can make a recipe. If so, it passes said recipe as ref
@@ -176,6 +178,14 @@ namespace Cooking
             if (_tooltipComponent != null)
             {
                 _tooltipComponent.SetText(text);
+            }
+        }
+
+        public void SetItemColliders(bool active)
+        {
+            foreach(var item in _ingredientSlots.HeldItems)
+            {
+                item.Collider.enabled = active;
             }
         }
 

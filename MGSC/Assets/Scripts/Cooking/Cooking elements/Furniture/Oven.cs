@@ -68,11 +68,28 @@ namespace Cooking
             _collider = GetComponent<Collider>();
             if (_door == null)
                 throw new MissingReferenceException("Please assign a reference to the furnace's door in the inspector :)");
+            if (_slot != null)
+            {
+                _slot.OnGrab.AddListener((meh) => Idk(false));
+                _slot.OnDrop.AddListener((meh) => Idk(true));
+            }
         }
 
         private void Update()
         {
             TryCook();
+        }
+
+        /// <summary>
+        /// Sorry I don't know what I'm doing here. Just trying to get to the end of my day. And it's sunday.
+        /// </summary>
+        /// <param name="drop"></param>
+        private void Idk(bool drop)
+        {
+            if (_slot.HeldItem is Plate plate)
+            {
+                plate.SetItemColliders(drop);
+            }
         }
 
         public void ToggleCooking()

@@ -21,6 +21,7 @@ namespace GameSystem
         IngredientName = 51,
         MealName = 52,
         MealIngredients = 53,
+        MoneyGainedOnLastOrder = 54,
 
         // Data passed by script
         ExternalData = 255

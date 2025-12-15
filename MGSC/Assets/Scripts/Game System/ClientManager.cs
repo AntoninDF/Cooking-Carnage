@@ -34,8 +34,8 @@ namespace GameSystem
             { EClientType.B, 0f },
             { EClientType.C, 0f }
         };
-        
-        
+
+        private ShiftManager _shiftManager;
         #endregion
         
         #region Methods
@@ -56,7 +56,27 @@ namespace GameSystem
         {
             ReferenceManager.Instance.RemoveManager(this);
         }
-        public void Init() { }
+        public void Init()
+        {
+            _shiftManager = ReferenceManager.Get<ShiftManager>();
+        }
+
+        public void PostInit()
+        {
+            if (_shiftManager != null)
+            {
+                _shiftManager.OnNextShift += Reset;
+            }
+        }
+
+        private void Reset()
+        {
+            ClientsServedThisShift = 0;
+            ClientsKilledThisShift = 0;
+            currentClients = new();
+            clientHistory = new();
+        }
+
         
         /// <summary>
         /// Add client data to the lists (creates a copy in case gameobject gets destroyed)
