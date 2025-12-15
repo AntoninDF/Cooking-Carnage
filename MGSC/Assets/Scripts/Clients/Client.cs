@@ -46,6 +46,8 @@ namespace Clients
         [SerializeField] private UnityEvent _onStartWalking;
         [SerializeField] private UnityEvent _onEndWalking;
         [SerializeField] private UnityEvent _onCounterRegister;
+        [SerializeField] private UnityEvent _onCounterArrival;
+        [SerializeField] private UnityEvent _onCounterDeparture;
         [SerializeField] private UnityEvent _onKilled;
         [SerializeField] private UnityEvent _onSatisfactoryOrder;
         [SerializeField] private UnityEvent _onWrongOrder;
@@ -122,6 +124,8 @@ namespace Clients
                     {
                         _state = EClientState.AtCounter;
                         UseCounter(_currentCounter);
+                        if (_currentCounter.GetComponent<OrderingCounter>() == null)
+                            _onCounterArrival?.Invoke();
                     }
                     break;
 
@@ -231,7 +235,6 @@ namespace Clients
 
         public void ResolveOrder(ServingInfo info, OrderRating rating)
         {
-            Debug.Log("Order R3esolved");
             if (_state == EClientState.AtCounter && _hasOrdered)
             {
                 _onStartEating?.Invoke();
@@ -255,10 +258,16 @@ namespace Clients
             var tm = ReferenceManager.Get<TimerManager>();
             if (tm != null)
             {
-                tm.StartTimer("Leave", _timeToEat, () => _state = EClientState.ReachingSpline);
+                tm.StartTimer("Leave", _timeToEat, () => LeaveCounterFeedback() );
                 tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => gameObject.SetActive(false));
             }
             _hasEaten = true;
+        }
+
+        private void LeaveCounterFeedback()
+        {
+            _onCounterDeparture?.Invoke();
+            _state = EClientState.ReachingSpline;
         }
 
         public void Kill()
