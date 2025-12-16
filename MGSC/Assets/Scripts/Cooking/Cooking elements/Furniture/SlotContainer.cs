@@ -83,8 +83,13 @@ namespace Cooking
         public void Drop(IGrabbable item)
         {
             if (_heldItem == null) return;
-            _heldItem = null;
+            Empty();
             OnDrop?.Invoke(item);
+        }
+
+        public void Empty()
+        {
+           _heldItem = null;
         }
 
         public void Grab(IGrabbable item)
@@ -93,7 +98,6 @@ namespace Cooking
                 return;
             if (_itemSlot == null)
                 throw new MissingReferenceException("Please reference the item slot's transform in this container slot's dedicated field : " + name);
-
             _heldItem = item;
             item.GetGrabbed(this);
             OnGrab?.Invoke(item);
