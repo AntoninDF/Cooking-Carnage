@@ -31,6 +31,12 @@ namespace Cooking
 
         private void Start()
         {
+            Reset();
+            ReferenceManager.Get<ShiftManager>().OnNextShift += Reset;
+        }
+
+        private void Reset()
+        {
             for (int i = 0; i < _startSpawnIterations; i++)
                 TrySpawn();
         }
