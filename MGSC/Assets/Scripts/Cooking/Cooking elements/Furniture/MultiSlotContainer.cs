@@ -74,6 +74,8 @@ namespace Cooking
             OnDrop?.Invoke(item);
         }
 
+        public void Empty() { }
+
         public void Grab(IGrabbable item)
         {
             if (_items.Contains(item)) return;

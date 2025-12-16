@@ -47,6 +47,8 @@ namespace Cooking
             item.GetGrabbed(this);
             OnGrab?.Invoke(item);
         }
+        
+        public void Empty() { }
 
         public void Drop(IGrabbable item)
         {

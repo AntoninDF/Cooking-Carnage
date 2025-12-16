@@ -150,7 +150,7 @@ namespace Cooking
             go.name = this.name + " as meal";
             Meal meal = go.GetComponent<Meal>();
             meal.Recipe = recipe;
-            Container.Drop(this);
+            Container.Empty();
             Container.Grab(meal);
             
             foreach (var obj in _ingredientSlots.HeldItems)

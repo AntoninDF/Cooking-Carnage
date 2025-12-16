@@ -1,6 +1,7 @@
 ﻿using Controller;
 using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
+using GameSystem;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.Events;
@@ -59,6 +60,8 @@ namespace Cooking
 
         private UnityEvent _onGrabbed;
         private Collider _collider;
+
+        private GameLoop gameLoop;
         #endregion
 
         #region Methods
@@ -73,11 +76,14 @@ namespace Cooking
                 _slot.OnGrab.AddListener((meh) => Idk(false));
                 _slot.OnDrop.AddListener((meh) => Idk(true));
             }
+
+            gameLoop = ReferenceManager.Get<GameLoop>();
         }
 
         private void Update()
         {
-            TryCook();
+            if(gameLoop.IsRunning)
+                TryCook();
         }
 
         /// <summary>
@@ -109,7 +115,10 @@ namespace Cooking
 
         private void TryCook()
         {
-            if (!_isCooking) return;
+            if (!_isCooking)
+            {
+                return;
+            }
 
             if ((_requireClosedDoor && _door.IsOpen) || _slot.IsFree)
             {
