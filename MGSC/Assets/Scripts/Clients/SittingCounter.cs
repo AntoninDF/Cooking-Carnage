@@ -148,7 +148,7 @@ namespace Clients
 
         public void HeightDeathTrap(float height)
         {
-            deathTrap.position = new Vector3(deathTrap.position.x,-height+1.5f,deathTrap.position.z);
+            deathTrap.position = new Vector3(deathTrap.position.x,height,deathTrap.position.z);
         }
 
 
