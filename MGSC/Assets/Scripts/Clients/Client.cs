@@ -38,6 +38,7 @@ namespace Clients
         [SerializeField] private float _timeToEat = 2f;
         [SerializeField] private float _timeBeforeDisappearingAfterLeaving = 15f;
         [SerializeField] private float _timeBeforeDisappearingAfterDying = 3f;
+        [Range(-1f, 0)] [SerializeField] private float deathTrapHeight = -1;
 
         [Header("Client events")]
         [SerializeField] private UnityEvent _onLookAt;
@@ -46,6 +47,8 @@ namespace Clients
         [SerializeField] private UnityEvent _onStartWalking;
         [SerializeField] private UnityEvent _onEndWalking;
         [SerializeField] private UnityEvent _onCounterRegister;
+        [SerializeField] private UnityEvent _onCounterArrival;
+        [SerializeField] private UnityEvent _onCounterDeparture;
         [SerializeField] private UnityEvent _onKilled;
         [SerializeField] private UnityEvent _onSatisfactoryOrder;
         [SerializeField] private UnityEvent _onWrongOrder;
@@ -93,7 +96,6 @@ namespace Clients
             _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
             if (_gameLoop == null)
                 Debug.LogError("[Client] Init : No gameloop found.");
-
         }
 
         private void Update()
@@ -103,13 +105,7 @@ namespace Clients
             switch (_state)
             {
                 case EClientState.None:
-
-                    if (_currentCounter)
-                    {
-                        _onStartWalking?.Invoke();
-                        _state = EClientState.Moving;
-                    }
-
+                    
                     break;
 
                 case EClientState.Moving:
@@ -126,12 +122,18 @@ namespace Clients
                     break;
 
                 case EClientState.AtCounter:
-
-                    _movement.GoTo(_currentCounter.UserSpot.position);
-
+                    
                     if (_currentCounter is OrderingCounter counter)
+                    { 
                         counter.TryAcceptOrder();
-
+                    }
+                    else
+                    {
+                        _state = EClientState.PlatformElevation;
+                        _currentCounter.GetComponent<SittingCounter>().HeightDeathTrap(deathTrapHeight); 
+                        _currentCounter.GetComponent<SittingCounter>().OnPlatformUp?.Invoke(); 
+                        _onCounterArrival?.Invoke();
+                    }
                     break;
 
                 case EClientState.ReachingSpline:
@@ -144,6 +146,25 @@ namespace Clients
                         _movement.SnapToSpline();
                     }
                     break;
+                
+                case EClientState.PlatformElevation:
+
+                    Vector3 sizeMattersUserSpot = _currentCounter.UserSpot.position;
+                    if (sizeMattersUserSpot.y < 0)
+                    {
+                        sizeMattersUserSpot.y = 0;
+                    }
+                    
+                    if (transform.position != sizeMattersUserSpot)
+                    {
+                        _movement.GoTo(sizeMattersUserSpot);
+                    }
+                    else
+                    {
+                        transform.forward = _currentCounter.UserSpot.forward;
+                        _state = EClientState.None;
+                    }
+                    break;
             }
 
             FaceDirection();
@@ -151,9 +172,14 @@ namespace Clients
         }
 
         private void FaceDirection()
-        {
+        { 
             if (transform.position != _previousPos)
-                transform.rotation = Quaternion.LookRotation(transform.position - _previousPos, Vector3.up);
+            {
+                Vector3 direction = new Vector3(transform.position.x - _previousPos.x, 0, transform.position.z - _previousPos.z);
+                if (direction != Vector3.zero)
+                    transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+            }
+            
         }
 
         /// <summary>
@@ -204,6 +230,8 @@ namespace Clients
             _currentCounter = counter;
             _currentCounter.Register(this);
             _onCounterRegister?.Invoke();
+            
+            _state = EClientState.Moving;
         }
 
         public void UseCounter(Counter counter)
@@ -225,14 +253,11 @@ namespace Clients
             {
                 return; // Pas de Sitting dispo
             }
-            
-            
         }
 
         public void ResolveOrder(ServingInfo info, OrderRating rating)
         {
-            Debug.Log("Order R3esolved");
-            if (_state == EClientState.AtCounter && _hasOrdered)
+            if (_state == EClientState.None && _hasOrdered && _currentCounter)
             {
                 _onStartEating?.Invoke();
 
@@ -245,7 +270,6 @@ namespace Clients
 
         private void Eat(ServingInfo info, OrderRating rating)
         {
-            Debug.Log("Eating");
             if (rating.IsCorrectRecipe)
                 _onSatisfactoryOrder?.Invoke();
             else
@@ -255,10 +279,17 @@ namespace Clients
             var tm = ReferenceManager.Get<TimerManager>();
             if (tm != null)
             {
-                tm.StartTimer("Leave", _timeToEat, () => _state = EClientState.ReachingSpline);
+                tm.StartTimer("Leave", _timeToEat, () => LeaveCounterFeedback() );
                 tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => gameObject.SetActive(false));
             }
             _hasEaten = true;
+        }
+
+        private void LeaveCounterFeedback()
+        {
+            _onCounterDeparture?.Invoke();
+            _currentCounter.GetComponent<SittingCounter>().OnPlatformDown?.Invoke(); 
+            _state = EClientState.ReachingSpline;
         }
 
         public void Kill()
@@ -276,7 +307,6 @@ namespace Clients
         {
             Destroy(gameObject);
         }
-
 
         public void OnDrawGizmos()
         {
@@ -304,6 +334,7 @@ namespace Clients
             Sitting = 3,
             ReachingSpline = 4,
             AtCounter = 5,
+            PlatformElevation = 6,
 
         }
 
