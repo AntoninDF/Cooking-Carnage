@@ -188,6 +188,8 @@ namespace Controller
             OnGrab?.Invoke(item);
         }
 
+        public void Empty() { }
+
         public void Drop(IGrabbable item) => Drop();
         public void DropOnContainer()
         {

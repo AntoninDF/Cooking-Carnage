@@ -27,6 +27,8 @@ namespace Cooking
         }
 
         public void Drop(IGrabbable item) { }
+        
+        public void Empty() { }
 
         public void Grab(IGrabbable item)
         {
