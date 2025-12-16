@@ -46,8 +46,10 @@ namespace Cooking
         [SerializeField] private UnityEvent _onLookAt;
         [Tooltip("Invoked when this item stops being looked at by the player")]
         [SerializeField] private UnityEvent _onStopLookAt;
-        [Tooltip("Invoked when this item is destroyed")]
-        [SerializeField] private UnityEvent _onDestroy;
+        [Tooltip("Invoked when this item is disabled or destroyed")]
+        [SerializeField] private UnityEvent _onDisable;
+        [Tooltip("Invoked when this item is enabled")]
+        [SerializeField] private UnityEvent _onEnable;
 
         protected Tooltip _tooltipComponent; 
         private Coroutine _coroutine;
@@ -229,10 +231,8 @@ namespace Cooking
             _tooltip.SetActive(true);
         }
 
-        private void OnDestroy()
-        {
-            _onDestroy?.Invoke();   
-        }
+        private void OnDisable() => _onDisable?.Invoke();
+        private void OnEnable() => _onEnable?.Invoke();
         #endregion
     }
 
