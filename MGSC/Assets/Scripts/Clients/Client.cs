@@ -38,6 +38,7 @@ namespace Clients
         [SerializeField] private float _timeToEat = 2f;
         [SerializeField] private float _timeBeforeDisappearingAfterLeaving = 15f;
         [SerializeField] private float _timeBeforeDisappearingAfterDying = 3f;
+        [Range(-1f, 0)] [SerializeField] private float deathTrapHeight = -1;
 
         [Header("Client events")]
         [SerializeField] private UnityEvent _onLookAt;
@@ -54,7 +55,6 @@ namespace Clients
 
 
         private float _speed = 1f;
-        private float height;
         private SplineContainer _splineComp;
         private List<Counter> _counters;
 
@@ -83,7 +83,6 @@ namespace Clients
         {
             _movement = new(transform, _speed, _splineComp);
             _collider = GetComponent<Collider>();
-            height = _collider.bounds.size.y;
 
             _counters = ReferenceManager.Instance.GetElementsOfType<Counter>();
             if (_counters == null || _counters.Count == 0)
@@ -131,7 +130,7 @@ namespace Clients
                     else
                     {
                         _state = EClientState.PlatformElevation;
-                        _currentCounter.GetComponent<SittingCounter>().HeightDeathTrap(height); 
+                        _currentCounter.GetComponent<SittingCounter>().HeightDeathTrap(deathTrapHeight); 
                         _currentCounter.GetComponent<SittingCounter>().OnPlatformUp?.Invoke(); 
                         _onCounterArrival?.Invoke();
                     }
