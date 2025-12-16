@@ -5,6 +5,7 @@ using UnityEngine;
 using Cooking;
 using Clients;
 using Controller;
+using UI;
 
 namespace GameSystem
 {
@@ -53,7 +54,8 @@ namespace GameSystem
             typeof(OvenSetup),
             typeof(PlayerInterface),
             typeof(Entrance),
-            typeof(PlayerController)
+            typeof(PlayerController),
+            typeof(UITarget)
 
         };
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;

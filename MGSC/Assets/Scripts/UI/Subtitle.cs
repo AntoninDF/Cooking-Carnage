@@ -1,79 +1,120 @@
-using GameSystem;
-using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
+using System.Collections.Generic;
+using UnityEngine.Events;
 using UnityEngine;
+using TMPro;
+using Localization;
+using GameSystem;
+using FMODUnity;
 
-public class Subtitle : MonoBehaviour
+namespace UI
 {
-    #region Properties
-    /// <summary>
-    /// To play the subtitle, use Play() or PlayWithDelay()
-    /// </summary>
-    public bool IsPlaying => _isPlaying;
-    public float Delay { get => _delay; set => _delay = value; }
-    public float Duration { get => _duration; set => _duration = value; }
-    public string Text { get => _text; set => _text = value; }
-    public Subtitle NextSubtitle { get => _nextSubtitle; set => _nextSubtitle = value; }
 
-    #endregion
-    #region Fields
-    [Header("Parameters")]
-    [SerializeField]
-    [TextArea(15, 20)]
-    private string _text = "[Empty]";
-    [SerializeField]
-    private float _duration = 5f;
-    [SerializeField, Tooltip("How long this subtitle will wait after being played before showing up")]
-    private float _delay = 0f;
-
-    [Header("References")]
-    [SerializeField]
-    private TMP_Text _textComponent;
-    [SerializeField, Tooltip("Reference another subtitle component here if you want it to play after this one")]
-    private Subtitle _nextSubtitle;
-
-    // Private fields
-    private bool _isPlaying = false;
-    TimerManager tm;
-
-
-    #endregion
-
-    #region Methods
-
-    private void Start()
+    public class Subtitle : MonoBehaviour
     {
-        if (_textComponent == null)
-            _textComponent = GetComponent<TMP_Text>();
-        if (_textComponent == null)
-            throw new System.Exception("[Subtitle] : Please reference the text component in the inspector");
-        tm = ReferenceManager.Get<TimerManager>();
-        if (tm == null)
-            throw new System.Exception("[Subtitle] No timer manager found via the reference manager");
+        #region Properties
+
+        #endregion
+
+        #region Fields
+
+        [Header("Subtitle parameters")]
+        [SerializeField]
+        private List<SubtitleParam> _subtitles;
+
+        [Header("Subtitle references")]
+        [SerializeField]
+        private LocalizedTextDatabase _textDatabase;
+        [SerializeField]
+        private AvailableLanguages _language;
+        [SerializeField]
+        private GameObject _subtitleContainer;
+        [SerializeField]
+        private TMP_Text _textComponent;
+
+
+
+        // Hidden fields
+        private Dictionary<string, SubtitleParam> _subtitlesDict;
+        private SubtitleParam _currentSubtitle;
+        private TimerManager _timerManager;
+        private GameLoop _gameLoop;
+        #endregion
+
+        #region Methods
+        private void Start()
+        {
+            if (_subtitleContainer == null || _textComponent == null)
+                throw new System.NullReferenceException("[Subtitle] : Missing references, please assign them in the inspector");
+
+            InitSubtitleDict();
+            LocalizedText.EnforceDatabaseSetup(_textDatabase);
+            _timerManager = ReferenceManager.Get<TimerManager>();
+            _gameLoop = ReferenceManager.Get<GameLoop>();
+        }
+
+        public void Play(string subtitleName)
+        {
+            EnforceSubtitleDict();
+
+            if (_subtitlesDict.ContainsKey(subtitleName))
+            {
+                SubtitleParam sp = _subtitlesDict[subtitleName];
+                _subtitleContainer.SetActive(true);
+                _currentSubtitle = sp;
+                _textComponent.text = LocalizedText.GetText(_textDatabase, sp.TextID, _language);
+                if (sp.VoiceLine != null)
+                    sp.VoiceLine.Play();
+                _currentSubtitle.OnStart?.Invoke();
+                _gameLoop.OnPause.AddListener(PauseVoiceLine);
+                _gameLoop.OnResume.AddListener(ResumeVoiceLine);
+                Debug.Log("Playing subtitle " + _currentSubtitle.name);
+                _timerManager.StartTimer("Subtitle", sp.Duration, Stop);
+            }
+        }
+
+        private void PauseVoiceLine()
+        {
+            if (_currentSubtitle.VoiceLine != null)
+                _currentSubtitle.VoiceLine.EventInstance.setPaused(true);
+            Debug.Log("Pause detected from the subtitle script");
+        }
+        private void ResumeVoiceLine()
+        {
+            if (_currentSubtitle.VoiceLine != null)
+                _currentSubtitle.VoiceLine.EventInstance.setPaused(false);
+            Debug.Log("Resume detected from the subtitle script");
+        }
+        public void Stop()
+        {
+            _subtitleContainer.SetActive(false);
+            _currentSubtitle.VoiceLine?.Stop();
+            _gameLoop.OnPause.RemoveListener(PauseVoiceLine);
+            _gameLoop.OnResume.RemoveListener(ResumeVoiceLine);
+            _currentSubtitle.OnEnd?.Invoke();
+        }
+        private void EnforceSubtitleDict()
+        {
+            if (_subtitlesDict == null)
+                InitSubtitleDict();
+        }
+        private void InitSubtitleDict()
+        {
+            if (_subtitlesDict == null)
+                _subtitlesDict = new();
+            foreach(var param in _subtitles)
+                _subtitlesDict[param.name] = param;
+        }
+        #endregion
     }
 
-    public void PlayWithDelay() => PlayWithDelay(_delay);
-    public void PlayWithDelay(float delay) => tm.StartTimer("Play delayed subtitle", delay, Play);
-    public void Play()
+    [System.Serializable]
+    public struct SubtitleParam
     {
-        _isPlaying = true;
-
-        _textComponent.gameObject.SetActive(true);
-        tm.StartTimer("Stop subtitles", _duration, Stop);
+        public string name;
+        public string TextID;
+        public float Duration;
+        public StudioEventEmitter VoiceLine;
+        public UnityEvent OnStart;
+        public UnityEvent OnEnd;
     }
-
-    public void Stop()
-    {
-        _isPlaying = false;
-    }
-
-    public void PlayNextSubtitle()
-    {
-        if (_nextSubtitle == null) return;
-        _nextSubtitle.gameObject.SetActive(true);
-        _nextSubtitle.Play();
-    }
-
-    public void SetText(string  text) => _textComponent.text = text;
-    #endregion
 }

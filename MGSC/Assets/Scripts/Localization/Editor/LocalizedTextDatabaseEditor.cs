@@ -17,7 +17,12 @@ public class LocalizedTextDatabaseEditor : Editor
 
         LocalizedTextDatabase data = (LocalizedTextDatabase)target;
 
-        DrawDict("Data", data.TextByIDByLanguage, ref dictExpanded);
+        string t = "Data";
+        if (data.TextByIDByLanguage == null || data.TextByIDByLanguage.Count == 0)
+            t += " (empty)";
+        else
+            t += " (" + data.TextByIDByLanguage.Count.ToString() + ")";
+            DrawDict(t, data.TextByIDByLanguage, ref dictExpanded);
 
 
         GUILayout.BeginHorizontal();

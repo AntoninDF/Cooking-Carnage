@@ -41,6 +41,9 @@ namespace UI
         private UIMenu _currentMenu;
         private Dictionary<string, UIMenu> _menusByName = new();
 
+        // Managers
+        private ShiftManager _shiftManager;
+
         void Awake()
         {
             Register();
@@ -58,6 +61,7 @@ namespace UI
             _playerInputs = _inputActionAsset.FindActionMap("Player");
             _UIInputs = _inputActionAsset.FindActionMap("UI");
             _player = ReferenceManager.Instance.GetElementOfType<PlayerInterface>();
+            _shiftManager = ReferenceManager.Get<ShiftManager>();
 
             if (_gameLoop == null)
                 this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No gameloop found");
@@ -69,6 +73,8 @@ namespace UI
                 this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No UI action map found");
             if (_player == null)
                 this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No player found");
+            if (_shiftManager == null)
+                this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No shift manager found");
 
             if (_gameLoop == null || _inputActionAsset == null || _playerInputs == null || _UIInputs == null || _player == null)
                 this.Log(LogType.Error,"UIManager cannot run because it has not been initialized correctly");
@@ -103,13 +109,9 @@ namespace UI
             DisableMenu(_currentMenu);
             
             this.Log(LogType.Log, $"Enabling menu {menu.name}");
-            if (menu.menu == null)
-            {
-                this.Log(LogType.Warning,"Couldn't enable menu '" + menu.name + "' because the gameobject was null");
-                return;
-            }
+            
             _currentMenu = menu;
-            _currentMenu.menu.SetActive(true);
+            if (menu.menu != null) _currentMenu.menu.SetActive(true);
             _currentMenu.onEnable.Invoke();
             SetGameState(!_currentMenu.pauseGame);
             SetCursorFreedom(_currentMenu.mouseFreedom);
@@ -121,12 +123,7 @@ namespace UI
             if (menu == default) return;
             this.Log(LogType.Log, $"Disabling menu {menu.name}");
 
-            if (menu.menu == null)
-            {
-                this.Log(LogType.Warning,"Couldn't enable menu '" + menu.name + "' because the gameobject was null");
-                return;
-            }
-            menu.menu.SetActive(false);
+            if (menu.menu != null) menu.menu.SetActive(false);
             menu.onDisable.Invoke();
             this.Log(LogType.Log, $"{menu.name} menu has been disabled");
         }
@@ -214,6 +211,22 @@ namespace UI
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
+        }
+
+        public void RequestCameraSwitch(Transform target)
+        {
+            ReferenceManager.Get<CameraManager>().LookAt(target, 0, true);
+        }
+
+        public void RequestCameraSwitchToFirstUITarget()
+        {
+            UITarget target = ReferenceManager.Instance.GetElementOfType<UITarget>();
+            RequestCameraSwitch(target.transform);
+        }
+
+        public void ResetCameraSwitch()
+        {
+            ReferenceManager.Get<CameraManager>().EnableFirstPersonView();
         }
 
         [System.Serializable]

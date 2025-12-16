@@ -6,13 +6,12 @@ using TableUtility;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "LocalizedTextDatabase", menuName = "Scriptable Objects/LocalizedTextDatabase")]
-public class LocalizedTextDatabase : ScriptableObject
+public class LocalizedTextDatabase : ScriptableObject, ISerializationCallbackReceiver
 {
-
-    [HideInInspector] public TableReader Reader;
+    [SerializeField]
+    public TableReader Reader;
     public AvailableLanguages CurrentLanguage;
     public bool IsSetup => CheckSetup();
-
 
 
     public Dictionary<AvailableLanguages, Dictionary<string, string>> TextByIDByLanguage = new();
@@ -108,5 +107,46 @@ public class LocalizedTextDatabase : ScriptableObject
                 result[table[i][keyColumn]] = table[i][valueColumn];
         }
         return result;
+    }
+
+    /// <summary>
+    /// Code extracted from the Unity docs
+    /// </summary>
+    /// 
+    [SerializeField]
+    public List<AvailableLanguages> keys = new ();
+    [SerializeField]
+    public List<List<string>> valueKeys = new ();
+    [SerializeField]
+    public List<List<string>> values = new ();
+
+    // Create a Dictionary. The Unity serializer doesn't support Dictionary types.
+    public Dictionary<int, string> myDictionary = new Dictionary<int, string>();
+
+    public void OnBeforeSerialize()
+    {
+        keys.Clear();
+        valueKeys.Clear();
+        values.Clear();
+        // For each key/value pair in the dictionary, add the key to the keys list and the value to the values list
+        foreach (var kvp in TextByIDByLanguage)
+        {
+            keys.Add(kvp.Key);
+            valueKeys.Add(kvp.Value.Keys.ToList());
+            values.Add(kvp.Value.Values.ToList());
+        }
+    }
+
+    public void OnAfterDeserialize()
+    {
+        TextByIDByLanguage = new ();
+        // Loop through the list of keys and values and add each key/value pair to the dictionary
+        for (int i = 0; i != Math.Min(keys.Count, values.Count); i++)
+        {
+            Dictionary<string, string> keyValuePairs = new();
+            for (int j = 0; j < keys.Count; j++)
+                keyValuePairs[valueKeys[i][j]] = values[i][j];
+            TextByIDByLanguage.Add(keys[i], new Dictionary<string, string>());
+        }
     }
 }

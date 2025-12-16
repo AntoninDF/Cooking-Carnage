@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TableUtility
 {
-
+    [CreateAssetMenu(fileName = "GoogleSheetsReader", menuName = "Scriptable Objects/GoogleSheetsReader")]
     public class GoogleSheetsReader : TableReader
     {
         public string apiKey = "AIzaSyDq_y0Ury1MwseRCz_74yjnphff8Zdz660";

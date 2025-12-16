@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace GameSystem
 {
@@ -18,6 +19,8 @@ namespace GameSystem
         #region Fields
 
         private static readonly List<UpdatableBase> _updatables = new();
+        public UnityEvent OnPause = new();
+        public UnityEvent OnResume = new();
 
         #endregion
 
@@ -72,6 +75,7 @@ namespace GameSystem
         public void StartRunning()
         {
             IsRunning = true;
+            OnResume?.Invoke();
             
             this.Log("is now running");
         }
@@ -83,7 +87,7 @@ namespace GameSystem
         public void StopRunning()
         {
             IsRunning = false;
-            
+            OnPause?.Invoke();
             this.Log("is not running anymore");
         }
         
