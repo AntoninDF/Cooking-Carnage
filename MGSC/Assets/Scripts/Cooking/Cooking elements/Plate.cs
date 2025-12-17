@@ -160,7 +160,8 @@ namespace Cooking
                     itemManager.Despawn(ingredient);
             }
             _ingredientSlots.Reset();
-
+            
+            StopCooking();
             itemManager.Despawn(this);
         }
 
