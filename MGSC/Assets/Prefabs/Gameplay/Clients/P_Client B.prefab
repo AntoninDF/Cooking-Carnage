@@ -1,5 +1,383 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3582444336083751270
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 122355195622442001}
+  - component: {fileID: 3385323692232336953}
+  m_Layer: 0
+  m_Name: DominikWalk
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &122355195622442001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3582444336083751270}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9187926946827215070}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3385323692232336953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3582444336083751270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -2118909579
+      Data2: 1231996119
+      Data3: 924410800
+      Data4: 1671200530
+    Path: event:/SFX/Clients/Dominik/DominikWalk
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &4384633526893197403
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5939953932430137466}
+  - component: {fileID: 1661065432318739944}
+  m_Layer: 0
+  m_Name: DominikNegative
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5939953932430137466
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4384633526893197403}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9187926946827215070}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1661065432318739944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4384633526893197403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1063651552
+      Data2: 1279779075
+      Data3: 557069218
+      Data4: 1338887404
+    Path: event:/SFX/Clients/Dominik/DominikNegative
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &6601693502354981124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6286378676495629764}
+  - component: {fileID: 8541865979574000529}
+  m_Layer: 0
+  m_Name: DominikIdle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6286378676495629764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6601693502354981124}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9187926946827215070}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8541865979574000529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6601693502354981124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1122445142
+      Data2: 1234853550
+      Data3: 1712265360
+      Data4: -322325590
+    Path: event:/SFX/Clients/Dominik/DominikIdle
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &7750970924825473088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5497704488542522587}
+  - component: {fileID: 1577062665069598765}
+  m_Layer: 0
+  m_Name: DominikTrucide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5497704488542522587
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750970924825473088}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9187926946827215070}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1577062665069598765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750970924825473088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1882177479
+      Data2: 1241964367
+      Data3: 1977344137
+      Data4: -1699817770
+    Path: event:/SFX/Clients/Dominik/DominikTrucide
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &8638454905279077408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 932383649149059112}
+  - component: {fileID: 5476873913202467226}
+  m_Layer: 0
+  m_Name: DominikPositive
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &932383649149059112
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638454905279077408}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9187926946827215070}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5476873913202467226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8638454905279077408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -2003131126
+      Data2: 1322829300
+      Data3: -1310672724
+      Data4: -8668365
+    Path: event:/SFX/Clients/Dominik/DominikPositive
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &9112879275628025561
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6489908759033348080}
+  - component: {fileID: 3650951643878664712}
+  m_Layer: 0
+  m_Name: DominikEat
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6489908759033348080
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9112879275628025561}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9187926946827215070}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3650951643878664712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9112879275628025561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 2125628643
+      Data2: 1194461008
+      Data3: -382395257
+      Data4: 1947552295
+    Path: event:/SFX/Clients/Dominik/DominikEat
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &2961154790996950
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -48,6 +426,174 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onKilled.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onEndWalking.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onWrongOrder.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartEating.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartWalking.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onKilled.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onSatisfactoryOrder.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onKilled.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1577062665069598765}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onEndWalking.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onWrongOrder.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onKilled.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartEating.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onEndWalking.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3385323692232336953}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onKilled.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: Play
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartWalking.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onWrongOrder.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1661065432318739944}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartEating.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3650951643878664712}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartWalking.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3385323692232336953}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onEndWalking.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onWrongOrder.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onEndWalking.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Stop
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartEating.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onWrongOrder.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: Play
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onSatisfactoryOrder.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartEating.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: Play
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartWalking.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartWalking.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Play
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onSatisfactoryOrder.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 5476873913202467226}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onSatisfactoryOrder.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onSatisfactoryOrder.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: Play
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onKilled.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: FMODUnity.StudioEventEmitter, FMODUnity
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onEndWalking.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: FMODUnity.StudioEventEmitter, FMODUnity
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onWrongOrder.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: FMODUnity.StudioEventEmitter, FMODUnity
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartEating.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: FMODUnity.StudioEventEmitter, FMODUnity
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartWalking.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: FMODUnity.StudioEventEmitter, FMODUnity
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onSatisfactoryOrder.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: FMODUnity.StudioEventEmitter, FMODUnity
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onKilled.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onEndWalking.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onWrongOrder.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartEating.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onStartWalking.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3091706671942166073, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      propertyPath: _onSatisfactoryOrder.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5687090777271108394, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
       propertyPath: m_Name
       value: P_Client B
@@ -58,6 +604,29 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 9725721817a03fb4f914aedd170b5a24, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 9189761921888361224, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6489908759033348080}
+    - targetCorrespondingSourceObject: {fileID: 9189761921888361224, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6286378676495629764}
+    - targetCorrespondingSourceObject: {fileID: 9189761921888361224, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5497704488542522587}
+    - targetCorrespondingSourceObject: {fileID: 9189761921888361224, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 932383649149059112}
+    - targetCorrespondingSourceObject: {fileID: 9189761921888361224, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5939953932430137466}
+    - targetCorrespondingSourceObject: {fileID: 9189761921888361224, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 122355195622442001}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+--- !u!4 &9187926946827215070 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9189761921888361224, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+  m_PrefabInstance: {fileID: 2961154790996950}
+  m_PrefabAsset: {fileID: 0}
