@@ -79,21 +79,23 @@ namespace GameSystem
         /// <summary>
         /// Starts a timer with the given name, duration, callback, and loop option
         /// </summary>
-        public Timer StartTimer( string name, float duration, Action onComplete ,bool frameBased = false)
+        public Timer StartTimer( string name, float duration, Action onComplete ,bool frameBased = false, Action<float> onUpdate=null)
         {
             // If the timer already exist, replaces it by the new one
             if (timers.TryGetValue(name, out var existingTimer))
             {
-                existingTimer.Reset( name, duration, onComplete, frameBased );
+                existingTimer.Reset( name, duration, onComplete, onUpdate, frameBased );
                 existingTimer.Resume();
                 
                 this.Log(LogType.Log, "Timer " + name + " has been reset");
 
                 return existingTimer;
             }
+            if (onUpdate == null)
+                onUpdate = (elapsed) => { };
             
             // Creates a new timer
-            var t = new Timer( name, duration, onComplete, frameBased );
+            var t = new Timer( name, duration, onComplete, onUpdate, frameBased);
             timers[name] = t;
             
             this.Log(LogType.Log, "Timer " + name + " has been launched");
@@ -172,20 +174,22 @@ namespace GameSystem
         public bool IsPaused => paused;
         
         public Action onComplete;
+        public Action<float> onUpdate;
         private bool paused;
         
         #endregion
 
         #region Methods
-        public Timer(string name, float duration, Action onComplete, bool frameBased)
+        public Timer(string name, float duration, Action onComplete, Action<float> onUpdate, bool frameBased)
         {
-            Reset(name, duration, onComplete, frameBased);
+            Reset(name, duration, onComplete, onUpdate, frameBased);
         }
         
-        public void Reset( string name, float duration, Action actionOnComplete, bool frameBased)
+        public void Reset( string name, float duration, Action actionOnComplete, Action<float> actionOnUpdate, bool frameBased)
         {
             Name = name;
             this.onComplete = actionOnComplete;
+            this.onUpdate = actionOnUpdate;
             FrameBased = frameBased;
             Duration = frameBased ? Mathf.RoundToInt(duration) : duration;
             Elapsed = 0f;
@@ -218,6 +222,7 @@ namespace GameSystem
                     onComplete?.Invoke();
                 }
             }
+            onUpdate?.Invoke(Elapsed);
         }
         
         public void End()

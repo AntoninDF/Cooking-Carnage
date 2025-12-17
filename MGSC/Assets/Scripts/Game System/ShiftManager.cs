@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using Controller;
 using UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace GameSystem
 {
@@ -124,7 +122,7 @@ namespace GameSystem
             ReferenceManager.Instance.GetManager<DataManager>().SaveGameData();
             
             ReferenceManager.Instance.GetManager<ItemManager>().SpawnInitialItems();
-            
+
             OnNextShift?.Invoke();
             
             this.Log(LogType.Log, $"Shift {_shiftCount-1} is over, launching shift {_shiftCount}");

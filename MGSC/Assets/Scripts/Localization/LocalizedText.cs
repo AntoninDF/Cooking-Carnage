@@ -25,7 +25,9 @@ namespace Localization
         private void Start()
         {
             Init();
+            EnforceDatabaseSetup(Database);
             UpdateText();
+
         }
 
         private bool RequireInit()
@@ -42,18 +44,31 @@ namespace Localization
             if (Database == null)
                 return;
             if (RequireInit()) Init();
-            if (!Database.IsSetup)
+
+            _textComponent.text = GetText(Database, ID, Language);
+        }
+
+        public static string GetText(LocalizedTextDatabase db, string ID,  AvailableLanguages Language)
+        {
+            if (db == null)
+                return "";
+            if (!db.IsSetup)
                 Debug.LogWarning("[LocalizedText] : The database doesn't seem to be setup properly");
-            string text = _textComponent.text;
+            string text = "";
 
             if (!string.IsNullOrEmpty(ID))
             {
-                text = Database.Get(ID, Language);
+                text = db.Get(ID, Language);
             }
 
-            _textComponent.text = text;
+            return text;
         }
 
+        public static void EnforceDatabaseSetup(LocalizedTextDatabase Database)
+        {
+            if (Database != null && !Database.IsSetup)
+                Database.Load();
+        }
         #endregion
     }
 

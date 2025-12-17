@@ -6,130 +6,152 @@ using UnityEngine;
 
 public class CameraManager : IManager
 {
-         #region Properties
+    #region Properties
         
-        #endregion
+    #endregion
 
-        #region Fields
+    #region Fields
 
         
-        private CinemachineVirtualCameraBase camFPV;
-        private CinemachineVirtualCameraBase camFocus;
+    private CinemachineVirtualCameraBase camFPV;
+    private CinemachineVirtualCameraBase camFocus;
 
-        private GameObject focusPivot;
+    private GameObject focusPivot;
         
-        private CameraState currentState = CameraState.FirstPerson;
+    private CameraState currentState = CameraState.FirstPerson;
     
-        #endregion
+    #endregion
 
-        #region Methods
+    #region Methods
    
-        public CameraManager()
-        {
-            Register();
-        }
+    public CameraManager()
+    {
+        Register();
+    }
         
-        public void Register()
-        {
-            ReferenceManager.Instance.SetManager(this);
-        }
-        public void Unregister()
-        {
-            ReferenceManager.Instance.RemoveManager(this);
-        }
+    public void Register()
+    {
+        ReferenceManager.Instance.SetManager(this);
+    }
+    public void Unregister()
+    {
+        ReferenceManager.Instance.RemoveManager(this);
+    }
 
-        public void Init()
-        {
-            var player = ReferenceManager.Instance.GetElementOfType<PlayerInterface>();
+    public void Init()
+    {
+        var player = ReferenceManager.Instance.GetElementOfType<PlayerInterface>();
 
-            foreach (var cam in player.GetComponentsInChildren<CinemachineVirtualCameraBase>())
+        foreach (var cam in player.GetComponentsInChildren<CinemachineVirtualCameraBase>())
+        {
+            if (cam.Name == "FP Camera")
             {
-                if (cam.Name == "FP Camera")
-                {
-                    camFPV = cam;
-                }
-                else if (cam.Name == "Focus Camera")
-                {
-                    camFocus = cam;
-                }
+                camFPV = cam;
             }
+            else if (cam.Name == "Focus Camera")
+            {
+                camFocus = cam;
+            }
+        }
             
-            if (camFocus == null || camFPV == null)
-                this.Log(LogType.Error, "No Camera found, please fix this");
+        if (camFocus == null || camFPV == null)
+            this.Log(LogType.Error, "No Camera found, please fix this");
             
-            focusPivot = new GameObject("Focus Pivot");
+        focusPivot = new GameObject("Focus Pivot");
+    }
+
+    public void LookAt(Transform target, float duration = 0, bool showMouse = false, float distance = 0.5f)
+    {
+        Vector3 targetPos = target.transform.position + target.transform.forward * -distance;
+        focusPivot.transform.position = targetPos;
+            
+        camFocus.Follow = focusPivot.transform;
+        camFocus.LookAt = target;
+            
+        ChangeState(CameraState.Focus);
+
+        if (showMouse)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
-        public void LookAt(Transform target, float duration = 0, bool showMouse = false, float distance = 0.5f)
+        if (duration > 0)
         {
-            Vector3 targetPos = target.transform.position + target.transform.forward * -distance;
-            focusPivot.transform.position = targetPos;
-            
-            camFocus.Follow = focusPivot.transform;
-            camFocus.LookAt = target;
-            
-            ChangeState(CameraState.Focus);
-
-            if (showMouse)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-
-            if (duration > 0)
-            {
-                ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("camFocus", duration, () => EnableFirstPersonView(), false);
-                ReferenceManager.Instance.GetManager<UIManager>().SwitchPlayerInputs(false);
-                this.Log(LogType.Log, $"Camera will focus on {target.name} for {duration}s");
-            }
-            else
-            {
-				ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
-                this.Log(LogType.Log, $"Camera will focus on {target.name}");
-            }
-            
+            ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("camFocus", duration, () => EnableFirstPersonView(), false);
+            ReferenceManager.Instance.GetManager<UIManager>().SwitchPlayerInputs(false);
+            this.Log(LogType.Log, $"Camera will focus on {target.name} for {duration}s");
         }
-
-        public void EnableFirstPersonView()
+        else
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            
-            ChangeState(CameraState.FirstPerson);
-            ReferenceManager.Instance.GetManager<UIManager>().SwitchPlayerInputs(true);
+			ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
+            this.Log(LogType.Log, $"Camera will focus on {target.name}");
         }
+            
+    }
 
-        void ChangeState(CameraState newState)
+    public void EnableFirstPersonView()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+            
+        ChangeState(CameraState.FirstPerson);
+        ReferenceManager.Instance.GetManager<UIManager>().SwitchPlayerInputs(true);
+    }
+
+    public void Animate(Transform start, Transform end, float duration, AnimationCurve motion=null, Transform lookAtTarget = null)
+    {
+        if (motion == null)
+            motion = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        var tm = ReferenceManager.Get<TimerManager>();
+        tm.StartTimer("Animate camera", duration, () => { }, onUpdate:(elapsed) => Set(LerpedTransform(focusPivot.transform, lookAtTarget, elapsed/duration), lookAtTarget));
+    }
+
+    public Transform LerpedTransform(Transform start, Transform end, float t)
+    {
+        focusPivot.transform.position = Vector3.Lerp(start.position, end.position, t);
+        focusPivot.transform.rotation = Quaternion.Lerp(start.rotation, end.rotation, t);
+        focusPivot.transform.localScale = Vector3.Lerp(start.localScale, end.localScale, t);
+        return focusPivot.transform;
+    }
+
+    public void Set(Transform position, Transform lookAt=null)
+    {
+        camFocus.Follow = position;
+        if (lookAt != null) camFocus.LookAt = lookAt;
+    }
+
+    void ChangeState(CameraState newState)
+    {
+        if (currentState != newState)
         {
-            if (currentState != newState)
+            switch (newState)
             {
-                switch (newState)
-                {
-                    case CameraState.FirstPerson :
-                        (camFocus.Priority,camFPV.Priority) = (10,20);
+                case CameraState.FirstPerson :
+                    (camFocus.Priority,camFPV.Priority) = (10,20);
                         
-                        break;
-                    case CameraState.Focus :
-                        (camFocus.Priority,camFPV.Priority) = (20,10);
-                        break;
-                }
+                    break;
+                case CameraState.Focus :
+                    (camFocus.Priority,camFPV.Priority) = (20,10);
+                    break;
+            }
                 
-                currentState = newState;
-                this.Log(LogType.Log, $"Camera mode updated to {newState}");
-            }
-            else
-            {
-                this.Log(LogType.Warning, $"Camera was already in {currentState} mode");
-            }
+            currentState = newState;
+            this.Log(LogType.Log, $"Camera mode updated to {newState}");
         }
+        else
+        {
+            this.Log(LogType.Warning, $"Camera was already in {currentState} mode");
+        }
+    }
 
         
     
-        #endregion
+    #endregion
 
-        enum CameraState
-        {
-            FirstPerson,
-            Focus,
-        }
+    enum CameraState
+    {
+        FirstPerson,
+        Focus,
+    }
 }
