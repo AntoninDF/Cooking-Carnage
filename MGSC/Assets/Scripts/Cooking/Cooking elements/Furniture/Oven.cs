@@ -128,6 +128,12 @@ namespace Cooking
             Cook();
         }
 
+        /// Could be refactored using timers.
+        /// Cook => Check if it's a plate, if so, start timer 
+        /// If plate is grabbed or toggle is called, stop timer.
+        /// If timer reaches the end, transform the plate and start a new timer for overcooked
+        /// Add a callback to the timer's update, so that we can add feedbacks on how cooked we are (we're pretty cooked, but we're also cooking)
+        /// Don't forget to invoke events.
         private void Cook()
         {
             ICookable cookItem = _slot.HeldItem as ICookable;

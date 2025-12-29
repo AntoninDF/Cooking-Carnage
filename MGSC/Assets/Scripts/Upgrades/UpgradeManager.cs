@@ -114,11 +114,13 @@ namespace Upgrades
             if (_moneyManager.MoneyInfo < price)
             {
                 this.Log(LogType.Log, $"No enough money for {upgrade}");
+                ReferenceManager.Instance.GetManager<UI.UIManager>().OnUpgradeFail?.Invoke();
                 return false;
             }
                 
             _moneyManager.AddMoney(-price);
             LevelUp(upgrade);
+            ReferenceManager.Instance.GetManager<UI.UIManager>().OnUpgradeSuccess?.Invoke();
             return true;
         }
 

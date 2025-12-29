@@ -137,7 +137,7 @@ namespace GameSystem
         {
             var ui = ReferenceManager.Instance.GetManager<UIManager>();
             ui.EnableMenu(_gameProfile.DefaultMenu);
-            ReferenceManager.Instance.GetManager<ShiftManager>().OnShiftSucceeded += () => ui.EnableMenu("Upgrade");
+            ReferenceManager.Instance.GetManager<ShiftManager>().OnShiftSucceeded += () => ui.EnableMenu("ShiftRecap");
             ReferenceManager.Instance.GetManager<ShiftManager>().OnShiftFailed += () => ui.EnableMenu("FailedShiftRecap");
         }
 

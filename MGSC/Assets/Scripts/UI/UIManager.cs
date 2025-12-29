@@ -13,6 +13,9 @@ namespace UI
     {
         public UIMenu CurrentMenu => _currentMenu;
         public string CurrentMenuName => _currentMenu.name;
+        
+        public UnityEvent OnUpgradeFail => _onUpgradeFail;
+        public UnityEvent OnUpgradeSuccess => _onUpgradeSuccess;
 
         [Header("Info")]
         [InfoBox("Recommended UI tags are :\n" +
@@ -32,6 +35,8 @@ namespace UI
         [SerializeField] private UnityEvent _onStart;
         [SerializeField] private UnityEvent _onEnable;
         [SerializeField] private UnityEvent _onDisable;
+        [SerializeField] private UnityEvent _onUpgradeFail;
+        [SerializeField] private UnityEvent _onUpgradeSuccess;
 
         private GameLoop _gameLoop;
         private InputActionAsset _inputActionAsset;
