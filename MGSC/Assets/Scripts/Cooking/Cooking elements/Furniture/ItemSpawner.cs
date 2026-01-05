@@ -2,6 +2,7 @@ using Controller;
 using System.Collections.Generic;
 using GameSystem;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -11,7 +12,8 @@ namespace Cooking
     public class ItemSpawner : Interactable
     {
         #region Properties
-
+        public UnityEvent OnTrySpawn;
+        public UnityEvent OnSpawn;
         #endregion
 
         #region Fields
@@ -49,6 +51,7 @@ namespace Cooking
 
         public void TrySpawn()
         {
+            OnTrySpawn.Invoke();
             if ((Time.time - _timeOfLastSpawn) >= _cooldown)
             {
                 Spawn();
@@ -77,6 +80,7 @@ namespace Cooking
                     if (!couldBePlaced) go.transform.position = transform.position;
                 }
             }
+            OnSpawn.Invoke();
         }
 
         #endregion

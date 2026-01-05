@@ -18106,6 +18106,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3358328115337108302}
   - component: {fileID: 8430728227386867511}
+  - component: {fileID: 86510785232178482}
   m_Layer: 0
   m_Name: SUBTITLES
   m_TagString: Untagged
@@ -18395,22 +18396,22 @@ MonoBehaviour:
     VoiceLine: {fileID: 4529833227256164773}
     OnStart:
       m_PersistentCalls:
-        m_Calls: []
-    OnEnd:
-      m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8430728227386867511}
-          m_TargetAssemblyTypeName: UI.Subtitle, Assembly-CSharp
-          m_MethodName: Play
+        - m_Target: {fileID: 86510785232178482}
+          m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+          m_MethodName: BindEvent
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Sub_12
+            m_StringArgument: Plate Grabbed
             m_BoolArgument: 0
           m_CallState: 2
+    OnEnd:
+      m_PersistentCalls:
+        m_Calls: []
   - name: Sub_12
     TextID: Sub_12
     Duration: 4.5
@@ -18439,44 +18440,44 @@ MonoBehaviour:
     VoiceLine: {fileID: 6300651999169340407}
     OnStart:
       m_PersistentCalls:
-        m_Calls: []
-    OnEnd:
-      m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8430728227386867511}
-          m_TargetAssemblyTypeName: UI.Subtitle, Assembly-CSharp
-          m_MethodName: Play
+        - m_Target: {fileID: 86510785232178482}
+          m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+          m_MethodName: BindEvent
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Sub_14
+            m_StringArgument: Ingredient Cut
             m_BoolArgument: 0
           m_CallState: 2
+    OnEnd:
+      m_PersistentCalls:
+        m_Calls: []
   - name: Sub_14
     TextID: Sub_14
     Duration: 4.5
     VoiceLine: {fileID: 8655129482330511573}
     OnStart:
       m_PersistentCalls:
-        m_Calls: []
-    OnEnd:
-      m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8430728227386867511}
-          m_TargetAssemblyTypeName: UI.Subtitle, Assembly-CSharp
-          m_MethodName: Play
+        - m_Target: {fileID: 86510785232178482}
+          m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+          m_MethodName: BindEvent
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Sub_15
+            m_StringArgument: Meal Cooked
             m_BoolArgument: 0
           m_CallState: 2
+    OnEnd:
+      m_PersistentCalls:
+        m_Calls: []
   - name: Sub_15
     TextID: Sub_15
     Duration: 4.5
@@ -18505,44 +18506,44 @@ MonoBehaviour:
     VoiceLine: {fileID: 977282377416446787}
     OnStart:
       m_PersistentCalls:
-        m_Calls: []
-    OnEnd:
-      m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8430728227386867511}
-          m_TargetAssemblyTypeName: UI.Subtitle, Assembly-CSharp
-          m_MethodName: Play
+        - m_Target: {fileID: 86510785232178482}
+          m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+          m_MethodName: BindEvent
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Sub_17
+            m_StringArgument: Cooked Item Grabbed
             m_BoolArgument: 0
           m_CallState: 2
+    OnEnd:
+      m_PersistentCalls:
+        m_Calls: []
   - name: Sub_17
     TextID: Sub_17
     Duration: 4.5
     VoiceLine: {fileID: 4123603335621198200}
     OnStart:
       m_PersistentCalls:
-        m_Calls: []
-    OnEnd:
-      m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8430728227386867511}
-          m_TargetAssemblyTypeName: UI.Subtitle, Assembly-CSharp
-          m_MethodName: Play
+        - m_Target: {fileID: 86510785232178482}
+          m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+          m_MethodName: BindEvent
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Sub_18
+            m_StringArgument: Client Served
             m_BoolArgument: 0
           m_CallState: 2
+    OnEnd:
+      m_PersistentCalls:
+        m_Calls: []
   - name: Sub_18
     TextID: Sub_18
     Duration: 4.5
@@ -18679,6 +18680,164 @@ MonoBehaviour:
   _language: 2
   _subtitleContainer: {fileID: 6193206111340691823}
   _textComponent: {fileID: 6964458083141804614}
+--- !u!114 &86510785232178482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6319735778063438554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 426b482f3af7f704387fe39603b28abd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.EventLinker
+  _events:
+  - name: Plate Grabbed
+    TargetEvent: 1
+    OnCall:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 86510785232178482}
+          m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+          m_MethodName: UnbindEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Plate Grabbed
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8430728227386867511}
+          m_TargetAssemblyTypeName: UI.Subtitle, Assembly-CSharp
+          m_MethodName: Play
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Sub_12
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: Ingredient Cut
+    TargetEvent: 2
+    OnCall:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 86510785232178482}
+          m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+          m_MethodName: UnbindEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Ingredient Cut
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8430728227386867511}
+          m_TargetAssemblyTypeName: UI.Subtitle, Assembly-CSharp
+          m_MethodName: Play
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Sub_14
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: Meal Cooked
+    TargetEvent: 3
+    OnCall:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 86510785232178482}
+          m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+          m_MethodName: UnbindEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Meal Cooked
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8430728227386867511}
+          m_TargetAssemblyTypeName: UI.Subtitle, Assembly-CSharp
+          m_MethodName: Play
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Sub_15
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: Cooked Item Grabbed
+    TargetEvent: 4
+    OnCall:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 86510785232178482}
+          m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+          m_MethodName: UnbindEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Cooked Item Grabbed
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8430728227386867511}
+          m_TargetAssemblyTypeName: UI.Subtitle, Assembly-CSharp
+          m_MethodName: Play
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Sub_17
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: Client Served
+    TargetEvent: 5
+    OnCall:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 86510785232178482}
+          m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+          m_MethodName: UnbindEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Client Served
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8430728227386867511}
+          m_TargetAssemblyTypeName: UI.Subtitle, Assembly-CSharp
+          m_MethodName: Play
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Sub_18
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &6323315819063471673
 GameObject:
   m_ObjectHideFlags: 0
@@ -21557,7 +21716,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -60.049984}
+  m_AnchoredPosition: {x: 0, y: -60.049927}
   m_SizeDelta: {x: 0, y: -120.10003}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4441436505392287690

@@ -18,6 +18,7 @@ namespace Cooking
 
         public UnityEvent<IGrabbable> OnGrab => _onGrab;
         public UnityEvent<IGrabbable> OnDrop => _onDrop;
+        public UnityEvent OnDrop_Raw;
         public PlayerInterface Player { get; set; }
         public bool IsFree => _heldItem == null && !_locked;
         public bool IsLocked { get => _locked; set => _locked = value; }
@@ -85,6 +86,7 @@ namespace Cooking
             if (_heldItem == null) return;
             Empty();
             OnDrop?.Invoke(item);
+            OnDrop_Raw.Invoke();
         }
 
         public void Empty()

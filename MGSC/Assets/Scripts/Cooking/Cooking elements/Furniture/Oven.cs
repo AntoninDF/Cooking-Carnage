@@ -17,6 +17,7 @@ namespace Cooking
         public UnityEvent OnFailedStartAttempt => _onFailedStartAttempt;
         public UnityEvent OnItemCooked => _onItemCooked;
         public UnityEvent OnItemOvercooked => _onItemOvercooked;
+        public UnityEvent OnItemDropped => _slot.OnDrop_Raw;
         public bool IsCooking => _isCooking;
         public float Strength => _strength;
 

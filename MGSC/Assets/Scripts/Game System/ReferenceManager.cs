@@ -55,7 +55,9 @@ namespace GameSystem
             typeof(PlayerInterface),
             typeof(Entrance),
             typeof(PlayerController),
-            typeof(UITarget)
+            typeof(UITarget),
+            typeof(ItemSpawner),
+            typeof(Blender)
 
         };
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;
@@ -121,7 +123,7 @@ namespace GameSystem
 
         public List<T> GetElementsOfType<T>() where T : class
         {
-            if (!_elementDict.ContainsKey(typeof(T))) return null;
+            if (!_elementDict.ContainsKey(typeof(T))) return new List<T>();
             return _elementDict[typeof(T)].Select((mb) => mb as T).ToList();
         }
 
