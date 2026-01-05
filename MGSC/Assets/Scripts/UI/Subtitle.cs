@@ -67,7 +67,7 @@ namespace UI
                 _currentSubtitle.OnStart?.Invoke();
                 _gameLoop.OnPause.AddListener(PauseVoiceLine);
                 _gameLoop.OnResume.AddListener(ResumeVoiceLine);
-                Debug.Log("Playing subtitle " + _currentSubtitle.name);
+                //Debug.Log("Playing subtitle " + _currentSubtitle.name);
                 _timerManager.StartTimer("Subtitle", sp.Duration, Stop);
             }
         }
@@ -76,13 +76,13 @@ namespace UI
         {
             if (_currentSubtitle.VoiceLine != null)
                 _currentSubtitle.VoiceLine.EventInstance.setPaused(true);
-            Debug.Log("Pause detected from the subtitle script");
+            //Debug.Log("Pause detected from the subtitle script");
         }
         private void ResumeVoiceLine()
         {
             if (_currentSubtitle.VoiceLine != null)
                 _currentSubtitle.VoiceLine.EventInstance.setPaused(false);
-            Debug.Log("Resume detected from the subtitle script");
+            //Debug.Log("Resume detected from the subtitle script");
         }
         public void Stop()
         {

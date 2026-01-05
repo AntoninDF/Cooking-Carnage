@@ -19,6 +19,10 @@ public class ItemManager : IManager
     private Transform spawnParent; // REFACTO
     
     List<Item> activeItems = new List<Item>();
+
+    // Specifies, for shift X, the maximum amount of items Y that can be spawned. If Y is superior to the amount of items available in the scene, no additional items are spawned
+    //                                                                           X   Y
+    Dictionary<int, int> _maxSpawnItemsPerShift = new Dictionary<int, int>() { { 0 , 1 } };
     
     private Transform _itemsPooled;
     
@@ -46,18 +50,24 @@ public class ItemManager : IManager
     {
         GameObject newRoot = new GameObject("Items Pool");
         _itemsPooled = newRoot.transform;
+
+        DetectSpawnItems();
     }
 
     public void PostInit()
+    {
+    }
+
+    private void DetectSpawnItems()
     {
         foreach (var item in ReferenceManager.Instance.GetElementsOfType<Item>())
         {
             spawnItems.Add(item);
             spawnPositions.Add(item.transform.position);
         }
-        spawnParent = spawnItems.Count > 0 ? spawnItems[0].transform.parent : null; 
-        
-        for (var index = spawnItems.Count-1; index > 0; index--)
+        spawnParent = spawnItems.Count > 0 ? spawnItems[0].transform.parent : null;
+
+        for (var index = spawnItems.Count - 1; index > 0; index--)
         {
             var initialItem = spawnItems[index];
             StoreCopy(initialItem);
@@ -264,6 +274,7 @@ public class ItemManager : IManager
 
     public void StoreAllActive()
     {
+        Debug.Log("Active items : " + activeItems.Count + " (being stored)");
         for (var index = activeItems.Count-1; index > 0; index--)
         {
             var item = activeItems[index];
@@ -271,11 +282,22 @@ public class ItemManager : IManager
         }
     }
 
+    public void SpawnInitialItems(int shiftCount)
+    {
+        this.Log(spawnItems.Count + " items were spawned for shift " + shiftCount);
+        int i = 0;
+        foreach (var item in spawnItems)
+        {
+            if (_maxSpawnItemsPerShift.ContainsKey(shiftCount))
+                if (_maxSpawnItemsPerShift[shiftCount] < i)
+                    break;
+            TrySpawn(item.gameObject, item.transform.position, item.transform.rotation, item.transform.parent);
+            i++;
+        }
+    }
+
     public void SpawnInitialItems()
     {
-        for (var index = 0; index < spawnItems.Count; index++)
-        {
-            TrySpawn(spawnItems[index].gameObject, spawnPositions[index], new Quaternion(0,0,0,1), spawnParent);
-        }
+        SpawnInitialItems(1000);
     }
 }

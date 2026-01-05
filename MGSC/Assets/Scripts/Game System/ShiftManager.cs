@@ -22,7 +22,7 @@ namespace GameSystem
     
         private DataManager _dataManager;
     
-        private int _shiftCount;
+        private int _shiftCount = -1; // -1 because we call next shift since the first shift
         private float _currentRentPrice = 0 ;
         private AnimationCurve _rentPriceCurve;
         private float _shiftDuration = 120;
@@ -83,23 +83,11 @@ namespace GameSystem
             else
             {
                 OnShiftEnded?.Invoke();
-                
-                ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
-                ReferenceManager.Instance.GetManager<ItemManager>().StoreAllActive();
-                
-                foreach (var blender in ReferenceManager.Instance.GetElementsOfType<Cooking.Blender>())
-                {
-                    blender.Reset();
-                }
 
-                foreach (var oven in ReferenceManager.Instance.GetElementsOfType<Cooking.Oven>())
-                {
-                    oven.Reset();
-                }
-                
-                ReferenceManager.Instance.GetElementOfType<PlayerController>().transform.position = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform.position;
-                ReferenceManager.Instance.GetElementOfType<PlayerController>().transform.rotation = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform.rotation;
-                
+                ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
+                ResetAll();
+
+                // Pay rent
                 UpdateRentPrice();
                 var moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
                 if (moneyManager.MoneyInfo < _currentRentPrice)
@@ -110,10 +98,27 @@ namespace GameSystem
                 }
                 moneyManager.AddMoney(-_currentRentPrice);
                 OnShiftSucceeded?.Invoke();
-                
+
             }
         }
-        
+
+        private static void ResetAll()
+        {
+            ReferenceManager.Instance.GetManager<ItemManager>().StoreAllActive();
+
+            foreach (var blender in ReferenceManager.Instance.GetElementsOfType<Cooking.Blender>())
+            {
+                blender.Reset();
+            }
+
+            foreach (var oven in ReferenceManager.Instance.GetElementsOfType<Cooking.Oven>())
+            {
+                oven.Reset();
+            }
+            ReferenceManager.Instance.GetElementOfType<PlayerController>().transform.position = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform.position;
+            ReferenceManager.Instance.GetElementOfType<PlayerController>().transform.rotation = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform.rotation;
+        }
+
         public void NextShift()
         {
             _shiftCount++;
@@ -121,8 +126,8 @@ namespace GameSystem
 
             ReferenceManager.Instance.GetManager<DataManager>().SaveGameData();
             
-            ReferenceManager.Instance.GetManager<ItemManager>().SpawnInitialItems();
-
+            ReferenceManager.Instance.GetManager<ItemManager>().SpawnInitialItems(_shiftCount);
+            
             OnNextShift?.Invoke();
             
             this.Log(LogType.Log, $"Shift {_shiftCount-1} is over, launching shift {_shiftCount}");
@@ -151,7 +156,9 @@ namespace GameSystem
             //Debug.Log("[ShiftManager] : PostInit running (shift duration set to " + shiftDuration + "s)."); 
             this.Log(LogType.Log, $"PostInit running (shift duration set to {_shiftDuration}s)");
             _dataManager.LoadGlobalData();
-            LaunchShift(_shiftDuration);
+            //LaunchShift(_shiftDuration); // Removed because it doesn't call everything the right way
+            ResetAll();
+            NextShift();
         }
         #endregion
     }
