@@ -172,7 +172,7 @@ namespace GameSystem
             {
                 money = 0,
                 upgrades = new Dictionary<string, int> { },
-                shiftCount = 1
+                shiftCount = -1
             };
 
             #endregion
@@ -217,7 +217,7 @@ namespace GameSystem
             public float money;
             public Dictionary<string, int> upgrades;
 
-            public int shiftCount;
+            public int shiftCount = -1;
             // REFACTO : Player Settings
         }
     }

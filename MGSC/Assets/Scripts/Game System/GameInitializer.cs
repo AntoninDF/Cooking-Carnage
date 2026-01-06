@@ -84,10 +84,15 @@ namespace GameSystem
             // Apply the base logic to ensure all managers are setup to work correctly
             PostInitManagers();
 
+            // Reset the save file
             if (_gameProfile.ResetSaveFile) ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
+
+            // Enable the default UI menu and bind it's events
             if (_gameProfile.AddUI) SetupUI();
+
             SetupMealPrices();
 
+            // Remove the GameInitializer
             if (_gameProfile.DestroyAfterInitialization) Destroy(this.gameObject);
         }
 

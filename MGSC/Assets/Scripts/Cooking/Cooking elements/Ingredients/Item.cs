@@ -166,7 +166,7 @@ namespace Cooking
             if (Container is IMultiContainer)
             {
                 _targetPos = Quaternion.Inverse(Container.transform.rotation) * (Player.LookInfo.point - FindLowestPoint() - Container.transform.position);
-                Debug.Log("Target pos is " + _targetPos + "\nDistance to player is " + Vector3.Distance(Player.transform.position, _targetPos));
+                //Debug.Log("Target pos is " + _targetPos + "\nDistance to player is " + Vector3.Distance(Player.transform.position, _targetPos));
                 _targetRot = _defaultRotation;
             }
         }
