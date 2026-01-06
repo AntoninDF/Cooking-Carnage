@@ -22,7 +22,7 @@ namespace GameSystem
     
         private DataManager _dataManager;
     
-        private int _shiftCount = -1; // -1 because we call next shift since the first shift
+        private int _shiftCount = 0;
         private float _currentRentPrice = 0 ;
         private AnimationCurve _rentPriceCurve;
         private float _shiftDuration = 120;

@@ -22,7 +22,7 @@ public class ItemManager : IManager
 
     // Specifies, for shift X, the maximum amount of items Y that can be spawned. If Y is superior to the amount of items available in the scene, no additional items are spawned
     //                                                                           X   Y
-    Dictionary<int, int> _maxSpawnItemsPerShift = new Dictionary<int, int>() { { 0 , 3 } };
+    Dictionary<int, int> _maxSpawnItemsPerShift = new Dictionary<int, int>() { { 0 , 1 }, { 1, 1 } };
     
     private Transform _itemsPooled;
     

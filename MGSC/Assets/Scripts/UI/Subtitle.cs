@@ -59,9 +59,13 @@ namespace UI
             if (_subtitlesDict.ContainsKey(subtitleName))
             {
                 SubtitleParam sp = _subtitlesDict[subtitleName];
-                _subtitleContainer.SetActive(true);
                 _currentSubtitle = sp;
-                _textComponent.text = LocalizedText.GetText(_textDatabase, sp.TextID, _language);
+                // Get the correct text content
+                var t = LocalizedText.GetText(_textDatabase, sp.TextID, _language);
+                _textComponent.text = t;
+                // Don't display the text box if there's no text
+                if (!string.IsNullOrEmpty(t))
+                    _subtitleContainer.SetActive(true);
                 if (sp.VoiceLine != null)
                     sp.VoiceLine.Play();
                 _currentSubtitle.OnStart?.Invoke();
