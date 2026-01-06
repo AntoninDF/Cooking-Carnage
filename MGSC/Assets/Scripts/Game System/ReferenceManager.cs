@@ -77,6 +77,11 @@ namespace GameSystem
             //DebugTrackedObjectsCount();
         }
 
+        public static void Reset()
+        {
+            _instance = new();
+        }
+
         public void SetManager<T>(T manager) where T : IManager
         {
             if (manager == null) throw new ArgumentNullException(nameof(manager));

@@ -18,7 +18,7 @@ namespace GameSystem
 
         #region Fields
 
-        private static readonly List<UpdatableBase> _updatables = new();
+        private List<UpdatableBase> _updatables = new();
         public UnityEvent OnPause = new();
         public UnityEvent OnResume = new();
 

@@ -84,9 +84,8 @@ namespace Clients
 
         private void Serve(IGrabbable item)
         {
-            if (_currentClient == null) return;
+            if (_currentClient == null) return; // This is very risky, the meal might get stuck on the slot and be never served
             Meal meal = item as Meal;
-            //Debug.Log("Meal is " + (meal==null?"null":meal));
             _onServe?.Invoke();
             ServingInfo info = new ServingInfo(meal);
             _orderManager.ResolveOrder(_currentClient.Order, info);
