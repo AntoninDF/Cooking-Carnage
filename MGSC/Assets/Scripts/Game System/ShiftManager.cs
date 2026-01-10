@@ -155,6 +155,7 @@ namespace GameSystem
         {
             //Debug.Log("[ShiftManager] : PostInit running (shift duration set to " + shiftDuration + "s)."); 
             this.Log(LogType.Log, $"PostInit running (shift duration set to {_shiftDuration}s)");
+            Debug.Log("ShiftManagerPostInit");
             _dataManager.LoadGlobalData();
             //LaunchShift(_shiftDuration); // Removed because it doesn't call everything the right way
             ResetAll();

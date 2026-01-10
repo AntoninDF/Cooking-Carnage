@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace UI
 {
@@ -213,6 +214,11 @@ namespace UI
                 EnableMenu(_pauseMenuName);
         }
 
+        public void ResetEverything()
+        {
+            ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);

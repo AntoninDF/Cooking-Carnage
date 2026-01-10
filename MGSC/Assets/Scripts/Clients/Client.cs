@@ -1,6 +1,7 @@
 using Cooking;
 using GameSystem;
 using Orders;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -75,6 +76,7 @@ namespace Clients
 
         private Collider _collider;
         private Vector3 _previousPos = Vector3.zero;
+        private Action _tryResolveOrder = null;
         #endregion
 
         #region Methods
@@ -163,6 +165,11 @@ namespace Clients
                     {
                         transform.forward = _currentCounter.UserSpot.forward;
                         _state = EClientState.None;
+                        if (_tryResolveOrder != null)
+                        {
+                            _tryResolveOrder();
+                            _tryResolveOrder = null;
+                        }
                     }
                     break;
             }
@@ -266,6 +273,10 @@ namespace Clients
                     tm.StartTimer("Eating", 2f, () => Eat(info, rating));
                 ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,false);
             }
+            else
+            {
+                _tryResolveOrder = () => ResolveOrder(info, rating);
+            }
         }
 
         private void Eat(ServingInfo info, OrderRating rating)
@@ -298,7 +309,7 @@ namespace Clients
 
             var tm = ReferenceManager.Get<TimerManager>();
             if (tm != null)
-                tm.StartTimer("Dying", _timeBeforeDisappearingAfterDying, () => gameObject.SetActive(false));
+                tm.StartTimer(gameObject.name + " Dying (ID:" + Time.time.ToString() + ")", _timeBeforeDisappearingAfterDying, () => gameObject.SetActive(false));
             
             ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,true);
         }
