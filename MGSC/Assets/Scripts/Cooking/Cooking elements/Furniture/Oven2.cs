@@ -7,6 +7,8 @@ namespace Cooking
 {
     public class Oven2 : Oven
     {
+        private string LastTimer { get => _timerID; set { _tm.RemoveTimer(_timerID); _timerID = value; } }
+
         TimerManager _tm;
         string _timerID;
         protected override void Start()
@@ -39,8 +41,8 @@ namespace Cooking
 
                 _isCooking = true;
                 OnStartCooking?.Invoke();
-                _timerID = "Cooking (" + Time.time + ")";
-                _tm.StartTimer(_timerID, targetDuration * Strength, Cook);
+                LastTimer = "Cooking (" + Time.time + ")";
+                _tm.StartTimer(LastTimer, targetDuration * Strength, Cook);
             }
             // Otherwise, it may be a cooked meal, so try to overcook it.
             else if (GetHeldItemAs<Meal>() != null)
@@ -54,7 +56,7 @@ namespace Cooking
         {
             var plate = GetHeldItemAs<Plate>();
             var targetRecipe = GetTargetRecipe();
-            plate.Cook(targetRecipe.timeToCook);
+            plate.Cook(targetRecipe.timeToCook + 0.01f);
             StartOvercooking();
         }
 
@@ -67,8 +69,8 @@ namespace Cooking
             float targetDuration = targetRecipe.timeToOvercook;
 
             _isCooking = true;
-            _timerID = "Overcooking (" + Time.time + ")";
-            _tm.StartTimer(_timerID, targetRecipe.timeToOvercook, Overcook);
+            LastTimer = "Overcooking (" + Time.time + ")";
+            _tm.StartTimer(LastTimer, targetRecipe.timeToOvercook, Overcook);
         }
 
         protected void Overcook()

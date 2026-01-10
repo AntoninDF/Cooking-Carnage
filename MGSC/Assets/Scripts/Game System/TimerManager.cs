@@ -150,9 +150,19 @@ namespace GameSystem
         /// </summary>
         public void RemoveTimer(string name)
         {
+            if (string.IsNullOrEmpty(name)) return;
+            if (!timers.ContainsKey(name)) return;
             timers.Remove(name);
             
             this.Log(LogType.Log, "Timer " + name + " has been erased");
+        }
+
+        public void RemoveFinishedTimers()
+        {
+            foreach (var name in timers.Keys)
+            {
+                RemoveTimer(name);
+            }
         }
 
         #endregion

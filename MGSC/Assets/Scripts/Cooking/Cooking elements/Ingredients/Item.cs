@@ -100,7 +100,6 @@ namespace Cooking
         public void GetGrabbed(IContainer newContainer)
         {
             Container?.Drop(this);
-            Debug.Log("Container is : " + newContainer.transform.name);
             Container = newContainer;
             if (newContainer is ISoloContainer)
             {
@@ -166,9 +165,6 @@ namespace Cooking
             }
             if (Container is IMultiContainer)
             {
-                Debug.Log("Container is : " + Container);
-                Debug.Log("Player is : " + Player);
-                Debug.Log("Player.LookInfo is : " + Player.LookInfo);
                 _targetPos = Quaternion.Inverse(Container.transform.rotation) * (Player.LookInfo.point - FindLowestPoint() - Container.transform.position);
                 //Debug.Log("Target pos is " + _targetPos + "\nDistance to player is " + Vector3.Distance(Player.transform.position, _targetPos));
                 _targetRot = _defaultRotation;

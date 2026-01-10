@@ -192,6 +192,7 @@ namespace GameSystem
 
         public string GetDataAsString(EDataInfo info)
         {
+            EnforceReferences();
             string result = "";
 
             switch (info)
