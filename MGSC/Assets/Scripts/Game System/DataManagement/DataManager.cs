@@ -123,7 +123,6 @@ namespace GameSystem
 
         public void ResetSave()
         {
-            Debug.Log("Save reset");
             currentGameData = DefaultData();
             SaveGameData(currentGameData);
             LoadGlobalData();

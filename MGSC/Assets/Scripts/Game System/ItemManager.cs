@@ -284,7 +284,6 @@ public class ItemManager : IManager
 
     public void SpawnInitialItems(int shiftCount)
     {
-        Debug.Log(spawnItems.Count + " items were spawned for shift " + shiftCount);
         int i = 0;
         foreach (var item in spawnItems)
         {
