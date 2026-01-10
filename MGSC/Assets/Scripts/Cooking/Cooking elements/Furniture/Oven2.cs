@@ -8,10 +8,11 @@ namespace Cooking
     public class Oven2 : Oven
     {
         TimerManager _tm;
-        string _cookingID;
+        string _timerID;
         protected override void Start()
         {
             ReferenceManager.Get(out _tm);
+            _slot.OnDrop.AddListener((item) => StopCooking());
         }
         protected override void Update()
         {
@@ -22,37 +23,77 @@ namespace Cooking
         {
             _isCooking = false;
             OnStopCooking?.Invoke();
-            _tm.StopTimer(_cookingID);
+            _tm.StopTimer(_timerID);
         }
         public override void StartCooking()
         {
-            var plate = GetPlate();
-            if (plate == null) return;
-            var targetRecipe = GetTargetRecipe();
-            if (targetRecipe == null) return;
+            var plate = GetHeldItemAs<Plate>();
 
-            float targetDuration = targetRecipe.timeToCook;
+            // If it's a plate, cook
+            if (plate != null)
+            {
+                var targetRecipe = GetTargetRecipe();
+                if (targetRecipe == null) return;
 
-            _isCooking = true;
-            OnStartCooking?.Invoke();
-            _cookingID = "Cooking (" + Time.time + ")";
-            _tm.StartTimer(_cookingID, targetDuration * Strength, Cook);
+                float targetDuration = targetRecipe.timeToCook;
+
+                _isCooking = true;
+                OnStartCooking?.Invoke();
+                _timerID = "Cooking (" + Time.time + ")";
+                _tm.StartTimer(_timerID, targetDuration * Strength, Cook);
+            }
+            // Otherwise, it may be a cooked meal, so try to overcook it.
+            else if (GetHeldItemAs<Meal>() != null)
+            {
+                StartOvercooking();
+                OnStartCooking?.Invoke();
+            }
         }
 
         protected override void Cook()
         {
-            var plate = GetPlate();
-            plate.Cook(GetTargetRecipe().timeToCook);
-            _cookingID = "Overcooking (" + Time.time + ")";
-            _tm.StartTimer(_cookingID, GetTargetRecipe().timeToOvercook, Overcook);
+            var plate = GetHeldItemAs<Plate>();
+            var targetRecipe = GetTargetRecipe();
+            plate.Cook(targetRecipe.timeToCook);
+            StartOvercooking();
+        }
+
+        protected virtual void StartOvercooking()
+        {
+            var meal = GetHeldItemAs<Meal>();
+            var targetRecipe = meal.Recipe;
+            if (targetRecipe == null) return;
+
+            float targetDuration = targetRecipe.timeToOvercook;
+
+            _isCooking = true;
+            _timerID = "Overcooking (" + Time.time + ")";
+            _tm.StartTimer(_timerID, targetRecipe.timeToOvercook, Overcook);
         }
 
         protected void Overcook()
         {
-
+            var meal= GetHeldItemAs<Meal>();
+            var targetRecipe = meal.Recipe;
+            meal.Cook(targetRecipe.timeToOvercook);
         }
 
-        protected Plate GetPlate() => _slot.IsFree ? null : _slot.HeldItem as Plate;
-        protected SO_Recipe GetTargetRecipe() => GetPlate()?.GetMatchingRecipe();
+        public override void ToggleCooking()
+        {
+            if (_isCooking)
+            {
+                StopCooking();
+                return;
+            }
+            if (_slot.IsFree)
+            {
+                OnFailedStartAttempt?.Invoke();
+                return;
+            }
+            StartCooking();
+        }
+
+        protected T GetHeldItemAs<T>() where T : class => _slot.IsFree ? null : _slot.HeldItem as T;
+        protected SO_Recipe GetTargetRecipe() => GetHeldItemAs<Plate>()?.GetMatchingRecipe();
     }
 }
