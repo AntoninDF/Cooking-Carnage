@@ -8,9 +8,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 414294609480527812, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: OnPress.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: -7821848794721809751}
+    - target: {fileID: 414294609480527812, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: OnPress.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleCooking
+      objectReference: {fileID: 0}
+    - target: {fileID: 414294609480527812, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: OnPress.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cooking.Oven2, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 3284549085174270630, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
       propertyPath: m_Name
       value: P_Oven2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4143289457847768278, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: _onOpen.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761963824019849930, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5761713516370686214, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -56,13 +76,46 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6265505501132321559, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: m_Size.z
+      value: 0.4746235
+      objectReference: {fileID: 0}
+    - target: {fileID: 6265505501132321559, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: m_Center.z
+      value: -0.095930904
+      objectReference: {fileID: 0}
+    - target: {fileID: 7503949388816502130, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7503949388816502130, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: _onDrop.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7823081379449817563, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294487052690821110, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: m_Size.x
+      value: 0.21081918
+      objectReference: {fileID: 0}
+    - target: {fileID: 8294487052690821110, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: m_Center.x
+      value: -0.030752778
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5887507579780967680, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+    - {fileID: 7503949388816502130, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3284549085174270630, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
-      insertIndex: 2
+      insertIndex: 1
       addedObject: {fileID: -7821848794721809751}
+    - targetCorrespondingSourceObject: {fileID: 3978166520960264976, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3748617520161028150}
   m_SourcePrefab: {fileID: 100100000, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
 --- !u!114 &1416181204408684860 stripped
 MonoBehaviour:
@@ -75,17 +128,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
---- !u!114 &3690748428218506242 stripped
+--- !u!114 &3145697778273473403 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7503949388816502130, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8123523289765675531, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
   m_PrefabInstance: {fileID: 6564926722106544496}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63a59fd62de223d418de0c80dab5994c, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerSlot
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+--- !u!114 &4472623446007555110 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7280839838746309974, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+  m_PrefabInstance: {fileID: 6564926722106544496}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
 --- !u!114 &4607749163152951907 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7271428153656253203, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
@@ -150,6 +214,81 @@ ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 4362567210639510521, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
   m_PrefabInstance: {fileID: 6564926722106544496}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7795176034945563232 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3978166520960264976, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+  m_PrefabInstance: {fileID: 6564926722106544496}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3748617520161028150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7795176034945563232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43a6743ed658de544824c378fe691ddd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cooking.EnglobingSlotContainer
+  OnDrop_Raw:
+    m_PersistentCalls:
+      m_Calls: []
+  _disableColliderIfHandEmpty: 0
+  _itemSlot: {fileID: 8134891405955228977}
+  _onGrab:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3145697778273473403}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _onDrop:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: Cooking.Oven, Assembly-CSharp
+        m_MethodName: StopCooking
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4472623446007555110}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _onLookAt:
+    m_PersistentCalls:
+      m_Calls: []
+  _onStopLookAt:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &8134891405955228977 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3170462326452630593, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+  m_PrefabInstance: {fileID: 6564926722106544496}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8542838040648014806 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3284549085174270630, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
@@ -167,7 +306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72379fe7d59851242ba51b79b045ab07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.Oven2
-  _slot: {fileID: 3690748428218506242}
+  _slot: {fileID: 3748617520161028150}
   _door: {fileID: 0}
   _strength: 1
   _requireClosedDoor: 0
