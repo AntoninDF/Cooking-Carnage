@@ -129,7 +129,7 @@ namespace Cooking
             return recipe != _recipeBook.DefaultRecipe;
         }
 
-        private SO_Recipe GetMatchingRecipe()
+        public SO_Recipe GetMatchingRecipe()
         {
             var ingredients = _ingredientSlots.HeldItems.Select((item) => ((Ingredient)item).Model);
             if (ingredients.Count() == 0) return _recipeBook.DefaultRecipe; // If empty recipe
