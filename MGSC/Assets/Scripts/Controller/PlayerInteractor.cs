@@ -177,10 +177,19 @@ namespace Controller
         }
         public void Grab(IGrabbable item)
         {
+            if (item is EnglobingSlotContainer)
+            {
+                item = (item as SlotContainer).HeldItem;
+                Debug.Log("Trying to grab item inside EnglobingSlotContainer : " + item);
+            }
+            Debug.Log("Item is : " + item);
+            Debug.Log("HeldItem is : " + _heldItem);
             if (item == null) return;
             if (_heldItem != null) return;
             if (item.Container != null && item.Container.IsLocked) return;
+            if (!CanGrab(item)) return;
 
+            Debug.Log("Tests passed");
             _grabbedItemThisFrame = true;
             item.GetGrabbed(this);
             _heldItem = item;
@@ -210,6 +219,8 @@ namespace Controller
 
             //Finally grab
             container.Grab(_heldItem);
+            Debug.Log("Target container is : " +  container);
+            if (container is ISoloContainer solocontainer) Debug.Log("Targetted container now possesses the following item : " + solocontainer.HeldItem);
         }
 
         public void Drop()
@@ -220,7 +231,14 @@ namespace Controller
             _heldItem = null;
         }
 
-        public bool CanGrab(IGrabbable item) => _heldItem == null;
+        public bool CanGrab(IGrabbable item)
+        {
+            return
+                _heldItem == null &&
+                (item is not EnglobingSlotContainer ||
+                (item is EnglobingSlotContainer esc && esc.HeldItem!=null))
+                ; 
+        }
 
         #endregion
     }
