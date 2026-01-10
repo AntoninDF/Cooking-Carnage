@@ -34,40 +34,40 @@ namespace Cooking
         #region Fields
         [Header("Oven references")]
         [Tooltip("The slot on which the plate will be put")]
-        [SerializeField] private SlotContainer _slot;
+        [SerializeField] protected SlotContainer _slot;
         [Tooltip("The furnace needs a reference to it's own door to ensure it's closed while cooking :)")]
         [SerializeField] private Door _door;
         [Space]
         [Header("Oven parameters")]
         [Tooltip("Speed modifier for the oven")]
-        [SerializeField] private float _strength = 1.0f;
+        [SerializeField] protected float _strength = 1.0f;
         [Tooltip("Does the door's state impact whether the oven can cook or not")]
         [SerializeField] private bool _requireClosedDoor = true;
         [Space]
         [Header("Oven events")]
         [Tooltip("Invoked when the furnace starts cooking")]
-        [SerializeField] private UnityEvent _onStartCooking;
+        [SerializeField] protected UnityEvent _onStartCooking;
         [Tooltip("Invoked when the furnace stops cooking")]
-        [SerializeField] private UnityEvent _onStopCooking;
+        [SerializeField] protected UnityEvent _onStopCooking;
         [Tooltip("Invoked when the player tries to start the furnace, but it cannot be started (if the door is opened for example)")]
-        [SerializeField] private UnityEvent _onFailedStartAttempt;
+        [SerializeField] protected UnityEvent _onFailedStartAttempt;
         [Tooltip("Invoked when the item is cooked")]
-        [SerializeField] private UnityEvent _onItemCooked;
+        [SerializeField] protected UnityEvent _onItemCooked;
         [Tooltip("Invoked when the item is overcooked")]
-        [SerializeField] private UnityEvent _onItemOvercooked;
+        [SerializeField] protected UnityEvent _onItemOvercooked;
 
-        private bool _isCooking = false;
-        private ECookStatus _currentStatus = ECookStatus.Raw;
+        protected bool _isCooking = false;
+        protected ECookStatus _currentStatus = ECookStatus.Raw;
 
-        private UnityEvent _onGrabbed;
-        private Collider _collider;
+        protected UnityEvent _onGrabbed;
+        protected Collider _collider;
 
-        private GameLoop gameLoop;
+        protected GameLoop gameLoop;
         #endregion
 
         #region Methods
 
-        private void Start()
+        protected virtual void Start()
         {
             _collider = GetComponent<Collider>();
             if (_door == null)
@@ -81,7 +81,7 @@ namespace Cooking
             gameLoop = ReferenceManager.Get<GameLoop>();
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if(gameLoop.IsRunning)
                 TryCook();
@@ -91,7 +91,7 @@ namespace Cooking
         /// Sorry I don't know what I'm doing here. Just trying to get to the end of my day. And it's sunday.
         /// </summary>
         /// <param name="drop"></param>
-        private void Idk(bool drop)
+        protected virtual void Idk(bool drop)
         {
             if (_slot.HeldItem is Plate plate)
             {
@@ -99,7 +99,7 @@ namespace Cooking
             }
         }
 
-        public void ToggleCooking()
+        public virtual void ToggleCooking()
         {
             if (_isCooking)
             {
@@ -114,7 +114,7 @@ namespace Cooking
             StartCooking();
         }
 
-        private void TryCook()
+        protected virtual void TryCook()
         {
             if (!_isCooking)
             {
@@ -135,7 +135,7 @@ namespace Cooking
         /// If timer reaches the end, transform the plate and start a new timer for overcooked
         /// Add a callback to the timer's update, so that we can add feedbacks on how cooked we are (we're pretty cooked, but we're also cooking)
         /// Don't forget to invoke events.
-        private void Cook()
+        protected virtual void Cook()
         {
             ICookable cookItem = _slot.HeldItem as ICookable;
             if (cookItem == null) return;
@@ -154,13 +154,13 @@ namespace Cooking
             }
         }
 
-        public void StartCooking()
+        public virtual void StartCooking()
         {
             _isCooking = true;
             OnStartCooking?.Invoke();
         }
 
-        private void StopCooking()
+        protected virtual void StopCooking()
         {
             _isCooking = false;
             _currentStatus = ECookStatus.Raw;
@@ -170,14 +170,14 @@ namespace Cooking
             cookItem.StopCooking();
         }
 
-        public void StopCooking(IGrabbable item)
+        public virtual void StopCooking(IGrabbable item)
         {
             StopCooking();
             if (item is ICookable)
                 (item as ICookable).StopCooking();
         }
 
-        public void GetGrabbed(IContainer newContainer)
+        public virtual void GetGrabbed(IContainer newContainer)
         {
             if (newContainer is not SlotContainer) return;
             Container?.Drop(this);
@@ -196,10 +196,10 @@ namespace Cooking
             OnGrabbed?.Invoke();
         }
 
-        public void SetAnimationMode(bool animate = true) { }
-        public void SetStrength(float strength) { _strength = strength; }
+        public virtual void SetAnimationMode(bool animate = true) { }
+        public virtual void SetStrength(float strength) { _strength = strength; }
 
-        public void Reset()
+        public virtual void Reset()
         {
             if (_slot != null && _slot.HeldItem != null)
             {
