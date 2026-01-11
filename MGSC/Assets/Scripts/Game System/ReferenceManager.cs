@@ -45,6 +45,7 @@ namespace GameSystem
             typeof(Ingredient),
             typeof(Furnace),
             typeof(Oven),
+            typeof(Oven2),
             typeof(TrashCan),
             typeof(Meal),
             typeof(Blender),

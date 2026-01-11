@@ -282,8 +282,9 @@ public class JiggleRigBuilder : MonoBehaviour, IJiggleAdvancable, IJiggleBlendab
         /// Offsets the jiggle signals from the position set with PrepareTeleport to the current position. This prevents jiggles from freaking out from a large movement.
         /// </summary>
         public void FinishTeleport() {
+                if (simulatedPoints ==  null) return;
             for (int i = 0; i < boneCount; i++) {
-                simulatedPoints[i].FinishTeleport(simulatedPoints);
+                simulatedPoints[i]?.FinishTeleport(simulatedPoints);
             }
         }
 
