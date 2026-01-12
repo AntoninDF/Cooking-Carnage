@@ -13,6 +13,10 @@ public class SO_AssetReferences : ScriptableObject
     public GameObject UI { get => _UI; private set => _UI = value; }
     [Tooltip("UI prefab to spawn on scene start")]
     [SerializeField] private GameObject _UI;
+    
+    public GameObject GameLoop { get => _gameloop; private set => _gameloop = value; }
+    [Tooltip("Gameloop prefab to spawn on scene start")]
+    [SerializeField] private GameObject _gameloop;
 
     public InputActionAsset InputActions { get => _inputActions; private set => _inputActions = value; }
     [Tooltip("The input action asset for the player")]

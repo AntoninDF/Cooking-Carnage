@@ -32,6 +32,11 @@ namespace GameSystem
         [Tooltip("How long should a shift last ?")]
         [SerializeField] private float _shiftDuration = 30f;
         public float ShiftDuration => _shiftDuration;
+        
+        [Tooltip("How much time left is considered noon/the end of the shift ?")]
+        [SerializeField] private float _shiftNoonDuration = 30f;
+        public float ShiftNoonDuration => _shiftNoonDuration;
+        
         [Tooltip("How much money does the rent cost (Y axis), depending on the shift count (X axis)")]
         [SerializeField] private AnimationCurve _rentPrice;
         public AnimationCurve RentPrice => _rentPrice;
