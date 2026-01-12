@@ -412,6 +412,9 @@ MonoBehaviour:
           m_StringArgument: Chara Standing Out
           m_BoolArgument: 0
         m_CallState: 2
+  _onFailedKillAttempt:
+    m_PersistentCalls:
+      m_Calls: []
   deathTrap: {fileID: 5361733293880336800}
 --- !u!1 &4233302793106191903
 GameObject:
@@ -3192,6 +3195,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5441982633704886918}
     m_Modifications:
+    - target: {fileID: 411250470431508703, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 424732036597750088, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.65
@@ -3276,13 +3283,87 @@ PrefabInstance:
       propertyPath: m_Name
       value: P_Button
       objectReference: {fileID: 0}
+    - target: {fileID: 8118814472532715555, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4733034349733220245, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4392137206514293934}
   m_SourcePrefab: {fileID: 100100000, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
+--- !u!1 &3665709076259549917 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4733034349733220245, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
+  m_PrefabInstance: {fileID: 8318196141765311816}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4392137206514293934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3665709076259549917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 426b482f3af7f704387fe39603b28abd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.EventLinker
+  _onStart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4392137206514293934}
+        m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+        m_MethodName: BindEvent
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Enable Kill Tooltip
+          m_BoolArgument: 0
+        m_CallState: 2
+  _events:
+  - name: Enable Kill Tooltip
+    TargetEvent: 5
+    OnCall:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8558287683862558103}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 4392137206514293934}
+          m_TargetAssemblyTypeName: UI.EventLinker, Assembly-CSharp
+          m_MethodName: UnbindEvent
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Enable Kill Tooltip
+            m_BoolArgument: 1
+          m_CallState: 2
 --- !u!4 &8544692818739799040 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 424732036597750088, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
+  m_PrefabInstance: {fileID: 8318196141765311816}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8558287683862558103 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 411250470431508703, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
   m_PrefabInstance: {fileID: 8318196141765311816}
   m_PrefabAsset: {fileID: 0}
