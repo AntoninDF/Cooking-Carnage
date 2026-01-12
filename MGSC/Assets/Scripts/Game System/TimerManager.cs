@@ -108,6 +108,7 @@ namespace GameSystem
         /// </summary>
         public void StopTimer(string name)
         {
+            if (string.IsNullOrEmpty(name)) return;
             if (timers.TryGetValue(name, out var t))
             {
                 t.Pause();

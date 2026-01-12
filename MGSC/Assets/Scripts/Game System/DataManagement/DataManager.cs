@@ -206,6 +206,10 @@ namespace GameSystem
                 case EDataInfo.ClientsKilledThisShift:      return _clientManager.ClientsKilledThisShift.ToString();
                 case EDataInfo.MoneyGainedThisShift:        return _moneyManager.GetMoneyGainedThisShift().ToString();
                 case EDataInfo.MoneyAmount:                 return _moneyManager.MoneyInfo.ToString();
+                case EDataInfo.CookingSpeedUpgradeLevel:    return (_upgradeManager.GetUpgradeByType<CookingSpeedUpgrade>()?.Level+1).ToString();
+                case EDataInfo.IngredientDropUpgradeLevel:  return (_upgradeManager.GetUpgradeByType<IngredientDropUpgrade>()?.Level+1).ToString();
+                case EDataInfo.OvenCountUpgradeLevel:       return (_upgradeManager.GetUpgradeByType<OvenCountUpgrade>()?.Level+1).ToString();
+                case EDataInfo.CuttingSpeedUpgradeLevel:    return "1";
             }
             // REFACTO : To be implemented
 

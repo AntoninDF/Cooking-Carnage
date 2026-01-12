@@ -36,6 +36,7 @@ namespace Upgrades
 
         public void Apply(Clients.Client client)
         {
+            if (client == null) return;
             client.SetLoot(client.Model.loot, client.Model.dropRate + UnityEngine.Vector2.one * dropRateIncrement * _level);
         }
         public override void LevelUp()

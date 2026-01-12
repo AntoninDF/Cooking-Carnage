@@ -32,6 +32,7 @@ namespace Upgrades
             _upgrades = new List<Upgrade>();
             _upgrades.Add(new OvenCountUpgrade());
             _upgrades.Add(new CookingSpeedUpgrade());
+            _upgrades.Add(new IngredientDropUpgrade());
 
             _moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
             if (_moneyManager == null)
