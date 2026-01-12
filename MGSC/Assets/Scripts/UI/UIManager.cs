@@ -29,6 +29,7 @@ namespace UI
         //[Header("References")]
         [SerializeField] private string _pauseMenuName = "Pause";
         [SerializeField] private string _gameMenuName = "Game";
+        [SerializeField] private string _mainMenuName = "Main";
         [SerializeField] private List<UIMenu> _menus = new List<UIMenu>();
 
         [Header("UI Manager events")]
@@ -38,6 +39,8 @@ namespace UI
         [SerializeField] private UnityEvent _onDisable;
         [SerializeField] private UnityEvent _onUpgradeFail;
         [SerializeField] private UnityEvent _onUpgradeSuccess;
+        [SerializeField] private UnityEvent _onPause;
+        [SerializeField] private UnityEvent _onResume;
 
         private GameLoop _gameLoop;
         private InputActionAsset _inputActionAsset;
@@ -121,6 +124,8 @@ namespace UI
             _currentMenu.onEnable.Invoke();
             SetGameState(!_currentMenu.pauseGame);
             SetCursorFreedom(_currentMenu.mouseFreedom);
+
+
             
             this.Log(LogType.Log, $"{menu.name} menu has been enabled");
         }
@@ -150,10 +155,13 @@ namespace UI
         public void SetGameState(bool running) { if (running) ResumeGame(); else PauseGame(); }
         public void PauseGame()
         {
+            if (_currentMenu.name == _mainMenuName) return;
             _gameLoop.StopRunning();
             _playerInputs.Disable();
             _UIInputs.Enable();
-            
+            _onPause?.Invoke();
+
+
             this.Log(LogType.Log, $"Game has been paused");
         }
 
@@ -162,6 +170,7 @@ namespace UI
             _gameLoop.StartRunning();
             _playerInputs.Enable();
             _UIInputs.Enable();
+            _onResume?.Invoke();
             
             SetCursorFreedom(false);
             
@@ -210,7 +219,7 @@ namespace UI
             this.Log(LogType.Log, $"Toggleing pause");
             if (_currentMenu.name == _pauseMenuName)
                 EnableMenu(_gameMenuName);
-            else
+            else if (_currentMenu.name != _mainMenuName)
                 EnableMenu(_pauseMenuName);
         }
 

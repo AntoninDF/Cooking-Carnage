@@ -65,7 +65,7 @@ namespace GameSystem
             new ClientManager();
             new TimerManager();
             if (_gameProfile.AddClientSpawner) new AdaptiveClientSpawner();
-            new ShiftManager(_gameProfile.ShiftDuration, _gameProfile.RentPrice);
+            new ShiftManager(_gameProfile.ShiftDuration, _gameProfile.ShiftNoonDuration, _gameProfile.RentPrice);
             new MoneyManager();
             new UpgradeManager();
             new DataManager();
@@ -125,8 +125,14 @@ namespace GameSystem
         private void MakeGameLoop()
         {
             // Init GameLoop
-            GameObject gameLoop = new GameObject("GameLoop");
-            gameLoop.AddComponent<GameLoop>();
+            if (ReferenceManager.AssetReferences.UI != null)
+            {
+                Instantiate(ReferenceManager.AssetReferences.GameLoop);
+            }
+            else
+            {
+                Debug.LogWarning("[GameInitializer] : Couldn't add the GameLoop prefab because it was not referenced in the asset references object");
+            }
         }
 
         private void AddUI()

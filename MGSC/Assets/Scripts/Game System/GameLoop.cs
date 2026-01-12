@@ -21,6 +21,10 @@ namespace GameSystem
         private List<UpdatableBase> _updatables = new();
         public UnityEvent OnPause = new();
         public UnityEvent OnResume = new();
+        
+        public UnityEvent ShiftEnd = new();
+        public UnityEvent ShiftNoon = new();
+        public UnityEvent RentGameOver = new();
 
         #endregion
 

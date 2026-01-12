@@ -14,6 +14,10 @@ namespace GameSystem
         ShiftDuration,
         MoneyAmount,
         TimeElapsedSinceStartup,
+        CookingSpeedUpgradeLevel,
+        IngredientDropUpgradeLevel,
+        OvenCountUpgradeLevel,
+        CuttingSpeedUpgradeLevel,
 
 
         // Data dependent on a specific object should be 50 or more
