@@ -13,7 +13,7 @@ namespace Cooking
     public class SlotContainer : MonoBehaviour, ISoloContainer, IWatchable
     {
         #region Properties
-        public IGrabbable HeldItem { get => _heldItem; set { _heldItem = value; Debug.Log("HeldItem set"); } }
+        public IGrabbable HeldItem { get => _heldItem; set { _heldItem = value; } }
 
         public Transform ItemSlot => _itemSlot;
 
@@ -85,7 +85,6 @@ namespace Cooking
 
         public virtual void Drop(IGrabbable item)
         {
-            Debug.Log("The requested item to drop is " + item + ", and the possessed item is " + _heldItem + " (" + (item == _heldItem ? "EQUAL" : "NOT EQUAL") + ")");
             if (_heldItem == null || _heldItem != item) return;
             Empty();
             OnDrop?.Invoke(item);
@@ -104,11 +103,9 @@ namespace Cooking
             if (_itemSlot == null)
                 throw new MissingReferenceException("Please reference the item slot's transform in this container slot's dedicated field : " + name);
             _heldItem = item;
-            Debug.Log(this.name + " is grabbing item : " + (item as Item)?.name);
-
+            
             ReferenceManager.Instance.GetElementOfType<Oven2>()?.SendMessage("Update"); 
             item.GetGrabbed(this);
-            Debug.Log(this.name + " has grabbed item : " + (item as Item)?.name);
 
             ReferenceManager.Instance.GetElementOfType<Oven2>()?.SendMessage("Update");
             OnGrab?.Invoke(item);

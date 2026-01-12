@@ -85,6 +85,7 @@ public class ItemManager : IManager
                 if (!activeItems.Contains(item))
                 {
                     activeItems.Add(item);
+                    this.Log(LogType.Log, item.name + " has been registered as active item");
                 }
             }
             else
@@ -113,8 +114,6 @@ public class ItemManager : IManager
                 id = item.ID;
             }
         }
-
-        Debug.Log("Storing item " + item.name + " with ID " + id);
         
         if (!_itemsByID.ContainsKey(id))
         {
@@ -174,7 +173,6 @@ public class ItemManager : IManager
     private List<Item> correspondingItems;
     public GameObject TrySpawn(GameObject prefab ,Vector3 position = default, Quaternion rotation = default, Transform parent = null)
     {
-        Debug.Log("[ItemManager] TrySpawn invoked");
         if (!prefab.TryGetComponent<Item>(out Item prefabItem))
         {
             this.Log(LogType.Error, prefab.name + " cannot be spawned because it isn't an item");
@@ -184,19 +182,12 @@ public class ItemManager : IManager
 
         if (!string.IsNullOrEmpty(prefabItem.ID))
         {
-            Debug.Log("Item ID is : " + prefabItem.ID);
             correspondingItems = GetItemsByID(prefabItem.ID);
-            Debug.Log("There are " + correspondingItems?.Count + " corresponding items for this ID (" + prefabItem.ID + ")");
-
-            Debug.Log("Pooled items' IDs are : ");
-            foreach (var key in _itemsByID.Keys)
-                Debug.Log("Id : " + key);
 
             if (correspondingItems != null)
             {
                 foreach (Item item in correspondingItems)
                 {
-                    Debug.Log("Item is : " + item.name + " with ID " + item.ID);
                     TryRemove(item);
                     
                     if (parent == null)
@@ -225,14 +216,12 @@ public class ItemManager : IManager
             this.Log(LogType.Warning, prefabItem.name + " has no ID specified");
         }
         GameObject spawned = GameObject.Instantiate(prefab,position, rotation, parent);
-        Debug.Log("[ItemManager] TrySpawn : New object instantiated");
         UpdateActiveList(spawned.GetComponent<Item>());
         
         return spawned;
     }
     GameObject Spawn(Item item, Vector3 position, Quaternion rotation, Transform parent)
     {
-        Debug.Log("Spawning");
         item.transform.SetParent(parent);
         item.transform.position = position;
         item.transform.rotation = rotation;
