@@ -50,6 +50,7 @@ namespace Cooking
         [SerializeField] protected UnityEvent<IGrabbable> _onDrop;
         [SerializeField] protected UnityEvent _onLookAt;
         [SerializeField] protected UnityEvent _onStopLookAt;
+        [SerializeField] protected UnityEvent _onTryGrabIncorrectItem;
 
 
         protected Collider _collider;
@@ -123,7 +124,10 @@ namespace Cooking
 
             if (_filter != null && item is MonoBehaviour)
                 if (!_filter.IsValid((MonoBehaviour)item))
+                { 
+                    _onTryGrabIncorrectItem?.Invoke();
                     return false;
+                }
             return true;
         }
 

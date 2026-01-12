@@ -12,6 +12,7 @@ namespace UI
     public class EventLinker : MonoBehaviour
     {
         #region Fields
+        [SerializeField] private UnityEvent _onStart;
         [SerializeField] private List<EventLink> _events;
 
 
@@ -21,6 +22,10 @@ namespace UI
 
         #region Methods
 
+        void Start()
+        {
+            _onStart?.Invoke();
+        }
         private void Init()
         {
             foreach(var e in _events)

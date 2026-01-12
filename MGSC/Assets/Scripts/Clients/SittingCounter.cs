@@ -38,6 +38,7 @@ namespace Clients
         
         [SerializeField] private UnityEvent _onPlatformUp;
         [SerializeField] private UnityEvent _onPlatformDown;
+        [SerializeField] private UnityEvent _onFailedKillAttempt;
 
         private OrderManager _orderManager;
         [SerializeField]private Transform deathTrap;
@@ -97,12 +98,12 @@ namespace Clients
 
         public void TryKill()
         {
-            if (IsFree) return;
-
-            if (_currentClient.CheckClientCounterDistance(this))
+            if (!IsFree && _currentClient.CheckClientCounterDistance(this))
             {
                 Kill();
+                return;
             }
+            _onFailedKillAttempt?.Invoke();
         }
 
         private void Kill()
