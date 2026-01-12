@@ -1,5 +1,164 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1335839340561867880
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3469711727852356752}
+  - component: {fileID: 5226301829848895835}
+  m_Layer: 0
+  m_Name: AvatarGrab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3469711727852356752
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335839340561867880}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1326699478963369643}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5226301829848895835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335839340561867880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1593957238
+      Data2: 1239765027
+      Data3: 2136338058
+      Data4: -1526949636
+    Path: event:/SFX/Controller/AvatarGrab
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &1714580493301249877
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1326699478963369643}
+  m_Layer: 0
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1326699478963369643
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1714580493301249877}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.0375, z: -0.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3469711727852356752}
+  - {fileID: 7957388761450047051}
+  m_Father: {fileID: 7112028440370428212}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8670942440057300821
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7957388761450047051}
+  - component: {fileID: 4375570793313574057}
+  m_Layer: 0
+  m_Name: AvatarDrop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7957388761450047051
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8670942440057300821}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1326699478963369643}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4375570793313574057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8670942440057300821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -410476120
+      Data2: 1113419023
+      Data3: 1778775466
+      Data4: -312773068
+    Path: event:/SFX/Controller/AvatarDrop
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &5427668018987172087
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -183,6 +342,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 6
       objectReference: {fileID: 0}
@@ -199,6 +362,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4756962922335857838}
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
@@ -213,6 +380,18 @@ PrefabInstance:
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
       value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5226301829848895835}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Play
       objectReference: {fileID: 0}
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
@@ -231,11 +410,19 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: FMODUnity.StudioEventEmitter, FMODUnity
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3519798225028237028, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
@@ -294,6 +481,9 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 307971292422303130, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3519798225028237028, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1326699478963369643}
     - targetCorrespondingSourceObject: {fileID: 5896125322217884917, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 645357365569902604}
@@ -305,5 +495,10 @@ PrefabInstance:
 --- !u!4 &268222858925273893 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5896125322217884917, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+  m_PrefabInstance: {fileID: 5939075799966220240}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7112028440370428212 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3519798225028237028, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
   m_PrefabInstance: {fileID: 5939075799966220240}
   m_PrefabAsset: {fileID: 0}
