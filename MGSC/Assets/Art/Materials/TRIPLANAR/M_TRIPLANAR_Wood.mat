@@ -29,8 +29,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DISABLE_SSR_TRANSPARENT
-  - _INVERT_METALLIC
-  - _INVERT_ROUGHNESS
+  - _INVERT_AO
   - _SPACE_LOCAL
   m_InvalidKeywords:
   - _NORMALMAP_TANGENT_SPACE
@@ -51,11 +50,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _AORM:
-        m_Texture: {fileID: 2800000, guid: 00edf72593099dd48885c70dd618c963, type: 3}
+        m_Texture: {fileID: 2800000, guid: 33c9af8ff79446e4ea45671a6474dbf1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Albedo:
-        m_Texture: {fileID: 2800000, guid: c6bee64d02657594e9e0e9ece2837718, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9164dea1dfa5e994dae6c07ee6ee988a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _AnisotropyMap:
@@ -107,7 +106,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: 7cc415d99acc8db48a2b58fa3eae5a4e, type: 3}
+        m_Texture: {fileID: 2800000, guid: b9e116538422bcc4eac07cf8f9f4129b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
@@ -177,11 +176,11 @@ Material:
     - _Anisotropy: 0
     - _Blend: 1
     - _BlendMode: 0
-    - _Brightness: 1
+    - _Brightness: 1.57
     - _Brightness_Offset: 0
     - _CoatMask: 0
     - _ConservativeDepthOffsetEnable: 0
-    - _Contrast: 1
+    - _Contrast: 1.19
     - _CullMode: 2
     - _CullModeForward: 2
     - _Cutoff: 0.5
@@ -218,10 +217,10 @@ Material:
     - _HeightPoMAmplitude: 2
     - _HeightTessAmplitude: 2
     - _HeightTessCenter: 0.5
-    - _Hue: 1
-    - _INVERT_AO: 0
-    - _INVERT_METALLIC: 1
-    - _INVERT_ROUGHNESS: 1
+    - _Hue: -1.32
+    - _INVERT_AO: 1
+    - _INVERT_METALLIC: 0
+    - _INVERT_ROUGHNESS: 0
     - _InvTilingScale: 1
     - _Ior: 1.5
     - _IridescenceMask: 1
@@ -249,7 +248,7 @@ Material:
     - _RefractionModel: 0
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
-    - _Roughness_Intensity: 0.25
+    - _Roughness_Intensity: -3.85
     - _SPACE: 0
     - _Smoothness: 0.5
     - _SmoothnessRemapMax: 1
@@ -274,7 +273,7 @@ Material:
     - _TexWorldScale: 1
     - _TexWorldScaleEmissive: 1
     - _Thickness: 1
-    - _Tiling: 1
+    - _Tiling: 0.66
     - _TransmissionEnable: 1
     - _TransmissionMask: 1
     - _TransparentBackfaceEnable: 0
