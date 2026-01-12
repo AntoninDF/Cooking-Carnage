@@ -19,7 +19,6 @@ namespace Cooking
         }
         protected override void Update()
         {
-            Debug.Log("HeldItem is : " + _slot.HeldItem + "(Time : " + Time.time + ")");
         }
         protected override void TryCook()
         {

@@ -66,9 +66,7 @@ namespace Cooking
                 for (int i = 0; i < request.count; i++)
                 {
                     GameObject go = ReferenceManager.Instance.GetManager<ItemManager>().TrySpawn(request.item.transform.gameObject);
-                    Debug.Log("Spawning from item spawner");
-
-                    ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
+                    
                     Item item = go.GetComponent<Item>();
                     bool couldBePlaced= false;
                     foreach (var slot in _slotsToSpawn)
@@ -76,9 +74,7 @@ namespace Cooking
                         if (!slot.IsFree) continue;
                         item.SetAnimationMode(false);
                         slot.Grab(item);
-                        Debug.Log("Just grabbed the item from slot " + slot.name + " with position " + slot.transform.localPosition);
-
-                        ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
+                        
                         item.transform.position = slot.transform.position;
                         couldBePlaced = true;
                         break;
@@ -86,14 +82,9 @@ namespace Cooking
                     if (!couldBePlaced) go.transform.position = transform.position;
                 }
             }
-
-            Debug.Log("All loops from ItemSpawner terminated");
-
-            ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
+            
             OnSpawn.Invoke();
-            Debug.Log("OnSpawn Invoked");
-
-            ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
+            
         }
 
         #endregion
