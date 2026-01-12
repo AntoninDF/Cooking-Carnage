@@ -248,6 +248,8 @@ public class ItemManager : IManager
         }
         itemToStore.gameObject.SetActive(false);
         itemToStore.transform.parent = _itemsPooled;
+        if (itemToStore.Container != null)
+            itemToStore.Container.Drop(itemToStore);
         UpdateActiveList(itemToStore);
         
         if (reset || spawnItems.Contains(itemToStore))
@@ -286,13 +288,16 @@ public class ItemManager : IManager
 
     public void SpawnInitialItems(int shiftCount)
     {
+        this.Log("Spawning initial items");
         int i = 0;
         foreach (var item in spawnItems)
         {
             if (_maxSpawnItemsPerShift.ContainsKey(shiftCount))
                 if (_maxSpawnItemsPerShift[shiftCount] <= i)
                     break;
-            TrySpawn(item.gameObject, item.transform.position, item.transform.rotation, item.transform.parent);
+            this.Log(item.transform.position);
+            int index = spawnItems.IndexOf(item);
+            TrySpawn(item.gameObject, spawnPositions[index], item.transform.rotation, item.transform.parent);
             i++;
         }
     }

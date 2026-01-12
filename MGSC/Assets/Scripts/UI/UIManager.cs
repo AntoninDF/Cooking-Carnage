@@ -155,7 +155,6 @@ namespace UI
         public void SetGameState(bool running) { if (running) ResumeGame(); else PauseGame(); }
         public void PauseGame()
         {
-            if (_currentMenu.name == _mainMenuName) return;
             _gameLoop.StopRunning();
             _playerInputs.Disable();
             _UIInputs.Enable();
@@ -215,6 +214,7 @@ namespace UI
 
         private void TogglePause()
         {
+            if (_currentMenu.name == _mainMenuName) return;
             //Debug.Log("[UIManager] : Current menu is : " + _currentMenu.name);
             this.Log(LogType.Log, $"Toggleing pause");
             if (_currentMenu.name == _pauseMenuName)

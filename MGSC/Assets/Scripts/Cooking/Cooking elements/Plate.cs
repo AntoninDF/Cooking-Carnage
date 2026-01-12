@@ -152,9 +152,11 @@ namespace Cooking
             meal.Recipe = recipe;
             Container.Empty();
             Container.Grab(meal);
-            
-            foreach (var obj in _ingredientSlots.HeldItems)
+
+            int heldItems = _ingredientSlots.HeldItems.Count;
+            for (int i=0;i<heldItems;i++)
             {
+                var obj = _ingredientSlots.HeldItems[i];
                 var ingredient = obj as Item;
                 if (ingredient != null)
                     itemManager.Despawn(ingredient);

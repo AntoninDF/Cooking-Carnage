@@ -1,6 +1,7 @@
 using System;
 using Controller;
 using UI;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GameSystem
@@ -102,8 +103,9 @@ namespace GameSystem
             }
         }
 
-        private static void ResetAll()
+        private void ResetAll()
         {
+            this.Log("Reset everything for the next shift");
             ReferenceManager.Instance.GetManager<ItemManager>().StoreAllActive();
 
             foreach (var blender in ReferenceManager.Instance.GetElementsOfType<Cooking.Blender>())

@@ -65,13 +65,13 @@ namespace Cooking
             {
                 for (int i = 0; i < request.count; i++)
                 {
-                    GameObject go = ReferenceManager.Instance.GetManager<ItemManager>().TrySpawn(request.item.transform.gameObject);
-                    
-                    Item item = go.GetComponent<Item>();
                     bool couldBePlaced= false;
                     foreach (var slot in _slotsToSpawn)
                     {
                         if (!slot.IsFree) continue;
+                        GameObject go = ReferenceManager.Instance.GetManager<ItemManager>().TrySpawn(request.item.transform.gameObject);
+
+                        Item item = go.GetComponent<Item>();
                         item.SetAnimationMode(false);
                         slot.Grab(item);
                         
@@ -79,7 +79,6 @@ namespace Cooking
                         couldBePlaced = true;
                         break;
                     }
-                    if (!couldBePlaced) go.transform.position = transform.position;
                 }
             }
             

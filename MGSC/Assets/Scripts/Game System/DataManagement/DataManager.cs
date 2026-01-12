@@ -178,16 +178,22 @@ namespace GameSystem
             #endregion
         }
 
-        private int GetCorrectOrdersCount()
+        public int GetCorrectOrdersCount()
         {
             if (_clientManager.GetClientsHistory() == null) return 0;
             return _clientManager.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe == c.order.Recipe).Count();
         }
 
-        private int GetWrongOrdersCount()
+        public int GetWrongOrdersCount()
         {
             if (_clientManager.GetClientsHistory() == null) return 0;
             return _clientManager.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe != c.order.Recipe).Count();
+        }
+
+        public int GetTotalOrdersCount()
+        {
+            if (_clientManager.GetClientsHistory() == null) return 0;
+            return _clientManager.GetClientsHistory().Where((c) => !c.killed).Count();
         }
 
         public string GetDataAsString(EDataInfo info)
