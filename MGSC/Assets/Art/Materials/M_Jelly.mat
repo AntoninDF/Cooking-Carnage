@@ -30,7 +30,7 @@ Material:
   - TransparentBackface
   - RayTracingPrepass
   - MOTIONVECTORS
-  m_LockedProperties: 
+  m_LockedProperties: _normal_vector_range
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -53,6 +53,8 @@ Material:
     - _AlphaDstBlend: 10
     - _AlphaSrcBlend: 1
     - _BlendMode: 0
+    - _Cell_density_iridescent: 112.5
+    - _Cell_normal_modifier_intensity: 0.7
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 0
     - _CullModeForward: 0
@@ -66,6 +68,8 @@ Material:
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
     - _ExcludeFromTUAndAA: 0
+    - _Fresnel_emissive: 0
+    - _Fresnel_impact: 0
     - _MaterialID: 1
     - _MaterialTypeMask: 34
     - _OpaqueCullMode: 2
@@ -76,6 +80,7 @@ Material:
     - _RefractionModel: 0
     - _RenderQueueType: 4
     - _RequireSplitLighting: 0
+    - _Smoothness_normal_vector_factor: -0.63
     - _SrcBlend: 1
     - _StencilRef: 0
     - _StencilRefDepth: 0
@@ -91,7 +96,7 @@ Material:
     - _SurfaceType: 1
     - _Thickness: 33.02
     - _TransmissionEnable: 1
-    - _Transparency: 0.43
+    - _Transparency: 0.52
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
@@ -104,6 +109,12 @@ Material:
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4
     - _ZWrite: 0
+    - _emissive: -1.96
+    - _fresnel_pow: 28.19
+    - _normal_vector_intensity: 0.63
+    - _normal_vector_range: 0.27
+    - _normal_vector_smooth: 1
+    - _smoothness: 1
     m_Colors:
     - _Color: {r: 1, g: 0.5330188, b: 0.5330188, a: 1}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}

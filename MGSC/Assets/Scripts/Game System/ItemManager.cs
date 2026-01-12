@@ -85,6 +85,7 @@ public class ItemManager : IManager
                 if (!activeItems.Contains(item))
                 {
                     activeItems.Add(item);
+                    this.Log(LogType.Log, item.name + " has been registered as active item");
                 }
             }
             else
@@ -179,7 +180,7 @@ public class ItemManager : IManager
             return null;
         }
 
-        if (prefabItem.ID != "")
+        if (!string.IsNullOrEmpty(prefabItem.ID))
         {
             correspondingItems = GetItemsByID(prefabItem.ID);
 
@@ -193,7 +194,7 @@ public class ItemManager : IManager
                     {
                         parent = _itemsPooled;
                     }
-
+                    ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
                     return Spawn(item, position, rotation, parent);
                     
                 }
@@ -215,7 +216,6 @@ public class ItemManager : IManager
             this.Log(LogType.Warning, prefabItem.name + " has no ID specified");
         }
         GameObject spawned = GameObject.Instantiate(prefab,position, rotation, parent);
-        
         UpdateActiveList(spawned.GetComponent<Item>());
         
         return spawned;
@@ -226,11 +226,13 @@ public class ItemManager : IManager
         item.transform.position = position;
         item.transform.rotation = rotation;
         item.gameObject.SetActive(true);
-        
+
         UpdateActiveList(item);
         
         this.Log(LogType.Log, "Spawned " + item.name);
-        
+
+        ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
+
         return item.gameObject;
     }
     public void Despawn(Item itemToStore, bool reset = false)
@@ -284,7 +286,6 @@ public class ItemManager : IManager
 
     public void SpawnInitialItems(int shiftCount)
     {
-        Debug.Log(spawnItems.Count + " items were spawned for shift " + shiftCount);
         int i = 0;
         foreach (var item in spawnItems)
         {

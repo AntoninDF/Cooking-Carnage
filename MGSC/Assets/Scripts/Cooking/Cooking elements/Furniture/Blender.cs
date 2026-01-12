@@ -47,6 +47,8 @@ namespace Cooking
         [SerializeField]
         private UnityEvent _onStopCutting;
         [SerializeField]
+        private UnityEvent _onTryToCutAlreadyCutIngredient;
+        [SerializeField]
         private UnityEvent _onLookAt;
         [SerializeField]
         private UnityEvent _onStopLookAt;
@@ -83,10 +85,17 @@ namespace Cooking
         {
             if (_slotContainer != null && _slotContainer.HeldItem != null)
             {
-                if (_slotContainer.HeldItem is Ingredient)
+                if (_slotContainer.HeldItem is Ingredient ingredient)
                 {
-                    _timerManager.StartTimer("Cutting", _cutDuration, () => TryCutIngredient(_slotContainer.HeldItem as Ingredient));
-                    _onInteract?.Invoke();
+                    if (!ingredient.IsCut)
+                    {
+                        _timerManager.StartTimer("Cutting", _cutDuration, () => TryCutIngredient(ingredient));
+                        _onInteract?.Invoke();
+                    }
+                    else
+                    {
+                        _onTryToCutAlreadyCutIngredient?.Invoke();
+                    }
                 }
             }
         }

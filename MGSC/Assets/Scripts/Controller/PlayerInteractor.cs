@@ -177,14 +177,21 @@ namespace Controller
         }
         public void Grab(IGrabbable item)
         {
+            if (item is EnglobingSlotContainer)
+            {
+                item = (item as SlotContainer).HeldItem;
+            }
             if (item == null) return;
             if (_heldItem != null) return;
             if (item.Container != null && item.Container.IsLocked) return;
+            if (!CanGrab(item)) return;
 
             _grabbedItemThisFrame = true;
             item.GetGrabbed(this);
             _heldItem = item;
             _heldItem.Collider.enabled = false;
+            if (item is Item obj) obj.Player = this.Player;
+
             OnGrab?.Invoke(item);
         }
 
@@ -220,7 +227,14 @@ namespace Controller
             _heldItem = null;
         }
 
-        public bool CanGrab(IGrabbable item) => _heldItem == null;
+        public bool CanGrab(IGrabbable item)
+        {
+            return
+                _heldItem == null &&
+                (item is not EnglobingSlotContainer ||
+                (item is EnglobingSlotContainer esc && esc.HeldItem!=null))
+                ; 
+        }
 
         #endregion
     }

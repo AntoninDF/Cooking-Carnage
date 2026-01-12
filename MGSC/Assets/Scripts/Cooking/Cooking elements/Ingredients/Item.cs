@@ -1,4 +1,5 @@
 using Controller;
+using GameSystem;
 using System;
 using System.Collections;
 using UI;
@@ -99,7 +100,14 @@ namespace Cooking
 
         public void GetGrabbed(IContainer newContainer)
         {
+            
+
+            ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update"); 
             Container?.Drop(this);
+
+            
+
+            ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
             Container = newContainer;
             if (newContainer is ISoloContainer)
             {

@@ -1,4 +1,5 @@
 using Controller;
+using GameSystem;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,7 +13,7 @@ namespace Cooking
     public class SlotContainer : MonoBehaviour, ISoloContainer, IWatchable
     {
         #region Properties
-        public IGrabbable HeldItem { get => _heldItem; set => _heldItem = value; }
+        public IGrabbable HeldItem { get => _heldItem; set { _heldItem = value; } }
 
         public Transform ItemSlot => _itemSlot;
 
@@ -37,25 +38,26 @@ namespace Cooking
         #region Fields
         [Header("Parameters")]
         [SerializeField]
-        private bool _disableColliderIfHandEmpty = true;
+        protected bool _disableColliderIfHandEmpty = true;
         [Header("Slot references")]
         [Tooltip("Transform designating where the contained item should go")]
-        [SerializeField] private Transform _itemSlot;
+        [SerializeField] protected Transform _itemSlot;
         [Space]
         [Header("Slot events")]
         [Tooltip("Invoked when an item is put into the slot")]
-        [SerializeField] private UnityEvent<IGrabbable> _onGrab;
+        [SerializeField] protected UnityEvent<IGrabbable> _onGrab;
         [Tooltip("Invoked when an item is taken out of the slot")]
-        [SerializeField] private UnityEvent<IGrabbable> _onDrop;
-        [SerializeField] private UnityEvent _onLookAt;
-        [SerializeField] private UnityEvent _onStopLookAt;
+        [SerializeField] protected UnityEvent<IGrabbable> _onDrop;
+        [SerializeField] protected UnityEvent _onLookAt;
+        [SerializeField] protected UnityEvent _onStopLookAt;
+        [SerializeField] protected UnityEvent _onTryGrabIncorrectItem;
 
 
-        private Collider _collider;
-        private IGrabbable _heldItem;
-        private ContainerFilter _filter;
-        private bool _locked;
-        private bool _wasLookedAtThisFrame;
+        protected Collider _collider;
+        protected IGrabbable _heldItem;
+        protected ContainerFilter _filter;
+        protected bool _locked;
+        protected bool _wasLookedAtThisFrame;
         #endregion
 
         #region Methods
@@ -66,12 +68,12 @@ namespace Cooking
             _filter = gameObject.GetComponent<ContainerFilter>();
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             UpdateCollider();
             CheckIfLookedAt();
         }
-        private void CheckIfLookedAt()
+        protected virtual void CheckIfLookedAt()
         {
             bool lookedAt = (Player != null && Player.LookTarget == this.gameObject);
             if (lookedAt && !_wasLookedAtThisFrame)
@@ -81,31 +83,35 @@ namespace Cooking
             _wasLookedAtThisFrame = lookedAt;
         }
 
-        public void Drop(IGrabbable item)
+        public virtual void Drop(IGrabbable item)
         {
-            if (_heldItem == null) return;
+            if (_heldItem == null || _heldItem != item) return;
             Empty();
             OnDrop?.Invoke(item);
             OnDrop_Raw.Invoke();
         }
 
-        public void Empty()
+        public virtual void Empty()
         {
            _heldItem = null;
         }
 
-        public void Grab(IGrabbable item)
+        public virtual void Grab(IGrabbable item)
         {
             if (!CanGrab(item))
                 return;
             if (_itemSlot == null)
                 throw new MissingReferenceException("Please reference the item slot's transform in this container slot's dedicated field : " + name);
             _heldItem = item;
+            
+            ReferenceManager.Instance.GetElementOfType<Oven2>()?.SendMessage("Update"); 
             item.GetGrabbed(this);
+
+            ReferenceManager.Instance.GetElementOfType<Oven2>()?.SendMessage("Update");
             OnGrab?.Invoke(item);
         }
 
-        public bool CanGrab(IGrabbable item)
+        public virtual bool CanGrab(IGrabbable item)
         {
             if (_heldItem != null) return false;
             if (_locked) return false;
@@ -115,23 +121,26 @@ namespace Cooking
 
             if (_filter != null && item is MonoBehaviour)
                 if (!_filter.IsValid((MonoBehaviour)item))
+                { 
+                    _onTryGrabIncorrectItem?.Invoke();
                     return false;
+                }
             return true;
         }
 
-        public void GetGrabbed(IContainer newContainer)
+        public virtual void GetGrabbed(IContainer newContainer)
         {
             if (newContainer == null) return;
             Container = newContainer;
             OnGrabbed?.Invoke();
         }
 
-        public void LookAt(PlayerInteractor interactor)
+        public virtual void LookAt(PlayerInteractor interactor)
         {
             Player = interactor.Player;
         }
 
-        private void UpdateCollider()
+        protected virtual void UpdateCollider()
         {
             if (_collider == null) return;
             if (Player == null) return;
@@ -139,26 +148,26 @@ namespace Cooking
                 SetActive(Player.HeldItem != null && !_locked);
         }
 
-        public void SetAnimationMode(bool animate = true)
+        public virtual void SetAnimationMode(bool animate = true)
         {
         }
         #endregion
 
-        private enum ESlotFilter
+        protected enum ESlotFilter
         {
             All = 0,
             Ingredient = 1,
             MultiSlotContainer = 2
         }
 
-        public void SetActive(bool active)
+        public virtual void SetActive(bool active)
         {
             if (_collider == null)
                 _collider = GetComponent<Collider>();
             _collider.enabled = active;
         }
 
-        public void SetFilter(params Filter[] filters)
+        public virtual void SetFilter(params Filter[] filters)
         {
             if (_filter != null)
             {

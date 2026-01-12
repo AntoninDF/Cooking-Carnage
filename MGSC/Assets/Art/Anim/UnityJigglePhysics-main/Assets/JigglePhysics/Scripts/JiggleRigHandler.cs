@@ -60,6 +60,7 @@ internal class JiggleRigHandler<T> : MonoBehaviour where T : MonoBehaviour {
     }
 
     internal static void RemoveJiggleRigAdvancable(IJiggleAdvancable advancable) {
+        if (jiggleRigs == null) return;
         if (!jiggleRigs.Contains(advancable)) {
             RemoveInstanceIfNeeded();
             return;

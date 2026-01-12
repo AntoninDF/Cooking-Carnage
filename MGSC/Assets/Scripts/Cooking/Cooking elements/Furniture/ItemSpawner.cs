@@ -66,6 +66,7 @@ namespace Cooking
                 for (int i = 0; i < request.count; i++)
                 {
                     GameObject go = ReferenceManager.Instance.GetManager<ItemManager>().TrySpawn(request.item.transform.gameObject);
+                    
                     Item item = go.GetComponent<Item>();
                     bool couldBePlaced= false;
                     foreach (var slot in _slotsToSpawn)
@@ -73,6 +74,7 @@ namespace Cooking
                         if (!slot.IsFree) continue;
                         item.SetAnimationMode(false);
                         slot.Grab(item);
+                        
                         item.transform.position = slot.transform.position;
                         couldBePlaced = true;
                         break;
@@ -80,7 +82,9 @@ namespace Cooking
                     if (!couldBePlaced) go.transform.position = transform.position;
                 }
             }
+            
             OnSpawn.Invoke();
+            
         }
 
         #endregion

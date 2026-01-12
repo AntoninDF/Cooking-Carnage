@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GameSystem;
 using Cooking;
 using Clients;
+using System.Linq;
 
 namespace UI
 {
@@ -11,6 +12,7 @@ namespace UI
     public class EventLinker : MonoBehaviour
     {
         #region Fields
+        [SerializeField] private UnityEvent _onStart;
         [SerializeField] private List<EventLink> _events;
 
 
@@ -20,6 +22,10 @@ namespace UI
 
         #region Methods
 
+        void Start()
+        {
+            _onStart?.Invoke();
+        }
         private void Init()
         {
             foreach(var e in _events)
@@ -67,7 +73,7 @@ namespace UI
                     }
                     break;
                 case TargetEvent.MealCooked:
-                    foreach (var elm in Ref.GetElementsOfType<Oven>())
+                    foreach (var elm in Ref.GetElementsOfType<Oven>().Concat(Ref.GetElementsOfType<Oven2>()))
                     {
                         // Target event
                         ev = elm.OnItemCooked;
