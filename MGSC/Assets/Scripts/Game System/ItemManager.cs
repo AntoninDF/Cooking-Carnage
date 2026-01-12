@@ -233,14 +233,11 @@ public class ItemManager : IManager
     GameObject Spawn(Item item, Vector3 position, Quaternion rotation, Transform parent)
     {
         Debug.Log("Spawning");
-        ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
         item.transform.SetParent(parent);
         item.transform.position = position;
         item.transform.rotation = rotation;
         item.gameObject.SetActive(true);
 
-        Debug.Log("Updating active list");
-        ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
         UpdateActiveList(item);
         
         this.Log(LogType.Log, "Spawned " + item.name);

@@ -109,6 +109,7 @@ namespace Upgrades
             if (!HasUpgradeOfType<T>(out upgrade))
             {
                 this.Log(LogType.Error, "No upgrade of type " + nameof(T) + " found");
+                return false;
             }
             float price = upgrade.GetPrice();
             if (_moneyManager.MoneyInfo < price)
