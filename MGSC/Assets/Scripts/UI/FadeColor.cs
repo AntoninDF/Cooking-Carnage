@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ namespace Assets.Scripts.UI
     {
 
         [SerializeField] private Image _target;
+        [SerializeField] private TMP_Text _textTarget;
         [SerializeField] private Color _startColor;
         [SerializeField] private Color _endColor;
         [SerializeField] private float _duration;
@@ -53,10 +55,14 @@ namespace Assets.Scripts.UI
 
         private void SetColor(float t)
         {
-            if (_target == null)
-                Debug.LogError("FadeColor target was null.");
-            t = Mathf.Clamp01( t );
-            _target.color = Color.Lerp(_startColor, _endColor, t);
+            t = Mathf.Clamp01(t);
+
+            if (_target != null)
+                _target.color = Color.Lerp(_startColor, _endColor, t);
+            
+            if (_textTarget != null)
+                _textTarget.color = Color.Lerp(_startColor, _endColor, t);
+
         }
     }
 }
