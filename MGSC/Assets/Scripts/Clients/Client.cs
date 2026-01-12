@@ -161,7 +161,7 @@ namespace Clients
                         sizeMattersUserSpot.y = 0;
                     }
                     
-                    if (transform.position != sizeMattersUserSpot)
+                    if (transform.position != sizeMattersUserSpot || _previousPos != sizeMattersUserSpot)
                     {
                         _movement.GoTo(sizeMattersUserSpot);
                     }
