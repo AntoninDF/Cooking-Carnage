@@ -1,5 +1,164 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1246761481511795606
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8963907770266214947}
+  - component: {fileID: 1931379132359071430}
+  m_Layer: 0
+  m_Name: AvatarDrop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8963907770266214947
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246761481511795606}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1363136377195171767}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1931379132359071430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246761481511795606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -410476120
+      Data2: 1113419023
+      Data3: 1778775466
+      Data4: -312773068
+    Path: event:/SFX/Controller/AvatarDrop
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &3742287010408932904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4640760258518211250}
+  - component: {fileID: 7144060086854947920}
+  m_Layer: 0
+  m_Name: AvatarGrab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4640760258518211250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3742287010408932904}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1363136377195171767}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7144060086854947920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3742287010408932904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1593957238
+      Data2: 1239765027
+      Data3: 2136338058
+      Data4: -1526949636
+    Path: event:/SFX/Controller/AvatarGrab
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &7691799659013310697
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1363136377195171767}
+  m_Layer: 0
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1363136377195171767
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7691799659013310697}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.05, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4640760258518211250}
+  - {fileID: 8963907770266214947}
+  m_Father: {fileID: 7112028440370428212}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4520658974247231165
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -100,6 +259,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 6
       objectReference: {fileID: 0}
@@ -116,6 +279,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2542088150261048687}
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
@@ -130,6 +297,18 @@ PrefabInstance:
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
       value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7144060086854947920}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Play
       objectReference: {fileID: 0}
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
@@ -148,11 +327,19 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: FMODUnity.StudioEventEmitter, FMODUnity
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: _onCut.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: _onGrabbed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3519798225028237028, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
@@ -227,6 +414,9 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 307971292422303130, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3519798225028237028, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1363136377195171767}
     - targetCorrespondingSourceObject: {fileID: 5896125322217884917, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4371162130091218613}
@@ -238,6 +428,11 @@ PrefabInstance:
 --- !u!4 &268222858925273893 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5896125322217884917, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+  m_PrefabInstance: {fileID: 5939075799966220240}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7112028440370428212 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3519798225028237028, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
   m_PrefabInstance: {fileID: 5939075799966220240}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7435425141210125165
