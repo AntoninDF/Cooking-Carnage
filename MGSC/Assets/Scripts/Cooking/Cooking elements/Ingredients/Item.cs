@@ -100,14 +100,12 @@ namespace Cooking
 
         public void GetGrabbed(IContainer newContainer)
         {
-
-            Debug.Log(this.name + " is getting grabbed");
+            
 
             ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update"); 
             Container?.Drop(this);
 
-
-            Debug.Log(this.name + " asked it's container (" + (Container as SlotContainer)?.name + ") to Drop");
+            
 
             ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
             Container = newContainer;

@@ -149,13 +149,9 @@ namespace Cooking
             var go = itemManager.TrySpawn(recipe.mealPrefab, transform.position, transform.rotation, transform.parent);
             go.name = this.name + " as meal";
             Meal meal = go.GetComponent<Meal>();
-            Debug.Log("Newly created meal has ID : " + meal.ID);
             meal.Recipe = recipe;
             Container.Empty();
             Container.Grab(meal);
-
-            if (Container is ISoloContainer cont)
-                Debug.Log("The container now holds : " + cont.HeldItem);
             
             foreach (var obj in _ingredientSlots.HeldItems)
             {
