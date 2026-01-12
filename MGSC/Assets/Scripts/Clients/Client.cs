@@ -45,6 +45,7 @@ namespace Clients
         [SerializeField] private UnityEvent _onLookAt;
         [SerializeField] private UnityEvent _onStopLookAt;
         [SerializeField] private UnityEvent _onStartEating;
+        [SerializeField] private UnityEvent _onEndEating;
         [SerializeField] private UnityEvent _onStartWalking;
         [SerializeField] private UnityEvent _onEndWalking;
         [SerializeField] private UnityEvent _onCounterRegister;
@@ -281,6 +282,7 @@ namespace Clients
 
         private void Eat(ServingInfo info, OrderRating rating)
         {
+            _onEndEating?.Invoke();
             if (rating.IsCorrectRecipe)
                 _onSatisfactoryOrder?.Invoke();
             else

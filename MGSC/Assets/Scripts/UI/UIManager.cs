@@ -38,6 +38,8 @@ namespace UI
         [SerializeField] private UnityEvent _onDisable;
         [SerializeField] private UnityEvent _onUpgradeFail;
         [SerializeField] private UnityEvent _onUpgradeSuccess;
+        [SerializeField] private UnityEvent _onPause;
+        [SerializeField] private UnityEvent _onResume;
 
         private GameLoop _gameLoop;
         private InputActionAsset _inputActionAsset;
@@ -153,7 +155,9 @@ namespace UI
             _gameLoop.StopRunning();
             _playerInputs.Disable();
             _UIInputs.Enable();
-            
+            _onPause?.Invoke();
+
+
             this.Log(LogType.Log, $"Game has been paused");
         }
 
@@ -162,6 +166,7 @@ namespace UI
             _gameLoop.StartRunning();
             _playerInputs.Enable();
             _UIInputs.Enable();
+            _onResume?.Invoke();
             
             SetCursorFreedom(false);
             
