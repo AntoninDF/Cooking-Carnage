@@ -54,6 +54,7 @@ namespace Clients
         [SerializeField] private UnityEvent _onKilled;
         [SerializeField] private UnityEvent _onSatisfactoryOrder;
         [SerializeField] private UnityEvent _onWrongOrder;
+        [SerializeField] private UnityEvent _onStart;
 
 
         private float _speed = 1f;
@@ -95,6 +96,8 @@ namespace Clients
                 Debug.LogWarning("[Client] Init : No spline component was referenced. Consider using SetSplinePath.");
 
             _movement.SetSplinePos(0.0f);
+            
+            _onStart?.Invoke();
 
             _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
             if (_gameLoop == null)
@@ -178,6 +181,7 @@ namespace Clients
             FaceDirection();
             _previousPos = transform.position;
         }
+        
 
         private void FaceDirection()
         { 
@@ -293,7 +297,7 @@ namespace Clients
             if (tm != null)
             {
                 tm.StartTimer("Leave", _timeToEat, () => LeaveCounterFeedback() );
-                tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => gameObject.SetActive(false));
+                tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => gameObject.SetActive(false)); //timer aussi utilisé dans endshift shiftmanager
             }
             _hasEaten = true;
         }

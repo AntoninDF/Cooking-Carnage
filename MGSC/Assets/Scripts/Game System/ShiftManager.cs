@@ -11,6 +11,8 @@ namespace GameSystem
         #region Properties
         public Action OnShiftFailed { get; set; }
         public Action OnShiftSucceeded { get; set; }
+        
+        public Action OnShiftNoon { get; set; }
         public Action OnNextShift { get; set; }
         public Action OnShiftEnded { get; set; }
         public int ShiftCount => _shiftCount;
@@ -22,11 +24,15 @@ namespace GameSystem
         #region Fields
     
         private DataManager _dataManager;
+        private TimerManager _timerManager;
     
         private int _shiftCount = 0;
         private float _currentRentPrice = 0 ;
         private AnimationCurve _rentPriceCurve;
         private float _shiftDuration = 120;
+        private float _noonDuration = 30;
+        
+        
     
         #endregion
 
@@ -36,20 +42,18 @@ namespace GameSystem
         {
             Register();
         }
-        public ShiftManager(float shiftDuration)
+
+        public ShiftManager(float shiftDuration,float shiftNoonDuration, AnimationCurve rentPriceCurve)
         {
             Register();
             SetShiftDuration(shiftDuration);
-        }
-        public ShiftManager(float shiftDuration, AnimationCurve rentPriceCurve)
-        {
-            Register();
-            SetShiftDuration(shiftDuration);
+            SetShiftNoonDuration(shiftNoonDuration);
             SetRentPriceCurve(rentPriceCurve);
         }
 
         public void SetShiftCount(int count) => _shiftCount = count;
         public void SetShiftDuration(float duration) => _shiftDuration = duration;
+        public void SetShiftNoonDuration(float duration) => _noonDuration = duration;
         public void SetRentPriceCurve(AnimationCurve rentPriceCurve) => _rentPriceCurve = rentPriceCurve;
         public void SetRentPrice(float price) => _currentRentPrice = price;
         public float GetCurrentRentPrice() => GetRentPrice(_shiftCount);
@@ -58,32 +62,42 @@ namespace GameSystem
 
         void LaunchShift(float duration)
         {
-            this.Log(LogType.Log, $"Launching new shift for {duration}s");
+            this.Log(LogType.Log, $"Launching new shift for {duration+_noonDuration}s");
             
-            ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("shiftDuration", duration, () => EndShift(), false);
+            _timerManager.StartTimer("shiftDuration", duration, () => LaunchShiftNoon(), false);
+        }
+
+        void LaunchShiftNoon()
+        {
+            OnShiftNoon?.Invoke();
+            this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
+            _timerManager.StartTimer("shiftNoonDuration", _noonDuration, () => EndShift(), false);
         }
 
         void DelayEndShift()
         {
-            ReferenceManager.Instance
-                .GetManager<TimerManager>()
-                .StartTimer("shiftEndDelay", 2, () => EndShift(), false);
+            _timerManager.StartTimer("shiftEndDelay", 2, () => TryEndShift(), false);
         }
 
         void EndShift()
+        {
+            OnShiftEnded?.Invoke();
+            TryEndShift();
+        }
+
+        void TryEndShift()
         {
             var clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
             int activeClients = clientManager.CurrentClients.Count;
             
             this.Log(LogType.Log, $"End of the Shift triggered. Active clients: {activeClients}");
 
-            if (activeClients != 0)
+            if (activeClients != 0 || _timerManager.IsTimerRunning("Disable client") || _timerManager.IsTimerRunning("Eating"))
             {
                 DelayEndShift();
             }
             else
             {
-                OnShiftEnded?.Invoke();
 
                 ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
                 ResetAll();
@@ -136,7 +150,7 @@ namespace GameSystem
             
             ReferenceManager.Instance.GetManager<UIManager>().ResumeGame();
             
-            LaunchShift(_shiftDuration);
+            LaunchShift(_shiftDuration-_noonDuration);
         }
 
         public void Register()
@@ -151,6 +165,7 @@ namespace GameSystem
         public void Init()
         {
             _dataManager = ReferenceManager.Instance.GetManager<DataManager>();
+            _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
         }
 
         public void PostInit()
@@ -162,6 +177,14 @@ namespace GameSystem
             //LaunchShift(_shiftDuration); // Removed because it doesn't call everything the right way
             ResetAll();
             NextShift();
+            
+            GameLoop gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
+            if (gameLoop)
+            {
+                OnShiftNoon += () => gameLoop.ShiftNoon?.Invoke();
+                OnShiftEnded += () => gameLoop.ShiftEnd?.Invoke();
+                OnShiftFailed += () => gameLoop.RentGameOver?.Invoke();
+            }
         }
         #endregion
     }

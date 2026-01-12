@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Client.Client
   _timeToEat: 2
-  _timeBeforeDisappearingAfterLeaving: 15
+  _timeBeforeDisappearingAfterLeaving: 8
   _timeBeforeDisappearingAfterDying: 3
   deathTrapHeight: -1
   _onLookAt:
@@ -250,6 +250,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _onEndEating:
+    m_PersistentCalls:
+      m_Calls: []
   _onStartWalking:
     m_PersistentCalls:
       m_Calls: []
@@ -310,6 +313,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _onStart:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!136 &7884375622220360648
 CapsuleCollider:
   m_ObjectHideFlags: 0
