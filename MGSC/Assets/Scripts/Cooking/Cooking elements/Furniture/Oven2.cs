@@ -63,6 +63,7 @@ namespace Cooking
             var targetRecipe = GetTargetRecipe();
             plate.Cook(targetRecipe.timeToCook + 0.01f);
             ResetSlider();
+            _onItemCooked?.Invoke();
             StartOvercooking();
         }
 
@@ -85,6 +86,7 @@ namespace Cooking
             var meal= GetHeldItemAs<Meal>();
             var targetRecipe = meal.Recipe;
             meal.Cook(targetRecipe.timeToOvercook);
+            _onItemOvercooked?.Invoke();
         }
 
         public override void ToggleCooking()

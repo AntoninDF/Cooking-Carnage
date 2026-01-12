@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GameSystem;
 using Cooking;
 using Clients;
+using System.Linq;
 
 namespace UI
 {
@@ -67,7 +68,7 @@ namespace UI
                     }
                     break;
                 case TargetEvent.MealCooked:
-                    foreach (var elm in Ref.GetElementsOfType<Oven>())
+                    foreach (var elm in Ref.GetElementsOfType<Oven>().Concat(Ref.GetElementsOfType<Oven2>()))
                     {
                         // Target event
                         ev = elm.OnItemCooked;

@@ -273,6 +273,7 @@ public class JiggleRigBuilder : MonoBehaviour, IJiggleAdvancable, IJiggleBlendab
         /// Saves the current state of the particles and animations in preparation for a teleport. Move the rig, then do FinishTeleport().
         /// </summary>
         public void PrepareTeleport() {
+            if (simulatedPoints == null) return;
             for (int i = 0; i < boneCount; i++) {
                 simulatedPoints[i].PrepareTeleport(simulatedPoints);
             }
