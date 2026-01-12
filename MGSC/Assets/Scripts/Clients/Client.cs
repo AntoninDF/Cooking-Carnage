@@ -297,7 +297,7 @@ namespace Clients
             if (tm != null)
             {
                 tm.StartTimer("Leave", _timeToEat, () => LeaveCounterFeedback() );
-                tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => gameObject.SetActive(false));
+                tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => gameObject.SetActive(false)); //timer aussi utilisé dans endshift shiftmanager
             }
             _hasEaten = true;
         }
