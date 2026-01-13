@@ -22,6 +22,8 @@ namespace GameSystem
         public UnityEvent OnPause = new();
         public UnityEvent OnResume = new();
         
+        
+        public UnityEvent ShiftBegin = new();
         public UnityEvent ShiftEnd = new();
         public UnityEvent ShiftNoon = new();
         public UnityEvent RentGameOver = new();
@@ -46,7 +48,7 @@ namespace GameSystem
         public void OnEnable()
         {
             Register();
-            StartRunning();
+            OnPause?.Invoke();
         }
 
         /// <summary>
