@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Controller
 {
@@ -36,6 +37,11 @@ namespace Controller
 
         private Vector3 _currentMovement;
         private float _verticalRotation;
+        private bool isMoving;
+        
+        [Header ("UnityEvents")] 
+        [SerializeField] private UnityEvent _onStartWalking;
+        [SerializeField] private UnityEvent _onStopWalking;
         #endregion
 
         #region Methods
@@ -85,6 +91,23 @@ namespace Controller
 
             HandleJumping();
             _characterController.Move(_currentMovement * Time.deltaTime);
+
+            if (!isMoving)
+            {
+                if(_characterController.velocity.magnitude >= CurrentSpeed*0.75)
+                {
+                    isMoving = true;
+                    _onStartWalking?.Invoke();
+                }
+            }
+            else
+            {
+                if(_characterController.velocity.magnitude < CurrentSpeed*0.75)
+                {
+                    isMoving = false;
+                    _onStopWalking?.Invoke();
+                }
+            }
         }
 
         private void ApplyHorizontalRotation(float rotationAmount)
