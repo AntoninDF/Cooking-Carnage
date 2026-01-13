@@ -33,4 +33,14 @@ public class StudioEventEmitterExtension : MonoBehaviour
         eventEmitter.Stop();
     }
     private void Get() => eventEmitter = GetComponent<StudioEventEmitter>();
+    
+    public void FMOD_SetParameterToMax(string parameterName)
+    {
+        eventEmitter.EventInstance.setParameterByName(parameterName, 1);
+    }
+        
+    public void FMOD_SetParameterToMin(string parameterName)
+    {
+        eventEmitter.EventInstance.setParameterByName(parameterName, 0);
+    }
 }
