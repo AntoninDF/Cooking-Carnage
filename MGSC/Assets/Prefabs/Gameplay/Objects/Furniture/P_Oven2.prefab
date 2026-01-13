@@ -119,6 +119,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5523419642664169699, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.04
+      objectReference: {fileID: 0}
     - target: {fileID: 5761713516370686214, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -229,6 +233,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+--- !u!1 &3890902340026287810 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7990525941214451634, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+  m_PrefabInstance: {fileID: 6564926722106544496}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4472623446007555110 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7280839838746309974, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
@@ -267,9 +276,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
---- !u!95 &5700694133266696112 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1443299288928130752, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+--- !u!320 &5401988086745503503 stripped
+PlayableDirector:
+  m_CorrespondingSourceObject: {fileID: 1291681628690237055, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
   m_PrefabInstance: {fileID: 6564926722106544496}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &6271733373260696446 stripped
@@ -309,6 +318,16 @@ ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 4362567210639510521, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
   m_PrefabInstance: {fileID: 6564926722106544496}
   m_PrefabAsset: {fileID: 0}
+--- !u!320 &7496560351232838928 stripped
+PlayableDirector:
+  m_CorrespondingSourceObject: {fileID: 3680126964966071392, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+  m_PrefabInstance: {fileID: 6564926722106544496}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7565982903223810852 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3739266762126142036, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+  m_PrefabInstance: {fileID: 6564926722106544496}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7795176034945563232 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3978166520960264976, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
@@ -346,6 +365,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5401988086745503503}
+        m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onDrop:
     m_PersistentCalls:
       m_Calls:
@@ -361,10 +392,25 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5401988086745503503}
+        m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onLookAt:
     m_PersistentCalls:
       m_Calls: []
   _onStopLookAt:
+    m_PersistentCalls:
+      m_Calls: []
+  _onTryGrabIncorrectItem:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &8134891405955228977 stripped
@@ -432,18 +478,6 @@ MonoBehaviour:
           m_StringArgument: Stop cooking
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 5700694133266696112}
-        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-        m_MethodName: SetTrigger
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: StartCookingAnimation
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 1416181204408684860}
         m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
         m_MethodName: Play
@@ -495,18 +529,6 @@ MonoBehaviour:
           m_StringArgument: Start cooking
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5700694133266696112}
-        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-        m_MethodName: SetTrigger
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: StopCookingAnimation
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1416181204408684860}
         m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
         m_MethodName: Stop
@@ -523,6 +545,42 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
         m_MethodName: Stop
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7496560351232838928}
+        m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+        m_MethodName: Stop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3890902340026287810}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7565982903223810852}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -561,33 +619,45 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5700694133266696112}
-        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-        m_MethodName: SetTrigger
-        m_Mode: 5
+      - m_Target: {fileID: 7496560351232838928}
+        m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: CookedAnimation
+          m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3890902340026287810}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 7565982903223810852}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   _onItemOvercooked:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5700694133266696112}
-        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-        m_MethodName: SetTrigger
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: OvercookedAnimation
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 4607749163152951907}
         m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
         m_MethodName: Play
