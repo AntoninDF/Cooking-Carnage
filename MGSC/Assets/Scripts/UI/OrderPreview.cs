@@ -85,6 +85,7 @@ namespace UI
             {
                 if (image == null) continue;
                 image.sprite = null;
+                image.color = new Color(0f, 0f, 0f, 0f);
             }
         }
 
@@ -146,6 +147,7 @@ namespace UI
                 if (ingredient == null) continue;
                 if (image == null) continue;
                 image.sprite = ingredient.Sprite;
+                image.color = Color.white;
             }
         }
         

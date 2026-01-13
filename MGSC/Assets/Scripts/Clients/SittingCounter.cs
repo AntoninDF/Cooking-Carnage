@@ -27,6 +27,7 @@ namespace Clients
         [SerializeField] private List<SlotContainer> _slotsToSpawn;
         [Tooltip("Slot on which the meal will be served.")]
         [SerializeField] private SlotContainer _mealSlot;
+        [SerializeField] private float _timeBeforeMealDisappears = 2.5f;
         [Space]
         [Header("Specific events")]
         [Tooltip("This event will be invoked when a client is successfully killed")]
@@ -92,7 +93,10 @@ namespace Clients
             _orderManager.ResolveOrder(_currentClient.Order, info);
             LastServedOrder = _currentClient.Order;
             _mealSlot.Drop(item);
-            ReferenceManager.Instance.GetManager<ItemManager>().Despawn(meal);
+            TimerManager tm;
+            ReferenceManager.Get(out tm);
+            
+            tm.StartTimer("Despawn meal", _timeBeforeMealDisappears, () => ReferenceManager.Instance.GetManager<ItemManager>().Despawn(meal));
             Free();
         }
 
