@@ -156,6 +156,7 @@ namespace Cooking
             int heldItems = _ingredientSlots.HeldItems.Count;
             for (int i=0;i<heldItems;i++)
             {
+                if (i >= _ingredientSlots.HeldItems.Count) break;
                 var obj = _ingredientSlots.HeldItems[i];
                 var ingredient = obj as Item;
                 if (ingredient != null)
