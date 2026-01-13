@@ -145,6 +145,19 @@ namespace GameSystem
         {
             return timers.TryGetValue(name, out var t) && !t.IsComplete && !t.IsPaused;
         }
+
+        public float TimeLeft(string name)
+        {
+            if (!IsTimerRunning(name))
+            {
+                return 0;
+            }
+            else
+            {
+                timers.TryGetValue(name, out var t);
+                return t.Duration - t.Elapsed;
+            }
+        }
         
         /// <summary>
         /// Removes a timer from the list (deletes it)

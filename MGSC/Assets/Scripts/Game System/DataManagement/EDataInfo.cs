@@ -18,6 +18,7 @@ namespace GameSystem
         IngredientDropUpgradeLevel,
         OvenCountUpgradeLevel,
         CuttingSpeedUpgradeLevel,
+        TimeLeft,
 
 
         // Data dependent on a specific object should be 50 or more

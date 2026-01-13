@@ -28,6 +28,7 @@ namespace GameSystem
         UpgradeManager _upgradeManager;
         ClientManager _clientManager;
         ShiftManager _shiftManager;
+        TimerManager _timerManager;
 
         private GameData currentGameData;
         private string filePath ;
@@ -164,6 +165,7 @@ namespace GameSystem
             _upgradeManager = ReferenceManager.Instance.GetManager<UpgradeManager>();
             _clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
             _shiftManager =  ReferenceManager.Instance.GetManager<ShiftManager>();
+            _timerManager =  ReferenceManager.Instance.GetManager<TimerManager>();
         }
 
         GameData DefaultData()
@@ -216,6 +218,7 @@ namespace GameSystem
                 case EDataInfo.IngredientDropUpgradeLevel:  return (_upgradeManager.GetUpgradeByType<IngredientDropUpgrade>()?.Level+1).ToString();
                 case EDataInfo.OvenCountUpgradeLevel:       return (_upgradeManager.GetUpgradeByType<OvenCountUpgrade>()?.Level+1).ToString();
                 case EDataInfo.CuttingSpeedUpgradeLevel:    return "1";
+                case EDataInfo.TimeLeft:                    return TimeSpan.FromSeconds(_timerManager.TimeLeft("shiftDuration") + _timerManager.TimeLeft("shiftNoonDuration")).ToString(@"mm\:ss");
             }
             // REFACTO : To be implemented
 
