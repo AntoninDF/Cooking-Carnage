@@ -103,7 +103,7 @@ namespace Clients
         public void TryKill()
         {
             // Check if tutorial is running :
-            if ( ReferenceManager.Get<DataManager>().GetTotalOrdersCount() < 1) return;
+            if ( ReferenceManager.Get<DataManager>().GetTotalOrdersCount() < 1 && ReferenceManager.Get<ShiftManager>().ShiftCount == 1) return;
 
             if (!IsFree && _currentClient.CheckClientCounterDistance(this))
             {
