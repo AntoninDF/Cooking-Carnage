@@ -137,9 +137,9 @@ namespace Clients
                     {
                         _state = EClientState.PlatformElevation;
                         _currentCounter.GetComponent<SittingCounter>().HeightDeathTrap(deathTrapHeight); 
-                        _currentCounter.GetComponent<SittingCounter>().OnPlatformUp?.Invoke(); 
-                        _onCounterArrival?.Invoke();
+                        _currentCounter.GetComponent<SittingCounter>().OnPlatformUp?.Invoke();
                     }
+                    _onCounterArrival?.Invoke();
                     break;
 
                 case EClientState.ReachingSpline:
