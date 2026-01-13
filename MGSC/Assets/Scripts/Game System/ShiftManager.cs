@@ -12,6 +12,8 @@ namespace GameSystem
         public Action OnShiftFailed { get; set; }
         public Action OnShiftSucceeded { get; set; }
         
+        
+        public Action OnShiftBegin { get; set; }
         public Action OnShiftNoon { get; set; }
         public Action OnNextShift { get; set; }
         public Action OnShiftEnded { get; set; }
@@ -63,7 +65,7 @@ namespace GameSystem
         void LaunchShift(float duration)
         {
             this.Log(LogType.Log, $"Launching new shift for {duration+_noonDuration}s");
-            
+            OnShiftBegin?.Invoke();
             _timerManager.StartTimer("shiftDuration", duration, () => LaunchShiftNoon(), false);
         }
 
@@ -181,6 +183,7 @@ namespace GameSystem
             GameLoop gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
             if (gameLoop)
             {
+                OnShiftBegin += () => gameLoop.ShiftBegin?.Invoke();
                 OnShiftNoon += () => gameLoop.ShiftNoon?.Invoke();
                 OnShiftEnded += () => gameLoop.ShiftEnd?.Invoke();
                 OnShiftFailed += () => gameLoop.RentGameOver?.Invoke();
