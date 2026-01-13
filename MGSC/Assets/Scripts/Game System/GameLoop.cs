@@ -19,6 +19,7 @@ namespace GameSystem
         #region Fields
 
         private List<UpdatableBase> _updatables = new();
+        public UnityEvent OnGameStart = new ();
         public UnityEvent OnPause = new();
         public UnityEvent OnResume = new();
         
@@ -48,7 +49,7 @@ namespace GameSystem
         public void OnEnable()
         {
             Register();
-            OnPause?.Invoke();
+            OnGameStart?.Invoke();
         }
 
         /// <summary>
