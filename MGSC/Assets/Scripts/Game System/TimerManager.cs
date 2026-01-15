@@ -148,8 +148,9 @@ namespace GameSystem
 
         public float TimeLeft(string name)
         {
-            timers.TryGetValue(name, out var t);
-            return t.Duration - t.Elapsed;
+            if (timers.TryGetValue(name, out var t) && t != null)
+                return t.Duration - t.Elapsed;
+            return 0f;
         }
         
         /// <summary>
