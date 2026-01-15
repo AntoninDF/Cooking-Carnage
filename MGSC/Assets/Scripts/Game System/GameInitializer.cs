@@ -46,7 +46,7 @@ namespace GameSystem
         /// <exception cref="MissingComponentException"></exception>
         public void ResetScene()
         {
-            ReferenceManager.Reset();
+            if (_gameProfile.ResetRefManager) ReferenceManager.Reset();
             ReferenceManager.Instance.RemoveAllManagers();
             if (_gameProfile == null)
                 throw new MissingReferenceException("[GameInitializer] : Please reference a game profile in the inspector.");

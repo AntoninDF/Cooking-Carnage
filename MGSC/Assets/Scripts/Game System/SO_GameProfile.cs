@@ -27,6 +27,11 @@ namespace GameSystem
         [SerializeField] private bool _resetSaveFile;
         public bool ResetSaveFile => _resetSaveFile;
 
+        [Tooltip("Wether or not to reset the ReferenceManager upon reloading")]
+        [SerializeField] private bool _resetRefManager = true;
+        public bool ResetRefManager => _resetRefManager;
+
+
         [Space]
         [Header("Game settings")]
         [Tooltip("How long should a shift last ?")]
