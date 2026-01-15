@@ -18,6 +18,7 @@ namespace Clients
         public UnityEvent OnPlatformDown => _onPlatformDown;
         public Meal ServedMeal => _mealSlot?.HeldItem as Meal;
         public Order LastServedOrder {  get; set; }
+        public bool LockWithTutorial { get => _lockWithTutorial; set => _lockWithTutorial = value; }
 
         #endregion
 
@@ -28,6 +29,7 @@ namespace Clients
         [Tooltip("Slot on which the meal will be served.")]
         [SerializeField] private SlotContainer _mealSlot;
         [SerializeField] private float _timeBeforeMealDisappears = 2.5f;
+        [SerializeField] private bool _lockWithTutorial = true;
         [Space]
         [Header("Specific events")]
         [Tooltip("This event will be invoked when a client is successfully killed")]
@@ -86,7 +88,8 @@ namespace Clients
 
         private void Serve(IGrabbable item)
         {
-            if (_currentClient == null) return; // This is very risky, the meal might get stuck on the slot and be never served
+            if (_currentClient == null) return; // The meal will just wait there
+            if (_lockWithTutorial) ;
             Meal meal = item as Meal;
             _onServe?.Invoke();
             ServingInfo info = new ServingInfo(meal);
@@ -103,7 +106,7 @@ namespace Clients
         public void TryKill()
         {
             // Check if tutorial is running :
-            if ( ReferenceManager.Get<DataManager>().GetTotalOrdersCount() < 1 && ReferenceManager.Get<ShiftManager>().ShiftCount == 1) return;
+            if (_lockWithTutorial && ReferenceManager.Get<DataManager>().GetTotalOrdersCount() < 1 && ReferenceManager.Get<ShiftManager>().ShiftCount == 1) return;
 
             if (!IsFree && _currentClient.CheckClientCounterDistance(this))
             {

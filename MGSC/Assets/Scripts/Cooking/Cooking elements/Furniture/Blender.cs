@@ -83,20 +83,19 @@ namespace Cooking
 
         public void Interact(PlayerInteractor interactor)
         {
-            if (_slotContainer != null && _slotContainer.HeldItem != null)
+            if (!(_slotContainer != null && _slotContainer.HeldItem != null))
+                return;
+            if (_slotContainer.HeldItem is not Ingredient ingredient)
+                return;
+
+            if (!ingredient.IsCut)
             {
-                if (_slotContainer.HeldItem is Ingredient ingredient)
-                {
-                    if (!ingredient.IsCut)
-                    {
-                        _timerManager.StartTimer("Cutting", _cutDuration, () => TryCutIngredient(ingredient));
-                        _onInteract?.Invoke();
-                    }
-                    else
-                    {
-                        _onTryToCutAlreadyCutIngredient?.Invoke();
-                    }
-                }
+                _timerManager.StartTimer("Cutting", _cutDuration, () => TryCutIngredient(ingredient));
+                _onInteract?.Invoke();
+            }
+            else
+            {
+                _onTryToCutAlreadyCutIngredient?.Invoke();
             }
         }
 
