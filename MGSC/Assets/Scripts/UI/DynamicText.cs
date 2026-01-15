@@ -93,6 +93,10 @@ namespace UI
                         result = counter.LastServedOrder.OrderRating.MoneyGained.ToString();
                     }
                     break;
+                case (EDataInfo.MealPrice):
+                    var order = _dataSource.GetComponent<OrderPreview>();
+                    if (order != null) result = order.CurrentOrder.Recipe.Price.ToString();
+                    break;
             }
 
             return result;
