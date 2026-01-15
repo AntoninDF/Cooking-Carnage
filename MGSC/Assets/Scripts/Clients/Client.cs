@@ -29,6 +29,7 @@ namespace Clients
         public bool IsSitting => _state == EClientState.Sitting;
         public float ReachDistance { get => _reachDistance; set => _reachDistance = value; }
         public bool HasOrdered => _hasOrdered;
+        public EClientState State => _state;
 
         public Collider Collider => _collider;
 
@@ -343,7 +344,7 @@ namespace Clients
 
         #endregion
 
-        private enum EClientState
+        public enum EClientState
         {
             None = 0,
             Moving = 1,
