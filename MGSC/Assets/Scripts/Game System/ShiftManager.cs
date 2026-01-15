@@ -112,6 +112,7 @@ namespace GameSystem
                 if (moneyManager.MoneyInfo < _currentRentPrice)
                 {
                     this.Log(LogType.Log, $"Not enough money ({moneyManager.MoneyInfo}) to pay the rent ({_currentRentPrice}€)");
+                    moneyManager.AddMoney(-_currentRentPrice);
                     OnShiftFailed?.Invoke();
                     return;
                 }

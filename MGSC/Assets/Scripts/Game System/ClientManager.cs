@@ -29,11 +29,7 @@ namespace GameSystem
         List<Client> currentClients = new List<Client>(); // script linked to entities
         List<ClientData> clientHistory =  new List<ClientData>(); // script copy
         
-        Dictionary<EClientType, float> clientTypePart = new Dictionary<EClientType, float>(){
-            { EClientType.A, 0f },
-            { EClientType.B, 0f },
-            { EClientType.C, 0f }
-        };
+        Dictionary<EClientType, float> clientTypePart = new Dictionary<EClientType, float>();
 
         private ShiftManager _shiftManager;
         #endregion
@@ -59,6 +55,11 @@ namespace GameSystem
         public void Init()
         {
             _shiftManager = ReferenceManager.Get<ShiftManager>();
+
+            foreach (var client in ReferenceManager.AssetReferences.clientList)
+            {
+                clientTypePart[client.clientType] = 0f;
+            }
         }
 
         public void PostInit()
