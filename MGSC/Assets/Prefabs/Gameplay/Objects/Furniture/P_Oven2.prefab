@@ -195,6 +195,10 @@ PrefabInstance:
       propertyPath: m_Center.x
       value: -0.030752778
       objectReference: {fileID: 0}
+    - target: {fileID: 8764803100969707827, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5887507579780967680, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
     - {fileID: 7503949388816502130, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
@@ -222,6 +226,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+--- !u!1 &2502202494087329859 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8764803100969707827, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
+  m_PrefabInstance: {fileID: 6564926722106544496}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3145697778273473403 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8123523289765675531, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
@@ -350,6 +359,7 @@ MonoBehaviour:
       m_Calls: []
   _disableColliderIfHandEmpty: 0
   _itemSlot: {fileID: 8134891405955228977}
+  _tooltip: {fileID: 0}
   _onGrab:
     m_PersistentCalls:
       m_Calls:
@@ -406,10 +416,34 @@ MonoBehaviour:
         m_CallState: 2
   _onLookAt:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2502202494087329859}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   _onStopLookAt:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2502202494087329859}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onTryGrabIncorrectItem:
     m_PersistentCalls:
       m_Calls: []
