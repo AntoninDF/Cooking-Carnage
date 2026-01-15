@@ -218,11 +218,22 @@ namespace GameSystem
                 case EDataInfo.IngredientDropUpgradeLevel:  return (_upgradeManager.GetUpgradeByType<IngredientDropUpgrade>()?.Level+1).ToString();
                 case EDataInfo.OvenCountUpgradeLevel:       return (_upgradeManager.GetUpgradeByType<OvenCountUpgrade>()?.Level+1).ToString();
                 case EDataInfo.CuttingSpeedUpgradeLevel:    return "1";
-                case EDataInfo.TimeLeft:                    return TimeSpan.FromSeconds(_timerManager.TimeLeft("shiftDuration") + _timerManager.TimeLeft("shiftNoonDuration")).ToString(@"mm\:ss");
+                case EDataInfo.TimeLeft:                    return ProcessTimeLeft();
+                    
             }
             // REFACTO : To be implemented
 
             return result;
+        }
+
+        string ProcessTimeLeft()
+        {
+            float timeLeft = _timerManager.TimeLeft("shiftDuration") + _timerManager.TimeLeft("shiftNoonDuration");
+            Debug.Log(timeLeft);
+            if (timeLeft > 0)
+                return TimeSpan.FromSeconds(timeLeft).ToString(@"mm\:ss");
+            else
+                return "OVER";
         }
 
         [System.Serializable]
