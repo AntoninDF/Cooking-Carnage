@@ -95,7 +95,11 @@ namespace UI
                     break;
                 case (EDataInfo.MealPrice):
                     var order = _dataSource.GetComponent<OrderPreview>();
-                    if (order != null) result = order.CurrentOrder.Recipe.Price.ToString();
+                    if (order != null && order.CurrentOrder != null)
+                    {
+                        result = order.CurrentOrder.Recipe.Price.ToString();
+                        result += "$";
+                    }
                     break;
             }
 
