@@ -67,13 +67,15 @@ namespace GameSystem
             this.Log(LogType.Log, $"Launching new shift for {duration+_noonDuration}s");
             OnShiftBegin?.Invoke();
             _timerManager.StartTimer("shiftDuration", duration, () => LaunchShiftNoon(), false);
+            _timerManager.StartTimer("shiftNoonDuration",_noonDuration,() => EndShift(), false);
+            _timerManager.StopTimer("shiftNoonDuration");
         }
 
         void LaunchShiftNoon()
         {
             OnShiftNoon?.Invoke();
             this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
-            _timerManager.StartTimer("shiftNoonDuration", _noonDuration, () => EndShift(), false);
+            _timerManager.ResumeTimer("shiftNoonDuration");
         }
 
         void DelayEndShift()
