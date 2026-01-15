@@ -242,10 +242,16 @@ namespace UI
                 EnableMenu(_pauseMenuName);
         }
 
+        public void ReloadGame()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        
+
         public void ResetEverything()
         {
             ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            ReloadGame();
         }
         public void Register()
         {
