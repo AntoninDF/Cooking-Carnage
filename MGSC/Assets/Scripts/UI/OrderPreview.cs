@@ -28,6 +28,7 @@ namespace UI
         [Header("Parameters")]
         [Tooltip("How long it will take for the order to disappear after it has been displayed. 0 means never")]
         [SerializeField] private float _resetDelay;
+        [SerializeField] private float _updateDelay;
         [Tooltip("Should recipes only be displayed if they are requested by a client that reserved this counter")]
         [SerializeField] private bool _filterByClient;
 
@@ -121,8 +122,18 @@ namespace UI
                 return;
             }
             _currentOrder = order;
-            _onOrderReceived?.Invoke();
+            
             UpdateRecipe(order.Recipe);
+            
+            if (_updateDelay != 0)
+            {
+                _timerManager.StartTimer("UpdateOrderPreview", _updateDelay, ()=> _onOrderReceived?.Invoke());
+            }
+            else
+            {
+                _onOrderReceived?.Invoke();
+            }
+            
             if (_timerManager != null && _resetDelay != 0)
             {
                 //Debug.Log("[OrderPreview] : Timer started for resetting the order");
@@ -141,7 +152,6 @@ namespace UI
 
         public void UpdateRecipe(SO_Recipe recipe)
         {
-            ResetSprites();
             if (_ingredientSprites == null)
             {
                 Debug.LogWarning("[OrderPreview] : The ingredient list was null");
@@ -164,9 +174,12 @@ namespace UI
                 image.sprite = ingredient.Sprite;
                 image.color = Color.white;
             }
-            
-            if(_priceBackground.Count >= recipe.Ingredients.Count)
-                _background.sprite = _priceBackground[recipe.Ingredients.Count];
+        }
+
+        public void UpdateRecipePreview()
+        {
+            if(_priceBackground.Count >= _currentOrder.Recipe.Ingredients.Count)
+                _background.sprite = _priceBackground[_currentOrder.Recipe.Ingredients.Count];
             
             if(_priceText)
                 _priceText.UpdateUI();

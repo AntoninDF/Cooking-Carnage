@@ -1097,10 +1097,23 @@ MonoBehaviour:
   - {fileID: 2930478976479545799}
   _counter: {fileID: 0}
   _resetDelay: 0
+  _updateDelay: 5
   _filterByClient: 0
   _onOrderReceived:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 2342053994506365014}
+        m_TargetAssemblyTypeName: UI.OrderPreview, Assembly-CSharp
+        m_MethodName: UpdateRecipePreview
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
       - m_Target: {fileID: 8807641009419041447}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -1154,7 +1167,7 @@ MonoBehaviour:
         m_CallState: 2
   _priceText: {fileID: 7074402550874929258}
   _priceBackground:
-  - {fileID: 21300000, guid: e6cf1f11a8c938a4ebcb31a6652e78ad, type: 3}
+  - {fileID: 21300000, guid: 14bcc3ced28f2504592f39b92cf23f6f, type: 3}
   - {fileID: 21300000, guid: e6cf1f11a8c938a4ebcb31a6652e78ad, type: 3}
   - {fileID: 21300000, guid: e6cf1f11a8c938a4ebcb31a6652e78ad, type: 3}
   - {fileID: 21300000, guid: e6cf1f11a8c938a4ebcb31a6652e78ad, type: 3}
@@ -1689,7 +1702,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.DynamicText
   _textObject: {fileID: 9133079934129188566}
-  _baseText: x$
+  _baseText: x
   _dataSource: {fileID: 5073779519757761507}
   _dataReplacement:
   - markup: x
@@ -1985,7 +1998,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e6cf1f11a8c938a4ebcb31a6652e78ad, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 14bcc3ced28f2504592f39b92cf23f6f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
