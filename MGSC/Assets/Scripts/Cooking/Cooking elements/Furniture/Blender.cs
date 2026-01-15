@@ -24,6 +24,7 @@ namespace Cooking
         public bool IsLookedAt => Player.LookTarget == gameObject;
         public UnityEvent OnLookAt { get; }
         public UnityEvent OnStopLookAt { get; }
+        public bool Locked { get; set; }
 
         #endregion
 
@@ -83,6 +84,7 @@ namespace Cooking
 
         public void Interact(PlayerInteractor interactor)
         {
+            if (Locked) return;
             if (!(_slotContainer != null && _slotContainer.HeldItem != null))
                 return;
             if (_slotContainer.HeldItem is not Ingredient ingredient)
@@ -101,6 +103,7 @@ namespace Cooking
 
         private void TryCutIngredient(Ingredient ingredient)
         {
+            if (Locked) return;
             ingredient.Cut();
             _onItemCut?.Invoke();
         }
@@ -130,7 +133,7 @@ namespace Cooking
         {
             if (_tooltip == null)
                 throw new MissingReferenceException("Please reference the tooltip gameobject in the inspector of " + name);
-            if (Player == null || !IsLookedAt)
+            if (Player == null || !IsLookedAt || Locked)
             {
                 if (_wasLookedAtThisFrame) StopLookAt();
                 _wasLookedAtThisFrame = false;

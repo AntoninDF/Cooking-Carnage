@@ -19,6 +19,7 @@ namespace Clients
         public Meal ServedMeal => _mealSlot?.HeldItem as Meal;
         public Order LastServedOrder {  get; set; }
         public bool LockWithTutorial { get => _lockWithTutorial; set => _lockWithTutorial = value; }
+        public bool ServingLocked { get; set; }
 
         #endregion
 
@@ -89,7 +90,7 @@ namespace Clients
         private void Serve(IGrabbable item)
         {
             if (_currentClient == null) return; // The meal will just wait there
-            if (_lockWithTutorial) ;
+            if (_lockWithTutorial && ServingLocked) return;
             Meal meal = item as Meal;
             _onServe?.Invoke();
             ServingInfo info = new ServingInfo(meal);
