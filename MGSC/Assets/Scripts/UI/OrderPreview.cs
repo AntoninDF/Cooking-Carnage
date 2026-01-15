@@ -14,6 +14,8 @@ namespace UI
     {
         #region Properties
 
+        public Order CurrentOrder => _currentOrder;
+        
         #endregion
 
         #region Fields
@@ -32,6 +34,10 @@ namespace UI
         [Header("Events")]
         [SerializeField] private UnityEvent _onOrderReceived;
         [SerializeField] private UnityEvent _onOrderResolved;
+        
+        [SerializeField] private DynamicText _priceText;
+        [SerializeField] private List<Sprite> _priceBackground = new();
+        [SerializeField] private Image _background;
 
         private Order _currentOrder;
         private List<OrderingCounter> _orderingCounters;
@@ -87,6 +93,12 @@ namespace UI
                 image.sprite = null;
                 image.color = new Color(0f, 0f, 0f, 0f);
             }
+            
+            if(_priceBackground.Count>0)
+                _background.sprite = _priceBackground[0];
+            
+            if(_priceText)
+                _priceText.UpdateUI();
         }
 
         public void Reset()
@@ -135,12 +147,15 @@ namespace UI
                 Debug.LogWarning("[OrderPreview] : The ingredient list was null");
                 return;
             }
-            if (recipe.Ingredients.Count > _ingredientSprites.Count)
+
+            int recipeCount = recipe.Ingredients.Count;
+            
+            if (recipeCount > _ingredientSprites.Count)
             {
                 Debug.LogWarning("[OrderPreview] : The requested recipe had more ingredients than there are image slots referenced. Please add more image slots.");
                 return;
             }
-            for (int i = 0; i < recipe.Ingredients.Count; i++)
+            for (int i = 0; i < recipeCount; i++)
             {
                 SO_Ingredient ingredient = recipe.Ingredients[i];
                 Image image = _ingredientSprites[i];
@@ -149,6 +164,12 @@ namespace UI
                 image.sprite = ingredient.Sprite;
                 image.color = Color.white;
             }
+            
+            if(_priceBackground.Count >= recipe.Ingredients.Count)
+                _background.sprite = _priceBackground[recipe.Ingredients.Count];
+            
+            if(_priceText)
+                _priceText.UpdateUI();
         }
         
         public void CameraFocus(float duration)

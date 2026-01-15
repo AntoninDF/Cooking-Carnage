@@ -65,7 +65,6 @@ namespace Cooking
             {
                 for (int i = 0; i < request.count; i++)
                 {
-                    bool couldBePlaced= false;
                     foreach (var slot in _slotsToSpawn)
                     {
                         if (!slot.IsFree) continue;
@@ -76,7 +75,6 @@ namespace Cooking
                         slot.Grab(item);
                         
                         item.transform.position = slot.transform.position;
-                        couldBePlaced = true;
                         break;
                     }
                 }
