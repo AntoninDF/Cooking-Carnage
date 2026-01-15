@@ -229,7 +229,7 @@ namespace GameSystem
         string ProcessTimeLeft()
         {
             float timeLeft = _timerManager.TimeLeft("shiftDuration") + _timerManager.TimeLeft("shiftNoonDuration");
-            Debug.Log(timeLeft);
+
             if (timeLeft > 0)
                 return TimeSpan.FromSeconds(timeLeft).ToString(@"mm\:ss");
             else
