@@ -228,6 +228,7 @@ namespace GameSystem
             int keyCount = keys.Count;
             
             //WIP : Works only for 3 types of Alien
+            /*
             for (int typeIndex = 0; typeIndex < keyCount; typeIndex++)
             {
                 int prevIndex = (typeIndex - 1) < 0 ? keyCount - 1 : typeIndex - 1;
@@ -237,7 +238,23 @@ namespace GameSystem
                 weightedTypes[type] =
                     35 + clientTypeAmount[keys[prevIndex]] * 5 + clientTypeAmount[keys[nextIndex]] * 5;
             }
-            float sum = weightedTypes[keys[0]] + weightedTypes[keys[1]]+weightedTypes[keys[2]];
+            */
+            weightedTypes = new Dictionary<EClientType, float>();
+            foreach (var kvp in clientTypeAmount)
+            {
+                EClientType type = kvp.Key;
+                weightedTypes[type] = 35;
+                foreach (var kvp2 in clientTypeAmount)
+                {
+                    if (kvp.Equals(kvp2)) continue;
+                    weightedTypes[type] += 5 * clientTypeAmount[kvp2.Key];
+                }
+            }
+            float sum = 0;
+            for (int i=0; i < weightedTypes.Count; i++)
+            {
+                sum += weightedTypes[keys[i]];
+            }
             
             for (int typeIndex = 0; typeIndex < keyCount; typeIndex++)
             {

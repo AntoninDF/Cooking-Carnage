@@ -152,7 +152,7 @@ namespace GameSystem
             
             this.Log(LogType.Log, $"Shift {_shiftCount-1} is over, launching shift {_shiftCount}");
             
-            ReferenceManager.Instance.GetManager<UIManager>().ResumeGame();
+            ReferenceManager.Instance.GetManager<UIManager>()?.ResumeGame();
             
             LaunchShift(_shiftDuration-_noonDuration);
         }

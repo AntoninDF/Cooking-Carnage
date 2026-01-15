@@ -90,6 +90,7 @@ namespace Clients
         private void Serve(IGrabbable item)
         {
             if (_currentClient == null) return; // The meal will just wait there
+            if (_currentClient.State != Client.EClientState.None) return;
             if (_lockWithTutorial && ServingLocked) return;
             Meal meal = item as Meal;
             _onServe?.Invoke();

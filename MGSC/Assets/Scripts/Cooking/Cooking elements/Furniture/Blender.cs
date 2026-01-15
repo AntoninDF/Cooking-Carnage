@@ -58,6 +58,7 @@ namespace Cooking
         // private fields
         TimerManager _timerManager;
         private bool _wasLookedAtThisFrame;
+        private bool _isCutting;
         #endregion
 
 
@@ -92,6 +93,7 @@ namespace Cooking
 
             if (!ingredient.IsCut)
             {
+                _isCutting = true;
                 _timerManager.StartTimer("Cutting", _cutDuration, () => TryCutIngredient(ingredient));
                 _onInteract?.Invoke();
             }
@@ -106,10 +108,13 @@ namespace Cooking
             if (Locked) return;
             ingredient.Cut();
             _onItemCut?.Invoke();
+            _isCutting = false;
         }
 
         public void StopCutting()
         {
+            if (!_isCutting) return;    
+            _isCutting = false;
             _timerManager.StopTimer("Cutting");
             _onStopCutting?.Invoke();
         }
