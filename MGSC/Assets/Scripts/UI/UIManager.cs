@@ -50,6 +50,10 @@ namespace UI
         private UIMenu _currentMenu;
         private Dictionary<string, UIMenu> _menusByName = new();
 
+        [Header("UI Resolution Settings")] 
+        [SerializeField] private int widthRatio = 16;
+        [SerializeField] private int heightRatio = 9;
+
         // Managers
         private ShiftManager _shiftManager;
 
@@ -92,7 +96,22 @@ namespace UI
             DisableAllMenus();
 
             SubscribeToEvents();
+
+            Vector2 resolution = GetAdaptedFullScreenResolution(widthRatio,heightRatio);
+            
+            Screen.SetResolution((int)resolution.x, (int)resolution.y, FullScreenMode.ExclusiveFullScreen, new RefreshRate { numerator = 60, denominator = 1 });
+            
             _onStart?.Invoke();
+        }
+        
+        Vector2  GetAdaptedFullScreenResolution(float ratioX, float ratioY)
+        {
+            float x = Screen.currentResolution.width / ratioX;
+            float y = Screen.currentResolution.height / ratioY;
+
+            float mult = x >= y ? y : x;
+            
+            return new Vector2(Mathf.Round(ratioX*mult), Mathf.Round(ratioY*mult));
         }
 
         private void SetupMenuDictionary()
