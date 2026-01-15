@@ -128,12 +128,14 @@ namespace GameSystem
             return manager != null;
         }
 
+        public static List<T> GetAll<T>() where T : class => Instance.GetElementsOfType<T>();
         public List<T> GetElementsOfType<T>() where T : class
         {
             if (!_elementDict.ContainsKey(typeof(T))) return new List<T>();
             return _elementDict[typeof(T)].Select((mb) => mb as T).ToList();
         }
 
+        public static T GetObject<T>() where T : class => Instance.GetElementOfType<T>();
         public T GetElementOfType<T>() where T : class => GetElementsOfType<T>().FirstOrDefault();
 
         public void TryAddElement<T>(T element) where T : MonoBehaviour
