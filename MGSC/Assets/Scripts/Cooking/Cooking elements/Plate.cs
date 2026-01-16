@@ -81,7 +81,7 @@ namespace Cooking
         public override void Reset()
         {
             base.Reset();
-            
+            DespawnContent();
         }
 
         private void SetupSlots()
@@ -148,8 +148,17 @@ namespace Cooking
             Container.Empty();
             Container.Grab(meal);
 
+            DespawnContent();
+            _ingredientSlots.Reset();
+
+            StopCooking();
+            itemManager.Despawn(this);
+        }
+
+        public void DespawnContent()
+        {
             int heldItems = _ingredientSlots.HeldItems.Count;
-            for (int i=0;i<heldItems;i++)
+            for (int i = 0; i < heldItems; i++)
             {
                 if (i >= _ingredientSlots.HeldItems.Count) break;
                 var obj = _ingredientSlots.HeldItems[i];
@@ -157,10 +166,6 @@ namespace Cooking
                 if (ingredient != null)
                     itemManager.Despawn(ingredient);
             }
-            _ingredientSlots.Reset();
-            
-            StopCooking();
-            itemManager.Despawn(this);
         }
 
         private void UpdateTooltip()
@@ -187,7 +192,6 @@ namespace Cooking
                 item.Collider.enabled = active;
             }
         }
-
         #endregion
     }
 
