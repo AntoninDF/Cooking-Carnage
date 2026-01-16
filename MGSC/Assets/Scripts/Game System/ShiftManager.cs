@@ -136,8 +136,13 @@ namespace GameSystem
             {
                 oven.Reset();
             }
-            ReferenceManager.Instance.GetElementOfType<PlayerController>().transform.position = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform.position;
-            ReferenceManager.Instance.GetElementOfType<PlayerController>().transform.rotation = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform.rotation;
+            var player = ReferenceManager.Instance.GetElementOfType<PlayerController>();
+            var playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>();
+            if (player != null && playerStart != null)
+            {
+                player.transform.position = playerStart.transform.position;
+                player.transform.rotation = playerStart.transform.rotation;
+            }
         }
 
         public void NextShift()
