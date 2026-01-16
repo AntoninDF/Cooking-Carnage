@@ -1,5 +1,6 @@
 using Clients;
 using Cooking;
+using Orders;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,7 +25,7 @@ public class SO_AssetReferences : ScriptableObject
 
     public SO_RecipeBook defaultRecipeBook;
 
-    public SO_RecipeBook CurrentRecipeBook { get; set; }
+    public SO_RecipeBook CurrentRecipeBook => OrderPicker.FindCurrentRecipeBook();
 
     public List<RecipeBookByShiftCount> recipeBookByShiftCount;
 
