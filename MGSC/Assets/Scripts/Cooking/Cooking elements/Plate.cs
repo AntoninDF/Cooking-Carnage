@@ -121,13 +121,13 @@ namespace Cooking
         private bool IsValidRecipe(ref SO_Recipe recipe)
         {
             recipe = GetMatchingRecipe();
-            return recipe != _recipeBook.DefaultRecipe;
+            return recipe != _recipeBook.EmptyRecipe;
         }
 
         public SO_Recipe GetMatchingRecipe()
         {
             var ingredients = _ingredientSlots.HeldItems.Select((item) => ((Ingredient)item).Model);
-            if (ingredients.Count() == 0) return _recipeBook.DefaultRecipe; // If empty recipe
+            if (ingredients.Count() == 0) return _recipeBook.EmptyRecipe; // If empty recipe
             foreach (var r in _recipeBook.Recipes)
             {
                 if (SO_Recipe.Compare(ingredients, r))
@@ -136,7 +136,7 @@ namespace Cooking
                 }
             }
 
-            return _recipeBook.DefaultRecipe;
+            return _recipeBook.FailedRecipe;
         }
 
         private void TransformToMeal(SO_Recipe recipe)
