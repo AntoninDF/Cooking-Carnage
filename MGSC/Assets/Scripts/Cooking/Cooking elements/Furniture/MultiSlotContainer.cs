@@ -91,7 +91,7 @@ namespace Cooking
         /// <returns></returns>
         public bool CanGrab(IGrabbable item)
         {
-
+            return false;
             if (_filter == null)
                 _filter = this.gameObject.GetComponent<ContainerFilter>();
 
