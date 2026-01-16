@@ -91,14 +91,7 @@ namespace Cooking
         /// <returns></returns>
         public bool CanGrab(IGrabbable item)
         {
-
-            if (_filter == null)
-                _filter = this.gameObject.GetComponent<ContainerFilter>();
-
-            if (_filter != null && item is MonoBehaviour)
-                if (!_filter.IsValid((MonoBehaviour)item))
-                    return false;
-            return true;
+            return false;
         }
 
         public void SetActive(bool active)

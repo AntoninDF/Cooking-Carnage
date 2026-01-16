@@ -81,7 +81,7 @@ namespace Cooking
         public override void Reset()
         {
             base.Reset();
-            
+            DespawnContent();
         }
 
         private void SetupSlots()
@@ -121,13 +121,13 @@ namespace Cooking
         private bool IsValidRecipe(ref SO_Recipe recipe)
         {
             recipe = GetMatchingRecipe();
-            return recipe != _recipeBook.DefaultRecipe;
+            return recipe != _recipeBook.EmptyRecipe;
         }
 
         public SO_Recipe GetMatchingRecipe()
         {
             var ingredients = _ingredientSlots.HeldItems.Select((item) => ((Ingredient)item).Model);
-            if (ingredients.Count() == 0) return _recipeBook.DefaultRecipe; // If empty recipe
+            if (ingredients.Count() == 0) return _recipeBook.EmptyRecipe; // If empty recipe
             foreach (var r in _recipeBook.Recipes)
             {
                 if (SO_Recipe.Compare(ingredients, r))
@@ -136,7 +136,7 @@ namespace Cooking
                 }
             }
 
-            return _recipeBook.DefaultRecipe;
+            return _recipeBook.FailedRecipe;
         }
 
         private void TransformToMeal(SO_Recipe recipe)
@@ -146,10 +146,22 @@ namespace Cooking
             Meal meal = go.GetComponent<Meal>();
             meal.Recipe = recipe;
             Container.Empty();
-            Container.Grab(meal);
+            if (Container is EnglobingSlotContainer sc)
+                sc.GrabWithoutFeedback(meal);
+            else
+                Container.Grab(meal);
 
+            DespawnContent();
+            _ingredientSlots.Reset();
+
+            StopCooking();
+            itemManager.Despawn(this);
+        }
+
+        public void DespawnContent()
+        {
             int heldItems = _ingredientSlots.HeldItems.Count;
-            for (int i=0;i<heldItems;i++)
+            for (int i = 0; i < heldItems; i++)
             {
                 if (i >= _ingredientSlots.HeldItems.Count) break;
                 var obj = _ingredientSlots.HeldItems[i];
@@ -157,10 +169,6 @@ namespace Cooking
                 if (ingredient != null)
                     itemManager.Despawn(ingredient);
             }
-            _ingredientSlots.Reset();
-            
-            StopCooking();
-            itemManager.Despawn(this);
         }
 
         private void UpdateTooltip()
@@ -187,7 +195,6 @@ namespace Cooking
                 item.Collider.enabled = active;
             }
         }
-
         #endregion
     }
 

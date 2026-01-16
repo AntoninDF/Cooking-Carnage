@@ -112,6 +112,8 @@ InitTestScene*.unity*
 # Ignore bank files in the StreamingAssets folder.
 /[Aa]ssets/StreamingAssets/**/*.bank
 /[Aa]ssets/StreamingAssets/**/*.bank.meta
+# Ignore all bank meta files because they keep reappearing and it's annoying
+*.bank.meta
 
 # If the source bank files are kept outside of the StreamingAssets folder then these can be ignored.
 # Log files can be ignored.
@@ -119,3 +121,4 @@ fmod_editor.log
 
 # Google APIs
 service-account.json
+service-account.json.meta

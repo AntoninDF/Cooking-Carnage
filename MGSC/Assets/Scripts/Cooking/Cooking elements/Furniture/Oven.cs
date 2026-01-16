@@ -203,7 +203,11 @@ namespace Cooking
         {
             if (_slot != null && _slot.HeldItem != null)
             {
-                GameSystem.ReferenceManager.Instance.GetManager<ItemManager>().Despawn(_slot.HeldItem as Item);
+                ItemManager im;
+                ReferenceManager.Get(out im);
+                if (_slot.HeldItem is Plate plate)
+                    plate.DespawnContent();
+                im.Despawn(_slot.HeldItem as Item);
                 _slot.HeldItem = null;
             }
         }

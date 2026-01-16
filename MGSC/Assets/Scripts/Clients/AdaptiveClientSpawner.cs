@@ -185,10 +185,9 @@ namespace GameSystem
             this.Log(LogType.Log,clientSO.name +" has been spawned into scene");
             
             AssignClientOrderingCounter(client);
-            
-                    
+
             ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(client,false);
-            ReferenceManager.Instance.GetElementOfType<Entrance>()?.OnClientEnter.Invoke();
+            ReferenceManager.Instance.GetElementOfType<Entrance>().OnClientEnter.Invoke();
                     
             Launch(GetRandomizedDelay);
             OnNewClient?.Invoke(client);
