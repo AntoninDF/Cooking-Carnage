@@ -45,6 +45,8 @@ namespace Cooking
             base.Start();
             if (Recipe == null) Debug.LogWarning("Recipe field was not set to an instance of an object");
             _tooltipComponent.SetText(Recipe.Name);
+
+            OnCook?.Invoke(this);
         }
         
         protected override string UpdateID()
