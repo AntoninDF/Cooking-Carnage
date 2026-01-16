@@ -100,7 +100,7 @@ namespace Clients
             // Enforce the first three orders of the first shift to be A B and C
             ShiftManager sm;
             ReferenceManager.Get(out sm);
-            if (sm!= null && sm.ShiftCount == 1)
+            if (sm!= null && sm.ShiftCount == 0)
             {
                 OrderManager om;
                 ReferenceManager.Get(out om);

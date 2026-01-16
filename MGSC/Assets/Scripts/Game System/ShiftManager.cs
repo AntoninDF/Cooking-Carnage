@@ -28,7 +28,7 @@ namespace GameSystem
         private DataManager _dataManager;
         private TimerManager _timerManager;
     
-        private int _shiftCount = 0;
+        private int _shiftCount = -1;
         private float _currentRentPrice = 0 ;
         private AnimationCurve _rentPriceCurve;
         private float _shiftDuration = 120;
@@ -147,9 +147,15 @@ namespace GameSystem
 
         public void NextShift()
         {
+            
             _shiftCount++;
             _currentRentPrice = _rentPriceCurve.Evaluate(_shiftCount);
 
+            if (_shiftCount >=1) // si ce n'est pas le tuto
+            {
+                ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo = new MoneyInfo(0);
+            }
+            
             ReferenceManager.Instance.GetManager<DataManager>().SaveGameData();
             
             ReferenceManager.Instance.GetManager<ItemManager>().SpawnInitialItems(_shiftCount);
@@ -195,6 +201,15 @@ namespace GameSystem
                 OnShiftNoon += () => gameLoop.ShiftNoon?.Invoke();
                 OnShiftEnded += () => gameLoop.ShiftEnd?.Invoke();
                 OnShiftFailed += () => gameLoop.RentGameOver?.Invoke();
+            }
+        }
+
+        public void SkipTutorialShift()
+        {
+            if (_shiftCount == 0)
+            {
+                _shiftCount = 1;
+                _dataManager.SaveGameData();
             }
         }
         #endregion
