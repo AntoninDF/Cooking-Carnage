@@ -1,4 +1,5 @@
 using Cooking;
+using GameSystem;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -222,9 +223,14 @@ namespace Controller
         public void Drop()
         {
             if (_heldItem == null) return;
-            _heldItem.Collider.enabled = true;
+            ReferenceManager.Get<TimerManager>()?.StartTimer("Enable dropped item's collider", 0.1f, () => 
+            {
+                _heldItem.Collider.enabled = true;
+                _heldItem = null;
+            }
+            );
             OnDrop?.Invoke(_heldItem);
-            _heldItem = null;
+            
         }
 
         public bool CanGrab(IGrabbable item)
