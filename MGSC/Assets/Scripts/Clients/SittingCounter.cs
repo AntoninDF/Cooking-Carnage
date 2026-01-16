@@ -16,6 +16,7 @@ namespace Clients
         public UnityEvent OnServe => _onServe;
         public UnityEvent OnPlatformUp => _onPlatformUp;
         public UnityEvent OnPlatformDown => _onPlatformDown;
+        public UnityEvent OnSkipTutorial => _onSkipTutorial;
         public Meal ServedMeal => _mealSlot?.HeldItem as Meal;
         public Order LastServedOrder {  get; set; }
         public bool LockWithTutorial { get => _lockWithTutorial; set => _lockWithTutorial = value; }
@@ -43,6 +44,7 @@ namespace Clients
         [SerializeField] private UnityEvent _onPlatformUp;
         [SerializeField] private UnityEvent _onPlatformDown;
         [SerializeField] private UnityEvent _onFailedKillAttempt;
+        [SerializeField] private UnityEvent _onSkipTutorial;
 
         private OrderManager _orderManager;
         [SerializeField]private Transform deathTrap;
@@ -108,7 +110,7 @@ namespace Clients
         public void TryKill()
         {
             // Check if tutorial is running :
-            if (_lockWithTutorial && ReferenceManager.Get<DataManager>().GetTotalOrdersCount() < 1 && ReferenceManager.Get<ShiftManager>().ShiftCount == 1) return;
+            if (_lockWithTutorial && ReferenceManager.Get<DataManager>().GetTotalOrdersCount() < 1 && ReferenceManager.Get<ShiftManager>().ShiftCount == 0) return;
 
             if (!IsFree && _currentClient.CheckClientCounterDistance(this))
             {

@@ -96,6 +96,28 @@ namespace Clients
             output = _recipeBook.Recipes[index];
             */
             output = OrderPicker.Pick();
+
+            // Enforce the first three orders of the first shift to be A B and C
+            ShiftManager sm;
+            ReferenceManager.Get(out sm);
+            if (sm!= null && sm.ShiftCount == 0)
+            {
+                OrderManager om;
+                ReferenceManager.Get(out om);
+                if (om != null)
+                {
+                    int ordersCount = om.PastOrders.Count + om.Orders.Count;
+                    if (ordersCount < 3)
+                    {
+                        var rb = ReferenceManager.AssetReferences.CurrentRecipeBook;
+                        if (rb != null)
+                        {
+                            ordersCount = Mathf.Clamp(ordersCount, 0, rb.Recipes.Count - 1);
+                            output = rb.Recipes[ordersCount];
+                        }
+                    }
+                }
+            }
             return output;
         }
 
