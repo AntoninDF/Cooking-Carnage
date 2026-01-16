@@ -174,7 +174,7 @@ namespace GameSystem
             {
                 money = 0,
                 upgrades = new Dictionary<string, int> { },
-                shiftCount = 0
+                shiftCount = -1
             };
 
             #endregion
