@@ -11,7 +11,6 @@ namespace Orders
 
     public static class OrderPicker
     {
-        
         public static SO_Recipe Pick()
         {
             ClientManager clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
@@ -30,11 +29,10 @@ namespace Orders
             Dictionary<SO_Recipe, float> weights = SetupRecipeWeights(recipes, clientCount, clientModels);
 
             output = PickRandomRecipe(weights);
-
             return output;
         }
 
-        private static SO_RecipeBook FindCurrentRecipeBook()
+        public static SO_RecipeBook FindCurrentRecipeBook()
         {
             var ar = ReferenceManager.AssetReferences;
             var sm = ReferenceManager.Instance.GetManager<ShiftManager>() ;

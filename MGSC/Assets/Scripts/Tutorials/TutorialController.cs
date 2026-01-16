@@ -22,6 +22,14 @@ namespace Tutorials
                 b.ServingLocked = !active;
             }
         }
+        
+        public void SetAllActive_KillButtons(bool active)
+        {
+            foreach (var b in ReferenceManager.GetAll<SittingCounter>())
+            {
+                b.LockWithTutorial = !active;
+            }
+        }
 
     }
 }

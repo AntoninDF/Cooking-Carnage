@@ -28,7 +28,7 @@ namespace GameSystem
         private DataManager _dataManager;
         private TimerManager _timerManager;
     
-        private int _shiftCount = 0;
+        private int _shiftCount = -1;
         private float _currentRentPrice = 0 ;
         private AnimationCurve _rentPriceCurve;
         private float _shiftDuration = 120;
@@ -78,9 +78,9 @@ namespace GameSystem
             _timerManager.ResumeTimer("shiftNoonDuration");
         }
 
-        void DelayEndShift()
+        void DelayEndShift(bool tutorialEnd = false)
         {
-            _timerManager.StartTimer("shiftEndDelay", 2, () => TryEndShift(), false);
+            _timerManager.StartTimer("shiftEndDelay", 2, () => TryEndShift(tutorialEnd), false);
         }
 
         void EndShift()
@@ -89,7 +89,7 @@ namespace GameSystem
             TryEndShift();
         }
 
-        void TryEndShift()
+        public void TryEndShift(bool tutorialEnd = false)
         {
             var clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
             int activeClients = clientManager.CurrentClients.Count;
@@ -102,22 +102,33 @@ namespace GameSystem
             }
             else
             {
-
-                ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
-                ResetAll();
-
-                // Pay rent
-                UpdateRentPrice();
-                var moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
-                if (moneyManager.MoneyInfo < _currentRentPrice)
+                if (!tutorialEnd)
                 {
-                    this.Log(LogType.Log, $"Not enough money ({moneyManager.MoneyInfo}) to pay the rent ({_currentRentPrice}€)");
+                    ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
+                    ResetAll();
+
+                    // Pay rent
+                    UpdateRentPrice();
+                    var moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
+                    if (moneyManager.MoneyInfo < _currentRentPrice)
+                    {
+                        this.Log(LogType.Log,
+                            $"Not enough money ({moneyManager.MoneyInfo}) to pay the rent ({_currentRentPrice}€)");
+                        moneyManager.AddMoney(-_currentRentPrice);
+                        OnShiftFailed?.Invoke();
+                        return;
+                    }
+
                     moneyManager.AddMoney(-_currentRentPrice);
-                    OnShiftFailed?.Invoke();
-                    return;
+                    OnShiftSucceeded?.Invoke();
                 }
-                moneyManager.AddMoney(-_currentRentPrice);
-                OnShiftSucceeded?.Invoke();
+                else
+                {
+                    ResetAll();
+                    UpdateRentPrice();
+                    NextShift();
+                
+                }
 
             }
         }
@@ -136,15 +147,26 @@ namespace GameSystem
             {
                 oven.Reset();
             }
-            ReferenceManager.Instance.GetElementOfType<PlayerController>().transform.position = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform.position;
-            ReferenceManager.Instance.GetElementOfType<PlayerController>().transform.rotation = ReferenceManager.Instance.GetElementOfType<PlayerStart>().transform.rotation;
+            var player = ReferenceManager.Instance.GetElementOfType<PlayerController>();
+            var playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>();
+            if (player != null && playerStart != null)
+            {
+                player.transform.position = playerStart.transform.position;
+                player.transform.rotation = playerStart.transform.rotation;
+            }
         }
 
         public void NextShift()
         {
+            
             _shiftCount++;
             _currentRentPrice = _rentPriceCurve.Evaluate(_shiftCount);
 
+            if (_shiftCount >=1) // si ce n'est pas le tuto
+            {
+                ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo = new MoneyInfo(0);
+            }
+            
             ReferenceManager.Instance.GetManager<DataManager>().SaveGameData();
             
             ReferenceManager.Instance.GetManager<ItemManager>().SpawnInitialItems(_shiftCount);
@@ -190,6 +212,15 @@ namespace GameSystem
                 OnShiftNoon += () => gameLoop.ShiftNoon?.Invoke();
                 OnShiftEnded += () => gameLoop.ShiftEnd?.Invoke();
                 OnShiftFailed += () => gameLoop.RentGameOver?.Invoke();
+            }
+        }
+
+        public void SkipTutorialShift()
+        {
+            if (_shiftCount == 0)
+            {
+                _shiftCount = 1;
+                _dataManager.SaveGameData();
             }
         }
         #endregion

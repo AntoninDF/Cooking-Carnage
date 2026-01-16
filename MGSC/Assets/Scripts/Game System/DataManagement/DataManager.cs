@@ -174,7 +174,7 @@ namespace GameSystem
             {
                 money = 0,
                 upgrades = new Dictionary<string, int> { },
-                shiftCount = 0
+                shiftCount = -1
             };
 
             #endregion
@@ -228,6 +228,10 @@ namespace GameSystem
 
         string ProcessTimeLeft()
         {
+            if (ShiftCount < 1)
+            {
+                return "";
+            }
             float timeLeft = _timerManager.TimeLeft("shiftDuration") + _timerManager.TimeLeft("shiftNoonDuration");
 
             if (timeLeft > 0)

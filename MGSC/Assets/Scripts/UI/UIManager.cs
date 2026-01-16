@@ -3,10 +3,12 @@ using GameSystem;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
+using Clients;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -31,10 +33,16 @@ namespace UI
         [SerializeField] private string _gameMenuName = "Game";
         [SerializeField] private string _mainMenuName = "Main";
         [SerializeField] private List<UIMenu> _menus = new List<UIMenu>();
+        [SerializeField] private GameObject _skipTutoButton;
+        [SerializeField] private GameObject _playButton;
 
         [Header("UI Manager events")]
 
         [SerializeField] private UnityEvent _onStart;
+
+        [SerializeField] private UnityEvent _onTutorialSetup;
+        [SerializeField] private UnityEvent _onTutorialSkip;
+        [SerializeField] private UnityEvent _onFade;
         [SerializeField] private UnityEvent _onEnable;
         [SerializeField] private UnityEvent _onDisable;
         [SerializeField] private UnityEvent _onUpgradeFail;
@@ -102,6 +110,18 @@ namespace UI
             Screen.SetResolution((int)resolution.x, (int)resolution.y, FullScreenMode.ExclusiveFullScreen, new RefreshRate { numerator = 60, denominator = 1 });
             
             _onStart?.Invoke();
+        }
+        
+        public void PostInit()
+        {
+            if (ReferenceManager.Instance.GetManager<DataManager>().ShiftCount >= 1)
+            {
+                SkipTutorial();
+            }
+            else
+            {
+                _onTutorialSetup?.Invoke();
+            }
         }
         
         Vector2  GetAdaptedFullScreenResolution(float ratioX, float ratioY)
@@ -183,8 +203,14 @@ namespace UI
             this.Log(LogType.Log, $"Game has been paused");
         }
 
-        public void ResumeGame()
+        public void ResumeGame(bool skiptutorial=false)
         {
+            if (skiptutorial)
+            {
+                SkipTutorial();
+            }
+            
+            
             _gameLoop.StartRunning();
             _playerInputs.Enable();
             _UIInputs.Enable();
@@ -193,6 +219,25 @@ namespace UI
             SetCursorFreedom(false);
             
             this.Log(LogType.Log, $"Game has been resumed");
+        }
+
+        private void SkipTutorial()
+        {
+            _playButton.GetComponent<Button>().onClick = _skipTutoButton.GetComponent<Button>().onClick;
+            _skipTutoButton?.gameObject.SetActive(false);
+            _shiftManager.SkipTutorialShift(); 
+            foreach (var b in ReferenceManager.GetAll<SittingCounter>())
+            {
+                b.GetComponentInChildren<EventLinker>().UnBindAll();
+                b.OnSkipTutorial?.Invoke();
+            }
+            _onTutorialSkip?.Invoke();
+        }
+
+        public void TutorialEndTransition()
+        {
+            _onFade?.Invoke();
+            ReferenceManager.Instance.GetManager<ShiftManager>().TryEndShift(true);
         }
 
         public void SwitchPlayerInputs(bool enabled)
