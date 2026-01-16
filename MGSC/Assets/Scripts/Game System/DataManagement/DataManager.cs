@@ -228,6 +228,10 @@ namespace GameSystem
 
         string ProcessTimeLeft()
         {
+            if (ShiftCount < 1)
+            {
+                return "";
+            }
             float timeLeft = _timerManager.TimeLeft("shiftDuration") + _timerManager.TimeLeft("shiftNoonDuration");
 
             if (timeLeft > 0)
