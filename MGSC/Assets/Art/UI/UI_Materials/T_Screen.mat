@@ -44,6 +44,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _T_Pattern:
         m_Texture: {fileID: 2800000, guid: 1dfe6c81f3b9f4d47b0bd7297058d61d, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -67,6 +71,7 @@ Material:
     - _AlphaDstBlend: 0
     - _AlphaSrcBlend: 1
     - _BlendMode: 0
+    - _ColorMask: 15
     - _ConservativeDepthOffsetEnable: 0
     - _CullMode: 2
     - _CullModeForward: 2
@@ -87,6 +92,10 @@ Material:
     - _PerPixelSorting: 0
     - _RenderQueueType: 1
     - _SrcBlend: 1
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
     - _StencilRef: 0
     - _StencilRefDepth: 1
     - _StencilRefDistortionVec: 4
@@ -103,14 +112,17 @@ Material:
     - _TransparentSortPriority: 0
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
+    - _UIMaskSoftnessX: 1
+    - _UIMaskSoftnessY: 1
     - _UseShadowThreshold: 0
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
+    - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _Pattern_color: {r: 0, g: 0.3207547, b: 0.31367376, a: 1}
-    - _Screen_color: {r: 0.0049394714, g: 0.18969122, b: 0.3490566, a: 1}
+    - _Screen_color: {r: 0.003921568, g: 0.34901962, b: 0.3152423, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
