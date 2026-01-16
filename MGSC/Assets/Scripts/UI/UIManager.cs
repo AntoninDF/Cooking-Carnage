@@ -42,6 +42,7 @@ namespace UI
 
         [SerializeField] private UnityEvent _onTutorialSetup;
         [SerializeField] private UnityEvent _onTutorialSkip;
+        [SerializeField] private UnityEvent _onFade;
         [SerializeField] private UnityEvent _onEnable;
         [SerializeField] private UnityEvent _onDisable;
         [SerializeField] private UnityEvent _onUpgradeFail;
@@ -231,6 +232,12 @@ namespace UI
                 b.OnSkipTutorial?.Invoke();
             }
             _onTutorialSkip?.Invoke();
+        }
+
+        public void TutorialEndTransition()
+        {
+            _onFade?.Invoke();
+            ReferenceManager.Instance.GetManager<ShiftManager>().TryEndShift(true);
         }
 
         public void SwitchPlayerInputs(bool enabled)

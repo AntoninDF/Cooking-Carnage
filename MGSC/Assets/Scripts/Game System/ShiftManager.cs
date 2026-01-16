@@ -78,9 +78,9 @@ namespace GameSystem
             _timerManager.ResumeTimer("shiftNoonDuration");
         }
 
-        void DelayEndShift()
+        void DelayEndShift(bool tutorialEnd = false)
         {
-            _timerManager.StartTimer("shiftEndDelay", 2, () => TryEndShift(), false);
+            _timerManager.StartTimer("shiftEndDelay", 2, () => TryEndShift(tutorialEnd), false);
         }
 
         void EndShift()
@@ -89,7 +89,7 @@ namespace GameSystem
             TryEndShift();
         }
 
-        void TryEndShift()
+        public void TryEndShift(bool tutorialEnd = false)
         {
             var clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
             int activeClients = clientManager.CurrentClients.Count;
@@ -102,22 +102,33 @@ namespace GameSystem
             }
             else
             {
-
-                ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
-                ResetAll();
-
-                // Pay rent
-                UpdateRentPrice();
-                var moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
-                if (moneyManager.MoneyInfo < _currentRentPrice)
+                if (!tutorialEnd)
                 {
-                    this.Log(LogType.Log, $"Not enough money ({moneyManager.MoneyInfo}) to pay the rent ({_currentRentPrice}€)");
+                    ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
+                    ResetAll();
+
+                    // Pay rent
+                    UpdateRentPrice();
+                    var moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
+                    if (moneyManager.MoneyInfo < _currentRentPrice)
+                    {
+                        this.Log(LogType.Log,
+                            $"Not enough money ({moneyManager.MoneyInfo}) to pay the rent ({_currentRentPrice}€)");
+                        moneyManager.AddMoney(-_currentRentPrice);
+                        OnShiftFailed?.Invoke();
+                        return;
+                    }
+
                     moneyManager.AddMoney(-_currentRentPrice);
-                    OnShiftFailed?.Invoke();
-                    return;
+                    OnShiftSucceeded?.Invoke();
                 }
-                moneyManager.AddMoney(-_currentRentPrice);
-                OnShiftSucceeded?.Invoke();
+                else
+                {
+                    ResetAll();
+                    UpdateRentPrice();
+                    NextShift();
+                
+                }
 
             }
         }
