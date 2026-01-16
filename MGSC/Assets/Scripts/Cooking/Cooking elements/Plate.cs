@@ -146,7 +146,10 @@ namespace Cooking
             Meal meal = go.GetComponent<Meal>();
             meal.Recipe = recipe;
             Container.Empty();
-            Container.Grab(meal);
+            if (Container is EnglobingSlotContainer sc)
+                sc.GrabWithoutFeedback(meal);
+            else
+                Container.Grab(meal);
 
             DespawnContent();
             _ingredientSlots.Reset();

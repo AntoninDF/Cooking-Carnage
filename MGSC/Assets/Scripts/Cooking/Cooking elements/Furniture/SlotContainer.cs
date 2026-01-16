@@ -98,17 +98,25 @@ namespace Cooking
 
         public virtual void Grab(IGrabbable item)
         {
-            if (!CanGrab(item))
+            bool flowControl = GrabWithoutFeedback(item);
+            if (!flowControl)
+            {
                 return;
+            }
+
+            OnGrab?.Invoke(item);
+        }
+
+        public bool GrabWithoutFeedback(IGrabbable item)
+        {
+            if (!CanGrab(item))
+                return false;
             if (_itemSlot == null)
                 throw new MissingReferenceException("Please reference the item slot's transform in this container slot's dedicated field : " + name);
             _heldItem = item;
-            
-            ReferenceManager.Instance.GetElementOfType<Oven2>()?.SendMessage("Update"); 
-            item.GetGrabbed(this);
 
-            ReferenceManager.Instance.GetElementOfType<Oven2>()?.SendMessage("Update");
-            OnGrab?.Invoke(item);
+            item.GetGrabbed(this);
+            return true;
         }
 
         public virtual bool CanGrab(IGrabbable item)
