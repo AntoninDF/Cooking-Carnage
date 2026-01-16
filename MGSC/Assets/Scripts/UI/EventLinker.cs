@@ -108,7 +108,25 @@ namespace UI
             }
         }
 
+        public void UnBindAll()
+        {
+            foreach (var e in _events)
+            {
+                UnbindEvent(e.name);
+            }
+        }
+        
+        public void BindAll()
+        {
+            foreach (var e in _events)
+            {
+                BindEvent(e.name);
+            }
+        }
+
         #endregion
+        
+        
 
     }
 

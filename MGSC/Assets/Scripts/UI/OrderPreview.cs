@@ -127,7 +127,7 @@ namespace UI
             
             if (_updateDelay != 0)
             {
-                _timerManager.StartTimer("UpdateOrderPreview", _updateDelay, ()=> _onOrderReceived?.Invoke());
+                _timerManager.StartTimer("UpdateOrderPreview (" + Time.time + ")", _updateDelay, ()=> _onOrderReceived?.Invoke());
             }
             else
             {
