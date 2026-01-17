@@ -40,7 +40,7 @@ namespace Cooking
         private void Reset()
         {
             for (int i = 0; i < _startSpawnIterations; i++)
-                TrySpawn();
+                Spawn(false);
         }
 
         public override void Interact(PlayerInteractor interactor)
@@ -59,7 +59,7 @@ namespace Cooking
             }
         }
 
-        public void Spawn()
+        public void Spawn(bool enableFeedbacks = true)
         {
             foreach (var request in _itemsToSpawn)
             {
@@ -72,8 +72,11 @@ namespace Cooking
 
                         Item item = go.GetComponent<Item>();
                         item.SetAnimationMode(false);
-                        slot.Grab(item);
-                        
+                        if (!enableFeedbacks)
+                            slot.GrabWithoutFeedback(item);
+                        else
+                            slot.Grab(item);
+
                         item.transform.position = slot.transform.position;
                         break;
                     }

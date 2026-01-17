@@ -115,7 +115,11 @@ namespace Cooking
                 throw new MissingReferenceException("Please reference the item slot's transform in this container slot's dedicated field : " + name);
             _heldItem = item;
 
-            item.GetGrabbed(this);
+            var itemAsItem = item as Item;
+            if (itemAsItem != null)
+                itemAsItem.GetGrabbedWithoutFeedback(this);
+            else
+                item.GetGrabbed(this);
             return true;
         }
 

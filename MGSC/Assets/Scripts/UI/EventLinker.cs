@@ -105,6 +105,17 @@ namespace UI
                             ev.RemoveListener(callback.Invoke);
                     }
                     break;
+                case TargetEvent.ClientKilled:
+                    foreach (var elm in Ref.GetElementsOfType<SittingCounter>())
+                    {
+                        // Target event
+                        ev = elm.OnKill;
+                        if (bind)
+                            ev.AddListener(callback.Invoke);
+                        else
+                            ev.RemoveListener(callback.Invoke);
+                    }
+                    break;
             }
         }
 
@@ -146,7 +157,8 @@ namespace UI
         IngredientCut,
         MealCooked,
         MealGrabbedFromOven,
-        ClientServed
+        ClientServed,
+        ClientKilled
     }
 
 }

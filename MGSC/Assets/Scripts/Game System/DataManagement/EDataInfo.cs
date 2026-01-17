@@ -5,6 +5,7 @@ namespace GameSystem
 
     public enum EDataInfo
     {
+        // Data easily accessible by any manager or script, and that is shared by all, goes here
         ShiftCount,
         CorrectOrdersThisShift,
         WrongOrdersThisShift,

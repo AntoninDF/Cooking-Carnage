@@ -22,7 +22,7 @@ public class ItemManager : IManager
 
     // Specifies, for shift X, the maximum amount of items Y that can be spawned. If Y is superior to the amount of items available in the scene, no additional items are spawned
     //                                                                           X   Y
-    Dictionary<int, int> _maxSpawnItemsPerShift = new Dictionary<int, int>() { { 0 , 1 }, { 1, 1 } };
+    Dictionary<int, int> _maxSpawnItemsPerShift = new Dictionary<int, int>() { { 0 , 1 } };
     
     private Transform _itemsPooled;
     
@@ -242,6 +242,7 @@ public class ItemManager : IManager
             this.Log(LogType.Error, itemToStore.name + " gameobject not found, probably destroyed ?");
             return;
         }
+        Debug.Log("Despawning " + itemToStore);
         if (!itemToStore.gameObject.activeSelf)
         {
             this.Log(LogType.Warning, itemToStore.name + " is not active and probably shouldn't be stored now at ID "+itemToStore.ID);

@@ -1,12 +1,13 @@
-﻿using Controller;
+﻿using Clients;
+using Controller;
 using GameSystem;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
-using Clients;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -35,6 +36,7 @@ namespace UI
         [SerializeField] private List<UIMenu> _menus = new List<UIMenu>();
         [SerializeField] private GameObject _skipTutoButton;
         [SerializeField] private GameObject _playButton;
+        [SerializeField] private Subtitle _subtitles;
 
         [Header("UI Manager events")]
 
@@ -74,7 +76,6 @@ namespace UI
         {
             ReferenceManager.Instance.RemoveManager(this);
         }
-
         public void Init()
         {
             _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
@@ -110,8 +111,7 @@ namespace UI
             Screen.SetResolution((int)resolution.x, (int)resolution.y, FullScreenMode.ExclusiveFullScreen, new RefreshRate { numerator = 60, denominator = 1 });
             
             _onStart?.Invoke();
-        }
-        
+        }        
         public void PostInit()
         {
             if (ReferenceManager.Instance.GetManager<DataManager>().ShiftCount >= 1)
@@ -122,8 +122,7 @@ namespace UI
             {
                 _onTutorialSetup?.Invoke();
             }
-        }
-        
+        }        
         Vector2  GetAdaptedFullScreenResolution(float ratioX, float ratioY)
         {
             float x = Screen.currentResolution.width / ratioX;
@@ -133,7 +132,6 @@ namespace UI
             
             return new Vector2(Mathf.Round(ratioX*mult), Mathf.Round(ratioY*mult));
         }
-
         private void SetupMenuDictionary()
         {
             _menusByName.Clear();
@@ -142,7 +140,6 @@ namespace UI
             
             this.Log(LogType.Log, $"{_menus.Count} UI menus has been setup");
         }
-
         public void EnableMenu(string menuName)
         {
             if (!_menusByName.ContainsKey(menuName))
@@ -150,8 +147,6 @@ namespace UI
             
             EnableMenu(_menusByName[menuName]);
         }
-
-
         public void EnableMenu(UIMenu menu)
         {
             DisableMenu(_currentMenu);
@@ -177,7 +172,6 @@ namespace UI
             menu.onDisable.Invoke();
             this.Log(LogType.Log, $"{menu.name} menu has been disabled");
         }
-
         public void DisableAllMenus()
         {
             this.Log(LogType.Log, $"Disabling all menus");
@@ -186,7 +180,6 @@ namespace UI
                 DisableMenu(menu);
             }
         }
-
         /// <summary>
         /// Wether or not the game should be paused
         /// </summary>
@@ -202,7 +195,15 @@ namespace UI
 
             this.Log(LogType.Log, $"Game has been paused");
         }
-
+        public void StartGame()
+        {
+            Debug.Log("Trying to Start game");
+            ReferenceManager.Get(out ShiftManager sm);
+            if (sm == null) return;
+            sm.SetupShift(sm.ShiftCount);
+            sm.LaunchShift();
+            Debug.Log("Start game");
+        }
         public void ResumeGame(bool skiptutorial=false)
         {
             if (skiptutorial)
@@ -220,11 +221,24 @@ namespace UI
             
             this.Log(LogType.Log, $"Game has been resumed");
         }
-
-        private void SkipTutorial()
+        public void PlaySubtitles(string name)
         {
-            _playButton.GetComponent<Button>().onClick = _skipTutoButton.GetComponent<Button>().onClick;
-            _skipTutoButton?.gameObject.SetActive(false);
+            if (_subtitles == null) return;
+            _subtitles.Play(name);
+        }
+        public void TryPlayTutorialSubtitles()
+        {
+            ReferenceManager.Get(out _shiftManager);
+            if (_shiftManager == null) return;
+            if (_shiftManager.ShiftCount == 0)
+            {
+                PlaySubtitles("Start");
+            }
+        }
+        public void SkipTutorial()
+        {
+            //_playButton.GetComponent<Button>().onClick = _skipTutoButton.GetComponent<Button>().onClick;
+            //_skipTutoButton?.gameObject.SetActive(false);
             _shiftManager.SkipTutorialShift(); 
             foreach (var b in ReferenceManager.GetAll<SittingCounter>())
             {
@@ -233,13 +247,14 @@ namespace UI
             }
             _onTutorialSkip?.Invoke();
         }
-
         public void TutorialEndTransition()
         {
             _onFade?.Invoke();
-            ReferenceManager.Instance.GetManager<ShiftManager>().TryEndShift(true);
+            ReferenceManager.Get(out ShiftManager sm);
+            ReferenceManager.Get(out TimerManager tm);
+            if (sm != null && tm != null)
+                tm.StartTimer("Tutorial ended. Moving to the next shift", 1.5f, () => sm.TryEndShift(true));
         }
-
         public void SwitchPlayerInputs(bool enabled)
         {
             if (enabled)
@@ -251,7 +266,6 @@ namespace UI
                 _playerInputs.Disable();
             }
         }
-
         private void SetCursorFreedom(bool freedom)
         {
             if (freedom)
@@ -263,19 +277,16 @@ namespace UI
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-
         private void LockCursor()
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-
         private void SubscribeToEvents()
         {
             if (_UIInputs != null)
                 _UIInputs.FindAction("Pause").performed += (ctx) => TogglePause();
         }
-
         private void TogglePause()
         {
             if (_currentMenu.name == _mainMenuName) return;
@@ -286,39 +297,32 @@ namespace UI
             else if (_currentMenu.name != _mainMenuName)
                 EnableMenu(_pauseMenuName);
         }
-
-        public void ReloadGame()
+        public void ReloadScene()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-        
-
+        }      
         public void ResetEverything()
         {
             ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
-            ReloadGame();
+            ReloadScene();
         }
         public void Register()
         {
             ReferenceManager.Instance.SetManager(this);
         }
-
         public void RequestCameraSwitch(Transform target)
         {
             ReferenceManager.Get<CameraManager>().LookAt(target, 0, true);
         }
-
         public void RequestCameraSwitchToFirstUITarget()
         {
             UITarget target = ReferenceManager.Instance.GetElementOfType<UITarget>();
             RequestCameraSwitch(target.transform);
         }
-
         public void ResetCameraSwitch()
         {
             ReferenceManager.Get<CameraManager>().EnableFirstPersonView();
         }
-
         [System.Serializable]
         public struct UIMenu
         {

@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using FMODUnity;
+using FMOD;
 
 [AddComponentMenu("FMOD Studio/FMOD Studio Extended Event Emitter")]
 [RequireComponent(typeof(StudioEventEmitter))]
@@ -31,6 +32,23 @@ public class StudioEventEmitterExtension : MonoBehaviour
     {
         Get();
         eventEmitter.Stop();
+    }
+    public void StopAll()
+    {
+        FMODUnity.RuntimeManager.StudioSystem.getBankList(out FMOD.Studio.Bank[] loadedBanks);
+        foreach (FMOD.Studio.Bank bank in loadedBanks)
+        {
+            bank.getPath(out string path);
+            RESULT busListOk = bank.getBusList(out FMOD.Studio.Bus[] myBuses);
+            bank.getBusCount(out int busCount);
+            if (busCount > 0)
+            {
+                foreach (var bus in myBuses)
+                {
+                    bus.stopAllEvents(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                }
+            }
+        }
     }
     private void Get() => eventEmitter = GetComponent<StudioEventEmitter>();
     
