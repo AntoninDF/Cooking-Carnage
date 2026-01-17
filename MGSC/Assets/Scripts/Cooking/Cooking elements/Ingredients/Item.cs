@@ -116,6 +116,19 @@ namespace Cooking
             OnGrabbed?.Invoke();
             GrabAnimation(!_animate);
         }
+        public void GetGrabbedWithoutFeedback(IContainer newContainer)
+        {
+            Container?.Drop(this);
+            Container = newContainer;
+            if (newContainer is ISoloContainer)
+            {
+                ISoloContainer soloContainer = (ISoloContainer)newContainer;
+                transform.SetParent(soloContainer.ItemSlot);
+            }
+            else
+                transform.parent = newContainer.transform;
+            GrabAnimation(!_animate);
+        }
 
         public void SetAnimationMode(bool animate=true)
         {

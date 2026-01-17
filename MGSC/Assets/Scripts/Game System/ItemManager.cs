@@ -242,6 +242,7 @@ public class ItemManager : IManager
             this.Log(LogType.Error, itemToStore.name + " gameobject not found, probably destroyed ?");
             return;
         }
+        Debug.Log("Despawning " + itemToStore);
         if (!itemToStore.gameObject.activeSelf)
         {
             this.Log(LogType.Warning, itemToStore.name + " is not active and probably shouldn't be stored now at ID "+itemToStore.ID);

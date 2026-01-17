@@ -175,9 +175,10 @@ namespace GameSystem
         /// <summary>
         /// Resets the specified shift without moving to the next one. 
         /// </summary>
-        private void SetupShift(int shiftCount)
+        public void SetupShift(int shiftCount)
         {
             _currentRentPrice = _rentPriceCurve.Evaluate(shiftCount);
+            ReferenceManager.Get(out ItemManager im);
 
             if (shiftCount >= 1) // si ce n'est pas le tuto
             {
@@ -186,7 +187,8 @@ namespace GameSystem
 
             ReferenceManager.Instance.GetManager<DataManager>().SaveGameData();
 
-            ReferenceManager.Instance.GetManager<ItemManager>().SpawnInitialItems(shiftCount);
+            im.StoreAllActive();
+            im.SpawnInitialItems(shiftCount);
         }
 
         public void Register()

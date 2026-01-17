@@ -98,7 +98,7 @@ namespace UI
                     if (order != null && order.CurrentOrder != null)
                     {
                         result = order.CurrentOrder.Recipe.Price.ToString();
-                        result += "$";
+                        //result += "$";
                     }
                     break;
             }

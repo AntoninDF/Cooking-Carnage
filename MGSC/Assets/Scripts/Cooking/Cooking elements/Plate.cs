@@ -150,7 +150,7 @@ namespace Cooking
                 sc.GrabWithoutFeedback(meal);
             else
                 Container.Grab(meal);
-
+            Debug.Log("Transforming to meal...");
             DespawnContent();
             _ingredientSlots.Reset();
 
@@ -160,15 +160,26 @@ namespace Cooking
 
         public void DespawnContent()
         {
-            int heldItems = _ingredientSlots.HeldItems.Count;
-            for (int i = 0; i < heldItems; i++)
+            Debug.Log("Despawning content");
+            foreach (var slot in _ingredientSlots.Slots)
             {
-                if (i >= _ingredientSlots.HeldItems.Count) break;
-                var obj = _ingredientSlots.HeldItems[i];
+                if (slot == null || slot.HeldItem == null)
+                {
+                Debug.Log("Slot " + slot + " was already empty and didn't need despawning");
+                    break;
+                }
+                Debug.Log("Despawning content for slot " + slot);
+                var obj = slot.HeldItem;
                 var ingredient = obj as Item;
                 if (ingredient != null)
+                {
+                    Debug.Log("Despawning " + ingredient);
                     itemManager.Despawn(ingredient);
+                }
+                else
+                    Debug.Log("Ingredient was null when trying to get despawned");
             }
+            _ingredientSlots.HeldItems.Clear();
         }
 
         private void UpdateTooltip()
