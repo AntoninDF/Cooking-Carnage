@@ -126,7 +126,7 @@ namespace GameSystem
         {
             currentGameData = DefaultData();
             SaveGameData(currentGameData);
-            LoadGlobalData();
+            //LoadGlobalData();
         }
 
         Dictionary<string, int> ConvertUpgradeData()
@@ -174,7 +174,7 @@ namespace GameSystem
             {
                 money = 0,
                 upgrades = new Dictionary<string, int> { },
-                shiftCount = -1
+                shiftCount = 0
             };
 
             #endregion

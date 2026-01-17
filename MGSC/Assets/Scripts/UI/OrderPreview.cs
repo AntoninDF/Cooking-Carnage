@@ -55,7 +55,7 @@ namespace UI
             _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
             _orderManager = ReferenceManager.Instance.GetManager<OrderManager>();
             Subscribe();
-
+            ResetSprites();
         }
 
         private void Subscribe()

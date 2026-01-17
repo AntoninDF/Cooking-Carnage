@@ -1,12 +1,13 @@
-﻿using Controller;
+﻿using Clients;
+using Controller;
 using GameSystem;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
-using Clients;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -203,6 +204,15 @@ namespace UI
             this.Log(LogType.Log, $"Game has been paused");
         }
 
+        public void StartGame()
+        {
+            Debug.Log("Trying to Start game");
+            ReferenceManager.Get(out ShiftManager sm);
+            if (sm == null) return;
+            sm.LaunchShift();
+            Debug.Log("Start game");
+        }
+
         public void ResumeGame(bool skiptutorial=false)
         {
             if (skiptutorial)
@@ -221,10 +231,10 @@ namespace UI
             this.Log(LogType.Log, $"Game has been resumed");
         }
 
-        private void SkipTutorial()
+        public void SkipTutorial()
         {
-            _playButton.GetComponent<Button>().onClick = _skipTutoButton.GetComponent<Button>().onClick;
-            _skipTutoButton?.gameObject.SetActive(false);
+            //_playButton.GetComponent<Button>().onClick = _skipTutoButton.GetComponent<Button>().onClick;
+            //_skipTutoButton?.gameObject.SetActive(false);
             _shiftManager.SkipTutorialShift(); 
             foreach (var b in ReferenceManager.GetAll<SittingCounter>())
             {
@@ -237,7 +247,10 @@ namespace UI
         public void TutorialEndTransition()
         {
             _onFade?.Invoke();
-            ReferenceManager.Instance.GetManager<ShiftManager>().TryEndShift(true);
+            ReferenceManager.Get(out ShiftManager sm);
+            ReferenceManager.Get(out TimerManager tm);
+            if (sm != null && tm != null)
+                tm.StartTimer("Tutorial ended. Moving to the next shift", 1.5f, () => sm.TryEndShift(true));
         }
 
         public void SwitchPlayerInputs(bool enabled)
@@ -287,7 +300,7 @@ namespace UI
                 EnableMenu(_pauseMenuName);
         }
 
-        public void ReloadGame()
+        public void ReloadScene()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
@@ -296,7 +309,7 @@ namespace UI
         public void ResetEverything()
         {
             ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
-            ReloadGame();
+            ReloadScene();
         }
         public void Register()
         {
