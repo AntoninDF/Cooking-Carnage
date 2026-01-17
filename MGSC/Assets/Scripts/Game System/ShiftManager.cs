@@ -182,7 +182,8 @@ namespace GameSystem
 
             if (shiftCount >= 1) // si ce n'est pas le tuto
             {
-                ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo = new MoneyInfo(0);
+                // J'ai commenté la ligne ci-dessous parce que c'est bizarre que notre argent soit reset à chaque shift
+                //ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo = new MoneyInfo(0);
             }
 
             ReferenceManager.Instance.GetManager<DataManager>().SaveGameData();

@@ -166,7 +166,7 @@ namespace Cooking
                 if (slot == null || slot.HeldItem == null)
                 {
                 Debug.Log("Slot " + slot + " was already empty and didn't need despawning");
-                    break;
+                    continue;
                 }
                 Debug.Log("Despawning content for slot " + slot);
                 var obj = slot.HeldItem;
