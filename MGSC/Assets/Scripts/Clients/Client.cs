@@ -298,7 +298,7 @@ namespace Clients
             if (tm != null)
             {
                 tm.StartTimer("Leave", _timeToEat, () => LeaveCounterFeedback() );
-                tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => gameObject.SetActive(false)); //timer aussi utilisé dans endshift shiftmanager
+                tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => AutoDestruction()); //timer aussi utilisé dans endshift shiftmanager
             }
             _hasEaten = true;
         }
@@ -316,7 +316,7 @@ namespace Clients
 
             var tm = ReferenceManager.Get<TimerManager>();
             if (tm != null)
-                tm.StartTimer(gameObject.name + " Dying (ID:" + Time.time.ToString() + ")", _timeBeforeDisappearingAfterDying, () => gameObject.SetActive(false));
+                tm.StartTimer(gameObject.name + " Dying (ID:" + Time.time.ToString() + ")", _timeBeforeDisappearingAfterDying, () => AutoDestruction());
             
             ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,true);
         }

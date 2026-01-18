@@ -55,7 +55,6 @@ namespace GameSystem
         public void Init()
         {
             filePath = Path.Combine(Application.persistentDataPath, "gameData.json");
-            
         }
         
         /// <summary>
@@ -129,14 +128,19 @@ namespace GameSystem
             //LoadGlobalData();
         }
 
-        Dictionary<string, int> ConvertUpgradeData()
+        List<UpgradeData> ConvertUpgradeData()
         {
-            Dictionary<string, int> result = new Dictionary<string, int>();
+            List<UpgradeData> result = new List<UpgradeData>();
 
-            foreach (var upgrade in _upgradeManager.Upgrades)
+            for (var index = 0; index < _upgradeManager.Upgrades.Count; index++)
             {
-                result[upgrade.GetType().Name] = upgrade.Level;
+                var upgrade = _upgradeManager.Upgrades[index];
+                this.Log(LogType.Warning, upgrade.GetType().Name + "found, lvl : " + upgrade.Level);
+                result.Add(new UpgradeData());
+                result[index].level = upgrade.Level;
+                result[index].name = upgrade.GetType().Name;
             }
+
             return result;
         }
 
@@ -149,10 +153,12 @@ namespace GameSystem
             }
             foreach (var upgradeData in currentGameData.upgrades)
             {
-                Type type = Type.GetType("Upgrades."+upgradeData.Key);
+                this.Log(LogType.Log, "Upgrade loaded");
+                
+                Type type = Type.GetType("Upgrades."+upgradeData.name);
                 Upgrade upgrade = _upgradeManager.GetUpgradeByType(type);
                 
-                for (int i = 0; i < upgradeData.Value; i++)
+                for (int i = 0; i < upgradeData.level; i++)
                 {
                     upgrade.LevelUp();
                 }
@@ -173,7 +179,7 @@ namespace GameSystem
             return new GameData
             {
                 money = 0,
-                upgrades = new Dictionary<string, int> { },
+                upgrades = new List<UpgradeData> { },
                 shiftCount = 0
             };
 
@@ -244,10 +250,17 @@ namespace GameSystem
         public class GameData
         {
             public float money;
-            public Dictionary<string, int> upgrades;
+            public List<UpgradeData> upgrades;
 
             public int shiftCount = -1;
             // REFACTO : Player Settings
+        }
+        
+        [Serializable]
+        public class UpgradeData
+        {
+            public string name;
+            public int level;
         }
     }
 }
