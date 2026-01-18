@@ -26,10 +26,10 @@ namespace Cooking
                 switch (filter.Condition)
                 {
                     case EFilterCondition.MustBe:
-                        if (!IsValid(comparedItem, filter.ItemType)) result = true;
+                        if (!IsValid(comparedItem, filter.ItemType)) result = false;
                         break;
                     case EFilterCondition.MustNotBe:
-                        if (IsValid(comparedItem, filter.ItemType)) result = true;
+                        if (IsValid(comparedItem, filter.ItemType)) result = false;
                         break;
                     default:
                         continue;
