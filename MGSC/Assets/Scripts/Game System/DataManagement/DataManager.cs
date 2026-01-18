@@ -223,7 +223,7 @@ namespace GameSystem
                 case EDataInfo.CookingSpeedUpgradeLevel:    return (_upgradeManager.GetUpgradeByType<CookingSpeedUpgrade>()?.Level+1).ToString();
                 case EDataInfo.IngredientDropUpgradeLevel:  return (_upgradeManager.GetUpgradeByType<IngredientDropUpgrade>()?.Level+1).ToString();
                 case EDataInfo.OvenCountUpgradeLevel:       return (_upgradeManager.GetUpgradeByType<OvenCountUpgrade>()?.Level+1).ToString();
-                case EDataInfo.CuttingSpeedUpgradeLevel:    return "1";
+                case EDataInfo.CuttingSpeedUpgradeLevel:    return (_upgradeManager.GetUpgradeByType<BlenderSpeedUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.TimeLeft:                    return ProcessTimeLeft();
                     
             }

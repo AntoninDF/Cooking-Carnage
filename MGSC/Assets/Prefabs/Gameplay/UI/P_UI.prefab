@@ -219,7 +219,7 @@ GameObject:
   - component: {fileID: 7876082299746108333}
   - component: {fileID: 2399062971940327849}
   m_Layer: 5
-  m_Name: Cutting speed
+  m_Name: Ingredient drops
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1905,6 +1905,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _onIngredientDropsUpgradeGranted:
+    m_PersistentCalls:
+      m_Calls: []
+  _onBlenderSpeedUpgradeDenied:
+    m_PersistentCalls:
+      m_Calls: []
+  _onBlenderSpeedUpgradeGranted:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &962621213839319439
@@ -3914,7 +3920,7 @@ GameObject:
   - component: {fileID: 1396143625743291270}
   - component: {fileID: 2969068347524385697}
   m_Layer: 5
-  m_Name: Ingredient drops
+  m_Name: Cutting speed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7767,7 +7773,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 68931529b72e73b4f8a6fa032bfde06e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a607b3f0a669f9043ad1fd088231c7cf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7796,7 +7802,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
+  m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 1}
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
@@ -7821,13 +7827,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 958063000473068527}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 3761420757731120749}
+        m_TargetAssemblyTypeName: Assets.Scripts.Upgrades.UpgradeRequester, Assembly-CSharp
+        m_MethodName: TryLevelUpBlenderSpeed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -16353,7 +16359,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LOCKED
+  m_text: 100$
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e94e43728c191cf45af34e6d7f50e8a3, type: 2}
   m_sharedMaterial: {fileID: -3927172370026718332, guid: e94e43728c191cf45af34e6d7f50e8a3, type: 2}
@@ -16380,8 +16386,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 22
-  m_fontSizeBase: 22
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

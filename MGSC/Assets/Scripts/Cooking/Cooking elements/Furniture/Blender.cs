@@ -14,6 +14,7 @@ namespace Cooking
     {
         #region Properties
         public float CutDuration { get => _cutDuration; set { _cutDuration = value; } }
+        public float DefaultCutDuration { get => _defaultCutDuration; set { _defaultCutDuration = value; } }
         public UnityEvent OnInteract => _onInteract;
         public UnityEvent OnItemCut => _onItemCut;
 
@@ -32,6 +33,7 @@ namespace Cooking
         [Header("Parameters")]
         [SerializeField]
         private float _cutDuration = 2.5f;
+        private float _defaultCutDuration;
 
         [Header("References")]
 
@@ -68,7 +70,11 @@ namespace Cooking
         {
             UpdateUI();
         }
+        private void Awake()
+        {
 
+            _defaultCutDuration = _cutDuration;
+        }
         private void Start()
         {
             if (_slotContainer == null)
@@ -81,6 +87,7 @@ namespace Cooking
             _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
             if (_timerManager == null)
                 throw new MissingReferenceException("[Blender] : No timer manager found");
+
         }
 
         public void Interact(PlayerInteractor interactor)
