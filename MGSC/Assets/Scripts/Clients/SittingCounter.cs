@@ -134,7 +134,6 @@ namespace Clients
         {
             float rand = Random.Range(dropRate.x, dropRate.y);
             int count = Mathf.RoundToInt(rand);
-            Debug.Log("Looting " + rand + " items, rounded to " + count);
             for (int i = 0; i < count; i++)
             {
                 Spawn(loot);

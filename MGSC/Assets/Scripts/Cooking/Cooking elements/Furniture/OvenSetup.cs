@@ -39,10 +39,8 @@ namespace Cooking
 
         public void Setup(int maxOvenCount)
         {
-            Debug.Log("Oven setup is... being setup");
             int ovenCount = Mathf.Min(maxOvenCount, _slots.Count);
             var ovens = ReferenceManager.GetAll<Oven>();
-            Debug.Log("Spawning " + ovenCount + " ovens");
             for (int i = ovens.Count; i < ovenCount; i++)
             {
                 GameObject go = Instantiate(_ovenPrefab);

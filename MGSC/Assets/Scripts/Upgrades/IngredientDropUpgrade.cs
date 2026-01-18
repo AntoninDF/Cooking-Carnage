@@ -1,4 +1,4 @@
-
+using UnityEngine;
 using GameSystem;
 
 namespace Upgrades
@@ -34,7 +34,8 @@ namespace Upgrades
         public void Apply(Clients.Client client)
         {
             if (client == null) return;
-            client.SetLoot(client.Model.loot, client.Model.dropRate + UnityEngine.Vector2.one * dropRateIncrement * _level);
+            Vector2 newRate = client.Model.dropRate + Vector2.one * dropRateIncrement * _level;
+            client.SetLoot(client.Model.loot, newRate);
         }
         public override void LevelUp()
         {
