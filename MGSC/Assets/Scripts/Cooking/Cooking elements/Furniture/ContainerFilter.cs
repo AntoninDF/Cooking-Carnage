@@ -2,6 +2,7 @@
 using Orders;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -13,24 +14,32 @@ namespace Cooking
         #region Fields
         [SerializeField] public List<Filter> _filters = new();
 
+        [SerializeField] private UnityEvent _onValidItem;
+        [SerializeField] private UnityEvent _onInvalidItem;
+
         #endregion
         public bool IsValid(MonoBehaviour comparedItem)
         {
+            bool result = true;
             foreach (Filter filter in _filters)
             {
                 switch (filter.Condition)
                 {
                     case EFilterCondition.MustBe:
-                        if (!IsValid(comparedItem, filter.ItemType)) return false;
+                        if (!IsValid(comparedItem, filter.ItemType)) result = true;
                         break;
                     case EFilterCondition.MustNotBe:
-                        if (IsValid(comparedItem, filter.ItemType)) return false;
+                        if (IsValid(comparedItem, filter.ItemType)) result = true;
                         break;
                     default:
                         continue;
                 }
             }
-            return true;
+            if (result)
+                _onValidItem?.Invoke();
+            else
+                _onInvalidItem?.Invoke();
+            return result;
         }
         private bool IsValid(MonoBehaviour item, EItemType type)
         {
