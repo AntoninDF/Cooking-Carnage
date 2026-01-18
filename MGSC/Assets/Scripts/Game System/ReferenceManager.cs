@@ -53,7 +53,6 @@ namespace GameSystem
             typeof(PlayerStart),
             typeof(PlayerInterface),
             typeof(OvenSetup),
-            typeof(PlayerInterface),
             typeof(Entrance),
             typeof(PlayerController),
             typeof(UITarget),

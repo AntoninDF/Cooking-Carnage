@@ -17,7 +17,7 @@ namespace Upgrades
 
 
         protected int _level; // Starts at 0
-        protected int _maxLevel = 2; // => Means 3 levels in total
+        protected int _maxLevel = 999; // => Means 1000 levels in total
         #endregion
 
         #region Methods
@@ -30,7 +30,7 @@ namespace Upgrades
         public abstract void Apply();
         public abstract void LevelUp();
         public abstract float GetPrice();
-        public abstract bool CanLevelUp();
+        public virtual bool CanLevelUp() => _level < _maxLevel;
         #endregion
     }
 }

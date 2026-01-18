@@ -18,6 +18,8 @@ namespace Assets.Scripts.Upgrades
         [SerializeField] private UnityEvent _onCuttingSpeedUpgradeGranted; 
         [SerializeField] private UnityEvent _onIngredientDropsUpgradeDenied; 
         [SerializeField] private UnityEvent _onIngredientDropsUpgradeGranted; 
+        [SerializeField] private UnityEvent _onBlenderSpeedUpgradeDenied; 
+        [SerializeField] private UnityEvent _onBlenderSpeedUpgradeGranted; 
 
 
         private UpgradeManager _upgradeManager;
@@ -65,6 +67,15 @@ namespace Assets.Scripts.Upgrades
                 _onIngredientDropsUpgradeGranted?.Invoke();
             else
                 _onIngredientDropsUpgradeDenied?.Invoke();
+            //return levelUpGranted;
+        }
+        public void TryLevelUpBlenderSpeed()
+        {
+            bool levelUpGranted = TryLevelUp<BlenderSpeedUpgrade>();
+            if (levelUpGranted)
+                _onBlenderSpeedUpgradeGranted?.Invoke();
+            else
+                _onBlenderSpeedUpgradeDenied?.Invoke();
             //return levelUpGranted;
         }
 
