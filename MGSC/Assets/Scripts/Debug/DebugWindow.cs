@@ -58,7 +58,7 @@ public class DebugWindow : MonoBehaviour
     {
         if (!_visible)
         {
-            DrawPressHint();
+            //DrawPressHint();
             return;
         }
         
