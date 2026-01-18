@@ -143,13 +143,6 @@ namespace GameSystem
                 
                 this.Log(LogType.Log, "Client"+client.GetEntityId()+" is the "+ ClientsServedThisShift+"th client served during this shift");
             }
-
-            if (false && client.gameObject)
-            {
-                this.Log(LogType.Log, "Client"+client.GetEntityId()+" gameobject is being destroyed");
-                
-                client.AutoDestruction();
-            }
         }
         
         /// <summary>
