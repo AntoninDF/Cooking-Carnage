@@ -108,7 +108,7 @@ namespace UI
 
             Vector2 resolution = GetAdaptedFullScreenResolution(widthRatio,heightRatio);
             
-            Screen.SetResolution((int)resolution.x, (int)resolution.y, FullScreenMode.ExclusiveFullScreen, new RefreshRate { numerator = 60, denominator = 1 });
+            Screen.SetResolution((int)resolution.x, (int)resolution.y, FullScreenMode.FullScreenWindow , new RefreshRate { numerator = 60, denominator = 1 });
             
             _onStart?.Invoke();
         }        
@@ -197,12 +197,10 @@ namespace UI
         }
         public void StartGame()
         {
-            Debug.Log("Trying to Start game");
             ReferenceManager.Get(out ShiftManager sm);
             if (sm == null) return;
             sm.SetupShift(sm.ShiftCount);
             sm.LaunchShift();
-            Debug.Log("Start game");
         }
         public void ResumeGame(bool skiptutorial=false)
         {
