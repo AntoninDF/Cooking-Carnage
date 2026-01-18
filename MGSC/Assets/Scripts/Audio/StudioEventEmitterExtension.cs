@@ -33,7 +33,9 @@ public class StudioEventEmitterExtension : MonoBehaviour
         Get();
         eventEmitter.Stop();
     }
-    public void StopAll()
+    public void StopAll() => StopAll_Static();
+
+    public static void StopAll_Static()
     {
         FMODUnity.RuntimeManager.StudioSystem.getBankList(out FMOD.Studio.Bank[] loadedBanks);
         foreach (FMOD.Studio.Bank bank in loadedBanks)

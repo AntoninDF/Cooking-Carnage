@@ -46,7 +46,7 @@ namespace Cooking
                 _isCooking = true;
                 OnStartCooking?.Invoke();
                 LastTimer = "Cooking (" + Time.time + ")";
-                _tm.StartTimer(LastTimer, targetDuration * Strength, Cook, onUpdate:(time) => UpdateSlider(time/(targetDuration * Strength)));
+                _tm.StartTimer(LastTimer, targetDuration / Strength, Cook, onUpdate:(time) => UpdateSlider(time/(targetDuration / Strength)));
             }
             // Otherwise, it may be a cooked meal, so try to overcook it.
             else if (GetHeldItemAs<Meal>() != null)

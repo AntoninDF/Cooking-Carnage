@@ -122,7 +122,7 @@ namespace Clients
 
         private void Kill()
         {
-            AddLoot(_currentClient.IngredientToDrop, _currentClient.Model.dropRate);
+            AddLoot(_currentClient.IngredientToDrop, _currentClient.DropRate);
             _orderManager.CancelOrder(_currentClient.Order);
             _currentClient.Kill();
             Free();
@@ -132,7 +132,9 @@ namespace Clients
 
         private void AddLoot(SO_Ingredient loot, Vector2 dropRate)
         {
-            int count = Mathf.RoundToInt(Random.Range(dropRate.x, dropRate.y));
+            float rand = Random.Range(dropRate.x, dropRate.y);
+            int count = Mathf.RoundToInt(rand);
+            Debug.Log("Looting " + rand + " items, rounded to " + count);
             for (int i = 0; i < count; i++)
             {
                 Spawn(loot);

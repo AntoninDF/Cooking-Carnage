@@ -174,6 +174,7 @@ public class DebugWindow : MonoBehaviour
             data.money = newMoney;
             data.upgrades = ReferenceManager.Instance.GetManager<DataManager>().Data.upgrades;
             ReferenceManager.Instance.GetManager<DataManager>().SaveGameData(data);
+            StudioEventEmitterExtension.StopAll_Static();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         GUILayout.Space(10);

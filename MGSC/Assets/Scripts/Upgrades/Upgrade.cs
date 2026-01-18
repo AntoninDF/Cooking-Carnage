@@ -30,6 +30,7 @@ namespace Upgrades
         public abstract void Apply();
         public abstract void LevelUp();
         public abstract float GetPrice();
+        public abstract bool CanLevelUp();
         #endregion
     }
 }

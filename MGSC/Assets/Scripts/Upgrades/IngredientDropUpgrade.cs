@@ -1,8 +1,5 @@
-using Cooking;
+
 using GameSystem;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 
 namespace Upgrades
 {
@@ -49,6 +46,7 @@ namespace Upgrades
         {
             return 100f;
         }
+        public override bool CanLevelUp() => true;
         #endregion
     }
 }
