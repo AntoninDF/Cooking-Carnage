@@ -119,7 +119,7 @@ namespace Upgrades
                 ReferenceManager.Instance.GetManager<UI.UIManager>().OnUpgradeFail?.Invoke();
                 return false;
             }
-                
+            if (!upgrade.CanLevelUp()) return false;
             _moneyManager.AddMoney(-price);
             LevelUp(upgrade);
             ReferenceManager.Instance.GetManager<UI.UIManager>().OnUpgradeSuccess?.Invoke();
