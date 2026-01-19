@@ -235,11 +235,13 @@ namespace Controller
 
         public bool CanGrab(IGrabbable item)
         {
-            return
-                _heldItem == null &&
-                (item is not EnglobingSlotContainer ||
-                (item is EnglobingSlotContainer esc && esc.HeldItem!=null))
-                ; 
+            Meal meal = item as Meal;
+            if (meal && meal.eaten)
+            {
+                return false;
+            }
+            
+            return _heldItem == null && (item is not EnglobingSlotContainer || (item is EnglobingSlotContainer esc && esc.HeldItem!=null))  ; 
         }
 
         #endregion
