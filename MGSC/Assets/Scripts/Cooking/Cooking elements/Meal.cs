@@ -20,6 +20,7 @@ namespace Cooking
         public UnityEvent<ICookable> OnCook => _onCook;
         public UnityEvent OnOvercooked => _onOvercooked;
         
+        
         #endregion
 
         #region Fields
@@ -36,6 +37,7 @@ namespace Cooking
         [SerializeField] private UnityEvent _onOvercooked;
 
         private float _targetCookDuration = 0.0f;
+        public bool eaten;
         #endregion
 
         #region Methods
@@ -47,6 +49,12 @@ namespace Cooking
             _tooltipComponent.SetText(Recipe.Name);
 
             OnCook?.Invoke(this);
+        }
+        
+        public override void Reset()
+        {
+            base.Reset();
+            eaten = false;
         }
         
         protected override string UpdateID()
@@ -95,6 +103,7 @@ namespace Cooking
                 _tooltipComponent.SetText(text);
             }
         }
+        
         #endregion
     }
 

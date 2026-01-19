@@ -102,9 +102,14 @@ namespace Clients
             _mealSlot.Drop(item);
             TimerManager tm;
             ReferenceManager.Get(out tm);
-            
-            tm.StartTimer("Despawn meal", _timeBeforeMealDisappears, () => ReferenceManager.Instance.GetManager<ItemManager>().Despawn(meal));
+            meal.eaten = true;
+            tm.StartTimer("Despawn meal", _timeBeforeMealDisappears, () => DespawnMeal(meal));
             Free();
+        }
+
+        private void DespawnMeal(Meal meal)
+        {
+            ReferenceManager.Instance.GetManager<ItemManager>().Despawn(meal,true);
         }
 
         public void TryKill()
