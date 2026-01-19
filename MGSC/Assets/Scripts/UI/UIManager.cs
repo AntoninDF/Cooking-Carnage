@@ -4,12 +4,11 @@ using GameSystem;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace UI
 {
@@ -30,6 +29,7 @@ namespace UI
             "ShiftRecap", EInfoBoxType.Normal)]
 
         //[Header("References")]
+        [SerializeField] private GameObject _canvas;
         [SerializeField] private string _pauseMenuName = "Pause";
         [SerializeField] private string _gameMenuName = "Game";
         [SerializeField] private string _mainMenuName = "Main";
@@ -283,7 +283,11 @@ namespace UI
         private void SubscribeToEvents()
         {
             if (_UIInputs != null)
+            {
                 _UIInputs.FindAction("Pause").performed += (ctx) => TogglePause();
+                _UIInputs.FindAction("ToggleUI").performed += (ctx) => ToggleAllUI();
+                _UIInputs.FindAction("Screenshot").performed += (ctx) => TakeScreenshot();
+            }
         }
         private void TogglePause()
         {
@@ -320,6 +324,23 @@ namespace UI
         public void ResetCameraSwitch()
         {
             ReferenceManager.Get<CameraManager>().EnableFirstPersonView();
+        }
+        public void HideAllUI() => _canvas?.SetActive(false);
+        public void ShowAllUI() => _canvas?.SetActive(true);
+        public void ToggleAllUI() => _canvas?.SetActive(!_canvas.activeSelf);
+        public void TakeScreenshot()
+        {
+            string path = Application.persistentDataPath + "/Screenshots";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            DirectoryInfo dir = new DirectoryInfo(path);
+            FileInfo[] info = dir.GetFiles("*.*");
+            int fileAmount = info.Length;
+            ScreenCapture.CaptureScreenshot(path + "/Screenshot " + fileAmount + ".png", 2);
+            Debug.Log("Screenshot taken, saved at path " + path + "/Screenshot " + fileAmount);
+            this.Log("Screenshot taken, saved at path " + path + "/Screenshot " + fileAmount);
         }
         [System.Serializable]
         public struct UIMenu
