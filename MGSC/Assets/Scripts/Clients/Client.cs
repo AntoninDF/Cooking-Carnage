@@ -57,6 +57,7 @@ namespace Clients
         [SerializeField] private UnityEvent _onSatisfactoryOrder;
         [SerializeField] private UnityEvent _onWrongOrder;
         [SerializeField] private UnityEvent _onStart;
+        [SerializeField] private UnityEvent _onDestroy;
 
 
         private SplineContainer _splineComp;
@@ -323,6 +324,7 @@ namespace Clients
 
         public void AutoDestruction()
         {
+            _onDestroy?.Invoke();
             Destroy(gameObject);
         }
 
