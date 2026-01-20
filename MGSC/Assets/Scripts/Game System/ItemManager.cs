@@ -247,6 +247,7 @@ public class ItemManager : IManager
             this.Log(LogType.Warning, itemToStore.name + " is not active and probably shouldn't be stored now at ID "+itemToStore.ID);
         }
         itemToStore.gameObject.SetActive(false);
+        itemToStore.OnDisable();
         itemToStore.transform.parent = _itemsPooled;
         if (itemToStore.Container != null)
             itemToStore.Container.Drop(itemToStore);
