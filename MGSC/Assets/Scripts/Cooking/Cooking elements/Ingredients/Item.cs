@@ -247,7 +247,7 @@ namespace Cooking
             _tooltip.SetActive(true);
         }
 
-        private void OnDisable() => _onDisable?.Invoke();
+        public void OnDisable() => _onDisable?.Invoke();
         private void OnEnable() => _onEnable?.Invoke();
         #endregion
     }

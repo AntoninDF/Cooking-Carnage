@@ -55,6 +55,7 @@ namespace Cooking
         {
             base.Reset();
             eaten = false;
+            CookStatus = ECookStatus.Cooked;
         }
         
         protected override string UpdateID()
