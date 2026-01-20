@@ -99,16 +99,17 @@ namespace Clients
             ServingInfo info = new ServingInfo(meal);
             _orderManager.ResolveOrder(_currentClient.Order, info);
             LastServedOrder = _currentClient.Order;
-            _mealSlot.Drop(item);
             TimerManager tm;
             ReferenceManager.Get(out tm);
             meal.eaten = true;
             tm.StartTimer("Despawn meal", _timeBeforeMealDisappears, () => DespawnMeal(meal));
-            Free();
         }
 
-        private void DespawnMeal(Meal meal)
+        private void DespawnMeal(IGrabbable item)
         {
+            _mealSlot.Drop(item);
+            Meal meal = item as Meal;
+            Free();
             ReferenceManager.Instance.GetManager<ItemManager>().Despawn(meal,true);
         }
 
