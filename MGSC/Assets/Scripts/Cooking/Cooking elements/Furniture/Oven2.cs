@@ -72,11 +72,9 @@ namespace Cooking
             var targetRecipe = meal.Recipe;
             if (targetRecipe == null) return;
 
-            float targetDuration = targetRecipe.timeToOvercook;
-
             _isCooking = true;
             LastTimer = "Overcooking (" + Time.time + ")";
-            float duration = targetRecipe.timeToOvercook; // Add * Strength to account for upgrades on overcooking too
+            float duration = targetRecipe.timeToOvercook - targetRecipe.timeToCook; // Add * Strength to account for upgrades on overcooking too
             _tm.StartTimer(LastTimer, duration, Overcook, onUpdate:(time) => UpdateSlider(time/ duration));
         }
 
