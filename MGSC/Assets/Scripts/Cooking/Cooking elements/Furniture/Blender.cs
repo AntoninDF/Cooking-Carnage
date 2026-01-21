@@ -56,6 +56,8 @@ namespace Cooking
         [SerializeField]
         private UnityEvent _onStopLookAt;
 
+        [SerializeField] private UnityEvent _onFailedInteraction;
+
 
         // private fields
         TimerManager _timerManager;
@@ -92,11 +94,22 @@ namespace Cooking
 
         public void Interact(PlayerInteractor interactor)
         {
-            if (Locked) return;
+            if (Locked) {_onFailedInteraction?.Invoke(); return;}
+
             if (!(_slotContainer != null && _slotContainer.HeldItem != null))
+            {
+                if (!interactor.ItemSlot.GetComponentInChildren<Ingredient>())
+                {
+                    _onFailedInteraction?.Invoke();
+                }
+
                 return;
+            }
+
             if (_slotContainer.HeldItem is not Ingredient ingredient)
-                return;
+            {
+                _onFailedInteraction?.Invoke();return;
+            }
 
             if (!ingredient.IsCut)
             {
@@ -106,7 +119,7 @@ namespace Cooking
             }
             else
             {
-                _onTryToCutAlreadyCutIngredient?.Invoke();
+                _onFailedInteraction?.Invoke();
             }
         }
 
