@@ -47,7 +47,7 @@ namespace Upgrades
         {
             return 100f;
         }
-        public override bool CanLevelUp() => true;
+        public override bool CanLevelUp() => _level < 3;
         #endregion
     }
 }
