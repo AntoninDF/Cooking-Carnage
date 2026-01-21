@@ -91,10 +91,14 @@ namespace GameSystem
         /// <summary>
         /// Pauses the game loop
         /// </summary>
-        public void StopRunning()
+        public void StopRunning(bool pauseMenu = true)
         {
             IsRunning = false;
             OnPause?.Invoke();
+            if (!pauseMenu)
+            {
+                OnResume?.Invoke();
+            }
             this.Log("is not running anymore");
         }
         

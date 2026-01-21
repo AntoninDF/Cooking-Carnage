@@ -187,11 +187,16 @@ namespace UI
         public void SetGameState(bool running) { if (running) ResumeGame(); else PauseGame(); }
         public void PauseGame()
         {
-            _gameLoop.StopRunning();
+            bool isPauseMenu = _currentMenu.name == _pauseMenuName;
+            
+            _gameLoop.StopRunning(isPauseMenu);
             _playerInputs.Disable();
             _UIInputs.Enable();
-            _onPause?.Invoke();
-
+            
+            if (isPauseMenu)
+            {
+                _onPause?.Invoke();
+            }
 
             this.Log(LogType.Log, $"Game has been paused");
         }
@@ -301,7 +306,9 @@ namespace UI
         }
         public void ReloadScene()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            _gameLoop.StartRunning();
+            ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("reloadscene", 1,
+                () => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex), true);
         }      
         public void ResetEverything()
         {
