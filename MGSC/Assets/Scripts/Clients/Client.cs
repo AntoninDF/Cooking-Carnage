@@ -275,9 +275,8 @@ namespace Clients
             {
                 _onStartEating?.Invoke();
 
-                var tm = ReferenceManager.Get<TimerManager>();
-                if (tm != null)
-                    tm.StartTimer("Eating", 2f, () => Eat(info, rating));
+                
+                ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("Eating"+ _currentCounter.name, 2f, () => Eat(info, rating));
                 ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,false);
             }
             else
@@ -298,8 +297,8 @@ namespace Clients
             var tm = ReferenceManager.Get<TimerManager>();
             if (tm != null)
             {
-                tm.StartTimer("Leave", _timeToEat, () => LeaveCounterFeedback() );
-                tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => AutoDestruction()); //timer aussi utilisé dans endshift shiftmanager
+                tm.StartTimer("Leave"+_currentCounter.name, _timeToEat, () => LeaveCounterFeedback() );
+                tm.StartTimer("Disable client"+_currentCounter.name, _timeBeforeDisappearingAfterLeaving, () => AutoDestruction()); //timer aussi utilisé dans endshift shiftmanager
             }
             _hasEaten = true;
         }
