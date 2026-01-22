@@ -102,14 +102,16 @@ namespace Clients
             TimerManager tm;
             ReferenceManager.Get(out tm);
             meal.eaten = true;
-            tm.StartTimer("Despawn meal", _timeBeforeMealDisappears, () => DespawnMeal(meal));
+            Free();
+            _mealSlot.IsLocked = true;
+            tm.StartTimer("Despawn meal"+name, _timeBeforeMealDisappears, () => DespawnMeal(meal));
         }
 
         private void DespawnMeal(IGrabbable item)
         {
+            _mealSlot.IsLocked = false;
             _mealSlot.Drop(item);
             Meal meal = item as Meal;
-            Free();
             ReferenceManager.Instance.GetManager<ItemManager>().Despawn(meal,true);
         }
 

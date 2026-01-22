@@ -29,7 +29,7 @@ namespace Upgrades
 
             foreach (Oven o in _targetOvens)
             {
-                o.SetStrength(1 + _level * 0.3f);
+                o.SetStrength(_level * 2f);
             }
         }
         public override void LevelUp()
@@ -43,7 +43,7 @@ namespace Upgrades
             return 100f;
         }
 
-        public override bool CanLevelUp() => true;
+        public override bool CanLevelUp() => _level < 3;
         #endregion
     }
 }

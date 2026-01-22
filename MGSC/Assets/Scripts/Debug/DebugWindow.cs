@@ -9,7 +9,7 @@ using Upgrades;
 public class DebugWindow : MonoBehaviour
 {
     private bool _visible;
-    private Rect _windowRect = new Rect(20, 20, 450, 500);
+    private Rect _windowRect = new Rect(20, 20, 450, 1000);
     private int _currentTab;
     private readonly string[] _tabs = { "General", "Settings", "Timers", "Clients", "Upgrades","Managers" };
     
