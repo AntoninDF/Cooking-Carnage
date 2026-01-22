@@ -140,8 +140,12 @@ namespace Cooking
 
             if (_filter != null && item is MonoBehaviour)
                 if (!_filter.IsValid((MonoBehaviour)item))
-                { 
-                    _onTryGrabIncorrectItem?.Invoke();
+                {
+                    if (!(item is SlotContainer))
+                    {
+                        _onTryGrabIncorrectItem?.Invoke();
+                    }
+
                     return false;
                 }
             return true;

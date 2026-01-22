@@ -104,7 +104,7 @@ namespace Clients
             meal.eaten = true;
             Free();
             _mealSlot.IsLocked = true;
-            tm.StartTimer("Despawn meal", _timeBeforeMealDisappears, () => DespawnMeal(meal));
+            tm.StartTimer("Despawn meal"+name, _timeBeforeMealDisappears, () => DespawnMeal(meal));
         }
 
         private void DespawnMeal(IGrabbable item)
