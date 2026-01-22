@@ -97,7 +97,7 @@ namespace GameSystem
             
             this.Log(LogType.Log, $"End of the Shift triggered. Active clients: {activeClients}");
 
-            if ((activeClients != 0 || _timerManager.IsTimerRunning("Disable client") || _timerManager.IsTimerRunning("Eating")) && !tutorialEnd)
+            if ((activeClients != 0 || _timerManager.IsTimerRunning("Disable client") || _timerManager.IsTimerRunning("Eating") || _timerManager.IsTimerRunning("Dying",false)) && !tutorialEnd)
             {
                 DelayEndShift();
             }

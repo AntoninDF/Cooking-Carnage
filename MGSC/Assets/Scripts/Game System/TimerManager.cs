@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GameSystem
@@ -141,9 +142,17 @@ namespace GameSystem
         /// <summary>
         /// Checks if a timer is currently running
         /// </summary>
-        public bool IsTimerRunning(string name)
+        public bool IsTimerRunning(string name, bool fullName =true)
         {
-            return timers.TryGetValue(name, out var t) && !t.IsComplete && !t.IsPaused;
+            if (fullName)
+            {
+                return timers.TryGetValue(name, out var t) && !t.IsComplete && !t.IsPaused;
+            }
+            else
+            {
+                var timerEntry = timers.FirstOrDefault(kvp => kvp.Key.Contains(name));
+                return timerEntry.Value != null && !timerEntry.Value.IsComplete && !timerEntry.Value.IsPaused;
+            }
         }
 
         public float TimeLeft(string name)

@@ -317,7 +317,7 @@ namespace Clients
 
             var tm = ReferenceManager.Get<TimerManager>();
             if (tm != null)
-                tm.StartTimer(gameObject.name + " Dying (ID:" + Time.time.ToString() + ")", _timeBeforeDisappearingAfterDying, () => AutoDestruction());
+                tm.StartTimer("Dying"+_currentCounter.name , _timeBeforeDisappearingAfterDying, () => AutoDestruction());
             
             ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,true);
         }
