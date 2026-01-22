@@ -137,7 +137,7 @@ namespace UI
             if (_timerManager != null && _resetDelay != 0)
             {
                 //Debug.Log("[OrderPreview] : Timer started for resetting the order");
-                _timerManager.StartTimer("ResetOrderPreview (" + Time.time + ")", _resetDelay, Reset);
+                _timerManager.StartTimer("ResetOrderPreview", _resetDelay, Reset);
             }
 
         }
