@@ -14,12 +14,12 @@ namespace Controller
         public static PlayerInterface TrySetupPlayer()
         {
             PlayerInterface player = null;
-            if (ReferenceManager.Instance.GetElementsOfType<PlayerInterface>().Count == 0)
+            if (Reference.GetAll<PlayerInterface>().Count == 0)
             {
                 TrySpawnPlayer(out player);
             }
             TryResetPlayer(player);
-            ReferenceManager.Instance.TryAddElement(player);
+            Reference.Instance.TryAddElement(player);
 
             return player;
         }
@@ -28,14 +28,14 @@ namespace Controller
         public static bool TrySpawnPlayer(out PlayerInterface player)
         {
             player = null;
-            if (!CheckReference(ReferenceManager.AssetReferences,
+            if (!CheckReference(Reference.AssetReferences,
                 "[PlayerSetup] : Cannot spawn the player because no Asset References SO was found."))
                 return false;
-            if (!CheckReference(ReferenceManager.AssetReferences.Player,
+            if (!CheckReference(Reference.AssetReferences.Player,
                 "[PlayerSetup] : Cannot spawn the player because no Player prefab was found in the Asset References SO."))
                 return false;
 
-            GameObject playerPrefab = ReferenceManager.AssetReferences.Player;
+            GameObject playerPrefab = Reference.AssetReferences.Player;
             if (!playerPrefab.HasComponent<PlayerInterface>())
             {
                 Debug.LogError("[PlayerSetup] : The player prefab referenced in the asset references SO doesn't have the player interface component.");
@@ -58,7 +58,7 @@ namespace Controller
 
         public static bool TryResetPlayer(PlayerInterface player)
         {
-            PlayerStart playerStart = ReferenceManager.Instance.GetElementOfType<PlayerStart>();
+            PlayerStart playerStart = Reference.GetObject<PlayerStart>();
             Vector3 pos;
             Quaternion rot;
             if (playerStart == null)
@@ -92,9 +92,9 @@ namespace Controller
         /// </summary>
         private static void SetPlayerReferences(PlayerInterface player)
         {
-            if (ReferenceManager.AssetReferences.InputActions == null)
+            if (Reference.AssetReferences.InputActions == null)
                 Debug.LogWarning("[PlayerSetup] : Please assign the input action asset in the asset references SO");
-            player.InputHandler.PlayerControls = ReferenceManager.AssetReferences.InputActions;
+            player.InputHandler.PlayerControls = Reference.AssetReferences.InputActions;
         }
 
         private static bool EnforceReference(Object obj, string message="Object not set to an instance of an object")

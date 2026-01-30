@@ -14,7 +14,7 @@ namespace Cooking
         string _timerID;
         protected override void Start()
         {
-            ReferenceManager.Get(out _tm);
+            Reference.GetManager(out _tm);
             _slot.OnDrop.AddListener((item) => StopCooking());
         }
         protected override void Update()

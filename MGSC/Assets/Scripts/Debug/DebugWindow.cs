@@ -127,7 +127,7 @@ public class DebugWindow : MonoBehaviour
         float fps = 1.0f / _deltaTime;
         GUILayout.Label($"FPS: {fps:F1}");
 
-        DataManager.GameData data = ReferenceManager.Instance.GetManager<DataManager>().Data;
+        DataManager.GameData data = Reference.GetManager<DataManager>().Data;
 
         GUILayout.Space(10);
         if (data != null)
@@ -163,7 +163,7 @@ public class DebugWindow : MonoBehaviour
 
         if (GUILayout.Button("Reset Camera", GUILayout.Width(160)))
         {
-            ReferenceManager.Instance.GetManager<CameraManager>().EnableFirstPersonView();
+            Reference.GetManager<CameraManager>().EnableFirstPersonView();
         }
         GUILayout.Space(10);
 
@@ -172,15 +172,15 @@ public class DebugWindow : MonoBehaviour
             DataManager.GameData data = new DataManager.GameData();
             data.shiftCount = newShift;
             data.money = newMoney;
-            data.upgrades = ReferenceManager.Instance.GetManager<DataManager>().Data.upgrades;
-            ReferenceManager.Instance.GetManager<DataManager>().SaveGameData(data);
+            data.upgrades = Reference.GetManager<DataManager>().Data.upgrades;
+            Reference.GetManager<DataManager>().SaveGameData(data);
             StudioEventEmitterExtension.StopAll_Static();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         GUILayout.Space(10);
         if (GUILayout.Button("Reset Save", GUILayout.Width(80)))
         {
-            ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
+            Reference.GetManager<DataManager>().ResetSave();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
@@ -189,7 +189,7 @@ public class DebugWindow : MonoBehaviour
     {
         GUILayout.Label("Active Timers", GUI.skin.box);
 
-        var timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
+        var timerManager = Reference.GetManager<TimerManager>();
         if (timerManager == null)
         {
             GUILayout.Label("(No TimerManager found)");
@@ -235,7 +235,7 @@ public class DebugWindow : MonoBehaviour
 {
     GUILayout.Label("Client Information", GUI.skin.box);
 
-    var clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
+    var clientManager = Reference.GetManager<ClientManager>();
     if (clientManager == null)
     {
         GUILayout.Label("(No ClientManager found)");
@@ -367,7 +367,7 @@ public class DebugWindow : MonoBehaviour
     private void DrawUpgradesTab()
     {
         GUILayout.Label("Upgrades", GUI.skin.box);
-        var upgradeManager = ReferenceManager.Instance.GetManager<UpgradeManager>();
+        var upgradeManager = Reference.GetManager<UpgradeManager>();
         if (upgradeManager == null)
         {
             GUILayout.Label("(No UpgradeManager found)");
@@ -388,7 +388,7 @@ public class DebugWindow : MonoBehaviour
     {
         GUILayout.Label("Managers Overview", GUI.skin.box);
 
-        var refManager = ReferenceManager.Instance;
+        var refManager = Reference.Instance;
         if (refManager == null)
         {
             GUILayout.Label("(No ReferenceManager found)");

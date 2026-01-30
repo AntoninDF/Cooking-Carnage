@@ -86,7 +86,7 @@ namespace Cooking
 
             _slotContainer.SetFilter(new Filter(EFilterCondition.MustBe, EItemType.Ingredient));
             _slotContainer.OnDrop.AddListener(StopCutting);
-            _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
+            Reference.GetManager(out _timerManager);
             if (_timerManager == null)
                 throw new MissingReferenceException("[Blender] : No timer manager found");
 
@@ -173,7 +173,8 @@ namespace Cooking
         {
             if (_slotContainer != null && _slotContainer.HeldItem != null)
             {
-                ReferenceManager.Instance.GetManager<ItemManager>().Despawn(_slotContainer.HeldItem as Ingredient);
+                if (Reference.TryGetManager(out ItemManager im))
+                    im.Despawn(_slotContainer.HeldItem as Ingredient);
                 _slotContainer.HeldItem = null;
             }
         }

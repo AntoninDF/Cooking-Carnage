@@ -34,7 +34,7 @@ namespace Clients
         {
             if (IsFree) return;
 
-            if (ReferenceManager.Instance.GetElementsOfType<SittingCounter>().Any(counter => counter.IsFree) 
+            if (Reference.GetAll<SittingCounter>().Any(counter => counter.IsFree) 
                 && _currentClient.CheckClientCounterDistance(this))
             {
                 AcceptOrder(); 
@@ -99,17 +99,17 @@ namespace Clients
 
             // Enforce the first three orders of the first shift to be A B and C
             ShiftManager sm;
-            ReferenceManager.Get(out sm);
+            Reference.GetManager(out sm);
             if (sm!= null && sm.ShiftCount == 0)
             {
                 OrderManager om;
-                ReferenceManager.Get(out om);
+                Reference.GetManager(out om);
                 if (om != null)
                 {
                     int ordersCount = om.PastOrders.Count + om.Orders.Count;
                     if (ordersCount < 3)
                     {
-                        var rb = ReferenceManager.AssetReferences.CurrentRecipeBook;
+                        var rb = Reference.AssetReferences.CurrentRecipeBook;
                         if (rb != null)
                         {
                             ordersCount = Mathf.Clamp(ordersCount, 0, rb.Recipes.Count - 1);
@@ -123,9 +123,7 @@ namespace Clients
 
         private bool EnforceReferences()
         {
-            if (_orderManager == null)
-                _orderManager = ReferenceManager.Instance.GetManager<OrderManager>();
-            if (_orderManager == null)
+            if (!Reference.TryGetManager(out _orderManager))
             {
                 Debug.LogError("[OrderingCounter] : No order manager found.");
                 return false;

@@ -13,7 +13,7 @@ namespace Orders
     {
         public static SO_Recipe Pick()
         {
-            ClientManager clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
+            ClientManager clientManager = Reference.GetManager<ClientManager>();
             if (clientManager == null)
                 throw new NullReferenceException("[OrderPicker] : client manager not found");
 
@@ -22,7 +22,7 @@ namespace Orders
             IEnumerable<SO_Recipe> recipes = FindCurrentRecipeBook().Recipes;
             if (recipes == null)
                 throw new NullReferenceException("[OrderPicker] : No recipe list found");
-            List<SO_Client> clientModels = ReferenceManager.AssetReferences.clientList;
+            List<SO_Client> clientModels = Reference.AssetReferences.clientList;
             EnforceSeenClientsCountTypes(ref clientCount, clientModels.Select((model) => model.clientType));
             Dictionary<SO_Recipe, float> recipeWeights = SetupRecipeWeights(recipes, clientCount, clientModels);
 
@@ -34,15 +34,15 @@ namespace Orders
 
         public static SO_RecipeBook FindCurrentRecipeBook()
         {
-            var ar = ReferenceManager.AssetReferences;
-            var sm = ReferenceManager.Instance.GetManager<ShiftManager>() ;
+            var ar = Reference.AssetReferences;
+            var sm = Reference.GetManager<ShiftManager>() ;
             SO_RecipeBook book = ar.defaultRecipeBook;
 
             if (sm != null)
                 foreach (var elm in ar.recipeBookByShiftCount)
                     if (sm.ShiftCount >= elm.shift) book = elm.recipeBook;
 
-            OrderManager om = ReferenceManager.Instance.GetManager<OrderManager>();
+            OrderManager om = Reference.GetManager<OrderManager>();
             if (om != null) om.Log("The current recipe book is '" + book.name + "'");
             return book;
         }

@@ -13,11 +13,11 @@ namespace GameSystem
     /// <summary>
     /// The reference manager holds a reference to every kitchen element, and eases reference setup
     /// </summary>
-    public class ReferenceManager
+    public class Reference
     {
         #region Properties
         // Lazy initialization
-        public static ReferenceManager Instance { get { if (_instance == null) _instance = new ReferenceManager(); return _instance;}}
+        public static Reference Instance { get { if (_instance == null) _instance = new Reference(); return _instance;}}
         public static SO_AssetReferences AssetReferences
         { 
             get
@@ -63,26 +63,105 @@ namespace GameSystem
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;
         private Dictionary<Type, IManager> _managers;
 
-        private static ReferenceManager _instance;
+        private static Reference _instance;
         private static SO_AssetReferences _assetReferences;
         #endregion
 
         #region Methods
 
-        public ReferenceManager() 
+        public Reference() 
         {
             _elementDict = new();
             _managers = new();
             ScanHierarchy();
-            //DebugTrackedObjectsCount();
         }
 
+        /// <summary>
+        /// Recreates a new instance, clearing all the references held so far.
+        /// </summary>
         public static void Reset()
         {
             _instance = new();
         }
+        /// <summary>
+        /// Store the reference to this manager to be accessible everywhere
+        /// </summary>
+        /// <typeparam name="T">Manager type, implements IManager</typeparam>
+        /// <param name="manager"></param>
+        public static void SetManager<T>(T manager) where T : IManager => Instance.SetManager_Instance(manager);
+        /// <summary>
+        /// Remove the manager associated to this type from the global reference index.
+        /// This will NOT break or update existing references that other scripts might hold to this manager.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void RemoveManager<T>() where T : IManager => Instance.RemoveManager_Instance<T>();
+        /// <summary>
+        /// Remove the manager associated to this type from the global reference index.
+        /// This will NOT break or update existing references that other scripts might hold to this manager.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void RemoveManager<T>(T manager) where T : IManager => Instance.RemoveManager_Instance<T>();
+        /// <summary>
+        /// Removes all the managers from the global reference index.
+        /// This will NOT break or update existing references that other scripts might hold to these managers.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void RemoveAllManagers() => Instance.RemoveAllManagers_Instance();
+        /// <summary>
+        /// Get a reference to a manager that registered to the reference index
+        /// </summary>
+        /// <typeparam name="T">Type of the requested manager</typeparam>
+        /// <returns></returns>
+        public static T GetManager<T>() where T : class, IManager => Instance.GetManager_Instance<T>();
+        /// <summary>
+        /// Get a reference to a manager that registered to the reference index
+        /// </summary>
+        /// <typeparam name="T">Type of the requested manager</typeparam>
+        /// <returns></returns>
+        public static T GetManager<T>(out T manager) where T : class, IManager => manager = GetManager<T>();
+        public static bool TryGetManager<T>(out T manager) where T : class, IManager => Instance.TryGetManager_Instance(out manager);
+        /// <summary>
+        /// Retrieves all the objects of this specific class that are in the reference index.
+        /// To ensure all objects from the current scene are indexed, call Reference.ScanHierarchy().
+        /// The retrieved object cannot be of an inheriting class.
+        /// The given type must be marked as a tracked type to be retrieved.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static List<T> GetAll<T>() where T : class => Instance.GetElementsOfType<T>();
+        public static List<T> GetAll<T>(List<T> output) where T : class => output = Instance.GetElementsOfType<T>();
+        /// <summary>
+        /// Tries to retrieve an object of a given specific type from the scene.
+        /// The type must be marked as a tracked type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static bool TryGetObject<T>(out T obj) where T : class
+        {
+            obj = Instance.GetElementOfType<T>();
+            return obj != null;
+        }
+        /// <summary>
+        /// Get the first indexed object of the given type.
+        /// The type must be marked as a tracked type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static T GetObject<T>(out T obj) where T : class
+        {
+            obj = GetObject<T>();
+            return obj;
+        }
+        public static T GetObject<T>() where T : class => Instance.GetElementOfType<T>();
 
-        public void SetManager<T>(T manager) where T : IManager
+
+
+
+
+
+        protected void SetManager_Instance<T>(T manager) where T : IManager
         {
             if (manager == null) throw new ArgumentNullException(nameof(manager));
             if (_managers.ContainsKey(typeof(T)) && _managers[typeof(T)] != null)
@@ -91,8 +170,7 @@ namespace GameSystem
             }
             _managers[typeof(T)] = manager;
         }
-
-        public void RemoveManager<T>() where T : IManager
+        protected void RemoveManager_Instance<T>() where T : IManager
         {
             if (!(_managers.ContainsKey(typeof(T)) && _managers[typeof(T)] != null))
             {
@@ -100,16 +178,8 @@ namespace GameSystem
             }
             _managers[typeof(T)] = null;
         }
-        public void RemoveManager<T>(T manager) where T: IManager
-        {
-            RemoveManager<T>();
-        }
-        public void RemoveAllManagers()
-        {
-            _managers.Clear();
-        }
-
-        public T GetManager<T>() where T : class, IManager
+        protected void RemoveAllManagers_Instance() => _managers.Clear();
+        protected T GetManager_Instance<T>() where T : class, IManager
         {
             if (!_managers.ContainsKey(typeof(T)) || _managers[typeof(T)] == null)
             {
@@ -118,23 +188,17 @@ namespace GameSystem
             }
             return _managers[typeof(T)] as T;
         }
-        public static T Get<T>() where T : class, IManager => Instance.GetManager<T>();
-        public static T Get<T>(out T manager) where T : class, IManager => manager = Get<T>();
-
-        public bool TryGetManager<T>(out T manager) where T : class, IManager
+        protected bool TryGetManager_Instance<T>(out T manager) where T : class, IManager
         {
-            manager = GetManager<T>();
+            manager = GetManager_Instance<T>();
             return manager != null;
         }
 
-        public static List<T> GetAll<T>() where T : class => Instance.GetElementsOfType<T>();
         public List<T> GetElementsOfType<T>() where T : class
         {
             if (!_elementDict.ContainsKey(typeof(T))) return new List<T>();
             return _elementDict[typeof(T)].Select((mb) => mb as T).ToList();
         }
-
-        public static T GetObject<T>() where T : class => Instance.GetElementOfType<T>();
         public T GetElementOfType<T>() where T : class => GetElementsOfType<T>().FirstOrDefault();
 
         public void TryAddElement<T>(T element) where T : MonoBehaviour

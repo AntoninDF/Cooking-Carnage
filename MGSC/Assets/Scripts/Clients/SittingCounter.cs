@@ -47,7 +47,11 @@ namespace Clients
         [SerializeField] private UnityEvent _onSkipTutorial;
 
         private OrderManager _orderManager;
-        [SerializeField]private Transform deathTrap;
+        private TimerManager _timerManager;
+        private ItemManager _itemManager;
+        private DataManager _dataManager;
+
+        [SerializeField] private Transform deathTrap;
         #endregion
 
         #region Methods
@@ -56,7 +60,10 @@ namespace Clients
         {
             EnforceSlots();
             _mealSlot.OnGrab.AddListener(Serve);
-            _orderManager = ReferenceManager.Instance.GetManager<OrderManager>();
+            Reference.GetManager(out _orderManager);
+            Reference.GetManager(out _timerManager);
+            Reference.GetManager(out _itemManager);
+            Reference.GetManager(out _dataManager);
         }
 
         private void EnforceSlots()
@@ -99,12 +106,10 @@ namespace Clients
             ServingInfo info = new ServingInfo(meal);
             _orderManager.ResolveOrder(_currentClient.Order, info);
             LastServedOrder = _currentClient.Order;
-            TimerManager tm;
-            ReferenceManager.Get(out tm);
             meal.eaten = true;
             Free();
             _mealSlot.IsLocked = true;
-            tm.StartTimer("Despawn meal"+name, _timeBeforeMealDisappears, () => DespawnMeal(meal));
+            _timerManager.StartTimer("Despawn meal"+name, _timeBeforeMealDisappears, () => DespawnMeal(meal));
         }
 
         private void DespawnMeal(IGrabbable item)
@@ -112,13 +117,13 @@ namespace Clients
             _mealSlot.IsLocked = false;
             _mealSlot.Drop(item);
             Meal meal = item as Meal;
-            ReferenceManager.Instance.GetManager<ItemManager>().Despawn(meal,true);
+            _itemManager.Despawn(meal,true);
         }
 
         public void TryKill()
         {
             // Check if tutorial is running :
-            if (_lockWithTutorial && ReferenceManager.Get<DataManager>().GetTotalOrdersCount() < 1 && ReferenceManager.Get<ShiftManager>().ShiftCount == 0) return;
+            if (_lockWithTutorial && _dataManager.GetTotalOrdersCount() < 1 && Reference.GetManager<ShiftManager>().ShiftCount == 0) return;
 
             if (!IsFree && _currentClient.CheckClientCounterDistance(this))
             {
@@ -154,7 +159,7 @@ namespace Clients
                 Debug.LogError("[SittingCounter] Spawn : Couldn't find any slot to put the ingredients. Please reference them in the inspector");
             }
 
-            GameObject go = ReferenceManager.Instance.GetManager<ItemManager>().TrySpawn(ingredient.Prefab);
+            GameObject go = _itemManager.TrySpawn(ingredient.Prefab);
             Ingredient item = go.GetComponent<Ingredient>();
             item.SetAnimationMode(false);
             bool couldBePlaced = false;

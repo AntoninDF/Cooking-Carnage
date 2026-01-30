@@ -78,7 +78,7 @@ namespace Cooking
                 _slot.OnDrop.AddListener((meh) => Idk(true));
             }
 
-            gameLoop = ReferenceManager.Get<GameLoop>();
+            gameLoop = Reference.GetManager<GameLoop>();
         }
 
         protected virtual void Update()
@@ -204,7 +204,7 @@ namespace Cooking
             if (_slot != null && _slot.HeldItem != null)
             {
                 ItemManager im;
-                ReferenceManager.Get(out im);
+                Reference.GetManager(out im);
                 if (_slot.HeldItem is Plate plate)
                     plate.DespawnContent();
                 im.Despawn(_slot.HeldItem as Item);

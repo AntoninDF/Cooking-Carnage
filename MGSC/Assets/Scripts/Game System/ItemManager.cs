@@ -38,12 +38,12 @@ public class ItemManager : IManager
     
     public void Register()
     {
-        ReferenceManager.Instance.SetManager(this);
+        Reference.SetManager(this);
     }
 
     public void Unregister()
     {
-        ReferenceManager.Instance.RemoveManager(this);
+        Reference.RemoveManager(this);
     }
 
     public void Init()
@@ -60,7 +60,7 @@ public class ItemManager : IManager
 
     private void DetectSpawnItems()
     {
-        foreach (var item in ReferenceManager.Instance.GetElementsOfType<Item>())
+        foreach (var item in Reference.Instance.GetElementsOfType<Item>())
         {
             spawnItems.Add(item);
             spawnPositions.Add(item.transform.position);
@@ -194,7 +194,7 @@ public class ItemManager : IManager
                     {
                         parent = _itemsPooled;
                     }
-                    ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
+                    Reference.GetObject<Oven2>().SendMessage("Update");
                     return Spawn(item, position, rotation, parent);
                     
                 }
@@ -230,8 +230,6 @@ public class ItemManager : IManager
         UpdateActiveList(item);
         
         this.Log(LogType.Log, "Spawned " + item.name);
-
-        ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
 
         return item.gameObject;
     }

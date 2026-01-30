@@ -14,7 +14,7 @@ public class ServingFeedback : MonoBehaviour
 
     public void Play(int orderID)
     {
-        var om = GameSystem.ReferenceManager.Instance.GetManager<OrderManager>();
+        var om = GameSystem.Reference.GetManager<OrderManager>();
         if (om == null) return;
         Order targetOrder = om.GetOrderByID(orderID);
         if (targetOrder == null) return;

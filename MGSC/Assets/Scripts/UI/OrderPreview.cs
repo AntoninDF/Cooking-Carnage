@@ -52,8 +52,8 @@ namespace UI
 
         private void Start()
         {
-            _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
-            _orderManager = ReferenceManager.Instance.GetManager<OrderManager>();
+            Reference.GetManager(out _timerManager);
+            Reference.GetManager(out _orderManager);
             Subscribe();
             ResetSprites();
         }
@@ -188,8 +188,8 @@ namespace UI
         public void CameraFocus(float duration)
         {
             bool revealMouse = duration == 0;
-            
-            ReferenceManager.Instance.GetManager<CameraManager>().LookAt(GetComponentInChildren<Canvas>().transform,duration,revealMouse);
+            if (Reference.TryGetManager(out CameraManager cm))
+                cm.LookAt(GetComponentInChildren<Canvas>().transform,duration,revealMouse);
         }
 
 

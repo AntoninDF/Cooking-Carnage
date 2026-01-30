@@ -1,3 +1,4 @@
+using GameSystem;
 using System;
 using System.Collections;
 using System.Linq;
@@ -51,7 +52,7 @@ namespace Cooking
         [Tooltip("Invoked when a normal ingredient is removed from the plate")]
         [SerializeField] private UnityEvent _onIngredientRemoved;
 
-        private ItemManager itemManager;
+        private ItemManager _itemManager;
         #endregion
         
         
@@ -69,7 +70,7 @@ namespace Cooking
                 Debug.LogError("[Plate] : Please reference the ingredient multislot in the inspector");
 
             SetupSlots();
-            itemManager = GameSystem.ReferenceManager.Instance.GetManager<ItemManager>();
+            Reference.GetManager(out _itemManager);
         }
         
         protected override string UpdateID()
@@ -141,7 +142,7 @@ namespace Cooking
 
         private void TransformToMeal(SO_Recipe recipe)
         {
-            var go = itemManager.TrySpawn(recipe.mealPrefab, transform.position, transform.rotation, transform.parent);
+            var go = _itemManager.TrySpawn(recipe.mealPrefab, transform.position, transform.rotation, transform.parent);
             go.name = this.name + " as meal";
             Meal meal = go.GetComponent<Meal>();
             meal.Recipe = recipe;
@@ -156,7 +157,7 @@ namespace Cooking
             _ingredientSlots.Reset();
 
             StopCooking();
-            itemManager.Despawn(this);
+            _itemManager.Despawn(this);
         }
 
         public void DespawnContent()
@@ -175,10 +176,10 @@ namespace Cooking
                 if (ingredient != null)
                 {
 
-                    itemManager.Despawn(ingredient);
+                    _itemManager.Despawn(ingredient);
                 }
                 else
-                    itemManager.Log(LogType.Error,"Ingredient was null when trying to get despawned");
+                    _itemManager.Log(LogType.Error,"Ingredient was null when trying to get despawned");
             }
             _ingredientSlots.HeldItems.Clear();
         }

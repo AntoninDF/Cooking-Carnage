@@ -29,12 +29,14 @@ namespace UI
         [Tooltip("Each element specifies which markup to replace with which value")]
         [SerializeField] private List<UIDataReplacement> _dataReplacement = new();
 
+        private DataManager _dataManager;
         #endregion
 
         #region Methods
         private void Start()
         {
             if (_textObject == null) _textObject = GetComponent<TMP_Text>();
+            Reference.GetManager(out _dataManager);
         }
         private void FixedUpdate()
         {
@@ -44,8 +46,7 @@ namespace UI
         public void UpdateUI()
         {
             if (_textObject == null) return;
-            DataManager dataManager = ReferenceManager.Instance.GetManager<DataManager>();
-            if (dataManager == null)
+            if (_dataManager == null)
             {
                 Debug.LogWarning("[DynamicText] : Couldn't update the UI, no DataManager found");
                 return;
@@ -58,7 +59,7 @@ namespace UI
                 if (textInfo.info.GetHashCode() > 49)
                     data = GetDataFromGameObject(textInfo.info);
                 else 
-                    data = dataManager.GetDataAsString(textInfo.info);
+                    data = _dataManager.GetDataAsString(textInfo.info);
                 result = result.Replace(textInfo.markup, data);
             }
             _textObject.text = result;

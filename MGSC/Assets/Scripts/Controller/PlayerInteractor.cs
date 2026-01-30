@@ -231,7 +231,7 @@ namespace Controller
         public void Drop()
         {
             if (_heldItem == null) return;
-            ReferenceManager.Get<TimerManager>()?.StartTimer("Enable dropped item's collider", 0.1f, () => 
+            Reference.GetManager<TimerManager>()?.StartTimer("Enable dropped item's collider", 0.1f, () => 
             {
                 _heldItem.Collider.enabled = true;
                 _heldItem = null;

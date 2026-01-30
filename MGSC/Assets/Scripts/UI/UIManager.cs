@@ -53,6 +53,11 @@ namespace UI
         [SerializeField] private UnityEvent _onResume;
 
         private GameLoop _gameLoop;
+        private TimerManager _timerManager;
+        private ShiftManager _shiftManager;
+        private DataManager _dataManager;
+        private CameraManager _cameraManager;
+
         private InputActionAsset _inputActionAsset;
         private InputActionMap _playerInputs;
         private InputActionMap _UIInputs;
@@ -65,7 +70,6 @@ namespace UI
         [SerializeField] private int heightRatio = 9;
 
         // Managers
-        private ShiftManager _shiftManager;
 
         void Awake()
         {
@@ -74,16 +78,19 @@ namespace UI
 
         public void Unregister()
         {
-            ReferenceManager.Instance.RemoveManager(this);
+            Reference.RemoveManager(this);
         }
         public void Init()
         {
-            _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
-            _inputActionAsset = ReferenceManager.AssetReferences.InputActions;
+            Reference.GetManager(out _gameLoop);
+            Reference.GetManager(out _shiftManager);
+            Reference.GetManager(out _dataManager);
+            Reference.GetManager(out _timerManager);
+
+            _inputActionAsset = Reference.AssetReferences.InputActions;
             _playerInputs = _inputActionAsset.FindActionMap("Player");
             _UIInputs = _inputActionAsset.FindActionMap("UI");
-            _player = ReferenceManager.Instance.GetElementOfType<PlayerInterface>();
-            _shiftManager = ReferenceManager.Get<ShiftManager>();
+            Reference.GetObject(out _player);
 
             if (_gameLoop == null)
                 this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No gameloop found");
@@ -114,7 +121,7 @@ namespace UI
         }        
         public void PostInit()
         {
-            if (ReferenceManager.Instance.GetManager<DataManager>().ShiftCount >= 1)
+            if (_dataManager.ShiftCount >= 1)
             {
                 SkipTutorial();
             }
@@ -202,10 +209,9 @@ namespace UI
         }
         public void StartGame()
         {
-            ReferenceManager.Get(out ShiftManager sm);
-            if (sm == null) return;
-            sm.SetupShift(sm.ShiftCount);
-            sm.LaunchShift();
+            if (_shiftManager == null) return;
+            _shiftManager.SetupShift(_shiftManager.ShiftCount);
+            _shiftManager.LaunchShift();
         }
         public void ResumeGame(bool skiptutorial=false)
         {
@@ -231,7 +237,6 @@ namespace UI
         }
         public void TryPlayTutorialSubtitles()
         {
-            ReferenceManager.Get(out _shiftManager);
             if (_shiftManager == null) return;
             if (_shiftManager.ShiftCount == 0)
             {
@@ -243,7 +248,7 @@ namespace UI
             //_playButton.GetComponent<Button>().onClick = _skipTutoButton.GetComponent<Button>().onClick;
             //_skipTutoButton?.gameObject.SetActive(false);
             _shiftManager.SkipTutorialShift(); 
-            foreach (var b in ReferenceManager.GetAll<SittingCounter>())
+            foreach (var b in Reference.GetAll<SittingCounter>())
             {
                 b.GetComponentInChildren<EventLinker>().UnBindAll();
                 b.OnSkipTutorial?.Invoke();
@@ -253,10 +258,8 @@ namespace UI
         public void TutorialEndTransition()
         {
             _onFade?.Invoke();
-            ReferenceManager.Get(out ShiftManager sm);
-            ReferenceManager.Get(out TimerManager tm);
-            if (sm != null && tm != null)
-                tm.StartTimer("Tutorial ended. Moving to the next shift", 1.5f, () => sm.TryEndShift(true));
+            if (_shiftManager != null && _timerManager != null)
+                _timerManager.StartTimer("Tutorial ended. Moving to the next shift", 1.5f, () => _shiftManager.TryEndShift(true));
         }
         public void SwitchPlayerInputs(bool enabled)
         {
@@ -307,30 +310,30 @@ namespace UI
         public void ReloadScene()
         {
             _gameLoop.StartRunning();
-            ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("reloadscene", 1,
+            _timerManager.StartTimer("reloadscene", 1,
                 () => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex), true);
         }      
         public void ResetEverything()
         {
-            ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
+            _dataManager.ResetSave();
             ReloadScene();
         }
         public void Register()
         {
-            ReferenceManager.Instance.SetManager(this);
+            Reference.SetManager(this);
         }
         public void RequestCameraSwitch(Transform target)
         {
-            ReferenceManager.Get<CameraManager>().LookAt(target, 0, true);
+            _cameraManager.LookAt(target, 0, true);
         }
         public void RequestCameraSwitchToFirstUITarget()
         {
-            UITarget target = ReferenceManager.Instance.GetElementOfType<UITarget>();
+            UITarget target = Reference.GetObject<UITarget>();
             RequestCameraSwitch(target.transform);
         }
         public void ResetCameraSwitch()
         {
-            ReferenceManager.Get<CameraManager>().EnableFirstPersonView();
+            _cameraManager.EnableFirstPersonView();
         }
         public void HideAllUI() => _canvas?.SetActive(false);
         public void ShowAllUI() => _canvas?.SetActive(true);

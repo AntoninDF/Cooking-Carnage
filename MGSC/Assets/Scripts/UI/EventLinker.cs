@@ -45,7 +45,7 @@ namespace UI
 
         private void BindOrUnbindEvent(TargetEvent target, UnityEvent callback, bool bind)
         {
-            var Ref = ReferenceManager.Instance;
+            var Ref = Reference.Instance;
             // Target event
             UnityEvent ev = null;
             switch(target)
