@@ -90,7 +90,7 @@ namespace UI
             _inputActionAsset = Reference.AssetReferences.InputActions;
             _playerInputs = _inputActionAsset.FindActionMap("Player");
             _UIInputs = _inputActionAsset.FindActionMap("UI");
-            Reference.GetObject(out _player);
+            Reference.Get(out _player);
 
             if (_gameLoop == null)
                 this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No gameloop found");
@@ -328,7 +328,7 @@ namespace UI
         }
         public void RequestCameraSwitchToFirstUITarget()
         {
-            UITarget target = Reference.GetObject<UITarget>();
+            UITarget target = Reference.Get<UITarget>();
             RequestCameraSwitch(target.transform);
         }
         public void ResetCameraSwitch()

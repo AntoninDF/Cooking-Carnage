@@ -46,7 +46,7 @@ public class CameraManager : IManager
         Reference.GetManager(out _uiManager);
         Reference.GetManager(out _timerManager);
 
-        var player = Reference.GetObject<PlayerInterface>();
+        var player = Reference.Get<PlayerInterface>();
 
         foreach (var cam in player.GetComponentsInChildren<CinemachineVirtualCameraBase>())
         {

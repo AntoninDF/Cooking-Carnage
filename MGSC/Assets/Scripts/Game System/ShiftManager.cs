@@ -155,8 +155,8 @@ namespace GameSystem
             {
                 oven.Reset();
             }
-            var player = Reference.GetObject<PlayerController>();
-            var playerStart = Reference.GetObject<PlayerStart>();
+            var player = Reference.Get<PlayerController>();
+            var playerStart = Reference.Get<PlayerStart>();
             if (player != null && playerStart != null)
             {
                 player.transform.position = playerStart.transform.position;

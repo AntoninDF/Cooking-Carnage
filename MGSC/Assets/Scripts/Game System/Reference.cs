@@ -9,7 +9,6 @@ using UI;
 
 namespace GameSystem
 {
-
     /// <summary>
     /// The reference manager holds a reference to every kitchen element, and eases reference setup
     /// </summary>
@@ -30,36 +29,13 @@ namespace GameSystem
         }
         
         public Dictionary<Type, IManager> Managers => _managers;
-        
-        
+
+
         #endregion
 
         #region Fields
 
-        private Type[] _trackedTypes =
-        {
-            typeof(OrderingCounter),
-            typeof(SittingCounter),
-            typeof(Counter),
-            typeof(Item),
-            typeof(Ingredient),
-            typeof(Furnace),
-            typeof(Oven),
-            typeof(Oven2),
-            typeof(TrashCan),
-            typeof(Meal),
-            typeof(Blender),
-            typeof(SimpleClientSpawner),
-            typeof(PlayerStart),
-            typeof(PlayerInterface),
-            typeof(OvenSetup),
-            typeof(Entrance),
-            typeof(PlayerController),
-            typeof(UITarget),
-            typeof(ItemSpawner),
-            typeof(Blender)
-
-        };
+        private Type[] _trackedTypes = TrackedTypes.GetTypes();
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;
         private Dictionary<Type, IManager> _managers;
 
@@ -137,7 +113,7 @@ namespace GameSystem
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static bool TryGetObject<T>(out T obj) where T : class
+        public static bool TryGet<T>(out T obj) where T : class
         {
             obj = Instance.GetElementOfType<T>();
             return obj != null;
@@ -149,12 +125,12 @@ namespace GameSystem
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static T GetObject<T>(out T obj) where T : class
+        public static T Get<T>(out T obj) where T : class
         {
-            obj = GetObject<T>();
+            obj = Get<T>();
             return obj;
         }
-        public static T GetObject<T>() where T : class => Instance.GetElementOfType<T>();
+        public static T Get<T>() where T : class => Instance.GetElementOfType<T>();
 
 
 

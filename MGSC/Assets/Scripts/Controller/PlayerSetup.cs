@@ -58,7 +58,7 @@ namespace Controller
 
         public static bool TryResetPlayer(PlayerInterface player)
         {
-            PlayerStart playerStart = Reference.GetObject<PlayerStart>();
+            PlayerStart playerStart = Reference.Get<PlayerStart>();
             Vector3 pos;
             Quaternion rot;
             if (playerStart == null)

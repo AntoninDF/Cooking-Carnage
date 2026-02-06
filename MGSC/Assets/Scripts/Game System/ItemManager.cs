@@ -194,7 +194,7 @@ public class ItemManager : IManager
                     {
                         parent = _itemsPooled;
                     }
-                    Reference.GetObject<Oven2>().SendMessage("Update");
+                    Reference.Get<Oven2>().SendMessage("Update");
                     return Spawn(item, position, rotation, parent);
                     
                 }
