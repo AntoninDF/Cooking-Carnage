@@ -47,7 +47,7 @@ namespace Cooking
                 go.name = "Oven n°" + i + " (" + Time.time + ")";
                 Oven oven = go.GetComponent<Oven>();
                 _slots[i].Grab(oven);
-                Reference.Instance.TryAddElement(oven);
+                Reference.TryAdd(oven);
             }
         }
 

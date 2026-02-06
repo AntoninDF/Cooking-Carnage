@@ -74,7 +74,7 @@ namespace GameSystem
             if (_gameProfile.AddUI) AddUI();
 
             // Create the player
-            Reference.Instance.ScanHierarchy();
+            Reference.ScanHierarchy();
             if (_gameProfile.AddPlayer) PlayerSetup.TrySetupPlayer();
 
             SetupDebug();

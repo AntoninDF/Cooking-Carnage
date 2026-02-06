@@ -19,7 +19,7 @@ namespace Controller
                 TrySpawnPlayer(out player);
             }
             TryResetPlayer(player);
-            Reference.Instance.TryAddElement(player);
+            Reference.TryAdd(player);
 
             return player;
         }

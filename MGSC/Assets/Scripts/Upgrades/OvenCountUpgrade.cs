@@ -18,7 +18,7 @@ namespace Upgrades
 
         public OvenCountUpgrade() : base()
         {
-            _targetOvenSetup = Reference.Instance.GetElementOfType<OvenSetup>();
+            _targetOvenSetup = Reference.Get<OvenSetup>();
         }
 
         public override void Apply()

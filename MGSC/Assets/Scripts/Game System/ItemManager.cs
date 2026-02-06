@@ -60,7 +60,7 @@ public class ItemManager : IManager
 
     private void DetectSpawnItems()
     {
-        foreach (var item in Reference.Instance.GetElementsOfType<Item>())
+        foreach (var item in Reference.GetAll<Item>())
         {
             spawnItems.Add(item);
             spawnPositions.Add(item.transform.position);

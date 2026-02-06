@@ -104,8 +104,8 @@ namespace GameSystem
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static List<T> GetAll<T>() where T : class => Instance.GetElementsOfType<T>();
-        public static List<T> GetAll<T>(List<T> output) where T : class => output = Instance.GetElementsOfType<T>();
+        public static List<T> GetAll<T>() where T : class => Instance.GetElementsOfType_Instance<T>();
+        public static List<T> GetAll<T>(List<T> output) where T : class => output = Instance.GetElementsOfType_Instance<T>();
         /// <summary>
         /// Tries to retrieve an object of a given specific type from the scene.
         /// The type must be marked as a tracked type.
@@ -115,7 +115,7 @@ namespace GameSystem
         /// <returns></returns>
         public static bool TryGet<T>(out T obj) where T : class
         {
-            obj = Instance.GetElementOfType<T>();
+            obj = Instance.GetElementOfType_Instance<T>();
             return obj != null;
         }
         /// <summary>
@@ -130,8 +130,37 @@ namespace GameSystem
             obj = Get<T>();
             return obj;
         }
-        public static T Get<T>() where T : class => Instance.GetElementOfType<T>();
+        public static T Get<T>() where T : class => Instance.GetElementOfType_Instance<T>();
+        public static void TryAdd<T>(T obj) where T : MonoBehaviour => Instance.TryAddElement_Instance(obj);
+        public static void ScanHierarchy(bool clearDictBeforeScan=true)
+        {
+            if (clearDictBeforeScan)
+                Instance._elementDict.Clear();
 
+            foreach (var type in Instance._trackedTypes)
+            {
+                if (!Instance._elementDict.ContainsKey(type))
+                    Instance._elementDict.Add(type, new List<MonoBehaviour>());
+
+                Instance._elementDict[type].InsertRange(0, (IEnumerable<MonoBehaviour>)GameObject.FindObjectsByType(type, FindObjectsSortMode.None) );
+            }
+        }
+        public static void ResetInstance()
+        {
+            _instance = null;
+        }
+        public static void DebugTrackedObjectsCount()
+        {
+            string toPrint = "References tracked :\n";
+
+            foreach (var kvp  in Instance._elementDict)
+            {
+                toPrint += kvp.Key.Name + " : ";
+                toPrint += kvp.Value?.Count + "\n";
+            }
+
+            Debug.Log(toPrint);
+        }
 
 
 
@@ -170,14 +199,14 @@ namespace GameSystem
             return manager != null;
         }
 
-        public List<T> GetElementsOfType<T>() where T : class
+        protected List<T> GetElementsOfType_Instance<T>() where T : class
         {
             if (!_elementDict.ContainsKey(typeof(T))) return new List<T>();
             return _elementDict[typeof(T)].Select((mb) => mb as T).ToList();
         }
-        public T GetElementOfType<T>() where T : class => GetElementsOfType<T>().FirstOrDefault();
+        protected T GetElementOfType_Instance<T>() where T : class => GetElementsOfType_Instance<T>().FirstOrDefault();
 
-        public void TryAddElement<T>(T element) where T : MonoBehaviour
+        protected void TryAddElement_Instance<T>(T element) where T : MonoBehaviour
         {
             if (!_elementDict.ContainsKey(typeof(T)))
                 _elementDict.Add(typeof(T), new List<MonoBehaviour>());
@@ -185,37 +214,8 @@ namespace GameSystem
                 _elementDict[typeof(T)].Add(element);
         }
 
-        public void ScanHierarchy(bool clearDictBeforeScan=true)
-        {
-            if (clearDictBeforeScan)
-                _elementDict.Clear();
 
-            foreach (var type in _trackedTypes)
-            {
-                if (!_elementDict.ContainsKey(type))
-                    _elementDict.Add(type, new List<MonoBehaviour>());
-
-                _elementDict[type].InsertRange(0, (IEnumerable<MonoBehaviour>)GameObject.FindObjectsByType(type, FindObjectsSortMode.None) );
-            }
-        }
-
-        public void DebugTrackedObjectsCount()
-        {
-            string toPrint = "References tracked :\n";
-
-            foreach (var kvp  in _elementDict)
-            {
-                toPrint += kvp.Key.Name + " : ";
-                toPrint += kvp.Value?.Count + "\n";
-            }
-
-            Debug.Log(toPrint);
-        }
         
-        public void ResetInstance()
-        {
-            _instance = null;
-        }
         
         #endregion
     }
