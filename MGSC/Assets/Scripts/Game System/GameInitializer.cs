@@ -99,7 +99,7 @@ namespace GameSystem
 
         private void InitManagers()
         {
-            foreach (var kvp in Reference.Instance.Managers)
+            foreach (var kvp in Reference.Managers)
             {
                 //Debug.Log("[GameInitializer] : Initializing " + kvp.Key + ", object is " + kvp.Value);
                 (kvp.Value).Init();
@@ -107,7 +107,7 @@ namespace GameSystem
         }
         private void PostInitManagers()
         {
-            foreach (var kvp in Reference.Instance.Managers)
+            foreach (var kvp in Reference.Managers)
             {
                 (kvp.Value).PostInit();
             }
@@ -165,7 +165,7 @@ namespace GameSystem
 
         private void SetupDebug()
         {
-            var refManagers = Reference.Instance.Managers;
+            var refManagers = Reference.Managers;
             
             if(_debugProfile == null)
                 return;

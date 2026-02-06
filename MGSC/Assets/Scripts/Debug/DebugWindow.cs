@@ -388,14 +388,8 @@ public class DebugWindow : MonoBehaviour
     {
         GUILayout.Label("Managers Overview", GUI.skin.box);
 
-        var refManager = Reference.Instance;
-        if (refManager == null)
-        {
-            GUILayout.Label("(No ReferenceManager found)");
-            return;
-        }
 
-        var managers = refManager.Managers;
+        var managers = Reference.Managers;
         if (managers == null || managers.Count == 0)
         {
             GUILayout.Label("No managers registered.");

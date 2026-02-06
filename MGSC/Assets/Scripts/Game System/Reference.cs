@@ -16,7 +16,7 @@ namespace GameSystem
     {
         #region Properties
         // Lazy initialization
-        public static Reference Instance { get { if (_instance == null) _instance = new Reference(); return _instance;}}
+        protected static Reference Instance { get { if (_instance == null) _instance = new Reference(); return _instance;}}
         public static SO_AssetReferences AssetReferences
         { 
             get
@@ -27,8 +27,8 @@ namespace GameSystem
             }
             set => _assetReferences = value;
         }
-        
-        public Dictionary<Type, IManager> Managers => _managers;
+
+        public static Dictionary<Type, IManager> Managers => Instance._managers;
 
 
         #endregion
