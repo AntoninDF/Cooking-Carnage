@@ -46,17 +46,17 @@ namespace GameSystem
         /// </summary>
         public void Register()
         {
-            ReferenceManager.Instance.SetManager(this);
+            Reference.SetManager(this);
         }
         public void Unregister()
         {
-            ReferenceManager.Instance.RemoveManager(this);
+            Reference.RemoveManager(this);
         }
         public void Init()
         {
-            _shiftManager = ReferenceManager.Get<ShiftManager>();
+            Reference.GetManager(out _shiftManager);
 
-            foreach (var client in ReferenceManager.AssetReferences.clientList)
+            foreach (var client in Reference.AssetReferences.clientList)
             {
                 clientTypePart[client.clientType] = 0f;
             }
@@ -127,8 +127,12 @@ namespace GameSystem
                 
                 return;
             }
-            
-            ClientData clientData = new ClientData(client.GetEntityId(),client.Type,killed,-1,Time.time,client.Order,ReferenceManager.Instance.GetManager<ShiftManager>().ShiftCount);
+
+            int shiftCount = 0;
+            if (Reference.TryGetManager(out ShiftManager sm))
+                shiftCount = sm.ShiftCount;
+
+            ClientData clientData = new ClientData(client.GetEntityId(), client.Type, killed, -1, Time.time, client.Order, shiftCount);
             
             clientHistory.Add(clientData);
             if (killed)
@@ -142,13 +146,6 @@ namespace GameSystem
                 ClientsServedThisShift++;
                 
                 this.Log(LogType.Log, "Client"+client.GetEntityId()+" is the "+ ClientsServedThisShift+"th client served during this shift");
-            }
-
-            if (false && client.gameObject)
-            {
-                this.Log(LogType.Log, "Client"+client.GetEntityId()+" gameobject is being destroyed");
-                
-                client.AutoDestruction();
             }
         }
         

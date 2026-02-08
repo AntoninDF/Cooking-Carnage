@@ -10,7 +10,7 @@ namespace Assets.Scripts.Controller
         private Transform _player;
         void Start()
         {
-            _player = ReferenceManager.Instance.GetElementOfType<PlayerInterface>().transform;
+            _player = Reference.Get<PlayerInterface>().transform;
         }
 
         // Update is called once per frame

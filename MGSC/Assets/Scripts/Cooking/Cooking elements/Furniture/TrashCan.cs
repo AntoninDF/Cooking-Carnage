@@ -1,4 +1,5 @@
 using Controller;
+using GameSystem;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,7 +18,15 @@ namespace Cooking
         [Header("Trashcan events")]
         [Tooltip("Invoked when an item is put into the trashcan")]
         [SerializeField] private UnityEvent<IGrabbable> _onGrab;
+
+        private ItemManager _itemManager;
+
         #endregion
+
+        void Start()
+        {
+            Reference.GetManager(out _itemManager);
+        }
 
         public bool CanGrab(IGrabbable item)
         {
@@ -51,7 +60,7 @@ namespace Cooking
 
         private void Dispose(IGrabbable item)
         {
-            GameSystem.ReferenceManager.Instance.GetManager<ItemManager>().Despawn(item as Item);
+            _itemManager.Despawn(item as Item);
         }
     }
 

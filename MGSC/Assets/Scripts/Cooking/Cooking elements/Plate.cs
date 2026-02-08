@@ -1,3 +1,4 @@
+using GameSystem;
 using System;
 using System.Collections;
 using System.Linq;
@@ -51,7 +52,7 @@ namespace Cooking
         [Tooltip("Invoked when a normal ingredient is removed from the plate")]
         [SerializeField] private UnityEvent _onIngredientRemoved;
 
-        private ItemManager itemManager;
+        private ItemManager _itemManager;
         #endregion
         
         
@@ -69,7 +70,7 @@ namespace Cooking
                 Debug.LogError("[Plate] : Please reference the ingredient multislot in the inspector");
 
             SetupSlots();
-            itemManager = GameSystem.ReferenceManager.Instance.GetManager<ItemManager>();
+            Reference.GetManager(out _itemManager);
         }
         
         protected override string UpdateID()
@@ -141,43 +142,44 @@ namespace Cooking
 
         private void TransformToMeal(SO_Recipe recipe)
         {
-            var go = itemManager.TrySpawn(recipe.mealPrefab, transform.position, transform.rotation, transform.parent);
+            var go = _itemManager.TrySpawn(recipe.mealPrefab, transform.position, transform.rotation, transform.parent);
             go.name = this.name + " as meal";
             Meal meal = go.GetComponent<Meal>();
             meal.Recipe = recipe;
             Container.Empty();
             if (Container is EnglobingSlotContainer sc)
+            {
                 sc.GrabWithoutFeedback(meal);
+            }
             else
                 Container.Grab(meal);
-            Debug.Log("Transforming to meal...");
             DespawnContent();
             _ingredientSlots.Reset();
 
             StopCooking();
-            itemManager.Despawn(this);
+            _itemManager.Despawn(this);
         }
 
         public void DespawnContent()
         {
-            Debug.Log("Despawning content");
+
             foreach (var slot in _ingredientSlots.Slots)
             {
                 if (slot == null || slot.HeldItem == null)
                 {
-                Debug.Log("Slot " + slot + " was already empty and didn't need despawning");
+
                     continue;
                 }
-                Debug.Log("Despawning content for slot " + slot);
+
                 var obj = slot.HeldItem;
                 var ingredient = obj as Item;
                 if (ingredient != null)
                 {
-                    Debug.Log("Despawning " + ingredient);
-                    itemManager.Despawn(ingredient);
+
+                    _itemManager.Despawn(ingredient);
                 }
                 else
-                    Debug.Log("Ingredient was null when trying to get despawned");
+                    _itemManager.Log(LogType.Error,"Ingredient was null when trying to get despawned");
             }
             _ingredientSlots.HeldItems.Clear();
         }

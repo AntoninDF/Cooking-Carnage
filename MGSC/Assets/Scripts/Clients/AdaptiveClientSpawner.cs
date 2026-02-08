@@ -44,6 +44,7 @@ namespace GameSystem
         
         // Reference Fields
         private TimerManager _timerManager;
+        private ClientManager _clientManager;
         
         private Queue<SO_Client> nextClients = new();
         
@@ -65,11 +66,11 @@ namespace GameSystem
         /// </summary>
         public void Register()
         {
-            ReferenceManager.Instance.SetManager(this);
+            Reference.SetManager(this);
         }
         public void Unregister()
         {
-            ReferenceManager.Instance.RemoveManager(this);
+            Reference.RemoveManager(this);
         }
 
 
@@ -80,11 +81,11 @@ namespace GameSystem
         {
             // WIP : should also setup floats according to a Settings Data
 
-            models = ReferenceManager.AssetReferences.clientList;
-            spline = ReferenceManager.Instance.GetManager<PathManager>()?.SplineComponent;
-            counters = ReferenceManager.Instance.GetElementsOfType<OrderingCounter>();
+            models = Reference.AssetReferences.clientList;
+            spline = Reference.GetManager<PathManager>()?.SplineComponent;
+            counters = Reference.GetAll<OrderingCounter>();
 
-            _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
+            Reference.GetManager(out _timerManager);
             _timerManager.StartTimer( "AdaptiveClientSpawner Init", 1, () => Launch(),true);
 
             if (models.Count <= 0 || !spline || counters.Count <= 0)
@@ -119,7 +120,7 @@ namespace GameSystem
 
         bool ShiftOngoing()
         {
-            return !ReferenceManager.Instance.GetManager<TimerManager>().IsTimerRunning("shiftEndDelay");
+            return !_timerManager.IsTimerRunning("shiftEndDelay");
         }
         
         /// <summary>
@@ -186,8 +187,8 @@ namespace GameSystem
             
             AssignClientOrderingCounter(client);
 
-            ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(client,false);
-            ReferenceManager.Instance.GetElementOfType<Entrance>().OnClientEnter.Invoke();
+            _clientManager.AddClientData(client,false);
+            Reference.Get<Entrance>().OnClientEnter.Invoke();
                     
             Launch(GetRandomizedDelay);
             OnNewClient?.Invoke(client);
@@ -219,8 +220,7 @@ namespace GameSystem
         /// </summary>
         EClientType GetRandomWeightedType()
         {
-            Dictionary<EClientType, float> clientTypeAmount =
-                ReferenceManager.Instance.GetManager<ClientManager>().ClientTypeAmount;
+            Dictionary<EClientType, float> clientTypeAmount = _clientManager.ClientTypeAmount;
             Dictionary<EClientType, float> weightedTypes = new Dictionary<EClientType, float>();
 
             var keys = clientTypeAmount.Keys.ToList();

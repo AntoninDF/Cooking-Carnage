@@ -40,14 +40,14 @@ namespace Cooking
         public void Setup(int maxOvenCount)
         {
             int ovenCount = Mathf.Min(maxOvenCount, _slots.Count);
-            var ovens = ReferenceManager.GetAll<Oven>();
+            var ovens = Reference.GetAll<Oven>();
             for (int i = ovens.Count; i < ovenCount; i++)
             {
                 GameObject go = Instantiate(_ovenPrefab);
                 go.name = "Oven n°" + i + " (" + Time.time + ")";
                 Oven oven = go.GetComponent<Oven>();
                 _slots[i].Grab(oven);
-                ReferenceManager.Instance.TryAddElement(oven);
+                Reference.TryAdd(oven);
             }
         }
 

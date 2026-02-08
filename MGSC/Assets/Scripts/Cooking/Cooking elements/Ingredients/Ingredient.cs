@@ -28,6 +28,7 @@ namespace Cooking
         [SerializeField]
         private UnityEvent _onCut;
 
+        private ItemManager _itemManager;
 
         #endregion
 
@@ -39,6 +40,7 @@ namespace Cooking
             if (_model == null)
                 throw new MissingReferenceException("Please assign an ingredient model in the inspector : " + name);
             UpdateID();
+            Reference.GetManager(out _itemManager);
         }
 
         protected override string UpdateID()
@@ -56,7 +58,7 @@ namespace Cooking
 
         public void Cut()
         {
-            ReferenceManager.Instance.GetManager<ItemManager>().StoreCopy(this);
+            _itemManager.StoreCopy(this);
            
             IsCut = true;
             _onCut?.Invoke();

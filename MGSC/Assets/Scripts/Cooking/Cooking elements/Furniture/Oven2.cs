@@ -14,7 +14,7 @@ namespace Cooking
         string _timerID;
         protected override void Start()
         {
-            ReferenceManager.Get(out _tm);
+            Reference.GetManager(out _tm);
             _slot.OnDrop.AddListener((item) => StopCooking());
         }
         protected override void Update()
@@ -46,7 +46,7 @@ namespace Cooking
                 _isCooking = true;
                 OnStartCooking?.Invoke();
                 LastTimer = "Cooking (" + Time.time + ")";
-                _tm.StartTimer(LastTimer, targetDuration / Strength, Cook, onUpdate:(time) => UpdateSlider(time/(targetDuration / Strength)));
+                _tm.StartTimer(LastTimer, targetDuration - Strength, Cook, onUpdate:(time) => UpdateSlider(time/(targetDuration - Strength)));
             }
             // Otherwise, it may be a cooked meal, so try to overcook it.
             else if (GetHeldItemAs<Meal>() != null)
@@ -72,11 +72,9 @@ namespace Cooking
             var targetRecipe = meal.Recipe;
             if (targetRecipe == null) return;
 
-            float targetDuration = targetRecipe.timeToOvercook;
-
             _isCooking = true;
             LastTimer = "Overcooking (" + Time.time + ")";
-            float duration = targetRecipe.timeToOvercook; // Add * Strength to account for upgrades on overcooking too
+            float duration = targetRecipe.timeToOvercook - targetRecipe.timeToCook; // Add * Strength to account for upgrades on overcooking too
             _tm.StartTimer(LastTimer, duration, Overcook, onUpdate:(time) => UpdateSlider(time/ duration));
         }
 

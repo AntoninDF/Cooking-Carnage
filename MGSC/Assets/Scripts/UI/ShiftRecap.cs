@@ -19,6 +19,7 @@ namespace UI
         [Tooltip("")]
         [SerializeField] private List<UITextElement> _textObjects = new();
 
+        private DataManager _dataManager;
         #endregion
 
         #region Methods
@@ -30,14 +31,14 @@ namespace UI
 
         public void UpdateUI()
         {
-            DataManager dataManager = ReferenceManager.Instance.GetManager<DataManager>();
-            if (dataManager == null)
+            Reference.GetManager(out _dataManager);
+            if (_dataManager == null)
                 Debug.LogError("[ShiftRecap] : Couldn't update the UI, no DataManager found");
             foreach (var textInfo in _textObjects)
             {
                 if (textInfo.textObject == null) continue;
                 if (textInfo.text == "") continue;
-                textInfo.textObject.text = textInfo.text.Replace( "{0}", dataManager.GetDataAsString(textInfo.info));
+                textInfo.textObject.text = textInfo.text.Replace( "{0}", _dataManager.GetDataAsString(textInfo.info));
             }
         }
 

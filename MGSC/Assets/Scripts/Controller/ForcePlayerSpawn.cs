@@ -10,7 +10,7 @@ namespace Player
         [SerializeField] private SO_AssetReferences _assetReferences;
         private void Start()
         {
-            ReferenceManager.AssetReferences = _assetReferences;
+            Reference.AssetReferences = _assetReferences;
             PlayerSetup.TrySetupPlayer();
             Destroy(gameObject);
         }

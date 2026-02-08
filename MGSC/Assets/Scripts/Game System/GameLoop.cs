@@ -38,11 +38,11 @@ namespace GameSystem
         /// </summary>
         public void Register()
         {
-            ReferenceManager.Instance.SetManager(this);
+            Reference.SetManager(this);
         }
         public void Unregister()
         {
-            ReferenceManager.Instance.RemoveManager(this);
+            Reference.RemoveManager(this);
         }
         public void Init() { }
 
@@ -91,10 +91,14 @@ namespace GameSystem
         /// <summary>
         /// Pauses the game loop
         /// </summary>
-        public void StopRunning()
+        public void StopRunning(bool pauseMenu = true)
         {
             IsRunning = false;
             OnPause?.Invoke();
+            if (!pauseMenu)
+            {
+                OnResume?.Invoke();
+            }
             this.Log("is not running anymore");
         }
         

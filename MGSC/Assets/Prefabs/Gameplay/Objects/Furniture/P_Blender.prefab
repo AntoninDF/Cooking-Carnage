@@ -222,6 +222,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6989993081345919821}
+        m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+        m_MethodName: Stop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onStopCutting:
     m_PersistentCalls:
       m_Calls:
@@ -287,6 +299,15 @@ MonoBehaviour:
         m_CallState: 2
   _onTryToCutAlreadyCutIngredient:
     m_PersistentCalls:
+      m_Calls: []
+  _onLookAt:
+    m_PersistentCalls:
+      m_Calls: []
+  _onStopLookAt:
+    m_PersistentCalls:
+      m_Calls: []
+  _onFailedInteraction:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2504455385313051896}
         m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
@@ -300,12 +321,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _onLookAt:
-    m_PersistentCalls:
-      m_Calls: []
-  _onStopLookAt:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &3220614507678689608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -712,7 +727,7 @@ PrefabInstance:
     - target: {fileID: 544372407822699799, guid: 3e4c4dee25688f046851cc217c5f1f80, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3be15669eaa5e1c4291af3046c28b9a5, type: 2}
+      objectReference: {fileID: 2100000, guid: ce24cc0afdad91c41b1c77976b0a1340, type: 2}
     - target: {fileID: 1060696313489028405, guid: 3e4c4dee25688f046851cc217c5f1f80, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1049,19 +1064,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7853921468675617389, guid: 09bc7bc51d5e6b54cb1036da729b2f6a, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9717939
       objectReference: {fileID: 0}
     - target: {fileID: 7853921468675617389, guid: 09bc7bc51d5e6b54cb1036da729b2f6a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7853921468675617389, guid: 09bc7bc51d5e6b54cb1036da729b2f6a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.23583212
       objectReference: {fileID: 0}
     - target: {fileID: 7853921468675617389, guid: 09bc7bc51d5e6b54cb1036da729b2f6a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7853921468675617389, guid: 09bc7bc51d5e6b54cb1036da729b2f6a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1069,7 +1084,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7853921468675617389, guid: 09bc7bc51d5e6b54cb1036da729b2f6a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 27.281
       objectReference: {fileID: 0}
     - target: {fileID: 7853921468675617389, guid: 09bc7bc51d5e6b54cb1036da729b2f6a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z

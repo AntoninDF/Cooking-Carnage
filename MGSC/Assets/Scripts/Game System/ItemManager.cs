@@ -38,12 +38,12 @@ public class ItemManager : IManager
     
     public void Register()
     {
-        ReferenceManager.Instance.SetManager(this);
+        Reference.SetManager(this);
     }
 
     public void Unregister()
     {
-        ReferenceManager.Instance.RemoveManager(this);
+        Reference.RemoveManager(this);
     }
 
     public void Init()
@@ -60,7 +60,7 @@ public class ItemManager : IManager
 
     private void DetectSpawnItems()
     {
-        foreach (var item in ReferenceManager.Instance.GetElementsOfType<Item>())
+        foreach (var item in Reference.GetAll<Item>())
         {
             spawnItems.Add(item);
             spawnPositions.Add(item.transform.position);
@@ -194,7 +194,7 @@ public class ItemManager : IManager
                     {
                         parent = _itemsPooled;
                     }
-                    ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
+                    Reference.Get<Oven2>().SendMessage("Update");
                     return Spawn(item, position, rotation, parent);
                     
                 }
@@ -231,8 +231,6 @@ public class ItemManager : IManager
         
         this.Log(LogType.Log, "Spawned " + item.name);
 
-        ReferenceManager.Instance.GetElementOfType<Oven2>().SendMessage("Update");
-
         return item.gameObject;
     }
     public void Despawn(Item itemToStore, bool reset = false)
@@ -247,6 +245,7 @@ public class ItemManager : IManager
             this.Log(LogType.Warning, itemToStore.name + " is not active and probably shouldn't be stored now at ID "+itemToStore.ID);
         }
         itemToStore.gameObject.SetActive(false);
+        itemToStore.OnDisable();
         itemToStore.transform.parent = _itemsPooled;
         if (itemToStore.Container != null)
             itemToStore.Container.Drop(itemToStore);

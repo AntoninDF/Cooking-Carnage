@@ -23,7 +23,7 @@ namespace UI
         public void EnableAndFadeOut()
         {
             transform.localScale = Vector3.one;
-            var tm = ReferenceManager.Get<TimerManager>();
+            var tm = Reference.GetManager<TimerManager>();
             if (tm != null)
             {
                 tm.StartTimer("Fading tooltip", _timeBeforeFading, () => StartCoroutine(Shrink(_duration)));

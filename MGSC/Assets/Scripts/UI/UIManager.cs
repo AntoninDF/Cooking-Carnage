@@ -4,12 +4,11 @@ using GameSystem;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace UI
 {
@@ -30,6 +29,7 @@ namespace UI
             "ShiftRecap", EInfoBoxType.Normal)]
 
         //[Header("References")]
+        [SerializeField] private GameObject _canvas;
         [SerializeField] private string _pauseMenuName = "Pause";
         [SerializeField] private string _gameMenuName = "Game";
         [SerializeField] private string _mainMenuName = "Main";
@@ -53,6 +53,11 @@ namespace UI
         [SerializeField] private UnityEvent _onResume;
 
         private GameLoop _gameLoop;
+        private TimerManager _timerManager;
+        private ShiftManager _shiftManager;
+        private DataManager _dataManager;
+        private CameraManager _cameraManager;
+
         private InputActionAsset _inputActionAsset;
         private InputActionMap _playerInputs;
         private InputActionMap _UIInputs;
@@ -65,7 +70,6 @@ namespace UI
         [SerializeField] private int heightRatio = 9;
 
         // Managers
-        private ShiftManager _shiftManager;
 
         void Awake()
         {
@@ -74,16 +78,19 @@ namespace UI
 
         public void Unregister()
         {
-            ReferenceManager.Instance.RemoveManager(this);
+            Reference.RemoveManager(this);
         }
         public void Init()
         {
-            _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
-            _inputActionAsset = ReferenceManager.AssetReferences.InputActions;
+            Reference.GetManager(out _gameLoop);
+            Reference.GetManager(out _shiftManager);
+            Reference.GetManager(out _dataManager);
+            Reference.GetManager(out _timerManager);
+
+            _inputActionAsset = Reference.AssetReferences.InputActions;
             _playerInputs = _inputActionAsset.FindActionMap("Player");
             _UIInputs = _inputActionAsset.FindActionMap("UI");
-            _player = ReferenceManager.Instance.GetElementOfType<PlayerInterface>();
-            _shiftManager = ReferenceManager.Get<ShiftManager>();
+            Reference.Get(out _player);
 
             if (_gameLoop == null)
                 this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No gameloop found");
@@ -108,13 +115,13 @@ namespace UI
 
             Vector2 resolution = GetAdaptedFullScreenResolution(widthRatio,heightRatio);
             
-            Screen.SetResolution((int)resolution.x, (int)resolution.y, FullScreenMode.ExclusiveFullScreen, new RefreshRate { numerator = 60, denominator = 1 });
+            Screen.SetResolution((int)resolution.x, (int)resolution.y, FullScreenMode.FullScreenWindow , new RefreshRate { numerator = 60, denominator = 1 });
             
             _onStart?.Invoke();
         }        
         public void PostInit()
         {
-            if (ReferenceManager.Instance.GetManager<DataManager>().ShiftCount >= 1)
+            if (_dataManager.ShiftCount >= 1)
             {
                 SkipTutorial();
             }
@@ -187,22 +194,24 @@ namespace UI
         public void SetGameState(bool running) { if (running) ResumeGame(); else PauseGame(); }
         public void PauseGame()
         {
-            _gameLoop.StopRunning();
+            bool isPauseMenu = _currentMenu.name == _pauseMenuName;
+            
+            _gameLoop.StopRunning(isPauseMenu);
             _playerInputs.Disable();
             _UIInputs.Enable();
-            _onPause?.Invoke();
-
+            
+            if (isPauseMenu)
+            {
+                _onPause?.Invoke();
+            }
 
             this.Log(LogType.Log, $"Game has been paused");
         }
         public void StartGame()
         {
-            Debug.Log("Trying to Start game");
-            ReferenceManager.Get(out ShiftManager sm);
-            if (sm == null) return;
-            sm.SetupShift(sm.ShiftCount);
-            sm.LaunchShift();
-            Debug.Log("Start game");
+            if (_shiftManager == null) return;
+            _shiftManager.SetupShift(_shiftManager.ShiftCount);
+            _shiftManager.LaunchShift();
         }
         public void ResumeGame(bool skiptutorial=false)
         {
@@ -228,7 +237,6 @@ namespace UI
         }
         public void TryPlayTutorialSubtitles()
         {
-            ReferenceManager.Get(out _shiftManager);
             if (_shiftManager == null) return;
             if (_shiftManager.ShiftCount == 0)
             {
@@ -240,7 +248,7 @@ namespace UI
             //_playButton.GetComponent<Button>().onClick = _skipTutoButton.GetComponent<Button>().onClick;
             //_skipTutoButton?.gameObject.SetActive(false);
             _shiftManager.SkipTutorialShift(); 
-            foreach (var b in ReferenceManager.GetAll<SittingCounter>())
+            foreach (var b in Reference.GetAll<SittingCounter>())
             {
                 b.GetComponentInChildren<EventLinker>().UnBindAll();
                 b.OnSkipTutorial?.Invoke();
@@ -250,10 +258,8 @@ namespace UI
         public void TutorialEndTransition()
         {
             _onFade?.Invoke();
-            ReferenceManager.Get(out ShiftManager sm);
-            ReferenceManager.Get(out TimerManager tm);
-            if (sm != null && tm != null)
-                tm.StartTimer("Tutorial ended. Moving to the next shift", 1.5f, () => sm.TryEndShift(true));
+            if (_shiftManager != null && _timerManager != null)
+                _timerManager.StartTimer("Tutorial ended. Moving to the next shift", 1.5f, () => _shiftManager.TryEndShift(true));
         }
         public void SwitchPlayerInputs(bool enabled)
         {
@@ -285,7 +291,11 @@ namespace UI
         private void SubscribeToEvents()
         {
             if (_UIInputs != null)
+            {
                 _UIInputs.FindAction("Pause").performed += (ctx) => TogglePause();
+                _UIInputs.FindAction("ToggleUI").performed += (ctx) => ToggleAllUI();
+                _UIInputs.FindAction("Screenshot").performed += (ctx) => TakeScreenshot();
+            }
         }
         private void TogglePause()
         {
@@ -299,29 +309,48 @@ namespace UI
         }
         public void ReloadScene()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            _gameLoop.StartRunning();
+            _timerManager.StartTimer("reloadscene", 1,
+                () => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex), true);
         }      
         public void ResetEverything()
         {
-            ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
+            _dataManager.ResetSave();
             ReloadScene();
         }
         public void Register()
         {
-            ReferenceManager.Instance.SetManager(this);
+            Reference.SetManager(this);
         }
         public void RequestCameraSwitch(Transform target)
         {
-            ReferenceManager.Get<CameraManager>().LookAt(target, 0, true);
+            _cameraManager.LookAt(target, 0, true);
         }
         public void RequestCameraSwitchToFirstUITarget()
         {
-            UITarget target = ReferenceManager.Instance.GetElementOfType<UITarget>();
+            UITarget target = Reference.Get<UITarget>();
             RequestCameraSwitch(target.transform);
         }
         public void ResetCameraSwitch()
         {
-            ReferenceManager.Get<CameraManager>().EnableFirstPersonView();
+            _cameraManager.EnableFirstPersonView();
+        }
+        public void HideAllUI() => _canvas?.SetActive(false);
+        public void ShowAllUI() => _canvas?.SetActive(true);
+        public void ToggleAllUI() => _canvas?.SetActive(!_canvas.activeSelf);
+        public void TakeScreenshot()
+        {
+            string path = Application.persistentDataPath + "/Screenshots";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            DirectoryInfo dir = new DirectoryInfo(path);
+            FileInfo[] info = dir.GetFiles("*.*");
+            int fileAmount = info.Length;
+            ScreenCapture.CaptureScreenshot(path + "/Screenshot " + fileAmount + ".png", 2);
+            Debug.Log("Screenshot taken, saved at path " + path + "/Screenshot " + fileAmount);
+            this.Log("Screenshot taken, saved at path " + path + "/Screenshot " + fileAmount);
         }
         [System.Serializable]
         public struct UIMenu

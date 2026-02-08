@@ -45,13 +45,12 @@ namespace UI
 
         private void BindOrUnbindEvent(TargetEvent target, UnityEvent callback, bool bind)
         {
-            var Ref = ReferenceManager.Instance;
             // Target event
             UnityEvent ev = null;
             switch(target)
             {
                 case TargetEvent.PlateGrabbedFromRack:
-                    foreach(var elm in Ref.GetElementsOfType<ItemSpawner>())
+                    foreach(var elm in Reference.GetAll<ItemSpawner>())
                     {
                         // Target event
                         ev = elm.OnSpawn;
@@ -62,7 +61,7 @@ namespace UI
                     }
                     break;
                 case TargetEvent.IngredientCut:
-                    foreach (var elm in Ref.GetElementsOfType<Blender>())
+                    foreach (var elm in Reference.GetAll<Blender>())
                     {
                         // Target event
                         ev = elm.OnItemCut;
@@ -73,7 +72,7 @@ namespace UI
                     }
                     break;
                 case TargetEvent.MealCooked:
-                    foreach (var elm in Ref.GetElementsOfType<Oven>().Concat(Ref.GetElementsOfType<Oven2>()))
+                    foreach (var elm in Reference.GetAll<Oven>().Concat(Reference.GetAll<Oven2>()))
                     {
                         // Target event
                         ev = elm.OnItemCooked;
@@ -84,7 +83,7 @@ namespace UI
                     }
                     break;
                 case TargetEvent.MealGrabbedFromOven:
-                    foreach (var elm in Ref.GetElementsOfType<Oven>())
+                    foreach (var elm in Reference.GetAll<Oven>())
                     {
                         // Target event
                         ev = elm.OnItemDropped;
@@ -95,7 +94,7 @@ namespace UI
                     }
                     break;
                 case TargetEvent.ClientServed:
-                    foreach (var elm in Ref.GetElementsOfType<SittingCounter>())
+                    foreach (var elm in Reference.GetAll<SittingCounter>())
                     {
                         // Target event
                         ev = elm.OnServe;
@@ -106,7 +105,7 @@ namespace UI
                     }
                     break;
                 case TargetEvent.ClientKilled:
-                    foreach (var elm in Ref.GetElementsOfType<SittingCounter>())
+                    foreach (var elm in Reference.GetAll<SittingCounter>())
                     {
                         // Target event
                         ev = elm.OnKill;

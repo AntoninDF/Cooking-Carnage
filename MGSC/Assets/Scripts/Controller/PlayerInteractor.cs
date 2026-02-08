@@ -201,21 +201,29 @@ namespace Controller
         public void Drop(IGrabbable item) => Drop();
         public void DropOnContainer()
         {
-            bool checkOverlap = true;
             if (_heldItem == null) return;
+
             if (_grabbedItemThisFrame) return;
 
             Component component;
             if (!LookTargetImplements<IContainer>(out component)) return;
 
             IContainer container = component as IContainer;
-            if (!container.CanGrab(_heldItem)) return;
-
-            if (checkOverlap && component is IMultiContainer)
+            if (!container.CanGrab(_heldItem))
             {
-                // REFACTO - TO DO : Implement overlap checking. Return if there is an overlap, otherwise continue
+                MultiSlotContainer multislot = container.transform.GetComponentInChildren<MultiSlotContainer>();
+                if (multislot!=null)
+                {
+                    container =  multislot.GetFirstAvailableSlot() as IContainer;
+                    if (container!=null)
+                    {
+                        container.Grab(_heldItem);
+                    }
+                    // REFACTO - TO DO : Implement overlap checking. Return if there is an overlap, otherwise continue
+                }
+                return;
             }
-
+            
             //Finally grab
             container.Grab(_heldItem);
         }
@@ -223,7 +231,7 @@ namespace Controller
         public void Drop()
         {
             if (_heldItem == null) return;
-            ReferenceManager.Get<TimerManager>()?.StartTimer("Enable dropped item's collider", 0.1f, () => 
+            Reference.GetManager<TimerManager>()?.StartTimer("Enable dropped item's collider", 0.1f, () => 
             {
                 _heldItem.Collider.enabled = true;
                 _heldItem = null;
@@ -235,11 +243,13 @@ namespace Controller
 
         public bool CanGrab(IGrabbable item)
         {
-            return
-                _heldItem == null &&
-                (item is not EnglobingSlotContainer ||
-                (item is EnglobingSlotContainer esc && esc.HeldItem!=null))
-                ; 
+            Meal meal = item as Meal;
+            if (meal && meal.eaten)
+            {
+                return false;
+            }
+            
+            return _heldItem == null && (item is not EnglobingSlotContainer || (item is EnglobingSlotContainer esc && esc.HeldItem!=null))  ; 
         }
 
         #endregion

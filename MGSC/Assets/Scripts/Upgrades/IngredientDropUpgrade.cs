@@ -11,6 +11,8 @@ namespace Upgrades
 
         #region Fields
         private float dropRateIncrement = 1f;
+
+        private ClientManager _clientManager;
         #endregion
 
         #region Methods
@@ -21,9 +23,9 @@ namespace Upgrades
 
         public override void Apply()
         {
-            ClientManager clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
-            if (clientManager == null) return;
-            var curr = clientManager.CurrentClients;
+            Reference.GetManager(out _clientManager);
+            if (_clientManager == null) return;
+            var curr = _clientManager.CurrentClients;
             if (curr == null) return;
             foreach (var client in curr)
             {
@@ -47,7 +49,7 @@ namespace Upgrades
         {
             return 100f;
         }
-        public override bool CanLevelUp() => true;
+        public override bool CanLevelUp() => _level < 3;
         #endregion
     }
 }

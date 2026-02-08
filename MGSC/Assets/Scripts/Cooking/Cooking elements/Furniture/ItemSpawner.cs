@@ -27,6 +27,9 @@ namespace Cooking
         [SerializeField] private int _startSpawnIterations = 1;
 
         private float _timeOfLastSpawn = float.MinValue;
+
+        private ShiftManager _shiftManager;
+        private ItemManager _itemManager;
         #endregion
 
         #region Methods
@@ -34,7 +37,9 @@ namespace Cooking
         private void Start()
         {
             Reset();
-            ReferenceManager.Get<ShiftManager>().OnNextShift += Reset;
+            Reference.GetManager(out _itemManager);
+            if (Reference.TryGetManager(out _shiftManager))
+                _shiftManager.OnNextShift += Reset;
         }
 
         private void Reset()
@@ -68,7 +73,7 @@ namespace Cooking
                     foreach (var slot in _slotsToSpawn)
                     {
                         if (!slot.IsFree) continue;
-                        GameObject go = ReferenceManager.Instance.GetManager<ItemManager>().TrySpawn(request.item.transform.gameObject);
+                        GameObject go = _itemManager.TrySpawn(request.item.transform.gameObject);
 
                         Item item = go.GetComponent<Item>();
                         item.SetAnimationMode(false);

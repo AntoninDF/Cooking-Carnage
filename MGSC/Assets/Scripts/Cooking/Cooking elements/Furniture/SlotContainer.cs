@@ -110,16 +110,23 @@ namespace Cooking
         public bool GrabWithoutFeedback(IGrabbable item)
         {
             if (!CanGrab(item))
+            {
                 return false;
+            }
+
             if (_itemSlot == null)
                 throw new MissingReferenceException("Please reference the item slot's transform in this container slot's dedicated field : " + name);
             _heldItem = item;
 
-            var itemAsItem = item as Item;
+            var itemAsItem = item as Plate;
             if (itemAsItem != null)
+            {
                 itemAsItem.GetGrabbedWithoutFeedback(this);
+            }
             else
+            {
                 item.GetGrabbed(this);
+            }
             return true;
         }
 
@@ -133,8 +140,12 @@ namespace Cooking
 
             if (_filter != null && item is MonoBehaviour)
                 if (!_filter.IsValid((MonoBehaviour)item))
-                { 
-                    _onTryGrabIncorrectItem?.Invoke();
+                {
+                    if (!(item is SlotContainer))
+                    {
+                        _onTryGrabIncorrectItem?.Invoke();
+                    }
+
                     return false;
                 }
             return true;

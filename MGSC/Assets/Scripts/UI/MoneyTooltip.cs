@@ -12,7 +12,7 @@ namespace UI
 
         private void Start()
         {
-            _dataManager = ReferenceManager.Instance.GetManager<DataManager>();
+            Reference.GetManager(out _dataManager);
         }
 
         private void Update()

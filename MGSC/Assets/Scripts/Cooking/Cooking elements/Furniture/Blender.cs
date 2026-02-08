@@ -14,6 +14,7 @@ namespace Cooking
     {
         #region Properties
         public float CutDuration { get => _cutDuration; set { _cutDuration = value; } }
+        public float DefaultCutDuration { get => _defaultCutDuration; set { _defaultCutDuration = value; } }
         public UnityEvent OnInteract => _onInteract;
         public UnityEvent OnItemCut => _onItemCut;
 
@@ -32,6 +33,7 @@ namespace Cooking
         [Header("Parameters")]
         [SerializeField]
         private float _cutDuration = 2.5f;
+        private float _defaultCutDuration;
 
         [Header("References")]
 
@@ -54,6 +56,8 @@ namespace Cooking
         [SerializeField]
         private UnityEvent _onStopLookAt;
 
+        [SerializeField] private UnityEvent _onFailedInteraction;
+
 
         // private fields
         TimerManager _timerManager;
@@ -68,7 +72,11 @@ namespace Cooking
         {
             UpdateUI();
         }
+        private void Awake()
+        {
 
+            _defaultCutDuration = _cutDuration;
+        }
         private void Start()
         {
             if (_slotContainer == null)
@@ -78,18 +86,30 @@ namespace Cooking
 
             _slotContainer.SetFilter(new Filter(EFilterCondition.MustBe, EItemType.Ingredient));
             _slotContainer.OnDrop.AddListener(StopCutting);
-            _timerManager = ReferenceManager.Instance.GetManager<TimerManager>();
+            Reference.GetManager(out _timerManager);
             if (_timerManager == null)
                 throw new MissingReferenceException("[Blender] : No timer manager found");
+
         }
 
         public void Interact(PlayerInteractor interactor)
         {
-            if (Locked) return;
+            if (Locked) {_onFailedInteraction?.Invoke(); return;}
+
             if (!(_slotContainer != null && _slotContainer.HeldItem != null))
+            {
+                if (!interactor.ItemSlot.GetComponentInChildren<Ingredient>())
+                {
+                    _onFailedInteraction?.Invoke();
+                }
+
                 return;
+            }
+
             if (_slotContainer.HeldItem is not Ingredient ingredient)
-                return;
+            {
+                _onFailedInteraction?.Invoke();return;
+            }
 
             if (!ingredient.IsCut)
             {
@@ -99,7 +119,7 @@ namespace Cooking
             }
             else
             {
-                _onTryToCutAlreadyCutIngredient?.Invoke();
+                _onFailedInteraction?.Invoke();
             }
         }
 
@@ -153,7 +173,8 @@ namespace Cooking
         {
             if (_slotContainer != null && _slotContainer.HeldItem != null)
             {
-                ReferenceManager.Instance.GetManager<ItemManager>().Despawn(_slotContainer.HeldItem as Ingredient);
+                if (Reference.TryGetManager(out ItemManager im))
+                    im.Despawn(_slotContainer.HeldItem as Ingredient);
                 _slotContainer.HeldItem = null;
             }
         }
