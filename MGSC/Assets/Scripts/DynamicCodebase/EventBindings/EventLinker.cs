@@ -1,13 +1,26 @@
 
+using System;
 using System.Collections.Generic;
-using UnityEditor;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEditor;
 
 public partial class EventLinker : MonoBehaviour
 {
     public List<string> displayedMembers;
+    public static Action<object> OnRebind;
     //public List<string> options;
+
+    private void Awake()
+    {
+        OnRebind += BindEvents;
+    }
+
+    public void Debug(string msg)
+    {
+        UnityEngine.Debug.Log(msg);
+    }
 
     public void TryAdd(string member)
     {
@@ -23,7 +36,47 @@ public partial class EventLinker : MonoBehaviour
         if (!displayedMembers.Contains(member)) return;
         displayedMembers.Remove(member);
     }
+
+    public static void Bind(object obj)
+    {
+        OnRebind?.Invoke(obj);
+    }
+    public void BindEvents(object obj)
+    {
+        foreach (var member in obj.GetType().GetMembers())
+        {
+            BindEventAttribute attr = member.GetCustomAttribute<BindEventAttribute>();
+            if (attr == null)
+                continue;
+            if (member.MemberType != MemberTypes.Field)
+                continue;
+            FieldInfo field = (FieldInfo)member;
+            foreach(string actionName in displayedMembers)
+            {
+                if (attr.Name == actionName)
+                {
+                    Action action = field.GetValue(obj) as Action;
+                    //if (action == null) continue;
+                    string parsedName = actionName.Split("/")[^1];
+                    foreach (FieldInfo myField in typeof(EventLinker).GetFields())
+                    {
+                        if (myField.Name == parsedName && myField.FieldType == typeof(UnityEvent))
+                        {
+                            UnityEvent myEvent = myField.GetValue(this) as UnityEvent;
+                            if (myEvent == null) continue;
+                            action += myEvent.Invoke;
+                        }
+                    }
+                    field.SetValue(obj, action);
+                }
+            }
+        }
+        
+    }
+
 }
+
+
 
 [CustomEditor(typeof(EventLinker))]
 public class EventLinkerEditor : Editor
@@ -46,6 +99,8 @@ public class EventLinkerEditor : Editor
             {
                 menu.AddItem(new GUIContent(option), false, () => data.TryAdd(option));
             }
+            if (data.options.Count == 0)
+                menu.AddItem(new GUIContent("No Actions available"), false, () => data.TryAdd(""));
 
             menu.ShowAsContext();
         }
@@ -60,10 +115,11 @@ public class EventLinkerEditor : Editor
 
         foreach(var name in data.displayedMembers)
         {
-            var prop = serializedObject.FindProperty(name);
+            string parsedName = name.Split("/")[^1];
+            var prop = serializedObject.FindProperty(parsedName);
             if (prop != null)
             {
-                if (GUILayout.Button("Remove " + name))
+                if (GUILayout.Button("Remove " + parsedName))
                 {
                     data.Remove(name);
                     break;

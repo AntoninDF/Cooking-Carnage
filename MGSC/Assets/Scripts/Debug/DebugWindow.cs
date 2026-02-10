@@ -9,99 +9,96 @@ using Upgrades;
 public class DebugWindow : MonoBehaviour
 {
     private bool _visible;
-    private Rect _windowRect = new Rect(20, 20, 450, 1000);
+    // On initialise avec une taille raisonnable, la hauteur s'adaptera toute seule
+    private Rect _windowRect = new Rect(20, 20, 450, 400); 
     private int _currentTab;
-    private readonly string[] _tabs = { "General", "Settings", "Timers", "Clients", "Upgrades","Managers" };
+    private readonly string[] _tabs = { "General", "Settings", "Timers", "Clients", "Upgrades", "Managers" };
     
     private float _gameSpeed = 1f;
-    //private float _clientSpeed = 1f;
     private float _deltaTime;
-    private float newMoney ;
+    private float newMoney;
 
     private int _lastCurrentClientsCount;
     private int _lastHistoryClientsCount;
     private int newShift;
     
+    // Scroll positions
     private Vector2 _clientScrollPos;
+    private Vector2 _mainScrollPos; // Nouveau : pour scroller toute la fenêtre si besoin
 
     private bool _previousMouseVisibility;
     private CursorLockMode _previousMouseLockMode;
-    
-    private readonly Vector2 referenceWindowSize = new Vector2(450, 500); 
-
     
     #region Methods
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F12))
         {
-            if (!_visible)
-            {
-                _previousMouseVisibility = Cursor.visible;
-                _previousMouseLockMode = Cursor.lockState;
-
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            else
-            {
-                Cursor.lockState = _previousMouseLockMode;
-                Cursor.visible = _previousMouseVisibility;
-            }
-            _visible = !_visible;
+            ToggleWindow();
         }
 
         _deltaTime += (Time.unscaledDeltaTime - _deltaTime) * 0.1f;
     }
 
-    private void OnGUI()
+    private void ToggleWindow()
     {
         if (!_visible)
         {
-            //DrawPressHint();
-            return;
+            _previousMouseVisibility = Cursor.visible;
+            _previousMouseLockMode = Cursor.lockState;
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
-        
-        float scaleX = _windowRect.width / referenceWindowSize.x;
-        float scaleY = _windowRect.height / referenceWindowSize.y;
-        Vector2 scale = new Vector2(scaleX, scaleY);
-        
-        Matrix4x4 oldMatrix = GUI.matrix;
-        
-        Vector2 pos = new Vector2(_windowRect.x, _windowRect.y);
-        GUI.matrix = Matrix4x4.TRS(pos, Quaternion.identity, new Vector3(scale.x, scale.y, 1f));
-        
-        GUI.Window(0, new Rect(0, 0, referenceWindowSize.x, referenceWindowSize.y), DrawWindow, "Debug Window");
-        
-        GUI.matrix = oldMatrix;
-        
+        else
+        {
+            Cursor.lockState = _previousMouseLockMode;
+            Cursor.visible = _previousMouseVisibility;
+        }
+        _visible = !_visible;
     }
 
-    private void DrawPressHint()
+    private void OnGUI()
     {
-        GUIStyle style = new GUIStyle(GUI.skin.label)
-        {
-            fontSize = 14,
-            fontStyle = FontStyle.Bold,
-            normal = { textColor = new Color(1f, 1f, 1f, 0.6f) }
-        };
-        GUI.Label(new Rect(10, 10, 300, 25), "Press F12 to open Debug Window", style);
+        if (!_visible) return;
+        
+        // Empêche la fenêtre d'être plus grande que l'écran
+        float maxHeight = Screen.height - 40;
+        
+        // Création de la fenêtre avec une option pour limiter la hauteur max
+        _windowRect = GUILayout.Window(0, _windowRect, DrawWindow, "Debug Window", GUILayout.Width(450), GUILayout.MaxHeight(maxHeight));
+        
+        // Empêche la fenêtre de sortir de l'écran
+        _windowRect.x = Mathf.Clamp(_windowRect.x, 0, Screen.width - _windowRect.width);
+        _windowRect.y = Mathf.Clamp(_windowRect.y, 0, Screen.height - _windowRect.height);
     }
 
     private void DrawWindow(int windowID)
     {
+        // Début du Scroll global pour la fenêtre (au cas où l'écran est petit)
+        _mainScrollPos = GUILayout.BeginScrollView(_mainScrollPos);
+
         GUILayout.BeginVertical();
 
+        // Onglets
         GUILayout.BeginHorizontal();
         for (int i = 0; i < _tabs.Length; i++)
         {
-            if (GUILayout.Toggle(_currentTab == i, _tabs[i], "Button"))
+            // Petit hack visuel : si beaucoup d'onglets, on retourne à la ligne
+            if (i > 0 && i % 3 == 0) 
+            {
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+            }
+            
+            if (GUILayout.Toggle(_currentTab == i, _tabs[i], "Button", GUILayout.Height(25)))
                 _currentTab = i;
         }
         GUILayout.EndHorizontal();
 
-        GUILayout.Space(10);
+        GUILayout.Space(15);
 
+        // Contenu
         switch (_currentTab)
         {
             case 0: DrawGeneralTab(); break;
@@ -113,6 +110,9 @@ public class DebugWindow : MonoBehaviour
         }
 
         GUILayout.EndVertical();
+        GUILayout.EndScrollView(); // Fin du scroll global
+
+        // Zone pour déplacer la fenêtre (sur toute la largeur du haut)
         GUI.DragWindow(new Rect(0, 0, 10000, 20));
     }
     
@@ -121,7 +121,7 @@ public class DebugWindow : MonoBehaviour
     #region Tabs
     private void DrawGeneralTab()
     {
-        GUILayout.Label("Game Profile: Not Yet Implemented");
+        GUILayout.Label("Game Profile", GUI.skin.box);
         GUILayout.Label($"Total Time: {Time.realtimeSinceStartup:F1}s");
         
         float fps = 1.0f / _deltaTime;
@@ -132,15 +132,16 @@ public class DebugWindow : MonoBehaviour
         GUILayout.Space(10);
         if (data != null)
         {
-            GUILayout.Label($"Current Shift :{data.shiftCount:F1}");
-            GUILayout.Label($"Current Money :{data.money:F1}€");
+            GUILayout.Label($"Current Shift: {data.shiftCount}");
+            GUILayout.Label($"Current Money: {data.money:F1}€");
         }
         else
         {
-            GUILayout.Label($"No game data loaded");
+            GUILayout.Label($"No game data loaded", GUI.skin.label);
         }
-
-        if (GUILayout.Button("Reload Scene"))
+        
+        GUILayout.Space(10);
+        if (GUILayout.Button("Reload Scene", GUILayout.Height(30)))
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -151,38 +152,54 @@ public class DebugWindow : MonoBehaviour
         GUILayout.Space(10);
         GUILayout.Label($"Time Scale: {_gameSpeed:F2}");
         _gameSpeed = GUILayout.HorizontalSlider(_gameSpeed, 0.1f, 10f);
-        Time.timeScale = _gameSpeed;
+        if (GUI.changed) Time.timeScale = _gameSpeed;
+        
+        if(GUILayout.Button("Reset Speed")) { _gameSpeed = 1f; Time.timeScale = 1f; }
         
         GUILayout.Space(10);
         
-        GUILayout.Label($"Set Shift: {newShift:F2}");
+        GUILayout.Label($"Set Shift: {newShift}");
         newShift = Mathf.RoundToInt(GUILayout.HorizontalSlider(newShift, 0, 99f));
         
         GUILayout.Label($"Set Money: {newMoney:F2}€");
         newMoney = GUILayout.HorizontalSlider(newMoney, 0.0f, 999f);
 
-        if (GUILayout.Button("Reset Camera", GUILayout.Width(160)))
+        GUILayout.Space(15);
+        
+        if (GUILayout.Button("Reset Camera"))
         {
             Reference.GetManager<CameraManager>().EnableFirstPersonView();
         }
-        GUILayout.Space(10);
+        
+        GUILayout.Space(5);
 
-        if (GUILayout.Button("Save and reload", GUILayout.Width(160)))
+        if (GUILayout.Button("Save and Reload"))
         {
-            DataManager.GameData data = new DataManager.GameData();
-            data.shiftCount = newShift;
-            data.money = newMoney;
-            data.upgrades = Reference.GetManager<DataManager>().Data.upgrades;
-            Reference.GetManager<DataManager>().SaveGameData(data);
-            StudioEventEmitterExtension.StopAll_Static();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            var dm = ReferenceManager.Instance.GetManager<DataManager>();
+            if(dm != null)
+            {
+                DataManager.GameData data = new DataManager.GameData();
+                data.shiftCount = newShift;
+                data.money = newMoney;
+                data.upgrades = dm.Data.upgrades;
+                dm.SaveGameData(data);
+                
+                // Assurez-vous que cette classe existe bien dans votre projet
+                // StudioEventEmitterExtension.StopAll_Static(); 
+                
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
         }
-        GUILayout.Space(10);
-        if (GUILayout.Button("Reset Save", GUILayout.Width(80)))
+        
+        GUILayout.Space(5);
+        
+        GUI.backgroundColor = Color.red;
+        if (GUILayout.Button("Reset Save (Hard Reset)"))
         {
             Reference.GetManager<DataManager>().ResetSave();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+        GUI.backgroundColor = Color.white;
     }
 
     private void DrawTimersTab()
@@ -196,44 +213,42 @@ public class DebugWindow : MonoBehaviour
             return;
         }
 
-        // Standard Timers
+        if (timerManager.Timers.Count == 0)
+        {
+            GUILayout.Label("No timers currently running.");
+            return;
+        }
+
         foreach (var t in timerManager.Timers)
         {
             float remaining = t.Value.Duration - t.Value.Elapsed;
             bool isOver = remaining <= 0.01f;
 
+            GUILayout.BeginVertical(GUI.skin.box);
+            
             GUIStyle style = new GUIStyle(GUI.skin.label);
-            if (isOver)
-                style.normal.textColor = Color.green;
+            if (isOver) style.normal.textColor = Color.green;
 
-            if (!t.Value.FrameBased)
-            {
-                GUILayout.Label($"⏱ Timer: {t.Key} — Remaining: {(isOver ? "Over" : $"{remaining:F1}s")}", style);
-            }
-            else
-            {
-                GUILayout.Label($"⏱ Timer: {t.Key} — Remaining: {(isOver ? "Over" : $"{remaining:F1} frames")}", style);
-            }
+            string timeStr = !t.Value.FrameBased ? $"{remaining:F1}s" : $"{remaining:F1} frames";
+            GUILayout.Label($"<b>{t.Key}</b>: {(isOver ? "Over" : timeStr)}", style);
 
-            // Buttons for this timer
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Pause", GUILayout.Width(60)))
-                t.Value.Pause(); 
-            if (GUILayout.Button("Resume", GUILayout.Width(60)))
-                t.Value.Resume();
-            if (GUILayout.Button("Achieve", GUILayout.Width(60)))
-                t.Value.End();
-            if (GUILayout.Button("Reset", GUILayout.Width(60)))
-                t.Value.Reset(t.Value.Name, t.Value.Duration, t.Value.onComplete, t.Value.onUpdate, t.Value.FrameBased);
+            if (GUILayout.Button("Pause")) t.Value.Pause(); 
+            if (GUILayout.Button("Resume")) t.Value.Resume();
+            if (GUILayout.Button("End")) t.Value.End();
             GUILayout.EndHorizontal();
-
+            
+            GUILayout.EndVertical();
             GUILayout.Space(5);
         }
     }
 
     private void DrawClientsTab()
-{
-    GUILayout.Label("Client Information", GUI.skin.box);
+    {
+        // Pas besoin de scrollview ICI car la fenêtre entière a maintenant un scrollview si ça dépasse
+        // Cependant, pour la liste d'historique qui peut être très longue, on garde un scroll interne de taille fixe
+        
+        GUILayout.Label("Client Information", GUI.skin.box);
 
     var clientManager = Reference.GetManager<ClientManager>();
     if (clientManager == null)
@@ -242,127 +257,62 @@ public class DebugWindow : MonoBehaviour
         return;
     }
 
-    int currentCount = 0;
-    int historyCount = 0;
-    int killedCount = 0;
-    int servedCount = 0;
+        int currentCount = clientManager.CurrentClients?.Count ?? 0;
+        var history = clientManager.GetClientsHistory() ?? new List<ClientManager.ClientData>();
+        
+        int servedCount = 0;
+        int killedCount = 0;
+        foreach (var c in history) { if (c.killed) killedCount++; else servedCount++; }
 
-    List<ClientManager.ClientData> history = null;
+        GUILayout.BeginHorizontal();
+        GUI.color = Color.green; GUILayout.Label($"Served: {servedCount}");
+        GUI.color = Color.red;   GUILayout.Label($"Killed: {killedCount}");
+        GUI.color = Color.white;
+        GUILayout.EndHorizontal();
 
-    try
-    {
-        currentCount = clientManager.CurrentClients?.Count ?? 0;
-        history = clientManager.GetClientsHistory() ?? new List<ClientManager.ClientData>();
-        historyCount = history.Count;
+        GUILayout.Space(10);
+        
+        // Active Clients
+        GUILayout.Label($"Active Clients ({currentCount})", GUI.skin.box);
+        if (clientManager.CurrentClients != null)
+        {
+            foreach (var c in clientManager.CurrentClients)
+            {
+                string name = c.name ?? "Unknown";
+                string type = c.Type.ToString();
+                string order = c.Order?.Recipe.Name ?? "None";
+                GUILayout.Label($"> {name} ({type}) : {order}");
+            }
+        }
 
+        GUILayout.Space(10);
+        GUILayout.Label($"History ({history.Count})", GUI.skin.box);
+
+        // ScrollView spécifique pour l'historique pour éviter que la liste ne prenne 10km de haut
+        _clientScrollPos = GUILayout.BeginScrollView(_clientScrollPos, GUI.skin.box, GUILayout.Height(300));
+        
         foreach (var c in history)
         {
-            if (c.killed) killedCount++;
-            else servedCount++;
-        }
-    }
-    catch (System.Exception e)
-    {
-        GUILayout.Label($"Error accessing client data: {e.Message}");
-    }
-
-    if (currentCount != _lastCurrentClientsCount || historyCount != _lastHistoryClientsCount)
-    {
-        _lastCurrentClientsCount = currentCount;
-        _lastHistoryClientsCount = historyCount;
-    }
-
-    // Summary counts
-    GUILayout.Label($"Current Clients: {currentCount}");
-    GUILayout.Label($"History Count: {historyCount}");
-
-    GUIStyle greenStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.green } };
-    GUIStyle redStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.red } };
-    GUIStyle yellowStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.yellow } };
-
-    GUILayout.BeginHorizontal();
-    GUILayout.Label("Served Clients: ");
-    GUILayout.Label(servedCount.ToString(), greenStyle);
-    GUILayout.Space(20);
-    GUILayout.Label("Killed Clients: ");
-    GUILayout.Label(killedCount.ToString(), redStyle);
-    GUILayout.EndHorizontal();
-
-    GUILayout.Space(10);
-    GUILayout.Label("Client List", GUI.skin.box);
-    
-    _clientScrollPos = GUILayout.BeginScrollView(_clientScrollPos, GUILayout.Height(300));
-
-    // Remove hover highlight effect for boxes
-    GUIStyle cleanBox = new GUIStyle(GUI.skin.box)
-    {
-        hover = { background = null },
-        active = { background = null },
-        normal = { background = GUI.skin.box.normal.background }
-    };
-
-    // ---- Active Clients ----
-    if (clientManager.CurrentClients != null && clientManager.CurrentClients.Count > 0)
-    {
-        GUILayout.Label("Active Clients:", yellowStyle);
-        foreach (var c in clientManager.CurrentClients)
-        {
-            string name = c.name ?? "Unknown";
-            string type = c.Type.ToString() ?? "Unknown";
-            string order = c.Order?.Recipe.Name ?? "None";
-
-            GUILayout.BeginHorizontal(cleanBox);
-            GUILayout.Label($"{name} ({type}) — Order: {order}");
-            GUILayout.FlexibleSpace();
-            GUILayout.Label("Status: Active", yellowStyle);
-            GUILayout.EndHorizontal();
-        }
-    }
-    else
-    {
-        GUILayout.Label("No active clients.");
-    }
-
-    GUILayout.Space(5);
-    GUILayout.Label("Past Clients:", GUI.skin.box);
-
-    // ---- Past Clients ----
-    if (history != null && history.Count > 0)
-    {
-        foreach (var c in history)
-        {
-            string id = c.id.ToString() ?? "Unknown";
-            string type = c.ClientType.ToString() ?? "Unknown";
+            string id = c.id.ToString();
+            string type = c.ClientType.ToString();
             string order = c.order?.Recipe.Name ?? "None";
             
-            GUIStyle statusStyle = c.killed ? redStyle : greenStyle;
-            string statusText = c.killed ? "Killed" : "Served";
-            
-            if (!c.killed)
+            GUILayout.BeginHorizontal();
+            if(c.killed) 
             {
-                string plate = c.order?.ServingInfo == null ? "None" : c.order.ServingInfo.Recipe.Name;
-
-                GUILayout.BeginHorizontal(cleanBox);
-                GUILayout.Label($"{id}({type}) Order: {order} Plate Received: {plate} ");
+                GUI.color = new Color(1, 0.5f, 0.5f);
+                GUILayout.Label($"[KILLED] {id} ({type}) - Order: {order}");
             }
             else
             {
-                GUILayout.BeginHorizontal(cleanBox);
-                GUILayout.Label($"{id} ({type}) Order: {order}");
+                GUI.color = Color.white;
+                GUILayout.Label($"[SERVED] {id} ({type}) - Order: {order}");
             }
-
-            GUILayout.FlexibleSpace();
-            GUILayout.Label($"Status: {statusText}", statusStyle);
             GUILayout.EndHorizontal();
         }
+        GUI.color = Color.white;
+        GUILayout.EndScrollView();
     }
-    else
-    {
-        GUILayout.Label("No history yet.");
-    }
-
-    GUILayout.EndScrollView(); 
-}
 
     private void DrawUpgradesTab()
     {
@@ -376,9 +326,11 @@ public class DebugWindow : MonoBehaviour
 
         foreach (var up in upgradeManager.Upgrades)
         {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label($"{up.GetType().Name} — Level {up.Level}");
-            if (GUILayout.Button("Level Up", GUILayout.Width(80)))
+            GUILayout.BeginHorizontal(GUI.skin.box);
+            GUILayout.Label($"{up.GetType().Name}", GUILayout.Width(150));
+            GUILayout.Label($"Lvl {up.Level}");
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("Level Up +", GUILayout.Width(80)))
                 up.LevelUp();
             GUILayout.EndHorizontal();
         }
@@ -399,25 +351,21 @@ public class DebugWindow : MonoBehaviour
         foreach (var kvp in managers)
         {
             Type type = kvp.Key;
-
             
             GUILayout.BeginHorizontal(GUI.skin.box);
-            GUILayout.Label($"{type.Name}", GUILayout.Width(150));
+            GUILayout.Label(type.Name, GUILayout.Width(150));
             
             bool info = Debugger.CheckDebug(type, LogType.Log);
             bool warning = Debugger.CheckDebug(type, LogType.Warning);
             bool error = Debugger.CheckDebug(type, LogType.Error);
 
-            bool newInfo = GUILayout.Toggle(info, "Info", GUILayout.Width(50));
-            bool newWarning = GUILayout.Toggle(warning, "Warning", GUILayout.Width(70));
-            bool newError = GUILayout.Toggle(error, "Error", GUILayout.Width(50));
-
-            
-            if (newInfo != info)
+            if (GUILayout.Toggle(info, "Info", GUILayout.Width(50)) != info)
                 Debugger.ToggleDebugManager(type, LogType.Log);
-            if (newWarning != warning)
+                
+            if (GUILayout.Toggle(warning, "Warn", GUILayout.Width(50)) != warning)
                 Debugger.ToggleDebugManager(type, LogType.Warning);
-            if (newError != error)
+                
+            if (GUILayout.Toggle(error, "Err", GUILayout.Width(50)) != error)
                 Debugger.ToggleDebugManager(type, LogType.Error);
 
             GUILayout.EndHorizontal();

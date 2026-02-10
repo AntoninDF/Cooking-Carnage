@@ -8,11 +8,9 @@ namespace SourceGen
     [InitializeOnLoad]
     public static class AutoScript
     {
-        private static DateTime lastUpdateTime = DateTime.MinValue;
         static AutoScript()
         {
-            if (DateTime.Now > lastUpdateTime.AddSeconds(10))
-                Regenerate();
+            Regenerate();
         }
 
         private static void Regenerate()

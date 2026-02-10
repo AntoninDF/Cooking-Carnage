@@ -39,7 +39,7 @@ namespace GameSystem
         private Dictionary<Type, List<MonoBehaviour>> _elementDict;
         private Dictionary<Type, IManager> _managers;
 
-        private static Reference _instance;
+        protected static Reference _instance;
         private static SO_AssetReferences _assetReferences;
         #endregion
 
@@ -49,7 +49,7 @@ namespace GameSystem
         {
             _elementDict = new();
             _managers = new();
-            ScanHierarchy();
+            ScanHierarchy_Instance();
         }
 
         /// <summary>
@@ -134,16 +134,7 @@ namespace GameSystem
         public static void TryAdd<T>(T obj) where T : MonoBehaviour => Instance.TryAddElement_Instance(obj);
         public static void ScanHierarchy(bool clearDictBeforeScan=true)
         {
-            if (clearDictBeforeScan)
-                Instance._elementDict.Clear();
-
-            foreach (var type in Instance._trackedTypes)
-            {
-                if (!Instance._elementDict.ContainsKey(type))
-                    Instance._elementDict.Add(type, new List<MonoBehaviour>());
-
-                Instance._elementDict[type].InsertRange(0, (IEnumerable<MonoBehaviour>)GameObject.FindObjectsByType(type, FindObjectsSortMode.None) );
-            }
+            Instance.ScanHierarchy_Instance(clearDictBeforeScan);
         }
         public static void ResetInstance()
         {
@@ -165,7 +156,19 @@ namespace GameSystem
 
 
 
+        protected void ScanHierarchy_Instance(bool clearDictBeforeScan=true)
+        {
+            if (clearDictBeforeScan)
+                _elementDict.Clear();
 
+            foreach (var type in _trackedTypes)
+            {
+                if (!_elementDict.ContainsKey(type))
+                    _elementDict.Add(type, new List<MonoBehaviour>());
+
+                _elementDict[type].InsertRange(0, (IEnumerable<MonoBehaviour>)GameObject.FindObjectsByType(type, FindObjectsSortMode.None));
+            }
+        }
         protected void SetManager_Instance<T>(T manager) where T : IManager
         {
             if (manager == null) throw new ArgumentNullException(nameof(manager));

@@ -1,13 +1,38 @@
 
 
 using System;
-using UnityEngine.Events;
-
-public class TestEventBroadcaster
+using UnityEngine;
+public class TestEventBroadcaster : MonoBehaviour
 {
-    [BindEvent("MyAction")]
+    [BindEvent("Action1")]
     public Action MyAction;
-    [BindEvent("FirstFolder/MyOtherAction")]
+    [BindEvent("Action2")]
     public Action MyOtherAction;
+    [BindEvent("Action3")]
+    public Action MyNewAction;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) )
+        {
+            Debug.Log("Space pressed");
+            MyAction?.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.LeftControl) )
+        {
+            Debug.Log("LeftControl pressed");
+            MyOtherAction?.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.RightControl) )
+        {
+            Debug.Log("RightControl pressed");
+            MyNewAction?.Invoke();
+        }
+    }
+
+    private void Start()
+    {
+        EventLinker.Bind(this);
+    }
 
 }

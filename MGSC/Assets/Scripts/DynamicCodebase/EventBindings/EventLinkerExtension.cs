@@ -1,3 +1,4 @@
+// // <HASHCODE> -1565040202
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
@@ -5,9 +6,11 @@ public partial class EventLinker : MonoBehaviour
 {
 	public List<string> options => 
 	new() {
-		"MyAction",
-		"FirstFolder/MyOtherAction"
+		"Action1",
+		"Action2",
+		"Action3"
 	};
-	public UnityEvent MyAction;
-	public UnityEvent MyOtherAction;
+	public UnityEvent Action1;
+	public UnityEvent Action2;
+	public UnityEvent Action3;
 }

@@ -34,6 +34,7 @@ namespace SourceGen
             sources.Add(element);
         }
 
+        public virtual void Comment(string comment) => Add(new CommentGenerator(comment));
 
         #endregion
     }

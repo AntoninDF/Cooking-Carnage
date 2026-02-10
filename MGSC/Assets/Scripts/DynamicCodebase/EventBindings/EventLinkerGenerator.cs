@@ -1,11 +1,13 @@
 using SourceGen;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using UnityEditor;
 
-public class EventLinkerGenerator
+public static class EventLinkerGenerator
 {
-    private static string OutputPath => "Assets/Scripts/DynamicCodebase/EventBindings/";
+    private static string OutputPath => "Assets/Scripts/DynamicCodebase/EventBindings/EventLinkerExtension";
 
     [RunOnDomainReload]
     public static void RegenerateEventLinkerEvents()
@@ -13,6 +15,7 @@ public class EventLinkerGenerator
         List<BindEventAttribute> fields = new();
         List<string> fieldNames = new();
         List<string> fieldPaths = new();
+        int hash;
 
         // Get all the fields that should be replicated in the event linker
         foreach(var asm in AppDomain.CurrentDomain.GetAssemblies())
@@ -26,7 +29,6 @@ public class EventLinkerGenerator
                     {
                         if (IsValidType(member))
                         {
-                            UnityEngine.Debug.Log(member.Name + " has a valid type");
                             if (string.IsNullOrEmpty(attr.Name))
                                 throw new Exception("BindEvent name parameter cannot be empty : " + member.Name);
                             fields.Add(attr);
@@ -34,6 +36,13 @@ public class EventLinkerGenerator
                     }
                 }
             }
+        }
+
+        hash = fields.GetHashCode();
+        if (CheckFileForHashCode(OutputPath, hash))
+        {
+            UnityEngine.Debug.Log("Regeneration aborted");
+            return;
         }
 
         foreach (var field in fields)
@@ -49,14 +58,29 @@ public class EventLinkerGenerator
             fieldPaths.Add(field.Name);
         }
 
-        MakeFile(fieldNames, fieldPaths)
-            .ToFile(OutputPath + "EventLinkerExtension");
-
+        MakeFile(fieldNames, fieldPaths, hash)
+            .ToFile(OutputPath);
     }
 
-    private static SourceGenerator MakeFile(List<string> eventNames, List<string> eventPaths)
+    private static bool CheckFileForHashCode(string filePath, int hashcode)
+    {
+        if (!AssetDatabase.AssetPathExists(filePath))
+            return false;
+
+        string file = File.ReadAllText(filePath);
+        if (string.IsNullOrEmpty(file))
+            return false;
+        if (!file.Contains("<HASHCODE>"))
+            return false;
+
+        return true;
+    }
+
+    private static SourceGenerator MakeFile(List<string> eventNames, List<string> eventPaths, int hashcode=0)
     {
         ScriptGenerator result = new("EventLinkerExtension");
+
+        result.Comment("// <HASHCODE> " + hashcode.ToString());
 
         result.Using("UnityEngine");
         result.Using("UnityEngine.Events");

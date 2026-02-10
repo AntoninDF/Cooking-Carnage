@@ -119,6 +119,84 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &796927058
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 796927060}
+  - component: {fileID: 796927059}
+  m_Layer: 0
+  m_Name: EventLinker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &796927059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796927058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39c2bfcbff6043e4ca82a09c328913f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventLinker
+  displayedMembers: []
+  Action1:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 796927059}
+        m_TargetAssemblyTypeName: EventLinker, Assembly-CSharp
+        m_MethodName: Debug
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: It works omg
+          m_BoolArgument: 0
+        m_CallState: 2
+  Action2:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 796927059}
+        m_TargetAssemblyTypeName: EventLinker, Assembly-CSharp
+        m_MethodName: Debug
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: fgsnsfjn
+          m_BoolArgument: 0
+        m_CallState: 2
+  Action3:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &796927060
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796927058}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.5174, y: -0.16393, z: 1.39659}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &908952706
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,6 +206,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 908952708}
+  - component: {fileID: 908952709}
   m_Layer: 0
   m_Name: SourceGenTester
   m_TagString: Untagged
@@ -150,6 +229,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &908952709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908952706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cde375087ab3f44a805e44c99f17411, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TestEventBroadcaster
 --- !u!1001 &1207986005
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -158,6 +249,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4006072810798740669, guid: d82f395abc9fef94da56bb9fec18c5ec, type: 3}
+      propertyPath: _gameProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: 1aa0b1254b4dbc247996dc639f9f593a, type: 2}
     - target: {fileID: 5387191335642997874, guid: d82f395abc9fef94da56bb9fec18c5ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.44443
@@ -263,3 +358,4 @@ SceneRoots:
   - {fileID: 2013410475}
   - {fileID: 1207986005}
   - {fileID: 908952708}
+  - {fileID: 796927060}
