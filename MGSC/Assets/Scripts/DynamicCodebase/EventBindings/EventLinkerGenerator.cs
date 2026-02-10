@@ -2,6 +2,7 @@ using SourceGen;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 
@@ -12,6 +13,8 @@ public static class EventLinkerGenerator
     [RunOnDomainReload]
     public static void RegenerateEventLinkerEvents()
     {
+        float end;
+        float start = UnityEngine.Time.realtimeSinceStartup;
         List<BindEventAttribute> fields = new();
         List<string> fieldNames = new();
         List<string> fieldPaths = new();
@@ -38,13 +41,6 @@ public static class EventLinkerGenerator
             }
         }
 
-        hash = fields.GetHashCode();
-        if (CheckFileForHashCode(OutputPath, hash))
-        {
-            UnityEngine.Debug.Log("Regeneration aborted");
-            return;
-        }
-
         foreach (var field in fields)
         {
             string parsedName = field.Name.Split("/")[^1];
@@ -58,20 +54,54 @@ public static class EventLinkerGenerator
             fieldPaths.Add(field.Name);
         }
 
+        fieldPaths.Sort();
+        // UnityEngine.Debug.Log("Paths are : " + string.Join(", ", fieldPaths));
+        hash = string.Join(", ", fieldPaths).GetHashCode();
+
+
+        if (CheckFileForHashCode(OutputPath + ".cs", hash))
+        {
+            end = UnityEngine.Time.realtimeSinceStartup;
+            // UnityEngine.Debug.Log("Regeneration aborted after " + (end-start) + "s");
+            return;
+        }
+
         MakeFile(fieldNames, fieldPaths, hash)
             .ToFile(OutputPath);
+        end = UnityEngine.Time.realtimeSinceStartup;
+        // UnityEngine.Debug.Log("Generation made in " + (end - start) + "s");
     }
 
     private static bool CheckFileForHashCode(string filePath, int hashcode)
     {
+        string markup = "<HASHCODE>";
         if (!AssetDatabase.AssetPathExists(filePath))
             return false;
 
-        string file = File.ReadAllText(filePath);
-        if (string.IsNullOrEmpty(file))
+        string[] file = File.ReadAllLines(filePath);
+
+        string hashString = "";
+        foreach (var line in file)
+        {
+            if (line.Contains(markup))
+            {
+                hashString = line;
+                continue;
+            }
+        }
+        hashString = hashString.Replace("\n", "").Replace(" ", "").Replace(markup, "").Replace("//", "") ;
+        // UnityEngine.Debug.Log("Found HashString is " + hashString + ", generated hashcode is " + hashcode);
+
+        if (!int.TryParse(hashString, out int retrievedHash))
+        {
+            UnityEngine.Debug.LogWarning("Hashcode for '" + hashString + "' couldn't be read");
+            return true;
+        }
+        
+        if (retrievedHash != hashcode)
+        {
             return false;
-        if (!file.Contains("<HASHCODE>"))
-            return false;
+        }
 
         return true;
     }
@@ -80,7 +110,7 @@ public static class EventLinkerGenerator
     {
         ScriptGenerator result = new("EventLinkerExtension");
 
-        result.Comment("// <HASHCODE> " + hashcode.ToString());
+        result.Comment("<HASHCODE> " + hashcode.ToString());
 
         result.Using("UnityEngine");
         result.Using("UnityEngine.Events");

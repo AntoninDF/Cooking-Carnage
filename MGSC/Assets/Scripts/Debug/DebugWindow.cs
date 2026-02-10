@@ -175,7 +175,7 @@ public class DebugWindow : MonoBehaviour
 
         if (GUILayout.Button("Save and Reload"))
         {
-            var dm = ReferenceManager.Instance.GetManager<DataManager>();
+            var dm = Reference.GetManager<DataManager>();
             if(dm != null)
             {
                 DataManager.GameData data = new DataManager.GameData();

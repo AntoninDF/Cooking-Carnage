@@ -6,8 +6,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEditor;
 
+// REFACTO : Support references to individual objects, to retrieve their specific Actions without making a global scan.
+
 public partial class EventLinker : MonoBehaviour
 {
+    
     public List<string> displayedMembers;
     public static Action<object> OnRebind;
     //public List<string> options;
