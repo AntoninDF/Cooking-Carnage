@@ -1,6 +1,7 @@
 using Controller;
 using GameSystem;
 using System;
+using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,7 +11,7 @@ namespace Cooking
     /// The slot container can receive up to one IGrabbable object
     /// </summary>
     [RequireComponent(typeof(Collider))]
-    public class SlotContainer : MonoBehaviour, ISoloContainer, IWatchable
+    public class SlotContainer : MonoBehaviour, ISoloContainer, IWatchable, ICallbackBroadcaster
     {
         #region Properties
         public IGrabbable HeldItem { get => _heldItem; set { _heldItem = value; } }
@@ -33,6 +34,12 @@ namespace Cooking
         public ContainerFilter Filter => _filter;
 
         public bool IsLookedAt => Player.LookTarget == gameObject;
+
+        public bool Passthrough => false;
+
+        public bool EnableCallbacks { get; set ; }
+
+        public ICallbackBroadcaster Self => this;
         #endregion
 
         #region Fields
@@ -65,7 +72,7 @@ namespace Cooking
         void Start()
         {
             _collider = GetComponent<Collider>();
-            _filter = gameObject.GetComponent<ContainerFilter>();
+            _filter = GetComponent<ContainerFilter>();
         }
 
         protected virtual void Update()
@@ -73,96 +80,6 @@ namespace Cooking
             UpdateCollider();
             CheckIfLookedAt();
         }
-        protected virtual void CheckIfLookedAt()
-        {
-            bool lookedAt = (Player != null && Player.LookTarget == this.gameObject);
-            if (lookedAt && !_wasLookedAtThisFrame)
-                _onLookAt?.Invoke();
-            else if (!lookedAt && _wasLookedAtThisFrame)
-                _onStopLookAt?.Invoke();
-            _wasLookedAtThisFrame = lookedAt;
-        }
-
-        public virtual void Drop(IGrabbable item)
-        {
-            if (_heldItem == null || _heldItem != item) return;
-            Empty();
-            OnDrop?.Invoke(item);
-            OnDrop_Raw.Invoke();
-        }
-
-        public virtual void Empty()
-        {
-           _heldItem = null;
-        }
-
-        public virtual void Grab(IGrabbable item)
-        {
-            bool flowControl = GrabWithoutFeedback(item);
-            if (!flowControl)
-            {
-                return;
-            }
-
-            OnGrab?.Invoke(item);
-        }
-
-        public bool GrabWithoutFeedback(IGrabbable item)
-        {
-            if (!CanGrab(item))
-            {
-                return false;
-            }
-
-            if (_itemSlot == null)
-                throw new MissingReferenceException("Please reference the item slot's transform in this container slot's dedicated field : " + name);
-            _heldItem = item;
-
-            var itemAsItem = item as Plate;
-            if (itemAsItem != null)
-            {
-                itemAsItem.GetGrabbedWithoutFeedback(this);
-            }
-            else
-            {
-                item.GetGrabbed(this);
-            }
-            return true;
-        }
-
-        public virtual bool CanGrab(IGrabbable item)
-        {
-            if (_heldItem != null) return false;
-            if (_locked) return false;
-
-            if (_filter == null)
-                _filter = this.gameObject.GetComponent<ContainerFilter>();
-
-            if (_filter != null && item is MonoBehaviour)
-                if (!_filter.IsValid((MonoBehaviour)item))
-                {
-                    if (!(item is SlotContainer))
-                    {
-                        _onTryGrabIncorrectItem?.Invoke();
-                    }
-
-                    return false;
-                }
-            return true;
-        }
-
-        public virtual void GetGrabbed(IContainer newContainer)
-        {
-            if (newContainer == null) return;
-            Container = newContainer;
-            OnGrabbed?.Invoke();
-        }
-
-        public virtual void LookAt(PlayerInteractor interactor)
-        {
-            Player = interactor.Player;
-        }
-
         protected virtual void UpdateCollider()
         {
             if (_collider == null) return;
@@ -170,25 +87,34 @@ namespace Cooking
             if (_disableColliderIfHandEmpty)
                 SetActive(Player.HeldItem != null && !_locked);
         }
-
-        public virtual void SetAnimationMode(bool animate = true)
-        {
-        }
-        #endregion
-
-        protected enum ESlotFilter
-        {
-            All = 0,
-            Ingredient = 1,
-            MultiSlotContainer = 2
-        }
-
         public virtual void SetActive(bool active)
         {
             if (_collider == null)
                 _collider = GetComponent<Collider>();
             _collider.enabled = active;
         }
+        protected virtual void CheckIfLookedAt()
+        {
+            bool lookedAt = (Player != null && Player.LookTarget == this.gameObject);
+            if (lookedAt && !_wasLookedAtThisFrame)
+                Self.Callback(_onLookAt);
+            else if (!lookedAt && _wasLookedAtThisFrame)
+                Self.Callback(_onStopLookAt);
+            _wasLookedAtThisFrame = lookedAt;
+        }
+        public virtual void Empty() =>_heldItem = null;
+        /*
+        public virtual void GetGrabbedBy(IContainer newContainer)
+        {
+            if (newContainer == null) return;
+            Container = newContainer;
+            OnGrabbed?.Invoke();
+        }*/
+        public virtual void LookAt(PlayerInteractor interactor) => Player = interactor.Player;
+        
+        public virtual void SetAnimationMode(bool animate = true) { }
+        #endregion
+
 
         public virtual void SetFilter(params Filter[] filters)
         {
@@ -202,6 +128,68 @@ namespace Cooking
             }
             foreach (var filter in filters)
                 _filter.AddFilter(filter);
+        }
+
+        public bool RequestGrab(IGrabbable item)
+        {
+            return TryGrab(item);
+        }
+
+        public bool RequestDrop(IGrabbable item = null)
+        {
+            return TryDrop(item);
+        }
+        protected bool TryGrab(IGrabbable item)
+        {
+            if (!CanGrab(item))
+                return false;
+            Grab(item);
+            return true;
+        }
+        protected bool TryDrop(IGrabbable item = null)
+        {
+            if (!CanDrop(item))
+                return false;
+            Drop(item);
+            return true;
+        }
+        protected virtual void Grab(IGrabbable item)
+        {
+            _heldItem = item;
+            item.GetGrabbedBy(this);
+            Self.Callback(OnGrab, item);
+        }
+        protected virtual void Drop(IGrabbable item = null)
+        {
+            _heldItem = null;
+            Self.Callback(OnDrop, item);
+            Self.Callback(OnDrop_Raw);
+        }
+        public virtual bool CanGrab(IGrabbable item)
+        {
+            if (_heldItem != null) return false;
+            if (_locked) return false;
+            if (_itemSlot == null)
+
+                if ((_filter != null || TryGetComponent(out _filter)) && item is MonoBehaviour)
+                    if (!_filter.IsValid((MonoBehaviour)item))
+                    {
+                        if (!(item is SlotContainer))
+                        {
+                            Self.Callback(_onTryGrabIncorrectItem);
+                        }
+
+                        return false;
+                    }
+            return true;
+        }
+        public bool CanDrop(IGrabbable item = null)
+        {
+            if (IsLocked) return false;
+            if (HeldItem == null) return false;
+            if (HeldItem.IsLocked) return false;
+            // if (item != HeldItem) return false; // Uncomment this to make sure the right item to be dropped is requested. Otherwise it will drop whatever the requested item is
+            return true;
         }
     }
 

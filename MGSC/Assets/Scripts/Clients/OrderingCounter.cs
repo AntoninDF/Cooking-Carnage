@@ -19,10 +19,6 @@ namespace Clients
         [SerializeField] private SO_RecipeBook _recipeBook;
         [Tooltip("Should order tickets be spawned on order validation ? If not, the references are useless")]
         [SerializeField] private bool _spawnTickets;
-        [Tooltip("Prefab that will be instantiated as an order ticket")]
-        [SerializeField] private GameObject _ticketPrefab;
-        [Tooltip("Slot on which to put the order ticket")]
-        [SerializeField] private SlotContainer _ticketSlot;
 
         private OrderManager _orderManager;
 
@@ -52,36 +48,10 @@ namespace Clients
                 Debug.LogError("[OrderingCounter] AcceptOrder : The newly created order was null. Please look into that");
             }
             _currentClient.AcceptOrder(newOrder);
-            if (_spawnTickets)
-            {
-                OrderTicket ticket = MakeTicket(newOrder);
-                StoreTicket(ticket);
-            }
             Free();
         }
 
-        private OrderTicket MakeTicket(Order order)
-        {
-            if (_ticketPrefab == null)
-                Debug.LogError("[OrderingCounter] : The ticket prefab's reference is missing, please assign it in the inspector");
-            GameObject go = Instantiate(_ticketPrefab);
-            OrderTicket ticket = go.GetComponent<OrderTicket>();
-            if (ticket == null)
-                Debug.LogError("[OrderingCounter] : The ticket prefab's OrderTicket component is missing. Please make sure there is one on the root object");
-            ticket.SetTargetOrder(order);
-
-            return ticket;
-        }
-
-        private void StoreTicket(OrderTicket ticket)
-        {
-            if (_ticketSlot == null)
-                Debug.LogError("[OrderingCounter] : The ticket slot's reference is missing, please assign it in the inspector");
-            ticket.SetAnimationMode(false);
-            _ticketSlot.Drop(_ticketSlot.HeldItem);
-            _ticketSlot.Grab(ticket);
-        }
-
+     
         /// <summary>
         /// Defines what order should be asked by the client. Can be modified to take the context into account.
         /// </summary>

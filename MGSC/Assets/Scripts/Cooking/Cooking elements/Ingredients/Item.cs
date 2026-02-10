@@ -12,7 +12,7 @@ namespace Cooking
     /// Adds every necessary item behaviour
     /// </summary>
     [RequireComponent(typeof(Collider))]
-    public class Item : MonoBehaviour, IGrabbable, IWatchable
+    public class Item : MonoBehaviour, IGrabbable, IWatchable, ICallbackBroadcaster
     {
         #region Properties
 
@@ -25,7 +25,11 @@ namespace Cooking
         public bool IsLookedAt => Player.LookTarget == gameObject;
 
         public string ID => UpdateID();
-   
+
+        public bool EnableCallbacks { get; set; }
+
+        public ICallbackBroadcaster Self => this;
+
         #endregion
 
         #region Fields
@@ -98,10 +102,10 @@ namespace Cooking
             transform.rotation = _defaultRotation;
         }
 
-        public void GetGrabbed(IContainer newContainer)
+        public void GetGrabbedBy(IContainer newContainer)
         {
             
-            Container?.Drop(this);
+            Container?.RequestDrop(this);
          
             Container = newContainer;
             if (newContainer is ISoloContainer)
@@ -113,20 +117,7 @@ namespace Cooking
             {
                 transform.parent = newContainer.transform;
             }
-            OnGrabbed?.Invoke();
-            GrabAnimation(!_animate);
-        }
-        public void GetGrabbedWithoutFeedback(IContainer newContainer)
-        {
-            Container?.Drop(this);
-            Container = newContainer;
-            if (newContainer is ISoloContainer)
-            {
-                ISoloContainer soloContainer = (ISoloContainer)newContainer;
-                transform.SetParent(soloContainer.ItemSlot);
-            }
-            else
-                transform.parent = newContainer.transform;
+            Self.Callback(OnGrabbed);
             GrabAnimation(!_animate);
         }
 

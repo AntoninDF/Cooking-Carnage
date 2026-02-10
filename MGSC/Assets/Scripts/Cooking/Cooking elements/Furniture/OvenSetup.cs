@@ -46,7 +46,7 @@ namespace Cooking
                 GameObject go = Instantiate(_ovenPrefab);
                 go.name = "Oven n°" + i + " (" + Time.time + ")";
                 Oven oven = go.GetComponent<Oven>();
-                _slots[i].Grab(oven);
+                _slots[i].TryGrab(oven);
                 Reference.TryAdd(oven);
             }
         }

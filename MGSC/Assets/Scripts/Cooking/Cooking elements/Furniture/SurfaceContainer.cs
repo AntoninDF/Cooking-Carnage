@@ -16,6 +16,7 @@ namespace Cooking
         public UnityEvent<IGrabbable> OnGrab => _onGrab;
         public UnityEvent<IGrabbable> OnDrop => _onDrop;
         public List<IGrabbable> HeldItems => _items;
+        public IGrabbable HeldItem => _items == null ? null : _items.Count > 0 ? _items[0] : null;
         public int MaxItemCount => _maxItemCount;
         public bool IsLocked => false;
         #endregion
@@ -44,7 +45,7 @@ namespace Cooking
             if (_items.Contains(item)) return;
 
             _items.Add(item);
-            item.GetGrabbed(this);
+            item.GetGrabbedBy(this);
             OnGrab?.Invoke(item);
         }
         

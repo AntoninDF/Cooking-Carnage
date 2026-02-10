@@ -166,7 +166,7 @@ namespace Clients
             foreach (var slot in _slotsToSpawn)
             {
                 if (!slot.IsFree) continue;
-                slot.Grab(item);
+                slot.TryGrab(item);
                 item.transform.position = slot.transform.position;
                 couldBePlaced = true;
                 break;

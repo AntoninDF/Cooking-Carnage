@@ -149,7 +149,7 @@ namespace Cooking
             Container.Empty();
             if (Container is EnglobingSlotContainer sc)
             {
-                sc.GrabWithoutFeedback(meal);
+                sc.TryGrab(meal);
             }
             else
                 Container.Grab(meal);

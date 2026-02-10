@@ -78,9 +78,9 @@ namespace Cooking
                         Item item = go.GetComponent<Item>();
                         item.SetAnimationMode(false);
                         if (!enableFeedbacks)
-                            slot.GrabWithoutFeedback(item);
+                            slot.TryGrab(item);
                         else
-                            slot.Grab(item);
+                            slot.TryGrab(item);
 
                         item.transform.position = slot.transform.position;
                         break;

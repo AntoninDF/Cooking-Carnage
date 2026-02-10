@@ -42,7 +42,7 @@ namespace Cooking
         public void Grab(IGrabbable item)
         {
             if (!CanGrab(item)) return;
-            item.GetGrabbed(this);
+            item.GetGrabbedBy(this);
             OnGrab?.Invoke(item);
             Dispose(item);
         }

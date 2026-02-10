@@ -177,7 +177,7 @@ namespace Cooking
                 (item as ICookable).StopCooking();
         }
 
-        public virtual void GetGrabbed(IContainer newContainer)
+        public virtual void GetGrabbedBy(IContainer newContainer)
         {
             if (newContainer is not SlotContainer) return;
             Container?.Drop(this);
