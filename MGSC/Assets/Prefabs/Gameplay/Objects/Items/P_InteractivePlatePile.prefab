@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1988903365140035185
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1203302186578192290}
+  - component: {fileID: 6768961698933838680}
+  - component: {fileID: 6280471646875775109}
+  - component: {fileID: 7685374054215512189}
+  m_Layer: 0
+  m_Name: P_InteractivePlatePile
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1203302186578192290
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988903365140035185}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.44544, y: 0, z: 3.83454}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6768961698933838680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988903365140035185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5079cf5dd485b5c4795ee73928561e44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlatePile
+  _platePrefab: {fileID: 8748648943628484965, guid: 41f1052143ccdf74281052a219d3de9a, type: 3}
+--- !u!114 &6280471646875775109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988903365140035185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 978e948a9e3139247a7bfbf4a3234284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPile
+  _objectCount: 0
+  _prefabs:
+  - {fileID: 4652849889307841505, guid: 41f1052143ccdf74281052a219d3de9a, type: 3}
+  _padding: 0
+  _offsetFromCenter: 0.06
+  _yawRotationRange: 1
+  _pitchRotationRange: 0.1
+  _minScale: {x: 1, y: 1, z: 1}
+  _maxScale: {x: 1, y: 1, z: 1}
+  _seed: 415598073
+  _allowChildDeletion: 1
+  _regenerateEverything: 0
+  _objectCountWarningThreshold: 500
+  _objectCountErrorThreshold: 1000
+--- !u!136 &7685374054215512189
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988903365140035185}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.35
+  m_Height: 5.188878
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.594439, z: 0}

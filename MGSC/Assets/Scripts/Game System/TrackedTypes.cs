@@ -1,16 +1,16 @@
 using Clients;
 using Controller;
 using Cooking;
+using GameSystem;
 using UI;
 
-namespace GameSystem
+
+public static class TrackedTypes
 {
-    public static class TrackedTypes
+    public static System.Type[] GetTypes()
     {
-        public static System.Type[] GetTypes()
+        return new System.Type[]
         {
-            return new System.Type[]
-            {
             // Add types to be tracked here
 
             typeof(OrderingCounter),
@@ -34,8 +34,7 @@ namespace GameSystem
             typeof(ItemSpawner),
             typeof(Blender)
 
-                // ...
-            };
-        }
+            // ...
+        };
     }
 }

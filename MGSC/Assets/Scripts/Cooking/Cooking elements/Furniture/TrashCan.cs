@@ -6,12 +6,20 @@ using UnityEngine.Events;
 namespace Cooking
 {
 
-    public class TrashCan : Interactable, IContainer
+    public class TrashCan : MonoBehaviour, IContainer, ICallbackBroadcaster
     {
         #region Properties
+        public PlayerInterface Player {  get; set; }
         public UnityEvent<IGrabbable> OnGrab => _onGrab;
         public UnityEvent<IGrabbable> OnDrop => null; // The trashcan never drops anything for now
-        public bool IsLocked => false;
+        public bool IsLocked { get; set; }
+        public bool Passthrough => false;
+        public IGrabbable HeldItem => null; // No item can ever be retrieved from the trashcan
+
+        public bool EnableCallbacks { get; set; }
+
+        public ICallbackBroadcaster Self => this;
+
         #endregion
 
         #region Fields
@@ -28,37 +36,39 @@ namespace Cooking
             Reference.GetManager(out _itemManager);
         }
 
+        public bool RequestGrab(IGrabbable item) => TryGrab(item);
+        public bool RequestDrop(IGrabbable item) => TryDrop(item);
+
         public bool CanGrab(IGrabbable item)
         {
             if (item is not ITrashable) return false;
-            //(item as ITrashable).Dispose();
             return true;
         }
-
-        public void Drop(IGrabbable item) { }
-        
+        public bool CanDrop(IGrabbable item) => false; // No item can ever come out of the trashcan
         public void Empty() { }
-
-        public void Grab(IGrabbable item)
+        protected bool TryGrab(IGrabbable item)
         {
-            if (!CanGrab(item)) return;
+            if (!CanGrab(item))
+                return false;
+            Grab(item);
+            return true;
+        }
+        protected bool TryDrop(IGrabbable item)
+        {
+            if (!CanDrop(item))
+                return false;
+            Drop(item);
+            return true;
+        }
+        protected void Grab(IGrabbable item)
+        {
             item.GetGrabbedBy(this);
-            OnGrab?.Invoke(item);
+            Self.Callback(OnGrab, item);
             Dispose(item);
         }
+        protected void Drop(IGrabbable item) { }
 
-        public override void Interact(PlayerInteractor interactor)
-        {
-            base.Interact(interactor);
-
-            Debug.Log("Interacting");
-            if (interactor.HeldItem == null) return;
-            if (!CanGrab(interactor.HeldItem)) return;
-            Grab(interactor.HeldItem);
-            interactor.Drop();
-        }
-
-        private void Dispose(IGrabbable item)
+        protected void Dispose(IGrabbable item)
         {
             _itemManager.Despawn(item as Item);
         }

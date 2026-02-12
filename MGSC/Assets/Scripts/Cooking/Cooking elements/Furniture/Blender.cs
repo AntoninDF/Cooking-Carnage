@@ -10,7 +10,7 @@ namespace Cooking
 {
 
 
-    public class Blender : MonoBehaviour, IInteractable, IWatchable
+    public class Blender : MonoBehaviour, IInteractable, IWatchable, ICallbackBroadcaster
     {
         #region Properties
         public float CutDuration { get => _cutDuration; set { _cutDuration = value; } }
@@ -25,7 +25,9 @@ namespace Cooking
         public bool IsLookedAt => Player.LookTarget == gameObject;
         public UnityEvent OnLookAt { get; }
         public UnityEvent OnStopLookAt { get; }
-        public bool Locked { get; set; }
+        public bool IsLocked { get; set; }
+        public bool EnableCallbacks { get; set; }
+        public ICallbackBroadcaster Self => this;
 
         #endregion
 
@@ -79,9 +81,7 @@ namespace Cooking
         }
         private void Start()
         {
-            if (_slotContainer == null)
-                _slotContainer = GetComponent<SlotContainer>();
-            if (_slotContainer == null)
+            if (_slotContainer == null && !TryGetComponent(out _slotContainer))
                 throw new MissingReferenceException("[Blender] : Missing reference for the slot container. Please assign it in the inspector");
 
             _slotContainer.SetFilter(new Filter(EFilterCondition.MustBe, EItemType.Ingredient));
@@ -92,42 +92,40 @@ namespace Cooking
 
         }
 
-        public void Interact(PlayerInteractor interactor)
+        public bool RequestInteraction(PlayerInteractor interactor)
         {
-            if (Locked) {_onFailedInteraction?.Invoke(); return;}
-
-            if (!(_slotContainer != null && _slotContainer.HeldItem != null))
+            if (
+                IsLocked ||
+                _slotContainer == null || 
+                _slotContainer.HeldItem == null ||
+                _slotContainer.HeldItem is not Ingredient ingredient ||
+                ingredient.IsCut
+                )
             {
-                if (!interactor.ItemSlot.GetComponentInChildren<Ingredient>())
-                {
-                    _onFailedInteraction?.Invoke();
-                }
+                ingredient = _slotContainer.HeldItem as Ingredient;
+                Debug.Log("IsLocked : " + IsLocked);
+                Debug.Log("SlotContainer : " + (_slotContainer == null ? "null" : "not null"));
+                Debug.Log("Held item : " + _slotContainer?.HeldItem);
+                if (ingredient != null) Debug.Log("Ingredient is cut : " + (ingredient.IsCut?"yup":"nope") );
+                Self.Callback(_onFailedInteraction);
+                return false;
+            }
+            Interact(ingredient);
+            return true;
+        }
 
-                return;
-            }
-
-            if (_slotContainer.HeldItem is not Ingredient ingredient)
-            {
-                _onFailedInteraction?.Invoke();return;
-            }
-
-            if (!ingredient.IsCut)
-            {
-                _isCutting = true;
-                _timerManager.StartTimer("Cutting", _cutDuration, () => TryCutIngredient(ingredient));
-                _onInteract?.Invoke();
-            }
-            else
-            {
-                _onFailedInteraction?.Invoke();
-            }
+        protected void Interact(Ingredient ingredient)
+        {
+            _isCutting = true;
+            _timerManager.StartTimer("Cutting", _cutDuration, () => TryCutIngredient(ingredient));
+            Self.Callback(_onInteract);
         }
 
         private void TryCutIngredient(Ingredient ingredient)
         {
-            if (Locked) return;
+            if (IsLocked) return;
             ingredient.Cut();
-            _onItemCut?.Invoke();
+            Self.Callback(_onItemCut);
             _isCutting = false;
         }
 
@@ -158,7 +156,7 @@ namespace Cooking
         {
             if (_tooltip == null)
                 throw new MissingReferenceException("Please reference the tooltip gameobject in the inspector of " + name);
-            if (Player == null || !IsLookedAt || Locked)
+            if (Player == null || !IsLookedAt || IsLocked)
             {
                 if (_wasLookedAtThisFrame) StopLookAt();
                 _wasLookedAtThisFrame = false;

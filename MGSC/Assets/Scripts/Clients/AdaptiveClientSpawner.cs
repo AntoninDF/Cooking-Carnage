@@ -86,6 +86,7 @@ namespace GameSystem
             counters = Reference.GetAll<OrderingCounter>();
 
             Reference.GetManager(out _timerManager);
+            Reference.GetManager(out _clientManager);
             _timerManager.StartTimer( "AdaptiveClientSpawner Init", 1, () => Launch(),true);
 
             if (models.Count <= 0 || !spline || counters.Count <= 0)

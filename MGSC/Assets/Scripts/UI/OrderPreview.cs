@@ -50,10 +50,13 @@ namespace UI
 
         #region Methods
 
-        private void Start()
+        private void Awake()
         {
             Reference.GetManager(out _timerManager);
             Reference.GetManager(out _orderManager);
+        }
+        private void Start()
+        {
             Subscribe();
             ResetSprites();
         }
@@ -102,7 +105,7 @@ namespace UI
                 _priceText.UpdateUI();
         }
 
-        public void Reset()
+        public void ResetPreview()
         {
             ResetSprites();
             _currentOrder = null;
@@ -137,7 +140,7 @@ namespace UI
             if (_timerManager != null && _resetDelay != 0)
             {
                 //Debug.Log("[OrderPreview] : Timer started for resetting the order");
-                _timerManager.StartTimer("ResetOrderPreview", _resetDelay, Reset);
+                _timerManager.StartTimer("ResetOrderPreview", _resetDelay, ResetPreview);
             }
 
         }
@@ -146,7 +149,7 @@ namespace UI
         {
             if (order == _currentOrder)
             {
-                Reset();
+                ResetPreview();
             }
         }
 

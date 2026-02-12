@@ -36,22 +36,27 @@ namespace Cooking
 
         private void Start()
         {
-            Reset();
-            Reference.GetManager(out _itemManager);
+            if (!Reference.TryGetManager(out _itemManager))
+                Debug.LogWarning("Item manager is null");
             if (Reference.TryGetManager(out _shiftManager))
-                _shiftManager.OnNextShift += Reset;
+                _shiftManager.OnNextShift += ResetContent;
+
+            ResetContent();
         }
 
-        private void Reset()
+        private void ResetContent()
         {
+            foreach (var slot  in _slotsToSpawn)
+            {
+                slot.Empty();
+            }
             for (int i = 0; i < _startSpawnIterations; i++)
                 Spawn(false);
         }
 
-        public override void Interact(PlayerInteractor interactor)
+        public override bool RequestInteraction(PlayerInteractor interactor)
         {
-            base.Interact(interactor);
-            //TrySpawn();
+            return base.RequestInteraction(interactor);
         }
 
         public void TrySpawn()
@@ -68,6 +73,7 @@ namespace Cooking
         {
             foreach (var request in _itemsToSpawn)
             {
+                if (request.item == null) continue;
                 for (int i = 0; i < request.count; i++)
                 {
                     foreach (var slot in _slotsToSpawn)
@@ -78,9 +84,9 @@ namespace Cooking
                         Item item = go.GetComponent<Item>();
                         item.SetAnimationMode(false);
                         if (!enableFeedbacks)
-                            slot.TryGrab(item);
+                            slot.RequestGrab(item);
                         else
-                            slot.TryGrab(item);
+                            slot.RequestGrab(item);
 
                         item.transform.position = slot.transform.position;
                         break;

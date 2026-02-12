@@ -57,9 +57,6 @@ namespace GameSystem
 
             if (_gameProfile.RequireGameLoop) MakeGameLoop();
 
-            // Instantiate the scene and create all the MonoBehaviour managers
-            if (_gameProfile.ApplyScenePreset) ApplyScenePreset();
-
             // Create all the pure managers
             new OrderManager();
             new ClientManager();
@@ -71,6 +68,10 @@ namespace GameSystem
             new DataManager();
             new CameraManager();
             new ItemManager();
+
+            // Instantiate the scene and create all the MonoBehaviour managers
+            if (_gameProfile.ApplyScenePreset) ApplyScenePreset();
+
             if (_gameProfile.AddUI) AddUI();
 
             // Create the player

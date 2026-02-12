@@ -236,7 +236,7 @@ PrefabInstance:
       addedObject: {fileID: -7821848794721809751}
     - targetCorrespondingSourceObject: {fileID: 3978166520960264976, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3748617520161028150}
+      addedObject: {fileID: 4820131973737151873}
   m_SourcePrefab: {fileID: 100100000, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
 --- !u!114 &1416181204408684860 stripped
 MonoBehaviour:
@@ -360,7 +360,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3978166520960264976, guid: 1cdd0233d3d88bb48a46a22107dba3f7, type: 3}
   m_PrefabInstance: {fileID: 6564926722106544496}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3748617520161028150
+--- !u!114 &4820131973737151873
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -369,14 +369,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7795176034945563232}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43a6743ed658de544824c378fe691ddd, type: 3}
+  m_Script: {fileID: 11500000, guid: 63a59fd62de223d418de0c80dab5994c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cooking.EnglobingSlotContainer
+  m_EditorClassIdentifier: Assembly-CSharp::Cooking.SlotContainer
   OnDrop_Raw:
     m_PersistentCalls:
       m_Calls: []
   _disableColliderIfHandEmpty: 0
   _itemSlot: {fileID: 8134891405955228977}
+  _allowPassthrough: 1
   _onGrab:
     m_PersistentCalls:
       m_Calls:
@@ -486,7 +487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72379fe7d59851242ba51b79b045ab07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.Oven2
-  _slot: {fileID: 3748617520161028150}
+  _slot: {fileID: 4820131973737151873}
   _door: {fileID: 0}
   _strength: 1
   _requireClosedDoor: 0

@@ -115,7 +115,7 @@ namespace Clients
         private void DespawnMeal(IGrabbable item)
         {
             _mealSlot.IsLocked = false;
-            _mealSlot.Drop(item);
+            _mealSlot.RequestDrop(item);
             Meal meal = item as Meal;
             _itemManager.Despawn(meal,true);
         }
@@ -166,7 +166,7 @@ namespace Clients
             foreach (var slot in _slotsToSpawn)
             {
                 if (!slot.IsFree) continue;
-                slot.TryGrab(item);
+                slot.RequestGrab(item);
                 item.transform.position = slot.transform.position;
                 couldBePlaced = true;
                 break;

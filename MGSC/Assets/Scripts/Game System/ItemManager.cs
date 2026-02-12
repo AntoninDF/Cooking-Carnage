@@ -248,7 +248,7 @@ public class ItemManager : IManager
         itemToStore.OnDisable();
         itemToStore.transform.parent = _itemsPooled;
         if (itemToStore.Container != null)
-            itemToStore.Container.Drop(itemToStore);
+            itemToStore.Container.RequestDrop(itemToStore);
         UpdateActiveList(itemToStore);
         
         if (reset || spawnItems.Contains(itemToStore))

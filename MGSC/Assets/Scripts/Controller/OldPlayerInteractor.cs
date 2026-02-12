@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
+/*
 namespace Controller
 {
 
@@ -90,7 +91,7 @@ namespace Controller
                 Component target;
                 if (LookTargetImplements<IWatchable>(out target))
                 {
-                    ((IWatchable)target).LookAt(this);
+                    ((IWatchable)target).LookAt(null);
                 }
                 Component container;
                 if (LookTargetImplements<IContainer>(out container))
@@ -111,8 +112,8 @@ namespace Controller
             Component target;
             if (!LookTargetImplements<IInteractable>(out target)) return;
 
-            ((IInteractable)target).Interact(this);
-            OnInteract?.Invoke(this);
+            ((IInteractable)target).Interact(null);
+            OnInteract?.Invoke(null);
         }
 
         /// <summary>
@@ -166,7 +167,7 @@ namespace Controller
                 }
                 if (container != null)
                 {
-                    container.Grab(t);
+                    container.RequestGrab(t);
                 }
             }
 
@@ -195,7 +196,7 @@ namespace Controller
             if (!CanGrab(item)) return;
 
             _grabbedItemThisFrame = true;
-            item.GetGrabbedBy(this);
+            item.GetGrabbedBy(null);
             _heldItem = item;
             _heldItem.Collider.enabled = false;
             if (item is Item obj) obj.Player = this.Player;
@@ -224,7 +225,7 @@ namespace Controller
                     container =  multislot.GetFirstAvailableSlot() as IContainer;
                     if (container!=null)
                     {
-                        container.Grab(_heldItem);
+                        container.RequestGrab(_heldItem);
                     }
                     // REFACTO - TO DO : Implement overlap checking. Return if there is an overlap, otherwise continue
                 }
@@ -232,7 +233,7 @@ namespace Controller
             }
             
             //Finally grab
-            container.Grab(_heldItem);
+            container.RequestGrab(_heldItem);
         }
 
         public void Drop()
@@ -263,3 +264,4 @@ namespace Controller
     }
 
 }
+*/

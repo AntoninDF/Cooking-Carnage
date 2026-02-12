@@ -1,8 +1,5 @@
 ﻿using Controller;
-using System.Net;
-using System.Runtime.InteropServices.WindowsRuntime;
 using GameSystem;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -20,6 +17,7 @@ namespace Cooking
         public UnityEvent OnItemDropped => _slot.OnDrop_Raw;
         public bool IsCooking => _isCooking;
         public float Strength => _strength;
+        public bool IsLocked { get; set; }
 
         public IContainer Container { get; set; }
 
@@ -180,7 +178,7 @@ namespace Cooking
         public virtual void GetGrabbedBy(IContainer newContainer)
         {
             if (newContainer is not SlotContainer) return;
-            Container?.Drop(this);
+            Container?.RequestDrop(this);
             Container = newContainer;
             if (newContainer is ISoloContainer)
             {

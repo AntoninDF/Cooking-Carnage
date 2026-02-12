@@ -1,4 +1,4 @@
-// <HASHCODE> -1024517996
+// <HASHCODE> 547362025
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
@@ -8,9 +8,11 @@ public partial class EventLinker : MonoBehaviour
 	new() {
 		"Action1",
 		"Action2",
-		"Action3"
+		"Action3",
+		"Player/OnInteract"
 	};
 	public UnityEvent Action1;
 	public UnityEvent Action2;
 	public UnityEvent Action3;
+	public UnityEvent OnInteract;
 }

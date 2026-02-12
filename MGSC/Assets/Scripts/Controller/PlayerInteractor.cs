@@ -1,6 +1,7 @@
 using Cooking;
 using GameSystem;
 using System;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -51,7 +52,6 @@ namespace Controller
 
         private PlayerInterface _playerInterface;
         private IGrabbable _heldItem;
-        private bool _grabbedItemThisFrame;
         private RaycastHit[] _lookedAtObjects;
         private TimerManager _timerManager;
 
@@ -73,6 +73,10 @@ namespace Controller
 
             Reference.GetManager(out _timerManager);
         }
+        void Update()
+        {
+            UpdateLookInfo();
+        }
 
         public Transform GetLookTransform() => Camera.main.transform;
         public RaycastHit[] GetLookedAtObjects() => _lookedAtObjects;
@@ -84,19 +88,26 @@ namespace Controller
         {
             LookContainer = null;
             RaycastHit[] allHits;
-            RaycastHit hit;
+            RaycastHit closestHit = new();
             allHits = Physics.RaycastAll(GetLookTransform().position, GetLookTransform().rotation * Vector3.forward);
-            if (allHits.Length > 0 && allHits[0].distance <= _reachDistance)
+
+            // Get the closest hit by distance
+            foreach(RaycastHit hit in allHits)
             {
-                hit = allHits[0];
-                LookInfo = hit;
+                if (closestHit.collider == null) closestHit = hit;
+                if (hit.distance < closestHit.distance) closestHit = hit;
+            }
+
+            if (closestHit.collider != null && closestHit.distance <= _reachDistance)
+            {
+                LookInfo = closestHit;
                 LookTarget = LookInfo.collider.gameObject;
-                Component target;
+                Behaviour target;
                 if (LookTargetImplements<IWatchable>(out target))
                 {
                     ((IWatchable)target).LookAt(this);
                 }
-                Component container;
+                Behaviour container;
                 if (LookTargetImplements<IContainer>(out container))
                 {
                     LookContainer = container as IContainer;
@@ -114,13 +125,13 @@ namespace Controller
         /// </summary>
         /// <param name="interactable">The interactable that the player is looking at</param>
         /// <returns></returns>
-        private bool LookTargetImplements<T>(out Component component) where T : IGeneric<T>
+        private bool LookTargetImplements<T>(out Behaviour component) where T : IGeneric<T>
         {
             if (LookTarget != null)
             {
-                foreach (var comp in LookTarget.GetComponents<Component>())
+                foreach (var comp in LookTarget.GetComponents<Behaviour>())
                 {
-                    if (comp is T)
+                    if (comp is T && comp.isActiveAndEnabled)
                     {
                         component = comp;
                         return true;
@@ -151,11 +162,6 @@ namespace Controller
             // Check if this container can grab the item
             if (!CanGrab(item))
                 return false;
-            // Check if the item's container is ok to drop it's item
-            if (item.Container != null)
-            {
-                if (!item.Container.CanDrop(item)) return false;
-            }
 
             Grab(item);
             return true;
@@ -171,6 +177,7 @@ namespace Controller
         {
             Self.Callback(OnGrab, item);
             _heldItem = item;
+            Debug.Log("The previous container for the grabbed object is " + item.Container);
             item.Container?.RequestDrop(item);
             item.GetGrabbedBy(this);
         }
@@ -191,10 +198,13 @@ namespace Controller
         }
         public bool CanGrab(IGrabbable item)
         {
+            if (HeldItem != null) return false;
             if (item == null) return false;
             if (item.IsLocked) return false;
-            if (item.Container.IsLocked) return false;
             if (IsLocked) return false;
+            if (item.Container != null)
+                if (!item.Container.CanDrop(item))
+                    return false;
             return true;
         }
         public bool CanDrop(IGrabbable item)
@@ -210,27 +220,37 @@ namespace Controller
         private void TryPlayerAction(InputAction.CallbackContext ctx) => TryPlayerAction();
         private bool TryPlayerAction()
         {
-            Component comp;
+            Behaviour comp;
             if (LookTargetImplements<IInteractable>(out comp))
             {
-                (comp as IInteractable).Interact(this);
-                Self.Callback(OnInteract, this);
+                Debug.Log("Trying to interact with INTERACTABLE");
+                if ((comp as IInteractable).RequestInteraction(this))
+                {
+                    Self.Callback(OnInteract, this);
+                    return true;
+                }
             }
             if (LookTargetImplements<IGrabbable>(out comp))
             {
-                RequestGrab(comp as IGrabbable);
+                Debug.Log("Trying to interact with GRABBABLE");
+                if (RequestGrab(comp as IGrabbable))
+                    return true;
             }
             if (LookTargetImplements<IContainer>(out comp))
             {
+                Debug.Log("Trying to interact with CONTAINER");
                 var container = comp as IContainer;
                 if (container.Passthrough)
                 {
-                    RequestGrab(container.HeldItem);
+                    if (RequestGrab(container.HeldItem))
+                        return true;
                 }
                 else
                 {
-                    container.RequestGrab(_heldItem);
+                    if (container.RequestGrab(_heldItem))
+                        return true;
                 }
+                
             }
             return false;
         }

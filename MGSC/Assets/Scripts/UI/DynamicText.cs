@@ -33,18 +33,22 @@ namespace UI
         #endregion
 
         #region Methods
+        private void Awake()
+        {
+            if (!Reference.TryGetManager(out _dataManager)) Debug.LogWarning("[Dynamic text] Start : No datamanager found");
+        }
         private void Start()
         {
             if (_textObject == null) _textObject = GetComponent<TMP_Text>();
-            Reference.GetManager(out _dataManager);
         }
-        private void FixedUpdate()
+        private void Update()
         {
             UpdateUI();
         }
 
         public void UpdateUI()
         {
+            if (!isActiveAndEnabled) return;
             if (_textObject == null) return;
             if (_dataManager == null)
             {

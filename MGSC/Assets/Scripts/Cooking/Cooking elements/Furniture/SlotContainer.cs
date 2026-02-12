@@ -35,7 +35,7 @@ namespace Cooking
 
         public bool IsLookedAt => Player.LookTarget == gameObject;
 
-        public bool Passthrough => false;
+        public bool Passthrough => _allowPassthrough;
 
         public bool EnableCallbacks { get; set ; }
 
@@ -49,6 +49,8 @@ namespace Cooking
         [Header("Slot references")]
         [Tooltip("Transform designating where the contained item should go")]
         [SerializeField] protected Transform _itemSlot;
+        [Tooltip("If passthrough is allowed, the detained item can be grabbed by interacting with this container instead of with the item directly. This is useful if the item's collider is blocked by the container's collider.")]
+        [SerializeField] protected bool _allowPassthrough;
         [Space]
         [Header("Slot events")]
         [Tooltip("Invoked when an item is put into the slot")]
@@ -65,6 +67,7 @@ namespace Cooking
         protected ContainerFilter _filter;
         protected bool _locked;
         protected bool _wasLookedAtThisFrame;
+        protected ItemManager _itemManager;
         #endregion
 
         #region Methods
@@ -73,6 +76,7 @@ namespace Cooking
         {
             _collider = GetComponent<Collider>();
             _filter = GetComponent<ContainerFilter>();
+            Reference.GetManager(out _itemManager);
         }
 
         protected virtual void Update()
@@ -102,14 +106,11 @@ namespace Cooking
                 Self.Callback(_onStopLookAt);
             _wasLookedAtThisFrame = lookedAt;
         }
-        public virtual void Empty() =>_heldItem = null;
-        /*
-        public virtual void GetGrabbedBy(IContainer newContainer)
+        public virtual void Empty()
         {
-            if (newContainer == null) return;
-            Container = newContainer;
-            OnGrabbed?.Invoke();
-        }*/
+            if (_heldItem is Item item)
+                _itemManager.Despawn(item, false);
+        }
         public virtual void LookAt(PlayerInteractor interactor) => Player = interactor.Player;
         
         public virtual void SetAnimationMode(bool animate = true) { }
@@ -132,6 +133,7 @@ namespace Cooking
 
         public bool RequestGrab(IGrabbable item)
         {
+            //Debug.Log("SlotContainer " + name + " sends a grab request" + (item is Behaviour go ? " to item '" + go.name + "'" : ""));
             return TryGrab(item);
         }
 
@@ -156,6 +158,7 @@ namespace Cooking
         protected virtual void Grab(IGrabbable item)
         {
             _heldItem = item;
+            item.Container?.RequestDrop(item);
             item.GetGrabbedBy(this);
             Self.Callback(OnGrab, item);
         }
@@ -167,20 +170,24 @@ namespace Cooking
         }
         public virtual bool CanGrab(IGrabbable item)
         {
+            if (item == null) return false;
             if (_heldItem != null) return false;
-            if (_locked) return false;
-            if (_itemSlot == null)
-
-                if ((_filter != null || TryGetComponent(out _filter)) && item is MonoBehaviour)
-                    if (!_filter.IsValid((MonoBehaviour)item))
+            if (IsLocked) return false;
+            if ((_filter != null || TryGetComponent(out _filter)) && item is MonoBehaviour)
+            {
+                if (!_filter.IsValid((MonoBehaviour)item))
+                {
+                    if (!(item is SlotContainer))
                     {
-                        if (!(item is SlotContainer))
-                        {
-                            Self.Callback(_onTryGrabIncorrectItem);
-                        }
-
-                        return false;
+                        Self.Callback(_onTryGrabIncorrectItem);
                     }
+
+                    return false;
+                }
+            }
+            if (item.Container != null)
+                if (!item.Container.CanDrop(item))
+                    return false;
             return true;
         }
         public bool CanDrop(IGrabbable item = null)

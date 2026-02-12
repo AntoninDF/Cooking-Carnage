@@ -103,6 +103,14 @@ namespace Cooking
             }
             return null;
         }
+        public SlotContainer GetFirstAvailableSlot(IGrabbable item)
+        {
+            foreach(SlotContainer slot in _slots)
+            {
+                if (slot.CanGrab(item)) return slot;
+            }
+            return null;
+        }
 
         public void Reset()
         {
@@ -113,19 +121,19 @@ namespace Cooking
 
         public bool RequestGrab(IGrabbable item)
         {
-            if (!CanGrab(item)) return false;
-            if (!item.Container.CanDrop(item)) return false;
-
             return TryGrab(item);
         }
 
         public bool RequestDrop(IGrabbable item = null)
         {
-            throw new NotImplementedException();
+            return TryDrop(item);
         }
         protected bool TryGrab(IGrabbable item)
         {
-
+            if (!CanGrab(item))
+                return false;
+            Grab(item);
+            return true;
         }
         protected bool TryDrop(IGrabbable item)
         {
@@ -135,16 +143,25 @@ namespace Cooking
         }
         protected void Grab(IGrabbable item)
         {
-            // NOT OVER
+            var slot = GetFirstAvailableSlot(item);
+            slot.RequestGrab(item);
+            RecordGrab(item);
+            Self.Callback(OnGrab, item);
         }
         protected void Drop(IGrabbable item)
         {
             item.Container.RequestDrop(item);
+            RecordDrop(item);
+            Self.Callback(OnDrop, item);
         }
         public bool CanGrab(IGrabbable item)
         {
+            if (item == null) return false;
             if (!_slots.Any((slot) => slot.CanGrab(item))) return false;
             if (IsLocked) return false;
+            if (item.Container != null)
+                if (!item.Container.CanDrop(item))
+                    return false;
             return true;
         }
         public bool CanDrop(IGrabbable item)
