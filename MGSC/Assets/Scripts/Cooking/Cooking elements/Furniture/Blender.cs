@@ -26,7 +26,7 @@ namespace Cooking
         public UnityEvent OnLookAt { get; }
         public UnityEvent OnStopLookAt { get; }
         public bool IsLocked { get; set; }
-        public bool EnableCallbacks { get; set; }
+        public bool EnableCallbacks { get; set; } = true;
         public ICallbackBroadcaster Self => this;
 
         #endregion

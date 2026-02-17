@@ -151,8 +151,7 @@ public class ItemPile : ObjectPile, IMultiContainer, ICallbackBroadcaster
         if (item.Container != null && item.Container.IsLocked) return false;
         if (HeldItems.Contains(item)) return false;
         if (item is not Item) return false;
-        
-
+        if (TryGetComponent<ContainerFilter>(out var filter) && !filter.IsValid(item.transform.GetComponent<Item>())) return false;
 
         return true;
     }
