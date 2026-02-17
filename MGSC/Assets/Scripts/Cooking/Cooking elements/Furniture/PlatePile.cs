@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEditor;
-using JetBrains.Annotations;
-using UnityEngine.Rendering;
 
 // Please don't inherit from this class, it isn't meant to
 [RequireComponent(typeof(ObjectPile))]
@@ -107,7 +105,7 @@ public sealed class PlatePile : MonoBehaviour, IMultiContainer, ICallbackBroadca
             _itemManager.Despawn(plate);
         }
         HeldItems.Clear();
-        _pile.ObjectCount = 0;
+        _pile.TargetObjectCount = 0;
         _pile.TryRegenerate();
     }
 
@@ -163,7 +161,7 @@ public sealed class PlatePile : MonoBehaviour, IMultiContainer, ICallbackBroadca
         Plate plate = item as Plate;
         plate.transform.SetParent(null);
         plate.Collider.enabled = true;
-        _pile.ObjectCount = _pile.transform.childCount;
+        _pile.TargetObjectCount = _pile.transform.childCount;
         //_pile.TryRegenerate();
         UpdateCollider();
     }

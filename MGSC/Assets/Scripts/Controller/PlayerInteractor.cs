@@ -177,7 +177,6 @@ namespace Controller
         {
             Self.Callback(OnGrab, item);
             _heldItem = item;
-            Debug.Log("The previous container for the grabbed object is " + item.Container);
             item.Container?.RequestDrop(item);
             item.GetGrabbedBy(this);
         }
@@ -238,12 +237,15 @@ namespace Controller
             }
             if (LookTargetImplements<IContainer>(out comp))
             {
-                Debug.Log("Trying to interact with CONTAINER");
+                //Debug.Log("Trying to interact with CONTAINER");
                 var container = comp as IContainer;
                 if (container.Passthrough)
                 {
                     if (RequestGrab(container.HeldItem))
                         return true;
+                    else if (container.RequestGrab(_heldItem))
+                        return true;
+
                 }
                 else
                 {
