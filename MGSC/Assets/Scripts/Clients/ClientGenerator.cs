@@ -78,8 +78,7 @@ namespace Clients
         private Client TryUseUpgrades()
         {
             if (!_useUpgrades) return this;
-            UpgradeManager uMan = ReferenceManager.Instance.GetManager<UpgradeManager>();
-            if (uMan == null) return this;
+            if (!Reference.TryGetManager(out UpgradeManager uMan)) return this;
             IngredientDropUpgrade upgrade = uMan.GetUpgradeByType<IngredientDropUpgrade>();
             if (upgrade == null) return this;
             upgrade.Apply(this);

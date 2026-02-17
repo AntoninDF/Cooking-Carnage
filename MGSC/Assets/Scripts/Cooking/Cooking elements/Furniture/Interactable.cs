@@ -10,7 +10,7 @@ namespace Cooking
     /// Base class for any interactable object (that isn't an ingredient)
     /// </summary>
     [RequireComponent(typeof(Collider))]
-    public class Interactable : MonoBehaviour, IInteractable, IWatchable
+    public class Interactable : MonoBehaviour, IInteractable, IWatchable, ICallbackBroadcaster
     {
         #region Properties
         public UnityEvent OnInteract => _onInteract;
@@ -20,6 +20,9 @@ namespace Cooking
         public PlayerInterface Player { get; set; }
         public bool IsLookedAt => Player.LookTarget == gameObject;
         public Collider Collider => _collider;
+        public bool IsLocked { get; set; }
+        public bool EnableCallbacks { get; set; }
+        public ICallbackBroadcaster Self => this;
 
         #endregion
 
@@ -62,9 +65,10 @@ namespace Cooking
         /// Simply invokes OnInteract
         /// </summary>
         /// <param name="interactor"></param>
-        public virtual void Interact(PlayerInteractor interactor)
+        public virtual bool RequestInteraction(PlayerInteractor interactor)
         {
-            OnInteract?.Invoke();
+            Self.Callback(OnInteract);
+            return true;
         }
 
         /// <summary>

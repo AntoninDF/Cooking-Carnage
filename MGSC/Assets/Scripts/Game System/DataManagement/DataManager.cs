@@ -46,11 +46,11 @@ namespace GameSystem
 
         public void Register()
         {
-            ReferenceManager.Instance.SetManager(this);
+            Reference.SetManager(this);
         }
         public void Unregister()
         {
-            ReferenceManager.Instance.RemoveManager(this);
+            Reference.RemoveManager(this);
         }
         public void Init()
         {
@@ -167,11 +167,11 @@ namespace GameSystem
 
         private void EnforceReferences()
         {
-            _moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
-            _upgradeManager = ReferenceManager.Instance.GetManager<UpgradeManager>();
-            _clientManager = ReferenceManager.Instance.GetManager<ClientManager>();
-            _shiftManager =  ReferenceManager.Instance.GetManager<ShiftManager>();
-            _timerManager =  ReferenceManager.Instance.GetManager<TimerManager>();
+            Reference.GetManager(out _moneyManager);
+            Reference.GetManager(out _upgradeManager);
+            Reference.GetManager(out _clientManager);
+            Reference.GetManager(out _shiftManager);
+            Reference.GetManager(out _timerManager);
         }
 
         GameData DefaultData()

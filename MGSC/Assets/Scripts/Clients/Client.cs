@@ -76,6 +76,8 @@ namespace Clients
         private Order _order;
 
         private GameLoop _gameLoop;
+        private TimerManager _timerManager;
+        private ClientManager _clientManager;
         private bool _useUpgrades = true;
 
         private Collider _collider;
@@ -90,7 +92,7 @@ namespace Clients
             _movement = new(transform, _speed, _splineComp);
             _collider = GetComponent<Collider>();
 
-            _counters = ReferenceManager.Instance.GetElementsOfType<Counter>();
+            _counters = Reference.GetAll<Counter>();
             if (_counters == null || _counters.Count == 0)
                 Debug.LogError("[Client] Start : No counters were found. Please place at least one of each in the scene.");
 
@@ -101,7 +103,11 @@ namespace Clients
             
             _onStart?.Invoke();
 
-            _gameLoop = ReferenceManager.Instance.GetManager<GameLoop>();
+            Reference.GetManager(out _gameLoop);
+            Reference.GetManager(out _timerManager);
+            Reference.GetManager(out _clientManager);
+
+
             if (_gameLoop == null)
                 Debug.LogError("[Client] Init : No gameloop found.");
         }
@@ -203,7 +209,7 @@ namespace Clients
         /// <returns>The first free counter found</returns>
         private T CheckForCounter<T>(bool mustBeFree=true) where T : Counter
         {
-            _counters = ReferenceManager.Instance.GetElementsOfType<Counter>();
+            _counters = Reference.GetAll<Counter>();
             T closestCounter = null;
             float closestDistance = float.MaxValue;
             foreach (var counter in _counters)
@@ -275,10 +281,9 @@ namespace Clients
             {
                 _onStartEating?.Invoke();
 
-                var tm = ReferenceManager.Get<TimerManager>();
-                if (tm != null)
-                    tm.StartTimer("Eating", 2f, () => Eat(info, rating));
-                ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,false);
+                if (_timerManager != null)
+                    _timerManager.StartTimer("Eating", 2f, () => Eat(info, rating));
+                _clientManager.AddClientData(this,true,false);
             }
             else
             {
@@ -295,11 +300,10 @@ namespace Clients
                 _onWrongOrder?.Invoke();
 
             //Refacto : Faire que le client mange et parte du resto
-            var tm = ReferenceManager.Get<TimerManager>();
-            if (tm != null)
+            if (_timerManager != null)
             {
-                tm.StartTimer("Leave", _timeToEat, () => LeaveCounterFeedback() );
-                tm.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => AutoDestruction()); //timer aussi utilisé dans endshift shiftmanager
+                _timerManager.StartTimer("Leave", _timeToEat, () => LeaveCounterFeedback() );
+                _timerManager.StartTimer("Disable client", _timeBeforeDisappearingAfterLeaving, () => AutoDestruction()); //timer aussi utilisé dans endshift shiftmanager
             }
             _hasEaten = true;
         }
@@ -315,11 +319,10 @@ namespace Clients
         {
             _onKilled?.Invoke(); 
 
-            var tm = ReferenceManager.Get<TimerManager>();
-            if (tm != null)
-                tm.StartTimer("Dying"+_currentCounter.name , _timeBeforeDisappearingAfterDying, () => AutoDestruction());
-            
-            ReferenceManager.Instance.GetManager<ClientManager>().AddClientData(this,true,true);
+            if (_timerManager != null)
+                _timerManager.StartTimer("Dying"+_currentCounter.name , _timeBeforeDisappearingAfterDying, () => AutoDestruction());
+
+            _clientManager.AddClientData(this,true,true);
         }
 
         public void AutoDestruction()

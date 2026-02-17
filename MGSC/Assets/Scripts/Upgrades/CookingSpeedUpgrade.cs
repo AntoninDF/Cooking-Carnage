@@ -24,8 +24,8 @@ namespace Upgrades
 
         public override void Apply()
         {
-            ReferenceManager.Instance.ScanHierarchy();
-            _targetOvens = ReferenceManager.Instance.GetElementsOfType<Oven>();
+            Reference.ScanHierarchy();
+            _targetOvens = Reference.GetAll<Oven>();
 
             foreach (Oven o in _targetOvens)
             {

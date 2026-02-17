@@ -1,5 +1,8 @@
 using Cooking;
 using GameSystem;
+using System;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -7,7 +10,7 @@ using UnityEngine.InputSystem;
 namespace Controller
 {
 
-    public class PlayerInteractor : MonoBehaviour, ISoloContainer
+    public class PlayerInteractor : MonoBehaviour, ISoloContainer, ICallbackBroadcaster
     {
         #region Properties
         public PlayerInputHandler InputHandler => Player.InputHandler;
@@ -17,16 +20,21 @@ namespace Controller
         public float ReachDistance { get => _reachDistance; set => _reachDistance = value; }
         [field: SerializeField]
         public UnityEvent<PlayerInteractor> OnInteract { get; set; }
-        public IGrabbable HeldItem { get=> _heldItem; set=> _heldItem=value; }
+        public IGrabbable HeldItem { get => _heldItem; set => _heldItem = value; }
         public Transform ItemSlot => _handSlot;
         [field: SerializeField]
         public UnityEvent<IGrabbable> OnGrab { get; set; }
         [field: SerializeField]
         public UnityEvent<IGrabbable> OnDrop { get; set; }
         public PlayerInterface Player { get => _playerInterface; set => _playerInterface = value; }
-        public bool IsLocked => false;
+        public bool IsLocked { get; set; }
+        public bool EnableCallbacks { get; set; }
+        public bool Passthrough => false;
+
+        public ICallbackBroadcaster Self => this;
 
         #endregion
+
 
         #region Fields
         [Header("References")]
@@ -39,36 +47,39 @@ namespace Controller
         [Tooltip("Distance in meters up to which the player can reach items")]
         [SerializeField] private float _reachDistance = 3f;
 
+        [BindEvent("Player/OnInteract")]
+        public Action _onInteract;
+
         private PlayerInterface _playerInterface;
         private IGrabbable _heldItem;
-        private bool _grabbedItemThisFrame;
+        private RaycastHit[] _lookedAtObjects;
+        private TimerManager _timerManager;
+
         #endregion
 
-
         #region Methods
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+
         void Start()
         {
             if (InputHandler == null)
                 throw new MissingReferenceException("The player input handler wasn't assigned by the GameInitializer.");
 
-            InputHandler.OnInteract += Interact;
-            InputHandler.OnGrab += GrabOrDrop;
+            InputHandler.OnInteract += TryPlayerAction;
 
             if (_handSlot == null)
                 throw new MissingReferenceException("Please assign the hand slot reference in the player interactor :)");
 
-            Grab(_defaultHeldItem);
-        }
+            TryGrab(_defaultHeldItem);
 
-        // Update is called once per frame
+            Reference.GetManager(out _timerManager);
+        }
         void Update()
         {
             UpdateLookInfo();
-            _grabbedItemThisFrame = false;
         }
 
         public Transform GetLookTransform() => Camera.main.transform;
+        public RaycastHit[] GetLookedAtObjects() => _lookedAtObjects;
 
         /// <summary>
         /// Update the LookInfo and LookTarget variables to inform on what is being looked at.
@@ -76,17 +87,27 @@ namespace Controller
         private void UpdateLookInfo()
         {
             LookContainer = null;
-            RaycastHit hit;
-            if (Physics.Raycast(GetLookTransform().position, GetLookTransform().rotation * Vector3.forward, out hit, _reachDistance))
+            RaycastHit[] allHits;
+            RaycastHit closestHit = new();
+            allHits = Physics.RaycastAll(GetLookTransform().position, GetLookTransform().rotation * Vector3.forward);
+
+            // Get the closest hit by distance
+            foreach(RaycastHit hit in allHits)
             {
-                LookInfo = hit;
+                if (closestHit.collider == null) closestHit = hit;
+                if (hit.distance < closestHit.distance) closestHit = hit;
+            }
+
+            if (closestHit.collider != null && closestHit.distance <= _reachDistance)
+            {
+                LookInfo = closestHit;
                 LookTarget = LookInfo.collider.gameObject;
-                Component target;
+                Behaviour target;
                 if (LookTargetImplements<IWatchable>(out target))
                 {
                     ((IWatchable)target).LookAt(this);
                 }
-                Component container;
+                Behaviour container;
                 if (LookTargetImplements<IContainer>(out container))
                 {
                     LookContainer = container as IContainer;
@@ -97,29 +118,20 @@ namespace Controller
                 LookTarget = null;
                 LookInfo = default(RaycastHit);
             }
+            _lookedAtObjects = allHits;
         }
-
-        private void Interact(InputAction.CallbackContext context)
-        {
-            Component target;
-            if (!LookTargetImplements<IInteractable>(out target)) return;
-
-            ((IInteractable)target).Interact(this);
-            OnInteract?.Invoke(this);
-        }
-
         /// <summary>
         /// Check if the looked at target has a component derived from BaseObject, and if so, passes it back as out parameter. Otherwise it will be null.
         /// </summary>
         /// <param name="interactable">The interactable that the player is looking at</param>
         /// <returns></returns>
-        private bool LookTargetImplements<T>(out Component component) where T : IGeneric<T>
+        private bool LookTargetImplements<T>(out Behaviour component) where T : IGeneric<T>
         {
             if (LookTarget != null)
             {
-                foreach (var comp in LookTarget.GetComponents<Component>())
+                foreach (var comp in LookTarget.GetComponents<Behaviour>())
                 {
-                    if (comp is T)
+                    if (comp is T && comp.isActiveAndEnabled)
                     {
                         component = comp;
                         return true;
@@ -130,129 +142,119 @@ namespace Controller
             return false;
         }
 
-
-
-        public void GrabOrDrop(InputAction.CallbackContext context)
+        #region IContainer methods
+        public bool RequestGrab(IGrabbable item)
         {
-            if (HeldItem == null) Grab();
-            else if (!TryGrabIndirectly())
-                DropOnContainer();
-        }
-
-        public bool TryGrabIndirectly()
-        {
-            if (HeldItem == null) return false;
-            Component target;
-            if (!LookTargetImplements<IGrabbable>(out target)) return false;
-            IGrabbable t = target as IGrabbable;
-            t.SetAnimationMode(true);
-
-            IContainer container = HeldItem as IContainer;
-            MultiSlotContainer multislot;
-            HeldItem.transform.TryGetComponent<MultiSlotContainer>(out multislot);
-            if (multislot != null || container != null)
-            {
-                if (multislot != null)
-                {
-                    SlotContainer slot = multislot.GetFirstAvailableSlot();
-                    container = slot;
-                }
-                if (container != null)
-                {
-                    container.Grab(t);
-                }
-            }
-
-
-
+            // Try to grab the item
+            if (CanGrab(item))
+                return TryGrab(item);
+            // Or try to ask the held item to grab the item
+            if (HeldItem is IContainer container)
+                return container.RequestGrab(item);
             return false;
         }
-
-        public void Grab()
+        public bool RequestDrop(IGrabbable item = null)
         {
-            Component target;
-            if (!LookTargetImplements<IGrabbable>(out target)) return;
-            IGrabbable t = target as IGrabbable;
-            t.SetAnimationMode(true);
-            Grab(t);
+            return TryDrop(item);
         }
-        public void Grab(IGrabbable item)
+        protected bool TryGrab(IGrabbable item)
         {
-            if (item is EnglobingSlotContainer)
-            {
-                item = (item as SlotContainer).HeldItem;
-            }
-            if (item == null) return;
-            if (_heldItem != null) return;
-            if (item.Container != null && item.Container.IsLocked) return;
-            if (!CanGrab(item)) return;
+            // Check if this container can grab the item
+            if (!CanGrab(item))
+                return false;
 
-            _grabbedItemThisFrame = true;
-            item.GetGrabbed(this);
+            Grab(item);
+            return true;
+        }
+        protected bool TryDrop(IGrabbable item = null)
+        {
+            if (!CanDrop(item))
+                return false;
+            Drop(item);
+            return false;
+        }
+        protected void Grab(IGrabbable item)
+        {
+            Self.Callback(OnGrab, item);
             _heldItem = item;
-            _heldItem.Collider.enabled = false;
-            if (item is Item obj) obj.Player = this.Player;
-
-            OnGrab?.Invoke(item);
+            Debug.Log("The previous container for the grabbed object is " + item.Container);
+            item.Container?.RequestDrop(item);
+            item.GetGrabbedBy(this);
         }
-
-        public void Empty() { }
-
-        public void Drop(IGrabbable item) => Drop();
-        public void DropOnContainer()
+        protected void Drop(IGrabbable item = null)
         {
             if (_heldItem == null) return;
-
-            if (_grabbedItemThisFrame) return;
-
-            Component component;
-            if (!LookTargetImplements<IContainer>(out component)) return;
-
-            IContainer container = component as IContainer;
-            if (!container.CanGrab(_heldItem))
-            {
-                MultiSlotContainer multislot = container.transform.GetComponentInChildren<MultiSlotContainer>();
-                if (multislot!=null)
-                {
-                    container =  multislot.GetFirstAvailableSlot() as IContainer;
-                    if (container!=null)
-                    {
-                        container.Grab(_heldItem);
-                    }
-                    // REFACTO - TO DO : Implement overlap checking. Return if there is an overlap, otherwise continue
-                }
-                return;
-            }
-            
-            //Finally grab
-            container.Grab(_heldItem);
-        }
-
-        public void Drop()
-        {
-            if (_heldItem == null) return;
-            ReferenceManager.Get<TimerManager>()?.StartTimer("Enable dropped item's collider", 0.1f, () => 
+            _timerManager.StartTimer("Enable dropped item's collider", 0.1f, () =>
             {
                 _heldItem.Collider.enabled = true;
                 _heldItem = null;
             }
             );
-            OnDrop?.Invoke(_heldItem);
-            
+            Self.Callback(OnDrop, item);
         }
-
+        public void Empty()
+        {
+            _heldItem = null;
+        }
         public bool CanGrab(IGrabbable item)
         {
-            Meal meal = item as Meal;
-            if (meal && meal.eaten)
+            if (HeldItem != null) return false;
+            if (item == null) return false;
+            if (item.IsLocked) return false;
+            if (IsLocked) return false;
+            if (item.Container != null)
+                if (!item.Container.CanDrop(item))
+                    return false;
+            return true;
+        }
+        public bool CanDrop(IGrabbable item)
+        {
+            if (IsLocked) return false;
+            if (item == null) return false;
+            if (item.IsLocked) return false;
+            return true;
+        }
+        #endregion
+
+        // PRIVATE METHODS
+        private void TryPlayerAction(InputAction.CallbackContext ctx) => TryPlayerAction();
+        private bool TryPlayerAction()
+        {
+            Behaviour comp;
+            if (LookTargetImplements<IInteractable>(out comp))
             {
-                return false;
+                Debug.Log("Trying to interact with INTERACTABLE");
+                if ((comp as IInteractable).RequestInteraction(this))
+                {
+                    Self.Callback(OnInteract, this);
+                    return true;
+                }
             }
-            
-            return _heldItem == null && (item is not EnglobingSlotContainer || (item is EnglobingSlotContainer esc && esc.HeldItem!=null))  ; 
+            if (LookTargetImplements<IGrabbable>(out comp))
+            {
+                Debug.Log("Trying to interact with GRABBABLE");
+                if (RequestGrab(comp as IGrabbable))
+                    return true;
+            }
+            if (LookTargetImplements<IContainer>(out comp))
+            {
+                Debug.Log("Trying to interact with CONTAINER");
+                var container = comp as IContainer;
+                if (container.Passthrough)
+                {
+                    if (RequestGrab(container.HeldItem))
+                        return true;
+                }
+                else
+                {
+                    if (container.RequestGrab(_heldItem))
+                        return true;
+                }
+                
+            }
+            return false;
         }
 
         #endregion
     }
-
 }

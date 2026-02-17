@@ -14,7 +14,7 @@ namespace GameSystem
 
         public virtual void RegisterToGameLoop()
         {
-            if (ReferenceManager.Instance.TryGetManager<GameLoop>(out var loop))
+            if (Reference.TryGetManager<GameLoop>(out var loop))
                 loop.RegisterUpdatable(this);
             else
                 Debug.LogWarning($"{GetType().Name}: GameLoop not ready yet!");
@@ -22,7 +22,7 @@ namespace GameSystem
 
         public virtual void UnregisterFromGameLoop()
         {
-            if (ReferenceManager.Instance.TryGetManager<GameLoop>(out var loop))
+            if (Reference.TryGetManager<GameLoop>(out var loop))
                 loop.UnregisterUpdatable(this);
         }
     }

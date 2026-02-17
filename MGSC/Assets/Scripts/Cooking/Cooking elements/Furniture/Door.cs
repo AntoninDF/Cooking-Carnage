@@ -47,10 +47,14 @@ namespace Cooking
             _defaultAngle = GetAxis(transform.rotation.eulerAngles).magnitude;
             _offset = new Vector3(_angle, _angle, _angle);
         }
-        public override void Interact(PlayerInteractor interactor)
+        public override bool RequestInteraction(PlayerInteractor interactor)
         {
-            base.Interact(interactor);
-            ToggleDoor();
+            if (base.RequestInteraction(interactor))
+            {
+                ToggleDoor();
+                return true;
+            }
+            return false;
         }
 
         public void ToggleDoor()

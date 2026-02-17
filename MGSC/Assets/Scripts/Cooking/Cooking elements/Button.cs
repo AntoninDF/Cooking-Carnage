@@ -11,10 +11,14 @@ namespace Cooking
     {
         public UnityEvent OnPress;
 
-        public override void Interact(PlayerInteractor interactor)
+        public override bool RequestInteraction(PlayerInteractor interactor)
         {
-            base.Interact(interactor);
-            OnPress?.Invoke();
+            if (base.RequestInteraction(interactor))
+            {
+                Self.Callback(OnPress);
+                return true;
+            }
+            return false;
         }
     }
 

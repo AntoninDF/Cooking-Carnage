@@ -48,8 +48,8 @@ namespace UI
 
             InitSubtitleDict();
             LocalizedText.EnforceDatabaseSetup(_textDatabase);
-            _timerManager = ReferenceManager.Get<TimerManager>();
-            _gameLoop = ReferenceManager.Get<GameLoop>();
+            _timerManager = Reference.GetManager<TimerManager>();
+            _gameLoop = Reference.GetManager<GameLoop>();
         }
 
         public void Play(string subtitleName)

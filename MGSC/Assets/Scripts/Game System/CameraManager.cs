@@ -7,12 +7,15 @@ using UnityEngine;
 public class CameraManager : IManager
 {
     #region Properties
-        
+
     #endregion
 
     #region Fields
 
-        
+    private UIManager _uiManager;
+    private TimerManager _timerManager;
+
+
     private CinemachineVirtualCameraBase camFPV;
     private CinemachineVirtualCameraBase camFocus;
 
@@ -31,16 +34,19 @@ public class CameraManager : IManager
         
     public void Register()
     {
-        ReferenceManager.Instance.SetManager(this);
+        Reference.SetManager(this);
     }
     public void Unregister()
     {
-        ReferenceManager.Instance.RemoveManager(this);
+        Reference.RemoveManager(this);
     }
 
     public void Init()
     {
-        var player = ReferenceManager.Instance.GetElementOfType<PlayerInterface>();
+        Reference.GetManager(out _uiManager);
+        Reference.GetManager(out _timerManager);
+
+        var player = Reference.Get<PlayerInterface>();
 
         foreach (var cam in player.GetComponentsInChildren<CinemachineVirtualCameraBase>())
         {
@@ -78,13 +84,13 @@ public class CameraManager : IManager
 
         if (duration > 0)
         {
-            ReferenceManager.Instance.GetManager<TimerManager>().StartTimer("camFocus", duration, () => EnableFirstPersonView(), false);
-            ReferenceManager.Instance.GetManager<UIManager>().SwitchPlayerInputs(false);
+            _timerManager.StartTimer("camFocus", duration, () => EnableFirstPersonView(), false);
+            _uiManager.SwitchPlayerInputs(false);
             this.Log(LogType.Log, $"Camera will focus on {target.name} for {duration}s");
         }
         else
         {
-			ReferenceManager.Instance.GetManager<UIManager>().PauseGame();
+            _uiManager.PauseGame();
             this.Log(LogType.Log, $"Camera will focus on {target.name}");
         }
             
@@ -96,15 +102,14 @@ public class CameraManager : IManager
         Cursor.visible = false;
             
         ChangeState(CameraState.FirstPerson);
-        ReferenceManager.Instance.GetManager<UIManager>().SwitchPlayerInputs(true);
+        _uiManager.SwitchPlayerInputs(true);
     }
 
     public void Animate(Transform start, Transform end, float duration, AnimationCurve motion=null, Transform lookAtTarget = null)
     {
         if (motion == null)
             motion = AnimationCurve.EaseInOut(0, 0, 1, 1);
-        var tm = ReferenceManager.Get<TimerManager>();
-        tm.StartTimer("Animate camera", duration, () => { }, onUpdate:(elapsed) => Set(LerpedTransform(focusPivot.transform, lookAtTarget, elapsed/duration), lookAtTarget));
+        _timerManager.StartTimer("Animate camera", duration, () => { }, onUpdate:(elapsed) => Set(LerpedTransform(focusPivot.transform, lookAtTarget, elapsed/duration), lookAtTarget));
     }
 
     public Transform LerpedTransform(Transform start, Transform end, float t)

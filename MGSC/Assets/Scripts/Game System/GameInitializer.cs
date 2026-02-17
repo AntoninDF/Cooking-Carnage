@@ -46,19 +46,16 @@ namespace GameSystem
         /// <exception cref="MissingComponentException"></exception>
         public void ResetScene()
         {
-            if (_gameProfile.ResetRefManager) ReferenceManager.Reset();
-            ReferenceManager.Instance.RemoveAllManagers();
+            if (_gameProfile.ResetRefManager) Reference.Reset();
+            Reference.RemoveAllManagers();
             if (_gameProfile == null)
                 throw new MissingReferenceException("[GameInitializer] : Please reference a game profile in the inspector.");
 
             if (_gameProfile.DestroyEveryOtherObject) DestroyEverything();
 
-            ReferenceManager.AssetReferences = _gameProfile.AssetReferences;
+            Reference.AssetReferences = _gameProfile.AssetReferences;
 
             if (_gameProfile.RequireGameLoop) MakeGameLoop();
-
-            // Instantiate the scene and create all the MonoBehaviour managers
-            if (_gameProfile.ApplyScenePreset) ApplyScenePreset();
 
             // Create all the pure managers
             new OrderManager();
@@ -71,10 +68,14 @@ namespace GameSystem
             new DataManager();
             new CameraManager();
             new ItemManager();
+
+            // Instantiate the scene and create all the MonoBehaviour managers
+            if (_gameProfile.ApplyScenePreset) ApplyScenePreset();
+
             if (_gameProfile.AddUI) AddUI();
 
             // Create the player
-            ReferenceManager.Instance.ScanHierarchy();
+            Reference.ScanHierarchy();
             if (_gameProfile.AddPlayer) PlayerSetup.TrySetupPlayer();
 
             SetupDebug();
@@ -83,7 +84,7 @@ namespace GameSystem
             InitManagers();
             
             // Reset the save file
-            if (_gameProfile.ResetSaveFile) ReferenceManager.Instance.GetManager<DataManager>().ResetSave();
+            if (_gameProfile.ResetSaveFile) Reference.GetManager<DataManager>().ResetSave();
 
             // Apply the base logic to ensure all managers are setup to work correctly
             PostInitManagers();
@@ -99,7 +100,7 @@ namespace GameSystem
 
         private void InitManagers()
         {
-            foreach (var kvp in ReferenceManager.Instance.Managers)
+            foreach (var kvp in Reference.Managers)
             {
                 //Debug.Log("[GameInitializer] : Initializing " + kvp.Key + ", object is " + kvp.Value);
                 (kvp.Value).Init();
@@ -107,7 +108,7 @@ namespace GameSystem
         }
         private void PostInitManagers()
         {
-            foreach (var kvp in ReferenceManager.Instance.Managers)
+            foreach (var kvp in Reference.Managers)
             {
                 (kvp.Value).PostInit();
             }
@@ -125,9 +126,9 @@ namespace GameSystem
         private void MakeGameLoop()
         {
             // Init GameLoop
-            if (ReferenceManager.AssetReferences.UI != null)
+            if (Reference.AssetReferences.UI != null)
             {
-                Instantiate(ReferenceManager.AssetReferences.GameLoop);
+                Instantiate(Reference.AssetReferences.GameLoop);
             }
             else
             {
@@ -137,20 +138,23 @@ namespace GameSystem
 
         private void AddUI()
         {
-            if (ReferenceManager.AssetReferences.UI == null)
+            if (Reference.AssetReferences.UI == null)
                 Debug.LogWarning("[GameInitializer] : Couldn't add the UI prefab because it was not referenced in the asset references object");
             else
             {
-                Instantiate(ReferenceManager.AssetReferences.UI);
+                Instantiate(Reference.AssetReferences.UI);
             }
         }
 
         private void SetupUI()
         {
-            var ui = ReferenceManager.Instance.GetManager<UIManager>();
-            ui.EnableMenu(_gameProfile.DefaultMenu);
-            ReferenceManager.Instance.GetManager<ShiftManager>().OnShiftSucceeded += () => ui.EnableMenu("ShiftRecap");
-            ReferenceManager.Instance.GetManager<ShiftManager>().OnShiftFailed += () => ui.EnableMenu("FailedShiftRecap");
+            if (Reference.TryGetManager(out UIManager ui))
+                ui.EnableMenu(_gameProfile.DefaultMenu);
+            if (Reference.TryGetManager(out ShiftManager sm))
+            {
+                sm.OnShiftSucceeded += () => ui.EnableMenu("ShiftRecap");
+                sm.OnShiftFailed += () => ui.EnableMenu("FailedShiftRecap");
+            }
         }
 
         private void SetupMealPrices()
@@ -162,7 +166,7 @@ namespace GameSystem
 
         private void SetupDebug()
         {
-            var refManagers = ReferenceManager.Instance.Managers;
+            var refManagers = Reference.Managers;
             
             if(_debugProfile == null)
                 return;

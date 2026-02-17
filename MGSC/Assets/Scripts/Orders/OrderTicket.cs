@@ -54,7 +54,7 @@ namespace Orders
         {
             if (Container != null)
             {
-                Container.Drop(this);
+                Container.RequestDrop(this);
             }
             Destroy(gameObject);
         }

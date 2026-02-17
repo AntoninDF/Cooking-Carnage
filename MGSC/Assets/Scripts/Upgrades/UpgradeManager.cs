@@ -3,6 +3,7 @@ using GameSystem;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UI;
 
 namespace Upgrades
 {
@@ -35,8 +36,7 @@ namespace Upgrades
             _upgrades.Add(new IngredientDropUpgrade());
             _upgrades.Add(new BlenderSpeedUpgrade());
 
-            _moneyManager = ReferenceManager.Instance.GetManager<MoneyManager>();
-            if (_moneyManager == null)
+            if (!Reference.TryGetManager(out _moneyManager))
             {
                 this.Log(LogType.Warning, "No money manager found");
             }
@@ -108,6 +108,7 @@ namespace Upgrades
         public bool TryLevelUp<T>() where T: Upgrade
         {
             T upgrade;
+            bool b_ui = Reference.TryGetManager(out UI.UIManager uIManager);
             if (!HasUpgradeOfType<T>(out upgrade))
             {
                 this.Log(LogType.Error, "No upgrade of type " + nameof(T) + " found");
@@ -117,23 +118,23 @@ namespace Upgrades
             if (_moneyManager.MoneyInfo < price)
             {
                 this.Log(LogType.Log, $"No enough money for {upgrade}");
-                ReferenceManager.Instance.GetManager<UI.UIManager>().OnUpgradeFail?.Invoke();
+                if (b_ui) uIManager.OnUpgradeFail?.Invoke();
                 return false;
             }
             if (!upgrade.CanLevelUp()) return false;
             _moneyManager.AddMoney(-price);
             LevelUp(upgrade);
-            ReferenceManager.Instance.GetManager<UI.UIManager>().OnUpgradeSuccess?.Invoke();
+            if (b_ui) uIManager.OnUpgradeSuccess?.Invoke();
             return true;
         }
 
         public void Register()
         {
-            ReferenceManager.Instance.SetManager(this);
+            Reference.SetManager(this);
         }
         public void Unregister()
         {
-            ReferenceManager.Instance.RemoveManager(this);
+            Reference.RemoveManager(this);
         }
 
 

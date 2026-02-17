@@ -27,7 +27,7 @@ namespace Assets.Scripts.Upgrades
         // Use this for initialization
         void Start()
         {
-            _upgradeManager = ReferenceManager.Instance.GetManager<UpgradeManager>();
+            Reference.GetManager(out  _upgradeManager);
             if (_upgradeManager == null)
                 Debug.LogError("[UpgradeRequester] : No Upgrade Manager found");
         }

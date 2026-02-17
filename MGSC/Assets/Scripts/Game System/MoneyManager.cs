@@ -30,11 +30,11 @@ namespace GameSystem
 
         public void Register()
         {
-            ReferenceManager.Instance.SetManager(this);
+            Reference.SetManager(this);
         }
         public void Unregister()
         {
-            ReferenceManager.Instance.RemoveManager(this);
+            Reference.RemoveManager(this);
         }
 
         public void Init()
@@ -45,8 +45,8 @@ namespace GameSystem
 
         private void EnforceReferences()
         {
-            _dataManager = ReferenceManager.Instance.GetManager<DataManager>();
-            _orderManager = ReferenceManager.Instance.GetManager<OrderManager>();
+            Reference.GetManager(out _dataManager);
+            Reference.GetManager(out _orderManager);
         }
 
         private void SetSubscriptionToAll(bool subscribe)

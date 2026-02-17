@@ -12,7 +12,7 @@ namespace Cooking
     /// Adds every necessary item behaviour
     /// </summary>
     [RequireComponent(typeof(Collider))]
-    public class Item : MonoBehaviour, IGrabbable, IWatchable
+    public class Item : MonoBehaviour, IGrabbable, IWatchable, ICallbackBroadcaster
     {
         #region Properties
 
@@ -20,12 +20,17 @@ namespace Cooking
         public UnityEvent OnLookAt => _onLookAt;
         public UnityEvent OnStopLookAt => _onStopLookAt;
         public IContainer Container { get; set; }
-        public PlayerInterface Player { get; set; }
+        public PlayerInterface Player { get => _player; set => _player = value; }
         public Collider Collider => _collider;
         public bool IsLookedAt => Player.LookTarget == gameObject;
 
         public string ID => UpdateID();
-   
+        public bool IsLocked { get;set; }
+
+        public bool EnableCallbacks { get; set; }
+
+        public ICallbackBroadcaster Self => this;
+
         #endregion
 
         #region Fields
@@ -61,6 +66,7 @@ namespace Cooking
         private Collider _collider;
         private bool _wasLookedAtThisFrame;
         private bool _animate=true;
+        private PlayerInterface _player;
         
 
         private string itemID;
@@ -68,12 +74,14 @@ namespace Cooking
         #endregion
 
         #region Methods
-
+        private void Awake()
+        {
+            _collider = GetComponent<Collider>();
+        }
         protected virtual void Start()
         {
             _defaultPos = transform.position;
             _defaultRotation = transform.rotation;
-            _collider = GetComponent<Collider>();
             _tooltipComponent = _tooltip.GetComponent<Tooltip>();
         }
         
@@ -98,10 +106,10 @@ namespace Cooking
             transform.rotation = _defaultRotation;
         }
 
-        public void GetGrabbed(IContainer newContainer)
+        public void GetGrabbedBy(IContainer newContainer)
         {
             
-            Container?.Drop(this);
+            Container?.RequestDrop(this);
          
             Container = newContainer;
             if (newContainer is ISoloContainer)
@@ -113,20 +121,7 @@ namespace Cooking
             {
                 transform.parent = newContainer.transform;
             }
-            OnGrabbed?.Invoke();
-            GrabAnimation(!_animate);
-        }
-        public void GetGrabbedWithoutFeedback(IContainer newContainer)
-        {
-            Container?.Drop(this);
-            Container = newContainer;
-            if (newContainer is ISoloContainer)
-            {
-                ISoloContainer soloContainer = (ISoloContainer)newContainer;
-                transform.SetParent(soloContainer.ItemSlot);
-            }
-            else
-                transform.parent = newContainer.transform;
+            Self.Callback(OnGrabbed);
             GrabAnimation(!_animate);
         }
 
@@ -181,7 +176,10 @@ namespace Cooking
             }
             if (Container is IMultiContainer)
             {
-                _targetPos = Quaternion.Inverse(Container.transform.rotation) * (Player.LookInfo.point - FindLowestPoint() - Container.transform.position);
+                Vector3 dest = Vector3.zero;
+                if (Player != null || Reference.TryGet(out _player))
+                    dest = Player.LookInfo.point;
+                _targetPos = Quaternion.Inverse(Container.transform.rotation) * (dest - FindLowestPoint() - Container.transform.position);
                 //Debug.Log("Target pos is " + _targetPos + "\nDistance to player is " + Vector3.Distance(Player.transform.position, _targetPos));
                 _targetRot = _defaultRotation;
             }

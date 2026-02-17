@@ -27,26 +27,36 @@ namespace Cooking
         [SerializeField] private int _startSpawnIterations = 1;
 
         private float _timeOfLastSpawn = float.MinValue;
+
+        private ShiftManager _shiftManager;
+        private ItemManager _itemManager;
         #endregion
 
         #region Methods
 
         private void Start()
         {
-            Reset();
-            ReferenceManager.Get<ShiftManager>().OnNextShift += Reset;
+            if (!Reference.TryGetManager(out _itemManager))
+                Debug.LogWarning("Item manager is null");
+            if (Reference.TryGetManager(out _shiftManager))
+                _shiftManager.OnNextShift += ResetContent;
+
+            ResetContent();
         }
 
-        private void Reset()
+        private void ResetContent()
         {
+            foreach (var slot  in _slotsToSpawn)
+            {
+                slot.Empty();
+            }
             for (int i = 0; i < _startSpawnIterations; i++)
                 Spawn(false);
         }
 
-        public override void Interact(PlayerInteractor interactor)
+        public override bool RequestInteraction(PlayerInteractor interactor)
         {
-            base.Interact(interactor);
-            //TrySpawn();
+            return base.RequestInteraction(interactor);
         }
 
         public void TrySpawn()
@@ -63,19 +73,20 @@ namespace Cooking
         {
             foreach (var request in _itemsToSpawn)
             {
+                if (request.item == null) continue;
                 for (int i = 0; i < request.count; i++)
                 {
                     foreach (var slot in _slotsToSpawn)
                     {
                         if (!slot.IsFree) continue;
-                        GameObject go = ReferenceManager.Instance.GetManager<ItemManager>().TrySpawn(request.item.transform.gameObject);
+                        GameObject go = _itemManager.TrySpawn(request.item.transform.gameObject);
 
                         Item item = go.GetComponent<Item>();
                         item.SetAnimationMode(false);
                         if (!enableFeedbacks)
-                            slot.GrabWithoutFeedback(item);
+                            slot.RequestGrab(item);
                         else
-                            slot.Grab(item);
+                            slot.RequestGrab(item);
 
                         item.transform.position = slot.transform.position;
                         break;

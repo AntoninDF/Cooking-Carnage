@@ -10,14 +10,14 @@ namespace Tutorials
     {
         public void SetAllActive_Blenders(bool active)
         {
-            foreach (var b in ReferenceManager.GetAll<Blender>())
+            foreach (var b in Reference.GetAll<Blender>())
             {
-                b.Locked = !active;
+                b.IsLocked = !active;
             }
         }
         public void SetAllActive_SittingCounters(bool active)
         {
-            foreach (var b in ReferenceManager.GetAll<SittingCounter>())
+            foreach (var b in Reference.GetAll<SittingCounter>())
             {
                 b.ServingLocked = !active;
             }
@@ -25,7 +25,7 @@ namespace Tutorials
         
         public void SetAllActive_KillButtons(bool active)
         {
-            foreach (var b in ReferenceManager.GetAll<SittingCounter>())
+            foreach (var b in Reference.GetAll<SittingCounter>())
             {
                 b.LockWithTutorial = !active;
             }
