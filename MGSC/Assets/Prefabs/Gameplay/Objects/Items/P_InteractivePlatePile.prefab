@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1203302186578192290}
   - component: {fileID: 1025857146284889299}
   - component: {fileID: 7685374054215512189}
+  - component: {fileID: 1254375110154928972}
   m_Layer: 0
   m_Name: P_InteractivePlatePile
   m_TagString: Untagged
@@ -80,7 +81,28 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.35
-  m_Height: 0
+  m_Radius: 0.38981056
+  m_Height: 4.212858
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 2.0089765, z: 0}
+--- !u!114 &1254375110154928972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988903365140035185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 557202aa2b7e51340b943eb639e2e5d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerFilter
+  _filters:
+  - Condition: 0
+    ItemType: 3
+  _onValidItem:
+    m_PersistentCalls:
+      m_Calls: []
+  _onInvalidItem:
+    m_PersistentCalls:
+      m_Calls: []
