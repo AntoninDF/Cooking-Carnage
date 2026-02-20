@@ -46,13 +46,14 @@ namespace Cooking
                 GameObject go = Instantiate(_ovenPrefab);
                 go.name = "Oven n°" + i + " (" + Time.time + ")";
                 Oven oven = go.GetComponent<Oven>();
-                _slots[i].RequestGrab(oven);
+                _slots[i].Container.RequestGrab(null); // Replace null by oven
                 Reference.TryAdd(oven);
             }
         }
 
         private void SetupSlots()
         {
+                /*
             foreach (var slot in _slots)
             {
                 ContainerFilter filter;
@@ -60,10 +61,10 @@ namespace Cooking
                     filter = slot.AddComponent<ContainerFilter>();
                 else
                     filter = slot.Filter;
-
                 filter.Clear();
                 filter.AddFilter(EFilterCondition.MustBe, EItemType.Oven);
             }
+                */
         }
 
         #endregion

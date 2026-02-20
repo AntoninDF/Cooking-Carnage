@@ -49,6 +49,7 @@ namespace UI
             UnityEvent ev = null;
             switch(target)
             {
+                /*
                 case TargetEvent.PlateGrabbedFromRack:
                     foreach(var elm in Reference.GetAll<ItemSpawner>())
                     {
@@ -60,6 +61,7 @@ namespace UI
                             ev.RemoveListener(callback.Invoke);
                     }
                     break;
+                */
                 case TargetEvent.IngredientCut:
                     foreach (var elm in Reference.GetAll<Blender>())
                     {
@@ -72,10 +74,10 @@ namespace UI
                     }
                     break;
                 case TargetEvent.MealCooked:
-                    foreach (var elm in Reference.GetAll<Oven>().Concat(Reference.GetAll<Oven2>()))
+                    foreach (var elm in Reference.GetAll<Oven>())
                     {
                         // Target event
-                        ev = elm.OnItemCooked;
+                        ev = null; // To repair
                         if (bind)
                             ev.AddListener(callback.Invoke);
                         else
@@ -86,7 +88,7 @@ namespace UI
                     foreach (var elm in Reference.GetAll<Oven>())
                     {
                         // Target event
-                        ev = elm.OnItemDropped;
+                        ev = null; // To repair
                         if (bind)
                             ev.AddListener(callback.Invoke);
                         else

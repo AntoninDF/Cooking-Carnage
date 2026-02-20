@@ -17,7 +17,7 @@ namespace Clients
         public UnityEvent OnPlatformUp => _onPlatformUp;
         public UnityEvent OnPlatformDown => _onPlatformDown;
         public UnityEvent OnSkipTutorial => _onSkipTutorial;
-        public Meal ServedMeal => _mealSlot?.HeldItem as Meal;
+        public Meal ServedMeal => _mealSlot?.HeldItem .Owner as Meal;
         public Order LastServedOrder {  get; set; }
         public bool LockWithTutorial { get => _lockWithTutorial; set => _lockWithTutorial = value; }
         public bool ServingLocked { get; set; }
@@ -59,7 +59,7 @@ namespace Clients
         private void Start()
         {
             EnforceSlots();
-            _mealSlot.OnGrab.AddListener(Serve);
+            //_mealSlot.OnGrab.AddListener(Serve);
             Reference.GetManager(out _orderManager);
             Reference.GetManager(out _timerManager);
             Reference.GetManager(out _itemManager);
@@ -73,7 +73,7 @@ namespace Clients
             if (_mealSlot == null)
                 Debug.LogError("Please reference a slot on the sitting counter '" + name + "' for the meal to be served");
 
-
+            /*
             ContainerFilter filter;
             foreach (var slot in _slotsToSpawn)
             {
@@ -94,29 +94,30 @@ namespace Clients
                 filter = _mealSlot.GetComponent<ContainerFilter>();
             filter.Clear();
             filter.AddFilter(EFilterCondition.MustBe, EItemType.Meal);
+            */
         }
 
-        private void Serve(IGrabbable item)
+        private void Serve(Grabbable item)
         {
             if (_currentClient == null) return; // The meal will just wait there
             if (_currentClient.State != Client.EClientState.None) return;
             if (_lockWithTutorial && ServingLocked) return;
-            Meal meal = item as Meal;
+            Meal meal = item.Owner as Meal;
             _onServe?.Invoke();
             ServingInfo info = new ServingInfo(meal);
             _orderManager.ResolveOrder(_currentClient.Order, info);
             LastServedOrder = _currentClient.Order;
             meal.eaten = true;
             Free();
-            _mealSlot.IsLocked = true;
-            _timerManager.StartTimer("Despawn meal"+name, _timeBeforeMealDisappears, () => DespawnMeal(meal));
+            _mealSlot.Container.IsLocked = true;
+            _timerManager.StartTimer("Despawn meal"+name, _timeBeforeMealDisappears, () => DespawnMeal(null)); // Despawn meal instead of null
         }
 
-        private void DespawnMeal(IGrabbable item)
+        private void DespawnMeal(Grabbable item)
         {
-            _mealSlot.IsLocked = false;
-            _mealSlot.RequestDrop(item);
-            Meal meal = item as Meal;
+            _mealSlot.Container.IsLocked = false;
+            _mealSlot.Container.RequestDrop(item);
+            Meal meal = item.Owner as Meal;
             _itemManager.Despawn(meal,true);
         }
 
@@ -161,12 +162,11 @@ namespace Clients
 
             GameObject go = _itemManager.TrySpawn(ingredient.Prefab);
             Ingredient item = go.GetComponent<Ingredient>();
-            item.SetAnimationMode(false);
             bool couldBePlaced = false;
             foreach (var slot in _slotsToSpawn)
             {
-                if (!slot.IsFree) continue;
-                slot.RequestGrab(item);
+                if (!slot.Container.CanGrab(item.Grabbable)) continue;
+                slot.Container.RequestGrab(item.Grabbable);
                 item.transform.position = slot.transform.position;
                 couldBePlaced = true;
                 break;

@@ -1,8 +1,4 @@
-using GameSystem;
-using System;
-using System.Collections;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,48 +7,22 @@ namespace Cooking
     /// <summary>
     /// The plate class manages the contained items, can cook, then transform in a completed recipe
     /// </summary>
-    public class Plate : Item, ITrashable, ICookable
+    public class Plate : Item
     {
         #region Properties
-        public float TargetCookDuration {get => _targetCookDuration; set => _targetCookDuration = value; }
-        public float CookDuration { get; set; }
 
-        public float CookPercentage => CookDuration / (TargetCookDuration > 0 ? TargetCookDuration : 1.0f); // Between 0 and 1
-
-        public UnityEvent<ICookable> OnCook => _onCook;
         public ECookStatus CookStatus => ECookStatus.Raw;
 
         #endregion
 
         #region Fields
-        
-        [SerializeField] string _itemID;
-        
+                
         [Header("Plate references")]
-        //[Tooltip("Reference a slot container in which to put the base ingredient.")]
-        //[SerializeField] private SlotContainer _baseIngredientSlot;
-        [Tooltip("Reference a multi slot container in which to put every ingredient.")]
-        [SerializeField] private MultiSlotContainer _ingredientSlots;
         [Tooltip("The recipe book should contain every possible recipe for this object.")]
         [SerializeField] private SO_RecipeBook _recipeBook;
-        //[Space]
-        //[Header("Plate parameters")]
-        //[Tooltip("How much time it will take to be 100% cooked.")]
-        private float _targetCookDuration = 0.0f;
-        [Space]
-        [Header("Plate events")]
-        [Tooltip("Invoked repeatedly when the plate is cooking")]
-        [SerializeField] private UnityEvent<ICookable> _onCook;
-        [Tooltip("Invoked when the base ingredient is added to the plate")]
-        [SerializeField] private UnityEvent _onBaseIngredientAdded;
-        [Tooltip("Invoked when the base ingredient is removed from the plate")]
-        [SerializeField] private UnityEvent _onBaseIngredientRemoved;
-        [Tooltip("Invoked when a normal ingredient is added to the plate")]
-        [SerializeField] private UnityEvent _onIngredientAdded;
-        [Tooltip("Invoked when a normal ingredient is removed from the plate")]
-        [SerializeField] private UnityEvent _onIngredientRemoved;
 
         private ItemManager _itemManager;
+        protected MultiContainer _slots;
         #endregion
         
         
@@ -62,44 +32,33 @@ namespace Cooking
         protected override void Start()
         {
             base.Start();
-            //if (_baseIngredientSlot == null)
-                //Debug.LogError("[Plate] : Please reference the base ingredient slot in the inspector");
-            if (_ingredientSlots == null)
-                Debug.LogError("[Plate] : Please reference the ingredient multislot in the inspector");
-            if (_ingredientSlots == null)
-                Debug.LogError("[Plate] : Please reference the ingredient multislot in the inspector");
-
+            
             SetupSlots();
             Reference.GetManager(out _itemManager);
         }
         
-        protected override string UpdateID()
-        {
-            base.SetID(_itemID);
-            return _itemID;
-        }
 
-        public override void Reset()
+        public  void Reset()
         {
-            base.Reset();
-            DespawnContent();
+            //base.Reset();
+            //DespawnContent();
         }
 
         private void SetupSlots()
         {
-            _ingredientSlots.SetActive(true);
+            //_ingredientSlots.SetActive(true);
 
-            _ingredientSlots.OnGrab.AddListener((item) => _onIngredientAdded?.Invoke());
-            //_ingredientSlots.OnDrop.AddListener((item) => { if (_ingredientSlots.HeldItems.Count == 0) _baseIngredientSlot.IsLocked = false; });
-            _ingredientSlots.OnDrop.AddListener((item) => _onIngredientRemoved?.Invoke());
+            //_ingredientSlots.OnGrab.AddListener((item) => _onIngredientAdded?.Invoke());
+
+            //_ingredientSlots.OnDrop.AddListener((item) => _onIngredientRemoved?.Invoke());
         }
 
+        /*
         public void Cook(float dT) 
         {
             SO_Recipe recipe = GetMatchingRecipe();
             _targetCookDuration = recipe.timeToCook;
             CookDuration += dT; 
-            OnCook?.Invoke(this);
             UpdateTooltip();
             SetItemColliders(false);
 
@@ -114,6 +73,8 @@ namespace Cooking
             UpdateTooltip();
             SetItemColliders(true);
         }
+        */
+
         /// <summary>
         /// Checks if the current ingredient list can make a recipe. If so, it passes said recipe as ref
         /// </summary>
@@ -127,6 +88,7 @@ namespace Cooking
 
         public SO_Recipe GetMatchingRecipe()
         {
+            /*
             var ingredients = _ingredientSlots.HeldItems.Select((item) => ((Ingredient)item).Model);
             if (ingredients.Count() == 0) return _recipeBook.EmptyRecipe; // If empty recipe
             foreach (var r in _recipeBook.Recipes)
@@ -136,7 +98,7 @@ namespace Cooking
                     return r;
                 }
             }
-
+            */
             return _recipeBook.FailedRecipe;
         }
 
@@ -146,28 +108,28 @@ namespace Cooking
             go.name = this.name + " as meal";
             Meal meal = go.GetComponent<Meal>();
             meal.Recipe = recipe;
-            Container.Empty();
-            Container.RequestGrab(meal);
-            DespawnContent();
-            _ingredientSlots.Reset();
+            //Container.Empty();
+            //Container.RequestGrab(meal);
+            //DespawnContent();
+            //_ingredientSlots.Reset();
 
-            StopCooking();
+            //StopCooking();
             _itemManager.Despawn(this);
         }
-
+        /*
         public void DespawnContent()
         {
 
             foreach (var slot in _ingredientSlots.Slots)
             {
-                if (slot == null || slot.HeldItem == null)
+                //if (slot == null || slot.HeldItem == null)
                 {
 
                     continue;
                 }
 
                 var obj = slot.HeldItem;
-                var ingredient = obj as Item;
+                var ingredient = obj.Owner as Item;
                 if (ingredient != null)
                 {
 
@@ -176,9 +138,11 @@ namespace Cooking
                 else
                     _itemManager.Log(LogType.Error,"Ingredient was null when trying to get despawned");
             }
-            _ingredientSlots.HeldItems.Clear();
+            //_ingredientSlots.HeldItems.Clear();
         }
+        */
 
+        /*
         private void UpdateTooltip()
         {
             string text;
@@ -190,17 +154,18 @@ namespace Cooking
             {
                 text = "Cooking (" + Mathf.RoundToInt(CookPercentage*100) +"%)";
             }
-            if (_tooltipComponent != null)
+            //if (_tooltipComponent != null)
             {
-                _tooltipComponent.SetText(text);
+                //_tooltipComponent.SetText(text);
             }
         }
+        */
 
         public void SetItemColliders(bool active)
         {
-            foreach(var item in _ingredientSlots.HeldItems)
+            //foreach(var item in _ingredientSlots.HeldItems)
             {
-                item.Collider.enabled = active;
+                //item.Collider.enabled = active;
             }
         }
         #endregion

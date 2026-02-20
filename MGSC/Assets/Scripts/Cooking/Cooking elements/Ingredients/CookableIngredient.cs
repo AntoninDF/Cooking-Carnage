@@ -6,11 +6,11 @@ using UnityEngine.Events;
 namespace Cooking
 {
 
-    public class CookableIngredient : Ingredient, ICookable
+    public class CookableIngredient : Ingredient
     {
         #region Properties
         public float TargetCookDuration { get=>_targetCookDuration; set=>_targetCookDuration = value; }
-        public UnityEvent<ICookable> OnCook => _onCook;
+        public UnityEvent OnCook => _onCook;
         public float CookDuration { get; set; }
         public float CookPercentage => CookDuration / (TargetCookDuration > 0 ? TargetCookDuration : 1.0f);
         public ECookStatus CookStatus { get; set; }
@@ -30,7 +30,7 @@ namespace Cooking
         [Space]
         [Header("Cooking events")]
         [Tooltip("Invoked repeatedly when the ingredient is cooking")]
-        [SerializeField] private UnityEvent<ICookable> _onCook;
+        [SerializeField] private UnityEvent _onCook;
         #endregion
 
         #region Methods
@@ -40,20 +40,9 @@ namespace Cooking
             base.Start();
         }
 
-        protected override void Update()
-        {
-            UpdateUI();
-        }
+        
 
-        protected override void UpdateUI()
-        {
-            base.UpdateUI();
-            if (_cookIndicator == null)
-                throw new MissingReferenceException("Please reference the cook indicator in the inspector of " + name);
-            _cookIndicator.text = string.Format(_cookIndicatorText, Mathf.Round(CookPercentage * 100) + "%");
-        }
-
-        public void Cook(float dT) { CookDuration += dT; OnCook?.Invoke(this); }
+        public void Cook(float dT) { CookDuration += dT; OnCook?.Invoke(); }
         public void StopCooking() { }
 
         #endregion

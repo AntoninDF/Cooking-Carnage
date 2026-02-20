@@ -129,6 +129,11 @@ namespace GameSystem
             this.Log(manager.ToString() + " has been removed");
         }
         
+        public bool HasUpdatable(UpdatableBase manager)
+        {
+            return _updatables.Contains(manager);
+        }
+        
         #endregion
     }
 

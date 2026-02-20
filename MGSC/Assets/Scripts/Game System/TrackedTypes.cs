@@ -18,20 +18,15 @@ public static class TrackedTypes
             typeof(Counter),
             typeof(Item),
             typeof(Ingredient),
-            typeof(Furnace),
             typeof(Oven),
-            typeof(Oven2),
-            typeof(TrashCan),
             typeof(Meal),
             typeof(Blender),
             typeof(SimpleClientSpawner),
             typeof(PlayerStart),
-            typeof(PlayerInterface),
+            typeof(Player),
             typeof(OvenSetup),
             typeof(Entrance),
-            typeof(PlayerController),
             typeof(UITarget),
-            typeof(ItemSpawner),
             typeof(Blender)
 
             // ...

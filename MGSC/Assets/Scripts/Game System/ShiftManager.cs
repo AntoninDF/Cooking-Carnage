@@ -151,11 +151,11 @@ namespace GameSystem
                 blender.Reset();
             }
 
-            foreach (var oven in Reference.GetAll<Cooking.Oven>())
+            foreach (var oven in Reference.GetAll<Oven>())
             {
-                oven.Reset();
+                //oven.Reset();
             }
-            var player = Reference.Get<PlayerController>();
+            var player = Reference.Get<Player>();
             var playerStart = Reference.Get<PlayerStart>();
             if (player != null && playerStart != null)
             {

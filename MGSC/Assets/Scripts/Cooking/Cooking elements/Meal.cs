@@ -6,7 +6,7 @@ namespace Cooking
     /// <summary>
     /// Defines the data and behaviour needed to, uh, be a meal
     /// </summary>
-    public class Meal : Item, ITrashable, ICookable
+    public class Meal : Item
     {
         #region Properties
         public SO_Recipe Recipe { get => _recipe; set => _recipe = value; }
@@ -17,7 +17,7 @@ namespace Cooking
 
         public ECookStatus CookStatus { get; set; }  = ECookStatus.Cooked;
 
-        public UnityEvent<ICookable> OnCook => _onCook;
+        public UnityEvent OnCook => _onCook;
         public UnityEvent OnOvercooked => _onOvercooked;
         
         
@@ -32,7 +32,7 @@ namespace Cooking
         [SerializeField] private SO_Recipe _recipe;
         [Header("Meal events")]
         [Tooltip("Invoked repeatedly when the meal is cooking")]
-        [SerializeField] private UnityEvent<ICookable> _onCook;
+        [SerializeField] private UnityEvent _onCook;
         [Tooltip("Invoked when the meal gets overcooked")]
         [SerializeField] private UnityEvent _onOvercooked;
 
@@ -46,30 +46,24 @@ namespace Cooking
         {
             base.Start();
             if (Recipe == null) Debug.LogWarning("Recipe field was not set to an instance of an object");
-            _tooltipComponent.SetText(Recipe.Name);
+            
 
-            OnCook?.Invoke(this);
+            OnCook?.Invoke();
         }
         
-        public override void Reset()
+        public  void Reset()
         {
-            base.Reset();
             eaten = false;
             CookStatus = ECookStatus.Cooked;
         }
         
-        protected override string UpdateID()
-        {
-            base.SetID(_itemID);
-            return _itemID;
-        }
         
 
         public void Cook(float dT)
         {
             _targetCookDuration = _recipe.timeToOvercook;
             CookDuration += dT;
-            OnCook?.Invoke(this);
+            OnCook?.Invoke();
             UpdateTooltip();
 
             if (CookPercentage >= 1 && CookStatus != ECookStatus.Overcooked)
@@ -86,7 +80,6 @@ namespace Cooking
         {
             string text = _recipe.Name;
             if (CookStatus == ECookStatus.Overcooked) text += " (overcooked)";
-            _tooltipComponent.SetText(text);
         }
         private void UpdateTooltip()
         {
@@ -98,10 +91,6 @@ namespace Cooking
             else
             {
                 text = "Cooking (" + Mathf.RoundToInt(CookPercentage * 100 + 100) + "%)";
-            }
-            if (_tooltipComponent != null)
-            {
-                _tooltipComponent.SetText(text);
             }
         }
         

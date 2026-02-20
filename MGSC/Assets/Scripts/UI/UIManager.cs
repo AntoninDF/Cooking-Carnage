@@ -61,7 +61,7 @@ namespace UI
         private InputActionAsset _inputActionAsset;
         private InputActionMap _playerInputs;
         private InputActionMap _UIInputs;
-        private PlayerInterface _player;
+        private Player _player;
         private UIMenu _currentMenu;
         private Dictionary<string, UIMenu> _menusByName = new();
 
@@ -150,7 +150,10 @@ namespace UI
         public void EnableMenu(string menuName)
         {
             if (!_menusByName.ContainsKey(menuName))
+            {
                 this.Log(LogType.Warning, $"No such menu could be found {menuName}");
+                return;
+            }
             
             EnableMenu(_menusByName[menuName]);
         }

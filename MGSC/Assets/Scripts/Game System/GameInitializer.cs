@@ -1,10 +1,7 @@
 using System;
 using Controller;
 using NaughtyAttributes;
-using System.Collections.Generic;
-using TMPro;
 using UI;
-using Unity.VisualScripting;
 using UnityEngine;
 using Upgrades;
 namespace GameSystem
@@ -46,8 +43,11 @@ namespace GameSystem
         /// <exception cref="MissingComponentException"></exception>
         public void ResetScene()
         {
-            if (_gameProfile.ResetRefManager) Reference.Reset();
-            Reference.RemoveAllManagers();
+            if (_gameProfile.ResetRefManager)
+            {
+                Reference.Reset();
+                Reference.RemoveAllManagers();
+            }
             if (_gameProfile == null)
                 throw new MissingReferenceException("[GameInitializer] : Please reference a game profile in the inspector.");
 
@@ -96,6 +96,8 @@ namespace GameSystem
 
             // Remove the GameInitializer
             if (_gameProfile.DestroyAfterInitialization) Destroy(this.gameObject);
+
+            CursorUtility.Update();
         }
 
         private void InitManagers()
@@ -126,7 +128,7 @@ namespace GameSystem
         private void MakeGameLoop()
         {
             // Init GameLoop
-            if (Reference.AssetReferences.UI != null)
+            if (Reference.AssetReferences.GameLoop != null)
             {
                 Instantiate(Reference.AssetReferences.GameLoop);
             }

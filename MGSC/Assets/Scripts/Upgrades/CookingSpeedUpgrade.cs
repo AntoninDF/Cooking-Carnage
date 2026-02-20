@@ -29,7 +29,7 @@ namespace Upgrades
 
             foreach (Oven o in _targetOvens)
             {
-                o.SetStrength(_level * 2f);
+                //o.SetStrength(_level * 2f);
             }
         }
         public override void LevelUp()

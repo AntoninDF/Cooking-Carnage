@@ -109,10 +109,7 @@ public class ItemManager : IManager
 
         if (id == null)
         {
-            if (item.ID != null)
-            {
-                id = item.ID;
-            }
+            id = item.GetEntityId().ToString();
         }
         
         if (!_itemsByID.ContainsKey(id))
@@ -142,7 +139,7 @@ public class ItemManager : IManager
 
         if (id == null)
         {
-            id = item.ID;
+            id = item.GetEntityId().ToString();
         }
 
         if (_itemsByID.ContainsKey(id))
@@ -150,11 +147,11 @@ public class ItemManager : IManager
             if (_itemsByID[id].Contains(item))
             {
                 _itemsByID[id].Remove(item);
-                this.Log(LogType.Log, item.name +" has been removed, there is "+ _itemsByID[item.ID].Count+" left");
+                this.Log(LogType.Log, item.name +" has been removed, there is "+ _itemsByID[item.GetEntityId().ToString()].Count+" left");
             }
             else
             {
-                this.Log(LogType.Warning, item.name + " can't be removed because it wasn't stored at ID "+item.ID);
+                this.Log(LogType.Warning, item.name + " can't be removed because it wasn't stored at ID "+item.GetEntityId().ToString());
             }
         }
     }
@@ -180,9 +177,9 @@ public class ItemManager : IManager
             return null;
         }
 
-        if (!string.IsNullOrEmpty(prefabItem.ID))
+        if (!string.IsNullOrEmpty(prefabItem.GetEntityId().ToString()))
         {
-            correspondingItems = GetItemsByID(prefabItem.ID);
+            correspondingItems = GetItemsByID(prefabItem.GetEntityId().ToString());
 
             if (correspondingItems != null)
             {
@@ -194,7 +191,7 @@ public class ItemManager : IManager
                     {
                         parent = _itemsPooled;
                     }
-                    Reference.Get<Oven2>().SendMessage("Update");
+
                     return Spawn(item, position, rotation, parent);
                     
                 }
@@ -242,18 +239,18 @@ public class ItemManager : IManager
         }
         if (!itemToStore.gameObject.activeSelf)
         {
-            this.Log(LogType.Warning, itemToStore.name + " is not active and probably shouldn't be stored now at ID "+itemToStore.ID);
+            this.Log(LogType.Warning, itemToStore.name + " is not active and probably shouldn't be stored now at ID "+itemToStore.GetEntityId().ToString());
         }
         itemToStore.gameObject.SetActive(false);
-        itemToStore.OnDisable();
+        //itemToStore.OnDisable();
         itemToStore.transform.parent = _itemsPooled;
-        if (itemToStore.Container != null)
-            itemToStore.Container.RequestDrop(itemToStore);
+        //if (itemToStore.Container != null)
+            //itemToStore.Container.RequestDrop(itemToStore);
         UpdateActiveList(itemToStore);
         
-        if (reset || spawnItems.Contains(itemToStore))
-            itemToStore.Reset();
-        this.Log(LogType.Log, "Despawned " + itemToStore.name + ", will now try to store it at ID "+itemToStore.ID);
+        //if (reset || spawnItems.Contains(itemToStore))
+            //itemToStore.Reset();
+        this.Log(LogType.Log, "Despawned " + itemToStore.name + ", will now try to store it at ID "+itemToStore.GetEntityId().ToString());
 
         TryStore(itemToStore);
     }

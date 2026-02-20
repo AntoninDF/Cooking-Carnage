@@ -46,22 +46,26 @@ public class CameraManager : IManager
         Reference.GetManager(out _uiManager);
         Reference.GetManager(out _timerManager);
 
-        var player = Reference.Get<PlayerInterface>();
-
-        foreach (var cam in player.GetComponentsInChildren<CinemachineVirtualCameraBase>())
+        if (Reference.TryGet(out Player player))
         {
-            if (cam.Name == "FP Camera")
+            foreach (var cam in player.GetComponentsInChildren<CinemachineVirtualCameraBase>())
             {
-                camFPV = cam;
+                if (cam.Name == "FP Camera")
+                {
+                    camFPV = cam;
+                }
+                else if (cam.Name == "Focus Camera")
+                {
+                    camFocus = cam;
+                }
             }
-            else if (cam.Name == "Focus Camera")
-            {
-                camFocus = cam;
-            }
+
+            if (camFocus == null || camFPV == null)
+                this.Log(LogType.Error, "No Camera found, please fix this");
         }
+
+        
             
-        if (camFocus == null || camFPV == null)
-            this.Log(LogType.Error, "No Camera found, please fix this");
             
         focusPivot = new GameObject("Focus Pivot");
     }

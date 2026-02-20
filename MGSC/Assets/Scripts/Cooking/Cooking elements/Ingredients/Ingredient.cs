@@ -8,7 +8,7 @@ namespace Cooking
     /// <summary>
     /// Implements the base behaviour for every ingredient
     /// </summary>
-    public class Ingredient : Item, ITrashable
+    public class Ingredient : Item
     {
         #region Properties
         public SO_Ingredient Model => _model;
@@ -43,17 +43,10 @@ namespace Cooking
             Reference.GetManager(out _itemManager);
         }
 
-        protected override string UpdateID()
+        protected  string UpdateID()
         {
-            base.SetID(_itemID);
+            //base.SetID(_itemID);
             return _itemID;
-        }
-        
-
-        protected override void UpdateUI()
-        {
-            base.UpdateUI();
-            _tooltipComponent.SetText(Model.Name);
         }
 
         public void Cut()
@@ -66,7 +59,7 @@ namespace Cooking
             if (!_itemID.Contains(" Cut"))
             {
                 _itemID += " Cut";
-                base.SetID(_itemID);
+                //base.SetID(_itemID);
             }
         }
 

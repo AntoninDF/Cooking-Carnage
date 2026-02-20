@@ -29,6 +29,7 @@ namespace GameSystem
         /// </summary>
         public TimerManager()
         {
+            base.RegisterToGameLoop();
             Register();
         }
         
@@ -82,6 +83,8 @@ namespace GameSystem
         /// </summary>
         public Timer StartTimer( string name, float duration, Action onComplete ,bool frameBased = false, Action<float> onUpdate=null)
         {
+            if (!IsRegistered())
+                RegisterToGameLoop();
             // If the timer already exist, replaces it by the new one
             if (timers.TryGetValue(name, out var existingTimer))
             {

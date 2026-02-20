@@ -10,7 +10,7 @@ namespace Cooking
 {
 
 
-    public class Blender : MonoBehaviour, IInteractable, IWatchable, ICallbackBroadcaster
+    public class Blender : MonoBehaviour, IFeatureCollection
     {
         #region Properties
         public float CutDuration { get => _cutDuration; set { _cutDuration = value; } }
@@ -20,14 +20,14 @@ namespace Cooking
 
         public Collider Collider { get; set; }
 
-        public PlayerInterface Player { get; set; }
+        public Player Player { get; set; }
 
-        public bool IsLookedAt => Player.LookTarget == gameObject;
+        public bool IsLookedAt => false; // To repair
         public UnityEvent OnLookAt { get; }
         public UnityEvent OnStopLookAt { get; }
         public bool IsLocked { get; set; }
         public bool EnableCallbacks { get; set; } = true;
-        public ICallbackBroadcaster Self => this;
+        public FeatureCollection Collection { get; set; } = new();
 
         #endregion
 
@@ -84,30 +84,29 @@ namespace Cooking
             if (_slotContainer == null && !TryGetComponent(out _slotContainer))
                 throw new MissingReferenceException("[Blender] : Missing reference for the slot container. Please assign it in the inspector");
 
-            _slotContainer.SetFilter(new Filter(EFilterCondition.MustBe, EItemType.Ingredient));
-            _slotContainer.OnDrop.AddListener(StopCutting);
+            //_slotContainer.SetFilter(new Filter(EFilterCondition.MustBe, EItemType.Ingredient));
+            //_slotContainer.OnDrop.AddListener(StopCutting);
             Reference.GetManager(out _timerManager);
             if (_timerManager == null)
                 throw new MissingReferenceException("[Blender] : No timer manager found");
 
         }
 
-        public bool RequestInteraction(PlayerInteractor interactor)
+        public bool RequestInteraction(PlayerActor interactor)
         {
             if (
                 IsLocked ||
                 _slotContainer == null || 
                 _slotContainer.HeldItem == null ||
-                _slotContainer.HeldItem is not Ingredient ingredient ||
+                _slotContainer.HeldItem.Owner is not Ingredient ingredient ||
                 ingredient.IsCut
                 )
             {
-                ingredient = _slotContainer.HeldItem as Ingredient;
+                ingredient = _slotContainer.HeldItem.Owner as Ingredient;
                 Debug.Log("IsLocked : " + IsLocked);
                 Debug.Log("SlotContainer : " + (_slotContainer == null ? "null" : "not null"));
                 Debug.Log("Held item : " + _slotContainer?.HeldItem);
                 if (ingredient != null) Debug.Log("Ingredient is cut : " + (ingredient.IsCut?"yup":"nope") );
-                Self.Callback(_onFailedInteraction);
                 return false;
             }
             Interact(ingredient);
@@ -118,14 +117,12 @@ namespace Cooking
         {
             _isCutting = true;
             _timerManager.StartTimer("Cutting", _cutDuration, () => TryCutIngredient(ingredient));
-            Self.Callback(_onInteract);
         }
 
         private void TryCutIngredient(Ingredient ingredient)
         {
             if (IsLocked) return;
             ingredient.Cut();
-            Self.Callback(_onItemCut);
             _isCutting = false;
         }
 
@@ -136,18 +133,13 @@ namespace Cooking
             _timerManager.StopTimer("Cutting");
             _onStopCutting?.Invoke();
         }
-        public void StopCutting(IGrabbable item) => StopCutting();
+        public void StopCutting(Grabbable item) => StopCutting();
 
         /// <summary>
         /// Tell this IWatchable that it is being looked at
         /// </summary>
         /// <param name="interactor"></param>
-        public void LookAt(PlayerInteractor interactor)
-        {
-            Player = interactor.Player;
-            _onLookAt?.Invoke();
-
-        }
+   
         public void StopLookAt()
         {
             _onStopLookAt?.Invoke();
@@ -172,8 +164,8 @@ namespace Cooking
             if (_slotContainer != null && _slotContainer.HeldItem != null)
             {
                 if (Reference.TryGetManager(out ItemManager im))
-                    im.Despawn(_slotContainer.HeldItem as Ingredient);
-                _slotContainer.HeldItem = null;
+                    im.Despawn(null); // To repair
+                _slotContainer.Container.RequestDrop(_slotContainer.HeldItem);
             }
         }
 
