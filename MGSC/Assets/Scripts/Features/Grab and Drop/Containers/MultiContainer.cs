@@ -47,10 +47,12 @@ public class MultiContainer : Container
         HeldItems.Add(item);
         item.Container?.RequestDrop(item);
         item.GetGrabbedBy(this);
+        OnGrab?.Invoke(item);
     }
     protected virtual void Drop(Grabbable item = null)
     {
         HeldItems.Remove(item);
+        OnDrop?.Invoke(item);
     }
     public override bool CanGrab(Grabbable item)
     {

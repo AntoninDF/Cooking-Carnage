@@ -1,8 +1,5 @@
-
-using Orders;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
 
 namespace Cooking
 {
@@ -12,6 +9,7 @@ namespace Cooking
     public class ContainerFilter : FeatureComponent
     {
         public List<Filter> Filters = new();
+        public List<Func<Grabbable, bool>> Conditions = new();
 
         public ContainerFilter(IFeatureCollection owner) : base(owner)
         {
@@ -19,6 +17,15 @@ namespace Cooking
         public bool IsValid(Grabbable comparedItem)
         {
             bool result = true;
+
+            foreach(var condition in Conditions)
+            {
+                if (!condition(comparedItem))
+                {
+                    result = false; break;
+                }
+            }
+
             foreach (Filter filter in Filters)
             {
                 switch (filter.Condition)
@@ -37,27 +44,12 @@ namespace Cooking
         }
         private bool IsValid(Grabbable item, EItemType type)
         {
-            switch (type)
-            {
-                case EItemType.Ingredient:
-                    return item is Ingredient;
-                case EItemType.CutIngredient:
-                    return (item is Ingredient && (item.Owner as Ingredient).IsCut);
-                case EItemType.Meal:
-                    return item is Meal;
-                case EItemType.Plate:
-                    return item is Plate;
-                case EItemType.Trashable:
-                    return item is ITrashable;
-                case EItemType.Oven:
-                    return item is Oven;
-                
-                
-            }
+            
             return false;
         }
         public void AddFilter(Filter filter) => Filters.Add(filter);
         public void AddFilter(EFilterCondition condition, EItemType itemType) => Filters.Add(new Filter(condition, itemType));
+        public void AddCondition(Func<Grabbable, bool> condition) => Conditions.Add(condition);
         public void Clear() => Filters.Clear();
 
         

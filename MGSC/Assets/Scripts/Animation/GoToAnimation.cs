@@ -1,11 +1,16 @@
 using GameSystem;
+using System;
 using UnityEngine;
 
 public class GoToAnimation : FeatureComponent
 {
     public Transform ControlledTransform { get; set; }
+    public Action OnAnimationStart { get; set; }
+    public Action OnAnimationStop { get; set; }
 
 
+    private Vector3 defaultScale;
+    private Quaternion defaultRotation;
     private Vector3 startPos;
     private Vector3 endPos;
     private Transform targetTransform;
@@ -15,11 +20,16 @@ public class GoToAnimation : FeatureComponent
     {
         Reference.GetManager(out timerManager);
         ControlledTransform = controlledTransform;
+        defaultScale = ControlledTransform.lossyScale;
+        defaultRotation = ControlledTransform.rotation;
     }
 
     public void GoTo(Vector3 endPos, float duration=0.1f)
     {
         if (!CanAnimate()) return;
+
+        OnAnimationStart?.Invoke();
+
         startPos = ControlledTransform.position;
         this.endPos = endPos;
 
@@ -30,7 +40,7 @@ public class GoToAnimation : FeatureComponent
         else
             timerManager.StartTimer("GoToAnimation", duration, null, false, (elapsed) => SetPos(elapsed / duration));
     }
-    public void GoTo(Transform dest, float duration=0.1f, bool setAsParent=true)
+    public void GoTo(Transform dest, Vector3 worldPos, float duration=0.1f, bool setAsParent=true)
     {
         if (!CanAnimate())
         {
@@ -39,29 +49,39 @@ public class GoToAnimation : FeatureComponent
 
         if (dest == null)
         {
-            GoTo(Vector3.zero, duration);
+            GoTo(worldPos, duration);
             return;
         }
 
+        OnAnimationStart?.Invoke();
 
         if (setAsParent)
         {
             ControlledTransform.SetParent(dest);
+            var a = defaultScale;
+            var b = dest.lossyScale;
+            ControlledTransform.localScale = new Vector3(a.x/(b.x==0?1:b.x), a.y / (b.y == 0 ? 1 : b.y), a.z / (b.z == 0 ? 1 : b.z));
+            ControlledTransform.rotation = defaultRotation;
             startPos = ControlledTransform.localPosition;
-            endPos = Vector3.zero;
+            endPos = worldPos - dest.position;
+            endPos = new Vector3(endPos.x / (b.x == 0 ? 1 : b.x), endPos.y / (b.y == 0 ? 1 : b.y), endPos.z / (b.z == 0 ? 1 : b.z));
 
         }
         else
         {
             startPos = ControlledTransform.position;
-            endPos = dest.position;
+            endPos = worldPos;
         }
 
             targetTransform = dest;
         if (duration == 0f)
             SetPos(1);
         else
-            timerManager.StartTimer("GoToAnimation", duration, null, false, (elapsed) => SetPos(elapsed / duration));
+            timerManager.StartTimer("GoToAnimation", duration, EndAnimation, false, (elapsed) => SetPos(elapsed / duration));
+    }
+    public void GoTo(Transform dest, float duration=0.1f, bool setAsParent=true)
+    {
+        GoTo(dest, dest.position, duration, setAsParent);
     }
 
     private void SetPos(float percentage)
@@ -77,6 +97,11 @@ public class GoToAnimation : FeatureComponent
             ControlledTransform.position = startPos + (endPos - startPos) * curve.Evaluate(percentage);
         }
 
+    }
+
+    private void EndAnimation()
+    {
+        OnAnimationStop?.Invoke();
     }
 
     public bool CanAnimate()

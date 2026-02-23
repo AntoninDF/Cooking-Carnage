@@ -1,5 +1,6 @@
 
 using Cooking;
+using System;
 using System.Transactions;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,7 +10,8 @@ public abstract class Container : FeatureComponent
 
     public Transform transform {  get; set; }
     public ContainerFilter Filter { get; set; }
-
+    public Action<Grabbable> OnGrab;
+    public Action<Grabbable> OnDrop;
 
     protected Container(IFeatureCollection owner) : base(owner)
     {

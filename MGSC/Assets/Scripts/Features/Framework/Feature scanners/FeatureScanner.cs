@@ -4,10 +4,21 @@ public class FeatureScanner
 {
     #region Methods
 
+    public virtual List<FeatureComponent> Get(out List<FeatureComponent> list)
+    {
+        list = Get();
+        return list;
+    }
     public virtual List<FeatureComponent> Get()
     {
         var manager = Reference.GetManager<FeatureManager>();
         return manager.GetAll();
+    }
+
+    public virtual List<T> Get<T>(out List<T> list) where T : FeatureComponent
+    {
+        list = Get<T>();
+        return list;
     }
     public virtual List<T> Get<T>() where T : FeatureComponent
     {

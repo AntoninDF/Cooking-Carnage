@@ -76,9 +76,12 @@ public class Player : MonoBehaviour, IFeatureCollection
         PlayerActor.AddConstantAction(typeof(LookAtTarget),
             (feature) =>
             {
+                // The look at target is always looked at by default, since it is only triggered if in line of sight.
+                // So there is no need to check with CheckIfLookedAt().
                 var obj = feature as LookAtTarget;
-                Transform view = GetCameraTransform();
-                return obj.CheckIfLookedAt(view.position, view.forward, PlayerActor.ReachDistance);
+                obj.IsLookedAt = true;
+                obj.LookPosition = PlayerActor.LookPosition;
+                return true;
             }
             );
 

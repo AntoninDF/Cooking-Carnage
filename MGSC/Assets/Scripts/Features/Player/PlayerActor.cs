@@ -11,6 +11,7 @@ public class PlayerActor : FeatureComponent, IFeatureCollection
     public List<FeatureComponent> AvailableFeatures = new();
 
     public float ReachDistance { get; set; } = 10f;
+    public Vector3 LookPosition => _scanner.LastScanHitPosition;
 
     #region Fields
 

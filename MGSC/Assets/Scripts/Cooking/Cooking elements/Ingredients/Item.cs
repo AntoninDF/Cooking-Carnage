@@ -19,10 +19,12 @@ public class Item : MonoBehaviour, IFeatureCollection
     public GoToAnimation Anim { get; set; }
     public Collider Collider { get; set; }
     public LookAtTarget LookAtTarget { get; set; }
+    public BoundsFinder Bounds { get; set; }
     #endregion
 
     #region Fields
 
+    private Bounds bounds;
 
     #endregion
 
@@ -34,12 +36,30 @@ public class Item : MonoBehaviour, IFeatureCollection
         Grabbable = new(this);
         Anim = new(this, transform);
         LookAtTarget = new(this, transform);
+        Bounds = new(this, transform);
+        Bounds.Get(out bounds);
         BindEvents();
     }
 
     protected void BindEvents()
     {
-        Grabbable.OnGrab += () => Anim.GoTo(Grabbable.Container?.transform, setAsParent: true);
+        Grabbable.OnGrab += TriggerAnim;
+    }
+
+    private void TriggerAnim()
+    {
+        if (Grabbable.Container == null || Grabbable.Container.transform == null)
+        {
+            Anim.GoTo(Vector3.down * Bounds.FindLocalLowestPoint());
+        }
+        if (Grabbable.Container.TryGetSibling(out LookAtTarget lookTarget))
+        {
+            Anim.GoTo(Grabbable.Container.transform, lookTarget.LookPosition + Vector3.down * Bounds.FindLocalLowestPoint());
+        }
+        else
+        {
+            Anim.GoTo(Grabbable.Container.transform);
+        }
     }
     #endregion
 }

@@ -46,7 +46,6 @@ public class PlayerInputReader : BasePlayerInputs
 
     protected void BindEvents()
     {
-        UnityEngine.Debug.Log("Binding events");
         _movementAction.performed += MovementAction;
         _movementAction.canceled += MovementActionReset;
 
@@ -59,7 +58,6 @@ public class PlayerInputReader : BasePlayerInputs
     }
     protected void UnbindEvents()
     {
-        UnityEngine.Debug.Log("Unbinding events");
         _movementAction.performed -= MovementAction;
         _movementAction.canceled -= MovementActionReset;
 

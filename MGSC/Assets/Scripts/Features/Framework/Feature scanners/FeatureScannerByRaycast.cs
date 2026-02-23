@@ -10,6 +10,7 @@ public class FeatureScannerByRaycast : FeatureScanner
     public Vector3 Direction { get; set; }
     public float Distance { get; set; }
     public bool SortByDistance { get; set; } = true;
+    public Vector3 LastScanHitPosition { get; set; }
 
     #endregion
 
@@ -43,10 +44,18 @@ public class FeatureScannerByRaycast : FeatureScanner
 
         if (SortByDistance) results.OrderBy(hit => hit.distance);
 
+        float minDistance = float.MaxValue;
+
         foreach(RaycastHit hit in results)
         {
             var go = hit.transform.gameObject;
             if (go == null) continue;
+
+            if (hit.distance < minDistance)
+            {
+                LastScanHitPosition = hit.point;
+                minDistance = hit.distance;
+            }
 
             foreach (var comp in go.GetComponents<MonoBehaviour>())
             {

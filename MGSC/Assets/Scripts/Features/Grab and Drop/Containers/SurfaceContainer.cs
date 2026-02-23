@@ -37,7 +37,7 @@ namespace Cooking
             Filter = new(this);
             Container.Filter = Filter;
             Filter.Filters = _filters;
-            LookAtTarget = new(this, transform);
+            LookAtTarget = new LookAtTargetByRaycast(this, transform);
 
             LookAtTarget.OnStartLookAt += () => UnityEngine.Debug.Log("StartLookat");
             LookAtTarget.OnStopLookAt += () => UnityEngine.Debug.Log("StopLookat");

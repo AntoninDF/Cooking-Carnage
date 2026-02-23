@@ -41,9 +41,11 @@ public class SoloContainer : Container
         HeldItem = item;
         item.Container?.RequestDrop(item);
         item.GetGrabbedBy(this);
+        OnGrab?.Invoke(item);
     }
     protected virtual void Drop(Grabbable item = null)
     {
+        OnDrop?.Invoke(HeldItem);
         HeldItem = null;
     }
     public override bool CanGrab(Grabbable item)

@@ -21,7 +21,7 @@ namespace Cooking
         public bool EnableCallbacks { get; set; }
 
         public FeatureCollection Collection { get; set; } = new();
-
+        public MultiContainer Container { get; set; }
         #endregion
 
         #region Fields
@@ -34,32 +34,35 @@ namespace Cooking
 
 
         private ContainerFilter _filter;
+        private List<SoloContainer> _slotComponents;
         #endregion
 
         #region Methods
 
         private void Start()
         {
+            Container = new(this);
+            Filter = new (this);
             Init();
         }
 
         private void Init()
         {
-            if (_slots.Count == 0)
+            if (_slots.Count == 0 && !_detectSlots)
             {
-                if (!_detectSlots)
-                    Debug.LogWarning("Please reference the slots for this multi-slot container in the inspector, or opt for automatic detection. (GameObject : " + name + ")");
-                else
-                {
-                    throw new NotImplementedException("The automatic detection of child slots isn't yet implemented. If it is a problem, warn me :) (GameObject : " + name + ")");
-                }
+                Debug.LogWarning("Please reference the slots for this multi-slot container in the inspector, or opt for automatic detection. (GameObject : " + name + ")");
             }
 
-            foreach (var slot in _slots)
-            {
-                //slot.OnGrab.AddListener(RecordGrab);
-                //slot.OnDrop.AddListener(RecordDrop);
-            }
+            if (_detectSlots) _slots = GetComponentsInChildren<SlotContainer>().ToList();
+            _slotComponents = new FeatureScannerByHierarchy(gameObject).Get<SoloContainer>();
+
+
+            Container.OnGrab += GrabByFirstAvailableSlot;
+        }
+
+        private void GrabByFirstAvailableSlot(Grabbable grabbable)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
