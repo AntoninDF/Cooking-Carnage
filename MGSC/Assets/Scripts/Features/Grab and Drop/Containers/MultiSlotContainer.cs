@@ -57,6 +57,7 @@ namespace Cooking
             _slotComponents = new FeatureScannerByHierarchy(gameObject).Get<SoloContainer>();
 
 
+            Container.Filter.AddCondition
             Container.OnGrab += GrabByFirstAvailableSlot;
         }
 
