@@ -42,7 +42,6 @@ namespace Cooking
         private void Start()
         {
             Container = new(this);
-            Filter = new (this);
             Init();
         }
 
@@ -57,13 +56,45 @@ namespace Cooking
             _slotComponents = new FeatureScannerByHierarchy(gameObject).Get<SoloContainer>();
 
 
-            Container.Filter.AddCondition
+            this.Container.Filter.AddCondition(CanGrab);
             Container.OnGrab += GrabByFirstAvailableSlot;
+            Container.OnDrop += DropByFirstAvailableSlot;
+        }
+
+        private void DropByFirstAvailableSlot(Grabbable grabbable)
+        {
+            var slot = GetFirstAvailableSlot(grabbable);
+            if (slot != null)
+            {
+                slot.RequestDrop(grabbable);
+            }
         }
 
         private void GrabByFirstAvailableSlot(Grabbable grabbable)
         {
-            throw new NotImplementedException();
+            var slot = GetFirstAvailableSlot(grabbable);
+            if (slot != null)
+            {
+                slot.RequestGrab(grabbable);
+            }
+        }
+
+        private SoloContainer GetFirstAvailableSlot(Grabbable grabbable)
+        {
+            foreach (var slot in _slotComponents)
+            {
+                if (slot.CanGrab(grabbable))
+                    return slot;
+            }
+            return null;
+        }
+
+        private bool CanGrab(Grabbable grabbable)
+        {
+            var slot = GetFirstAvailableSlot(grabbable);
+            if (slot == null) return false;
+
+            return true;
         }
 
         #endregion

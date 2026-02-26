@@ -51,6 +51,7 @@ public class SoloContainer : Container
     public override bool CanGrab(Grabbable item)
     {
         if (item == HeldItem) return false;
+        if (HeldItem != null) return false;
         return base.CanGrab(item);
     }
 }

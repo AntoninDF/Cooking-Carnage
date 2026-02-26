@@ -12,12 +12,13 @@ public class PlayerActor : FeatureComponent, IFeatureCollection
 
     public float ReachDistance { get; set; } = 10f;
     public Vector3 LookPosition => _scanner.LastScanHitPosition;
+    public bool SortFeaturesByDistance { get => _scanner.SortByDistance; set => _scanner.SortByDistance = value; }
 
     #region Fields
 
     private FeatureScannerByRaycast _scanner = new ();
     private SoloContainer _container;
-    private Dictionary<System.Type, List<Func<FeatureComponent, bool>>> _playerActions = new();
+    private Dictionary<PlayerActionType, Dictionary<System.Type, List<Func<FeatureComponent, bool>>>> _playerActions = new();
     private Dictionary<System.Type, List<Func<FeatureComponent, bool>>> _constantActions = new();
 
     #endregion
@@ -57,43 +58,77 @@ public class PlayerActor : FeatureComponent, IFeatureCollection
     public bool TryAnyPlayerAction()
     {
         if (AvailableFeatures == null || AvailableFeatures.Count == 0) return false;
-
+        bool result = false;
         foreach (FeatureComponent feature in AvailableFeatures)
         {
-            TryPlayerAction(feature);
+            if (TryPlayerAction(feature))
+            {
+                result = true;
+            }
         }
 
-        return true;
+        return result;
     }
 
     private bool TryPlayerAction(FeatureComponent feature)
     {
-        foreach (System.Type type in _playerActions.Keys)
-        {
-            if (type.IsAssignableFrom(feature.GetType()))
-            {
-                foreach (var action in _playerActions[type])
-                {
-                    action(feature);
+        bool primaryActionPerformed = false;
+        if (_playerActions.TryGetValue(PlayerActionType.Primary, out var primaryActionsByType)) {
+            if (primaryActionsByType.TryGetValue(feature.GetType(), out var actions)) {
+                foreach (var action in actions) {
+                    if (action(feature)) {
+                        primaryActionPerformed = true;
+                        break;
+                    }
                 }
             }
         }
 
-        return false;
+        if (_playerActions.TryGetValue(PlayerActionType.Secondary, out var secondaryActionsByType)) {
+            if (secondaryActionsByType.TryGetValue(feature.GetType(), out var actions)) {
+                foreach (var action in actions) {
+                    action(feature);
+                }
+            }
+        }
+        if (_playerActions.TryGetValue(PlayerActionType.Default, out var defaultActionsByType)) {
+            if (secondaryActionsByType.TryGetValue(feature.GetType(), out var actions)) {
+                foreach (var action in actions) {
+                    action(feature);
+                }
+            }
+        }
+        
+
+        return primaryActionPerformed;
     }
 
-    public void AddPlayerAction<T>(Func<FeatureComponent, bool> action) where T : FeatureComponent => AddPlayerAction(typeof(T), action);
-    public void AddPlayerAction(System.Type type,  Func<FeatureComponent, bool> action)
+    public void AddPlayerAction<T>(PlayerActionType mode, Func<FeatureComponent, bool> action) where T : FeatureComponent => AddPlayerAction(typeof(T), mode, action);
+    /// <summary>
+    /// Player actions are only triggered externally by TryPlayerAction() or TryAnyPlayerAction()
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="action"></param>
+    public void AddPlayerAction(System.Type type,  PlayerActionType mode, Func<FeatureComponent, bool> action)
     {
         var key = type;
-        if (!_playerActions.ContainsKey(key))
+        if (!_playerActions.ContainsKey(mode))
         {
-            _playerActions[key] = new();
+            _playerActions[mode] = new();
         }
-        if (!_playerActions[key].Contains(action))
-            _playerActions[key].Add(action);
+        if (!_playerActions[mode].ContainsKey(key))
+        {
+            _playerActions[mode][key] = new();
+        }
+        if (!_playerActions[mode][key].Contains(action))
+            _playerActions[mode][key].Add(action);
     }
     public void AddConstantAction<T>(Func<FeatureComponent, bool> action) where T : FeatureComponent => AddConstantAction(typeof(T), action);
+    /// <summary>
+    /// Constant actions are executed every frame.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="action"></param>
     public void AddConstantAction(System.Type type,  Func<FeatureComponent, bool> action)
     {
         var key = type;
@@ -124,4 +159,13 @@ public class PlayerActor : FeatureComponent, IFeatureCollection
         }
     }
     #endregion
+}
+
+public enum PlayerActionType
+{
+    Default = 0, // Default should fall back to secondary
+    Primary = 1, // Only one primary action can be executed at a time.
+                 // If several primary actions are requested at the same time,
+                 // the first in queue will be treated, and others should be discarded
+    Secondary = 2, // Secondary actions are always performed as long as their requirements are met
 }

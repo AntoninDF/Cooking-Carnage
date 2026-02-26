@@ -51,7 +51,7 @@ public class ItemManager : IManager
         GameObject newRoot = new GameObject("Items Pool");
         _itemsPooled = newRoot.transform;
 
-        DetectSpawnItems();
+        DetectSpawnItems(); // Refacto : The item manager shouldn't handle the first item spawns of a shift. This should be a dedicated script
     }
 
     public void PostInit()
@@ -67,6 +67,7 @@ public class ItemManager : IManager
         }
         spawnParent = spawnItems.Count > 0 ? spawnItems[0].transform.parent : null;
 
+        /*
         for (var index = spawnItems.Count - 1; index >= 0; index--)
         {
             var initialItem = spawnItems[index];
@@ -74,6 +75,7 @@ public class ItemManager : IManager
 
             UpdateActiveList(initialItem);
         }
+        */
     }
 
     private void UpdateActiveList(Item item)

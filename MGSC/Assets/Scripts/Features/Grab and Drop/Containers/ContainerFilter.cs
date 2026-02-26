@@ -8,7 +8,6 @@ namespace Cooking
     /// </summary>
     public class ContainerFilter : FeatureComponent
     {
-        public List<Filter> Filters = new();
         public List<Func<Grabbable, bool>> Conditions = new();
 
         public ContainerFilter(IFeatureCollection owner) : base(owner)
@@ -26,31 +25,11 @@ namespace Cooking
                 }
             }
 
-            foreach (Filter filter in Filters)
-            {
-                switch (filter.Condition)
-                {
-                    case EFilterCondition.MustBe:
-                        if (!IsValid(comparedItem, filter.ItemType)) result = false;
-                        break;
-                    case EFilterCondition.MustNotBe:
-                        if (IsValid(comparedItem, filter.ItemType)) result = false;
-                        break;
-                    default:
-                        continue;
-                }
-            }
+            UnityEngine.Debug.Log("Filter is " + (result?"valid":"not valid"));
             return result;
         }
-        private bool IsValid(Grabbable item, EItemType type)
-        {
-            
-            return false;
-        }
-        public void AddFilter(Filter filter) => Filters.Add(filter);
-        public void AddFilter(EFilterCondition condition, EItemType itemType) => Filters.Add(new Filter(condition, itemType));
+        
         public void AddCondition(Func<Grabbable, bool> condition) => Conditions.Add(condition);
-        public void Clear() => Filters.Clear();
 
         
     }
@@ -64,17 +43,7 @@ namespace Cooking
     // Do not change the IDs !! It will break every existing filter
     public enum EItemType
     {
-        Ingredient=0,
-        CutIngredient=1,
-        Meal=2,
-        Plate=3,
-        Container=4,
-        OrderTicket=5,
-
-        Cookable=6,
-        Trashable=7,
-
-        Oven=8,
+        
     }
 
     [System.Serializable]

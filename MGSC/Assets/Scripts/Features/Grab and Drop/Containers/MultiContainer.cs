@@ -57,6 +57,7 @@ public class MultiContainer : Container
     public override bool CanGrab(Grabbable item)
     {
         if (HeldItems.Contains(item)) return false;
+        UnityEngine.Debug.Log("Multicontainer cangrab condition passed");
         return base.CanGrab(item);
     }
     public override bool CanDrop(Grabbable item = null)

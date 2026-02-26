@@ -22,8 +22,6 @@ namespace Cooking
         #endregion
 
         #region Fields
-        [Header("Surface container parameters")]
-        [SerializeField] private List<Filter> _filters;
         
 
 
@@ -36,11 +34,8 @@ namespace Cooking
             Container = new(this, transform);
             Filter = new(this);
             Container.Filter = Filter;
-            Filter.Filters = _filters;
             LookAtTarget = new LookAtTargetByRaycast(this, transform);
 
-            LookAtTarget.OnStartLookAt += () => UnityEngine.Debug.Log("StartLookat");
-            LookAtTarget.OnStopLookAt += () => UnityEngine.Debug.Log("StopLookat");
         }
 
 

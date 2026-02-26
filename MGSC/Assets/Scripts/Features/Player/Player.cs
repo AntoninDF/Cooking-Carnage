@@ -43,25 +43,28 @@ public class Player : MonoBehaviour, IFeatureCollection
 
     void AddInteractions()
     {
-        PlayerActor.AddPlayerAction(typeof(Interactable),
+        PlayerActor.AddPlayerAction(typeof(Interactable), PlayerActionType.Primary,
             (feature) =>
             {
+                UnityEngine.Debug.Log("Interactable detected");
                 var obj = feature as Interactable;
                 return obj.TryInteract();
             }
             );
 
-        PlayerActor.AddPlayerAction(typeof(Grabbable),
+        PlayerActor.AddPlayerAction(typeof(Grabbable), PlayerActionType.Primary,
             (feature) =>
             {
+                UnityEngine.Debug.Log("Grabbable detected");
                 var obj = feature as Grabbable;
                 return Container.RequestGrab(obj);
             }
             );
 
-        PlayerActor.AddPlayerAction(typeof(Container),
+        PlayerActor.AddPlayerAction(typeof(Container), PlayerActionType.Primary,
             (feature) =>
             {
+                UnityEngine.Debug.Log("Container detected");
                 var obj = feature as Container;
                 if (!obj.Passthrough)
                     return obj.RequestGrab(Container.HeldItem);
