@@ -34,9 +34,9 @@ namespace Cooking
 
         #region Methods
 
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
+            base.Awake();
             if (_model == null)
                 throw new MissingReferenceException("Please assign an ingredient model in the inspector : " + name);
             UpdateID();

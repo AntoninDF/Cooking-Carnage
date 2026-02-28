@@ -14,16 +14,16 @@ namespace Features
         {
             GameObject = gameObject;
         }
-        public override List<FeatureComponent> Get()
+        public override List<Feature> Get()
         {
-            List<FeatureComponent> result = new();
+            List<Feature> result = new();
             var hierarchy = GetChildren(GameObject);
             var components = GetComponentsFromGameObjects(hierarchy);
             foreach (var comp in components)
             {
                 if (comp is IFeatureCollection collection)
                 {
-                    result.AddRange(collection.Collection.AllFeatures);
+                    result.AddRange(collection.AllFeatures);
                 }
             }
             return result;
@@ -38,7 +38,7 @@ namespace Features
 
             for (int i = 0; i < go.transform.childCount; i++)
             {
-                children.AddRange(GetChildren(go.transform.GetChild(i).gameObject));
+                children.AddRange(GetChildren(go.transform.GetChild(i).gameObject, true));
             }
             return children;
         }

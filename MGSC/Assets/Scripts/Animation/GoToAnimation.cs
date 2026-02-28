@@ -3,7 +3,7 @@ using GameSystem;
 using System;
 using UnityEngine;
 
-public class GoToAnimation : FeatureComponent
+public class GoToAnimation : Feature
 {
     public Transform ControlledTransform { get; set; }
     public Action OnAnimationStart { get; set; }
@@ -15,11 +15,10 @@ public class GoToAnimation : FeatureComponent
     private Vector3 startPos;
     private Vector3 endPos;
     private Transform targetTransform;
-    private TimerManager timerManager;
+    private TimerManager timerManager  => Reference.GetManager<TimerManager>();
 
     public GoToAnimation(IFeatureCollection owner, Transform controlledTransform) : base(owner)
     {
-        Reference.GetManager(out timerManager);
         ControlledTransform = controlledTransform;
         defaultScale = ControlledTransform.lossyScale;
         defaultRotation = ControlledTransform.rotation;
@@ -82,6 +81,8 @@ public class GoToAnimation : FeatureComponent
     }
     public void GoTo(Transform dest, float duration=0.1f, bool setAsParent=true)
     {
+        Vector3 pos = Vector3.zero;
+        if (dest != null) pos = dest.position;
         GoTo(dest, dest.position, duration, setAsParent);
     }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Features
 {
-    public class BoundsFinder : FeatureComponent
+    public class BoundsFinder : Feature
     {
         public Transform transform { get; set; }
         public Bounds LastComputedBounds { get; set; }

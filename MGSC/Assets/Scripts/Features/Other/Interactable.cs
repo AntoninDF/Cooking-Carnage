@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Features
 {
-    public class Interactable : FeatureComponent
+    public class Interactable : Feature
     {
 
         public Action<InteractionContext> OnInteraction { get; set; }

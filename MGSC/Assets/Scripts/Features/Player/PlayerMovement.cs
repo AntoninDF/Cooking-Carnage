@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Features
 {
-    public class PlayerMovement : FeatureComponent
+    public class PlayerMovement : Feature
     {
         public float WalkSpeed { get; set; } = 3.0f;
         public float LookSpeed { get; set; } = 0.1f;

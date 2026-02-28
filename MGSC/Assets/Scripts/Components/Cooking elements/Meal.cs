@@ -42,9 +42,9 @@ namespace Cooking
 
         #region Methods
 
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
+            base.Awake();
             if (Recipe == null) Debug.LogWarning("Recipe field was not set to an instance of an object");
             
 

@@ -6,7 +6,7 @@ namespace Features
     /// <summary>
     /// The ContainerFilter component should be added to a gameobject with a container component. It filters out which Grabbables can be grabbed.
     /// </summary>
-    public class ContainerFilter : FeatureComponent
+    public class ContainerFilter : Feature
     {
         public List<Func<Grabbable, bool>> Conditions = new();
 

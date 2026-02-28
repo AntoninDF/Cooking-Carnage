@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Features
 {
-    public class FeatureComponent
+    public class Feature
     {
         #region Properties
 
@@ -50,7 +50,7 @@ namespace Features
 
         #region Methods
 
-        public FeatureComponent(IFeatureCollection owner)
+        public Feature(IFeatureCollection owner)
         {
             Init();
             Owner = owner;
@@ -62,12 +62,12 @@ namespace Features
         public virtual void Track() => Manager.Track(this);
         public virtual void Untrack() => Manager.Untrack(this);
         public virtual void IsTracked() => Manager.IsTracked(this);
-        public T GetSibling<T>() where T : FeatureComponent
+        public T GetSibling<T>() where T : Feature
         {
             if (Owner == null) return null;
             return Owner.Get<T>();
         }
-        public bool TryGetSibling<T>(out T feature) where T : FeatureComponent
+        public bool TryGetSibling<T>(out T feature) where T : Feature
         {
             feature = null;
             if (Owner == null) return false;
@@ -82,9 +82,11 @@ namespace Features
             IFeatureCollection owner = Owner;
             int maxIterations = 30;
             int i = 0;
-            while (owner is FeatureComponent fc && i < maxIterations)
+            if (HasTransform(owner, out var t)) return t;
+
+            while (owner is Feature fc && i < maxIterations)
             {
-                if (HasTransform(owner, out var t))
+                if (HasTransform(fc.Owner, out t))
                 {
                     return t;
                 }
@@ -106,6 +108,7 @@ namespace Features
         private bool HasTransform(object obj, out Transform transform)
         {
             transform = null;
+            if (obj == null) return false;
             if (obj is GameObject go)
             {
                 transform = go.transform;

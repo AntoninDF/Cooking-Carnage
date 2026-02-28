@@ -1,7 +1,7 @@
 using Features;
 using System;
 
-public class Grabbable : FeatureComponent
+public class Grabbable : Feature
 {
     public Container Container;
     public bool IsLocked { get; set; }

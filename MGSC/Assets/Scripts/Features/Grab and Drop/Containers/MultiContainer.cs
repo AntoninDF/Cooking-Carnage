@@ -13,6 +13,7 @@ namespace Features
         }
         public MultiContainer(IFeatureCollection owner, Transform transform) : base(owner, transform)
         {
+            this.transform = transform;
         }
 
         public override void Empty()

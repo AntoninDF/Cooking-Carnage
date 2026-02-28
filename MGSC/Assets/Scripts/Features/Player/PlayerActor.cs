@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace Features
 {
-    public class PlayerActor : FeatureComponent, IFeatureCollection
+    public class PlayerActor : Feature, IFeatureCollection
     {
 
         public FeatureCollection Collection { get; set; } = new();
 
-        public List<FeatureComponent> AvailableFeatures = new();
+        public List<Feature> AvailableFeatures = new();
 
         public float ReachDistance { get; set; } = 10f;
         public Vector3 LookPosition => _scanner.LastScanHitPosition;
@@ -20,8 +20,8 @@ namespace Features
 
         private FeatureScannerByRaycast _scanner = new ();
         private SoloContainer _container;
-        private Dictionary<PlayerActionType, Dictionary<System.Type, List<Func<FeatureComponent, bool>>>> _playerActions = new();
-        private Dictionary<System.Type, List<Func<FeatureComponent, bool>>> _constantActions = new();
+        private Dictionary<PlayerActionType, Dictionary<System.Type, List<Func<Feature, bool>>>> _playerActions = new();
+        private Dictionary<System.Type, List<Func<Feature, bool>>> _constantActions = new();
 
         #endregion
 
@@ -61,7 +61,7 @@ namespace Features
         {
             if (AvailableFeatures == null || AvailableFeatures.Count == 0) return false;
             bool result = false;
-            foreach (FeatureComponent feature in AvailableFeatures)
+            foreach (Feature feature in AvailableFeatures)
             {
                 //UnityEngine.Debug.Log("Feature is : " + feature);
                 if (TryPlayerAction(feature))
@@ -74,7 +74,7 @@ namespace Features
             return result;
         }
 
-        private bool TryPlayerAction(FeatureComponent feature)
+        private bool TryPlayerAction(Feature feature)
         {
             bool primaryActionPerformed = false;
             if (_playerActions.TryGetValue(PlayerActionType.Primary, out var primaryActionsByType)) {
@@ -107,13 +107,13 @@ namespace Features
             return primaryActionPerformed;
         }
 
-        public void AddPlayerAction<T>(PlayerActionType mode, Func<FeatureComponent, bool> action) where T : FeatureComponent => AddPlayerAction(typeof(T), mode, action);
+        public void AddPlayerAction<T>(PlayerActionType mode, Func<Feature, bool> action) where T : Feature => AddPlayerAction(typeof(T), mode, action);
         /// <summary>
         /// Player actions are only triggered externally by TryPlayerAction() or TryAnyPlayerAction()
         /// </summary>
         /// <param name="type"></param>
         /// <param name="action"></param>
-        public void AddPlayerAction(System.Type type,  PlayerActionType mode, Func<FeatureComponent, bool> action)
+        public void AddPlayerAction(System.Type type,  PlayerActionType mode, Func<Feature, bool> action)
         {
             var key = type;
             if (!_playerActions.ContainsKey(mode))
@@ -127,13 +127,13 @@ namespace Features
             if (!_playerActions[mode][key].Contains(action))
                 _playerActions[mode][key].Add(action);
         }
-        public void AddConstantAction<T>(Func<FeatureComponent, bool> action) where T : FeatureComponent => AddConstantAction(typeof(T), action);
+        public void AddConstantAction<T>(Func<Feature, bool> action) where T : Feature => AddConstantAction(typeof(T), action);
         /// <summary>
         /// Constant actions are executed every frame.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="action"></param>
-        public void AddConstantAction(System.Type type,  Func<FeatureComponent, bool> action)
+        public void AddConstantAction(System.Type type,  Func<Feature, bool> action)
         {
             var key = type;
             if (!_constantActions.ContainsKey(key))
@@ -148,7 +148,7 @@ namespace Features
         {
             if (AvailableFeatures == null || AvailableFeatures.Count == 0) return;
 
-            foreach (FeatureComponent feature in AvailableFeatures)
+            foreach (Feature feature in AvailableFeatures)
             {
                 foreach (System.Type type in _constantActions.Keys)
                 {

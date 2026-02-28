@@ -6,12 +6,12 @@ namespace Features
     {
         #region Properties
 
-        public List<FeatureComponent> DirectFeatures { get; set; } = new();
-        public List<FeatureComponent> AllFeatures
+        public List<Feature> DirectFeatures { get; set; } = new();
+        public List<Feature> AllFeatures
         {
             get
             {
-                List<FeatureComponent> result = new();
+                List<Feature> result = new();
                 foreach (var feature in DirectFeatures)
                 {
                     if (!result.Contains(feature)) result.Add(feature);
@@ -41,13 +41,13 @@ namespace Features
                     feature.Update();
         }
 
-        public void Add(FeatureComponent feature)
+        public void Add(Feature feature)
         {
             if (!DirectFeatures.Contains(feature))
                 DirectFeatures.Add(feature);
         }
-        public void Remove(FeatureComponent feature) => DirectFeatures.Remove(feature);
-        public T Get<T>() where T : FeatureComponent
+        public void Remove(Feature feature) => DirectFeatures.Remove(feature);
+        public T Get<T>() where T : Feature
         {
             foreach (var feature in DirectFeatures)
                 if (feature is T)
@@ -55,7 +55,7 @@ namespace Features
 
             return null;
         }
-        public bool TryGet<T>(out T feature) where T : FeatureComponent
+        public bool TryGet<T>(out T feature) where T : Feature
         {
             feature = Get<T>();
             return feature != null;

@@ -9,6 +9,7 @@ namespace Features
         }
         public SoloContainer(IFeatureCollection owner, Transform transform) : base(owner, transform)
         {
+            this.transform = transform;
         }
 
         public override void Empty()
@@ -49,9 +50,18 @@ namespace Features
         }
         public override bool CanGrab(Grabbable item)
         {
+            Debug.Log("A_1");
             if (item == HeldItem) return false;
+            Debug.Log("A_2");
             if (HeldItem != null) return false;
+            Debug.Log("A_3");
             return base.CanGrab(item);
+        }
+        public override bool CanDrop(Grabbable item = null)
+        {
+            if (item != null && item != HeldItem) return false;
+            if (item == null && HeldItem == null) return false;
+            return base.CanDrop(item);
         }
     }
 }

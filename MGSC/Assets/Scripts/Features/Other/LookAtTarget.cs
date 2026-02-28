@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Features
 {
-    public class LookAtTarget : FeatureComponent
+    public class LookAtTarget : Feature
     {
 
         public Transform transform { get; set; }
@@ -41,14 +41,13 @@ namespace Features
 
         #region Fields
         private bool _isLookedAt;
-        private TimerManager _timerManager;
+        private TimerManager _timerManager => Reference.GetManager<TimerManager>();
         private int _lastCheckedFrame;
         #endregion
 
         public LookAtTarget(IFeatureCollection owner, Transform transform) : base(owner)
         {
             this.transform = transform;
-            Reference.GetManager(out _timerManager);
         }
 
         public virtual bool CheckIfLookedAt(Vector3 position, Vector3 direction) => CheckIfLookedAt(position, direction, float.MaxValue);
@@ -80,7 +79,7 @@ namespace Features
 
         public virtual void RequestResetOnNextFrame()
         {
-            if (_timerManager != null || Reference.TryGetManager(out _timerManager))
+            if (_timerManager != null)
             {
                 _timerManager.StartTimer("Reset lookat (" + Time.time + ")", 3, Reset, true);
             }

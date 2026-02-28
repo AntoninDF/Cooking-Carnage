@@ -35,10 +35,7 @@ namespace Cooking
 
         #region Methods
 
-        protected override void Start()
-        {
-            base.Start();
-        }
+        
 
         
 

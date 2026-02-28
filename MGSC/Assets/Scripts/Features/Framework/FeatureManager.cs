@@ -6,7 +6,7 @@ public class FeatureManager : IManager
 
     #region Fields
 
-    protected Dictionary<System.Type, List<FeatureComponent>> trackedFeatures = new();
+    protected Dictionary<System.Type, List<Feature>> trackedFeatures = new();
 
 
 
@@ -25,38 +25,38 @@ public class FeatureManager : IManager
 
 
 
-    public bool TryGetAll<T>(out List<T> features) where T : FeatureComponent
+    public bool TryGetAll<T>(out List<T> features) where T : Feature
     {
         features = GetAll<T>();
         if (features.Count == 0) return false;
         return true;
     }
-    public List<FeatureComponent> GetAll()
+    public List<Feature> GetAll()
     {
-        List<FeatureComponent> result = new();
+        List<Feature> result = new();
         foreach (var features in trackedFeatures.Values)
             result = result.Concat(features).ToList();
         return result;
     }
-    public List<T> GetAll<T>() where T : FeatureComponent
+    public List<T> GetAll<T>() where T : Feature
     {
         if (!trackedFeatures.ContainsKey(typeof(T))) return new List<T>();
         List<T> result = new List<T>();
-        foreach(FeatureComponent comp  in trackedFeatures[typeof(T)])
+        foreach(Feature comp  in trackedFeatures[typeof(T)])
         {
             result.Add(comp as T);
         }
         return result;
     }
-    public void Track<T>(T feature) where T : FeatureComponent
+    public void Track<T>(T feature) where T : Feature
     {
         if (IsTracked(feature)) return;
 
         if (!trackedFeatures.ContainsKey(typeof(T)))
-            trackedFeatures.Add(typeof(T), new List<FeatureComponent>());
+            trackedFeatures.Add(typeof(T), new List<Feature>());
         trackedFeatures[typeof(T)].Add(feature);
     }
-    public void Untrack<T>(T feature) where T : FeatureComponent
+    public void Untrack<T>(T feature) where T : Feature
     {
         if (!IsTracked(feature)) return;
 
@@ -65,7 +65,7 @@ public class FeatureManager : IManager
         trackedFeatures[typeof(T)].Remove(feature);
     }
 
-    public bool IsTracked<T>(T feature) where T : FeatureComponent
+    public bool IsTracked<T>(T feature) where T : Feature
     {
         if (trackedFeatures == null) return false;
         if (!trackedFeatures.ContainsKey(typeof(T))) return false;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Features
 {
-    public abstract class Container : FeatureComponent, IFeatureCollection
+    public abstract class Container : Feature, IFeatureCollection
     {
 
         /// <summary>

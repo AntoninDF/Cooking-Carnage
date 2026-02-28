@@ -43,9 +43,9 @@ namespace Features
             Distance = distance;
         }
 
-        public override List<FeatureComponent> Get()
+        public override List<Feature> Get()
         {
-            List<FeatureComponent> result = new();
+            List<Feature> result = new();
             RaycastHit[] results;
 
             if (ScanAll) results = Physics.RaycastAll(Origin, Direction, Distance);

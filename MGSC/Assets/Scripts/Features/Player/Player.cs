@@ -49,7 +49,6 @@ public class Player : MonoBehaviour, IFeatureCollection
         PlayerActor.AddPlayerAction(typeof(Interactable), PlayerActionType.Primary,
             (feature) =>
             {
-                UnityEngine.Debug.Log("Interactable detected");
                 var obj = feature as Interactable;
                 return obj.TryInteract(new InteractionContext(this));
             }

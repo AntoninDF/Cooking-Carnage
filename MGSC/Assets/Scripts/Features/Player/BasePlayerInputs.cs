@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Features
 {
-    public abstract class BasePlayerInputs : FeatureComponent
+    public abstract class BasePlayerInputs : Feature
     {
         public Action OnPause { get; set; }
         public Action OnPrimaryAction { get; set; }

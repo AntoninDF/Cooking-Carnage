@@ -1,10 +1,10 @@
-using UnityEditor;
+using Features;
 using UnityEngine;
 
 /// <summary>
 /// Helper methods to extend functionality to GameObjects
 /// </summary>
-public static class GameObjectExtensionMethods
+public static class ExtensionMethods
 {
     /// <summary>
     /// Checks if the component exists on the gameObject
@@ -29,5 +29,35 @@ public static class GameObjectExtensionMethods
         bool valid = gameObject.GetComponent<T>() != null;
         if (valid) comp = temp;
         return valid;
+    }
+
+    public static T GetFeature<T>(this object obj) where T : Features.Feature
+    {
+        if (obj is IFeatureCollection col)
+        {
+            return col.Get<T>();
+        }
+        return null;
+    }
+    public static bool HasFeature<T>(this object obj) where T : Features.Feature
+    {
+        T feature;
+        if (obj is IFeatureCollection col)
+        {
+            feature = col.Get<T>();
+            if (feature != null) return true;
+        }
+        return false;
+    }
+    public static bool TryGetFeature<T>(this object obj, out T feature) where T : Features.Feature
+    {
+        feature = null;
+        if (obj is IFeatureCollection col)
+        {
+            UnityEngine.Debug.Log("There are " + col.DirectFeatures.Count + " features in object");
+            feature = col.Get<T>();
+            if (feature != null) return true;
+        }
+        return false;
     }
 }

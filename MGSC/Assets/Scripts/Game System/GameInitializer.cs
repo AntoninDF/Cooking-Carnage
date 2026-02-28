@@ -35,7 +35,10 @@ namespace GameSystem
         {
             ResetScene();
         }
-
+        void Start()
+        {
+            SetupScene();
+        }
         /// <summary>
         /// Instantiate all objects specified in the scene preset, and put them all in place
         /// </summary>
@@ -82,7 +85,9 @@ namespace GameSystem
             
             // Setup the managers' references
             InitManagers();
-            
+        }
+        private void SetupScene()
+        {
             // Reset the save file
             if (_gameProfile.ResetSaveFile) Reference.GetManager<DataManager>().ResetSave();
 

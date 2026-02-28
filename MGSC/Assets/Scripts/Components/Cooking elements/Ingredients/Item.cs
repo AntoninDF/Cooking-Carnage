@@ -26,13 +26,13 @@ public class Item : MonoBehaviour, IFeatureCollection
 
     #region Fields
 
-    private Bounds bounds;
+    protected Bounds bounds;
 
     #endregion
 
     #region Methods
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         Collider = GetComponent<Collider>();
 
@@ -46,16 +46,19 @@ public class Item : MonoBehaviour, IFeatureCollection
 
         BindEvents();
     }
-
-    protected void BindEvents()
+    /// <summary>
+    /// BindEvents is called in Awake. It should not depend on other objects being initialized.
+    /// </summary>
+    protected virtual void BindEvents()
     {
         Grabbable.OnGrab += TriggerAnim;
-        Interactable.OnInteraction += TryGetGrabbed;
+        Interactable.OnInteraction += TryInteract;
     }
 
-    private void TriggerAnim()
+    protected void TriggerAnim()
     {
-        Transform containerTransform = Grabbable.Container.GetParentTransform();
+        Transform containerTransform = Grabbable.Container.transform;
+        if (containerTransform == null) Grabbable.Container.GetParentTransform();
         if (Grabbable.Container == null || containerTransform == null)
         {
             Anim.GoTo(Vector3.down * Bounds.FindLocalLowestPoint());
@@ -70,19 +73,13 @@ public class Item : MonoBehaviour, IFeatureCollection
         }
     }
 
-    private void TryGetGrabbed(InteractionContext context)
+    protected virtual void TryInteract(InteractionContext context)
     {
-        Container container = null;
-        if (context.Interactor is Container)
-        {
-            container = (Container)context.Interactor;
-        }
-        else if (context.Interactor is IFeatureCollection col)
-        {
-            col.Get(out container);
-        }
-
-        if (container != null)
+        TryGetGrabbed(context);
+    }
+    protected virtual void TryGetGrabbed(InteractionContext context)
+    {
+        if (context.TryGetFeature(out Container container))
         {
             container.RequestGrab(Grabbable);
         }

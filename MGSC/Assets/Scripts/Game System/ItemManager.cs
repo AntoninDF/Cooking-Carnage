@@ -51,7 +51,7 @@ public class ItemManager : IManager
         GameObject newRoot = new GameObject("Items Pool");
         _itemsPooled = newRoot.transform;
 
-        DetectSpawnItems(); // Refacto : The item manager shouldn't handle the first item spawns of a shift. This should be a dedicated script
+        //DetectSpawnItems(); // Refacto : The item manager shouldn't handle the first item spawns of a shift. This should be a dedicated script
     }
 
     public void PostInit()

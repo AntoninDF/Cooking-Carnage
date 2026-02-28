@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Features
 {
@@ -13,11 +16,20 @@ namespace Features
         public List<SoloContainer> SoloContainers { get; set; } = new();
         #endregion
 
+
+        private Action<Grabbable> Grab => (item) => RequestGrab(item);
+        private Action<Grabbable> Drop => (item) => RequestDrop(item);
+
+
+
+        #region Methods
         public MultiSlotContainer(IFeatureCollection owner) : base(owner)
         {
         }
-
-        #region Methods
+        public MultiSlotContainer(IFeatureCollection owner, Transform transform) : base(owner)
+        {
+            this.transform = transform;
+        }
 
         public override void Init()
         {
@@ -31,12 +43,45 @@ namespace Features
         {
             foreach (var slot in SoloContainers)
             {
-                slot.OnGrab += (item) => Container.RequestGrab(item);
-                slot.OnDrop += (item) => Container.RequestDrop(item);
+                TryBind(slot.OnGrab, Grab);
+                TryBind(slot.OnDrop, Drop);
             }
         }
+        /// <summary>
+        /// Adds a slot to the list of tracked slots and binds it to this MultiSlotContainer
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public bool TryAddSlot(SoloContainer slot)
+        {
+            if (SoloContainers.Contains(slot)) return false;
+            SoloContainers.Add(slot);
+            TryBind(slot.OnGrab, Grab);
+            TryBind(slot.OnDrop, Drop);
+            return true;
+        }
+        public bool TryRemoveSlot(SoloContainer slot)
+        {
+            if (!SoloContainers.Contains(slot)) return false;
+            SoloContainers.Remove(slot);
+            TryUnbind(slot.OnGrab, Grab);
+            TryUnbind(slot.OnDrop, Drop);
+            return true;
+        }
+        private bool TryBind<T>(Action<T> action, Action<T> invocation)
+        {
+            if (action != null && action.GetInvocationList().Contains(invocation)) return false;
 
+            action += invocation;
+            return true;
+        }
+        private bool TryUnbind<T>(Action<T> action, Action<T> invocation)
+        {
+            if (action != null && !action.GetInvocationList().Contains(invocation)) return false;
 
+            action -= invocation;
+            return true;
+        }
         public override bool RequestGrab(Grabbable item) => TryGrab(item);
 
         private bool TryGrab(Grabbable item)
@@ -48,9 +93,13 @@ namespace Features
 
         public override bool CanGrab(Grabbable grabbable)
         {
+            UnityEngine.Debug.Log("0");
             if (!base.CanGrab(grabbable)) return false;
+            UnityEngine.Debug.Log("1");
             var slot = GetFirstAvailableSlot(grabbable);
+            UnityEngine.Debug.Log("2");
             if (slot == null) return false;
+            UnityEngine.Debug.Log("3");
 
             return true;
         }
@@ -73,8 +122,10 @@ namespace Features
         }
         private SoloContainer GetFirstAvailableSlot(Grabbable grabbable)
         {
+            Debug.Log("Length of SoloCcontainers is " + SoloContainers.Count);
             foreach (var slot in SoloContainers)
             {
+                Debug.Log("Slot is " + slot);
                 if (slot.CanGrab(grabbable))
                     return slot;
             }
