@@ -1,3 +1,4 @@
+using Features;
 using System.Collections.Generic;
 using System.Linq;
 public class FeatureManager : IManager

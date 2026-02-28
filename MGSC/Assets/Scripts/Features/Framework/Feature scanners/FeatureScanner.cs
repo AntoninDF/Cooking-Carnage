@@ -1,37 +1,40 @@
 using System.Collections.Generic;
 
-public class FeatureScanner
+namespace Features
 {
-    #region Methods
+    public class FeatureScanner
+    {
+        #region Methods
 
-    public virtual List<FeatureComponent> Get(out List<FeatureComponent> list)
-    {
-        list = Get();
-        return list;
-    }
-    public virtual List<FeatureComponent> Get()
-    {
-        var manager = Reference.GetManager<FeatureManager>();
-        return manager.GetAll();
-    }
-
-    public virtual List<T> Get<T>(out List<T> list) where T : FeatureComponent
-    {
-        list = Get<T>();
-        return list;
-    }
-    public virtual List<T> Get<T>() where T : FeatureComponent
-    {
-        List<T> result = new();
-
-        foreach(var component in Get())
+        public virtual List<FeatureComponent> Get(out List<FeatureComponent> list)
         {
-            if (component is T)
-                result.Add((T)component);
+            list = Get();
+            return list;
         }
-        return result;
+        public virtual List<FeatureComponent> Get()
+        {
+            var manager = Reference.GetManager<FeatureManager>();
+            return manager.GetAll();
+        }
+
+        public virtual List<T> Get<T>(out List<T> list) where T : FeatureComponent
+        {
+            list = Get<T>();
+            return list;
+        }
+        public virtual List<T> Get<T>() where T : FeatureComponent
+        {
+            List<T> result = new();
+
+            foreach (var component in Get())
+            {
+                if (component is T)
+                    result.Add((T)component);
+            }
+            return result;
+        }
+
+
+        #endregion
     }
-
-
-    #endregion
 }

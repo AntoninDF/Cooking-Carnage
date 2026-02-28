@@ -1,6 +1,5 @@
 using UnityEngine;
-using UnityEngine.Events;
-using Cooking;
+using Features;
 
 /// <summary>
 /// The slot container can receive up to one IGrabbable object

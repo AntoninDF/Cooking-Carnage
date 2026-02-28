@@ -1,3 +1,4 @@
+using Features;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -10,7 +11,6 @@ public class Player : MonoBehaviour, IFeatureCollection
     public BasePlayerInputs PlayerInputs { get; private set; }
     public PlayerMovement PlayerMovement { get; private set; }
 
-
     [SerializeField] private Transform head;
     [SerializeField] private Transform hand;
 
@@ -19,6 +19,8 @@ public class Player : MonoBehaviour, IFeatureCollection
     void Start()
     {
         PlayerActor = new(this);
+        PlayerActor.SortFeaturesByDistance = true;
+        PlayerActor.GetAllFeaturesInSight = false;
         Container = new (this, hand);
         PlayerInputs = new PlayerInputReader(this);
         PlayerMovement = new(this, transform, head, GetComponent<CharacterController>());
@@ -26,6 +28,7 @@ public class Player : MonoBehaviour, IFeatureCollection
 
         BindPlayerActions();
         AddInteractions();
+
     }
 
     // Update is called once per frame
@@ -48,31 +51,7 @@ public class Player : MonoBehaviour, IFeatureCollection
             {
                 UnityEngine.Debug.Log("Interactable detected");
                 var obj = feature as Interactable;
-                return obj.TryInteract();
-            }
-            );
-
-        PlayerActor.AddPlayerAction(typeof(Grabbable), PlayerActionType.Primary,
-            (feature) =>
-            {
-                UnityEngine.Debug.Log("Grabbable detected");
-                var obj = feature as Grabbable;
-                return Container.RequestGrab(obj);
-            }
-            );
-
-        PlayerActor.AddPlayerAction(typeof(Container), PlayerActionType.Primary,
-            (feature) =>
-            {
-                UnityEngine.Debug.Log("Container detected");
-                var obj = feature as Container;
-                if (!obj.Passthrough)
-                    return obj.RequestGrab(Container.HeldItem);
-                else
-                {
-                    if (Container.RequestGrab(obj.HeldItem)) return true;
-                    return obj.RequestGrab(Container.HeldItem);
-                }
+                return obj.TryInteract(new InteractionContext(this));
             }
             );
 

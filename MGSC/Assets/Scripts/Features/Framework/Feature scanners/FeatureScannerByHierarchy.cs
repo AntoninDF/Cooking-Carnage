@@ -1,53 +1,55 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-public class FeatureScannerByHierarchy : FeatureScanner
+namespace Features
 {
-    public GameObject GameObject { get; set; }
-
-
-
-
-    public FeatureScannerByHierarchy(GameObject gameObject)
+    public class FeatureScannerByHierarchy : FeatureScanner
     {
-        GameObject = gameObject;
-    }
-    public override List<FeatureComponent> Get()
-    {
-        List < FeatureComponent > result = new ();
-        var hierarchy = GetChildren(GameObject);
-        var components = GetComponentsFromGameObjects(hierarchy);
-        foreach(var comp in components)
+        public GameObject GameObject { get; set; }
+
+
+
+
+        public FeatureScannerByHierarchy(GameObject gameObject)
         {
-            if (comp is IFeatureCollection collection)
+            GameObject = gameObject;
+        }
+        public override List<FeatureComponent> Get()
+        {
+            List<FeatureComponent> result = new();
+            var hierarchy = GetChildren(GameObject);
+            var components = GetComponentsFromGameObjects(hierarchy);
+            foreach (var comp in components)
             {
-                result.AddRange(collection.Collection.AllFeatures);
+                if (comp is IFeatureCollection collection)
+                {
+                    result.AddRange(collection.Collection.AllFeatures);
+                }
             }
+            return result;
         }
-        return result;
-    }
 
-    private List<GameObject> GetChildren(GameObject go, bool addBaseGameObject = true)
-    {
-        List<GameObject> children = new List<GameObject>();
-
-        if (addBaseGameObject)
-            children.Add(go);
-
-        for (int i = 0; i < go.transform.childCount; i++)
+        private List<GameObject> GetChildren(GameObject go, bool addBaseGameObject = true)
         {
-            children.AddRange(GetChildren(go.transform.GetChild(i).gameObject));
+            List<GameObject> children = new List<GameObject>();
+
+            if (addBaseGameObject)
+                children.Add(go);
+
+            for (int i = 0; i < go.transform.childCount; i++)
+            {
+                children.AddRange(GetChildren(go.transform.GetChild(i).gameObject));
+            }
+            return children;
         }
-        return children;
-    }
-    private List<Component> GetComponentsFromGameObjects(List<GameObject> gameObjects)
-    {
-        var components = new List<Component>();
-        foreach (GameObject go in gameObjects)
+        private List<Component> GetComponentsFromGameObjects(List<GameObject> gameObjects)
         {
-            components.AddRange(go.GetComponents<Component>());
+            var components = new List<Component>();
+            foreach (GameObject go in gameObjects)
+            {
+                components.AddRange(go.GetComponents<Component>());
+            }
+            return components;
         }
-        return components;
     }
 }

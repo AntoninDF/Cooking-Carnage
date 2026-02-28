@@ -1,72 +1,92 @@
-using Controller;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.Events;
 
-namespace Cooking
+namespace Features
 {
     /// <summary>
     /// The multi slot container contains slots, that hold items themselves. The multi slot container is useful to keep track of the content of a fixed set of items.
     /// </summary>
-    public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
+    public class MultiSlotContainer : Container, IFeatureCollection
     {
         #region Properties
-        
-        public List<SlotContainer> Slots => _slots;
-        public bool IsLocked { get; set; }
-        public bool Passthrough => false;
 
-        public bool EnableCallbacks { get; set; }
-
-        public FeatureCollection Collection { get; set; } = new();
         public MultiContainer Container { get; set; }
+        public List<SoloContainer> SoloContainers { get; set; } = new();
         #endregion
 
-        #region Fields
-        [Header("Multislot references")]
-        [Tooltip("List of all the slots that belong to this multi-slot container")]
-        [SerializeField] private List<SlotContainer> _slots = new ();
-        [Tooltip("Wether or not this container should scan it's hierarchy on Start to find it's own slots")]
-        [SerializeField] private bool _detectSlots;
-        [Space]
-
-
-        private ContainerFilter _filter;
-        private List<SoloContainer> _slotComponents;
-        #endregion
+        public MultiSlotContainer(IFeatureCollection owner) : base(owner)
+        {
+        }
 
         #region Methods
 
-        private void Start()
+        public override void Init()
         {
+            base.Init();
             Container = new(this);
-            Init();
-        }
-
-        private void Init()
-        {
-            if (_slots.Count == 0 && !_detectSlots)
-            {
-                Debug.LogWarning("Please reference the slots for this multi-slot container in the inspector, or opt for automatic detection. (GameObject : " + name + ")");
-            }
-
-            if (_detectSlots) _slots = GetComponentsInChildren<SlotContainer>().ToList();
-            _slotComponents = new FeatureScannerByHierarchy(gameObject).Get<SoloContainer>();
-
-
             this.Container.Filter.AddCondition(CanGrab);
-            Container.OnGrab += GrabByFirstAvailableSlot;
-            Container.OnDrop += DropByFirstAvailableSlot;
+            SetupSlots();
         }
 
+        private void SetupSlots()
+        {
+            foreach (var slot in SoloContainers)
+            {
+                slot.OnGrab += (item) => Container.RequestGrab(item);
+                slot.OnDrop += (item) => Container.RequestDrop(item);
+            }
+        }
+
+
+        public override bool RequestGrab(Grabbable item) => TryGrab(item);
+
+        private bool TryGrab(Grabbable item)
+        {
+            if (!CanGrab(item)) return false;
+            GrabByFirstAvailableSlot(item);
+            return true;
+        }
+
+        public override bool CanGrab(Grabbable grabbable)
+        {
+            if (!base.CanGrab(grabbable)) return false;
+            var slot = GetFirstAvailableSlot(grabbable);
+            if (slot == null) return false;
+
+            return true;
+        }
+
+        
+
+        public override bool RequestDrop(Grabbable item = null) => TryDrop(item);
+        private bool TryDrop(Grabbable item)
+        {
+            if (!CanDrop(item)) return false;
+            DropByFirstAvailableSlot(item);
+            return true;
+        }
+        public override bool CanDrop(Grabbable item = null)
+        {
+            if (!base.CanDrop(item)) return false;
+            if (!Container.CanDrop(item)) return false;
+
+            return true;
+        }
+        private SoloContainer GetFirstAvailableSlot(Grabbable grabbable)
+        {
+            foreach (var slot in SoloContainers)
+            {
+                if (slot.CanGrab(grabbable))
+                    return slot;
+            }
+            return null;
+        }
         private void DropByFirstAvailableSlot(Grabbable grabbable)
         {
             var slot = GetFirstAvailableSlot(grabbable);
             if (slot != null)
             {
-                slot.RequestDrop(grabbable);
+                if (slot.RequestDrop(grabbable))
+                    OnDrop?.Invoke(grabbable);
             }
         }
 
@@ -75,26 +95,17 @@ namespace Cooking
             var slot = GetFirstAvailableSlot(grabbable);
             if (slot != null)
             {
-                slot.RequestGrab(grabbable);
+                if (slot.RequestGrab(grabbable))
+                    OnGrab?.Invoke(grabbable);
             }
         }
 
-        private SoloContainer GetFirstAvailableSlot(Grabbable grabbable)
+        public override void Empty()
         {
-            foreach (var slot in _slotComponents)
+            foreach(var slot in SoloContainers)
             {
-                if (slot.CanGrab(grabbable))
-                    return slot;
+                slot.Empty();
             }
-            return null;
-        }
-
-        private bool CanGrab(Grabbable grabbable)
-        {
-            var slot = GetFirstAvailableSlot(grabbable);
-            if (slot == null) return false;
-
-            return true;
         }
 
         #endregion

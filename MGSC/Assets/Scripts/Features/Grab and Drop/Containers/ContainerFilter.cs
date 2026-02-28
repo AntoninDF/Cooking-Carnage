@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Cooking
+namespace Features
 {
     /// <summary>
     /// The ContainerFilter component should be added to a gameobject with a container component. It filters out which Grabbables can be grabbed.
@@ -25,7 +25,7 @@ namespace Cooking
                 }
             }
 
-            UnityEngine.Debug.Log("Filter is " + (result?"valid":"not valid"));
+            //UnityEngine.Debug.Log("Filter is " + (result?"valid":"not valid"));
             return result;
         }
         
