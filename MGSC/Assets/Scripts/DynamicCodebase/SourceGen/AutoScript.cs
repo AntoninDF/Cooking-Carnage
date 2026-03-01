@@ -5,7 +5,7 @@ using UnityEditor;
 
 namespace SourceGen
 {
-    [InitializeOnLoad]
+    // [InitializeOnLoad] // Comment or uncomment this line to disable/enable autoscript
     public static class AutoScript
     {
         static AutoScript()
