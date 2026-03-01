@@ -46,6 +46,7 @@ namespace Features
             var duration = GetCookingDuration(cookable);
             TimerManager.StartTimer(timerName, duration, () => RequestCook(cookable), false, (elapsed) => Progress(elapsed, duration));
             OnCookingStart?.Invoke(cookable);
+            cookable.StartCooking();
         }
 
         // Starting to cook something and actually cooking it is different, hence the separate methods, despite them doing the same thing.

@@ -26,7 +26,6 @@ public static class TrackedTypes
             typeof(PlayerStart),
             typeof(Player),
             typeof(OvenSetup),
-            typeof(Entrance),
             typeof(UITarget),
             typeof(Blender)
 

@@ -294,7 +294,7 @@ namespace Clients
         private void Eat(ServingInfo info, OrderRating rating)
         {
             _onEndEating?.Invoke();
-            if (rating.IsCorrectRecipe && info.Meal.CookStatus == ECookStatus.Cooked)
+            if (rating.IsCorrectRecipe)//&& info.Meal.CookStatus == ECookStatus.Cooked)
                 _onSatisfactoryOrder?.Invoke();
             else
                 _onWrongOrder?.Invoke();

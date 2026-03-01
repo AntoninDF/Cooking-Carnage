@@ -15,7 +15,7 @@ namespace Cooking
 
         public float CookPercentage => CookDuration / (TargetCookDuration > 0 ? TargetCookDuration : 1.0f); // Between 0 and 1
 
-        public ECookStatus CookStatus { get; set; }  = ECookStatus.Cooked;
+        public string CookStatus { get; set; }  = "Cooked";
 
         public UnityEvent OnCook => _onCook;
         public UnityEvent OnOvercooked => _onOvercooked;
@@ -54,7 +54,7 @@ namespace Cooking
         public  void Reset()
         {
             eaten = false;
-            CookStatus = ECookStatus.Cooked;
+            //CookStatus = ECookStatus.Cooked;
         }
         
         
@@ -66,20 +66,20 @@ namespace Cooking
             OnCook?.Invoke();
             UpdateTooltip();
 
-            if (CookPercentage >= 1 && CookStatus != ECookStatus.Overcooked)
+            //if (CookPercentage >= 1 && CookStatus != ECookStatus.Overcooked)
             {
                 TransformToBurntMeal();
             }
         }
         private void TransformToBurntMeal()
         {
-            CookStatus = ECookStatus.Overcooked;
+            //CookStatus = ECookStatus.Overcooked;
             _onOvercooked?.Invoke();
         }
         public void StopCooking()
         {
             string text = _recipe.Name;
-            if (CookStatus == ECookStatus.Overcooked) text += " (overcooked)";
+            //if (CookStatus == ECookStatus.Overcooked) text += " (overcooked)";
         }
         private void UpdateTooltip()
         {

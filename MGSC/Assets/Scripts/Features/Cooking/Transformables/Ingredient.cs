@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Features
 {
     public class Ingredient : Feature, IFeatureCollection

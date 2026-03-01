@@ -29,7 +29,7 @@ namespace GameSystem
                 return output;
             }
             if (order.Recipe != order.ServingInfo.Recipe) output = WrongMealPrice;
-            else if (order.ServingInfo.Meal.CookStatus == Cooking.ECookStatus.Overcooked) output = OvercookedMealPrice;
+            //else if (order.ServingInfo.Meal.CookStatus == Cooking.ECookStatus.Overcooked) output = OvercookedMealPrice;
             else output = order.ServingInfo.Recipe.Price; // 10€ if served in less than 20s. 5€ if served in 50s
 
             return output;

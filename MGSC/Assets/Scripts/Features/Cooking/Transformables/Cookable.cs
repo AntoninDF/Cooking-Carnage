@@ -2,7 +2,7 @@ using System;
 
 namespace Features
 {
-    public class Cookable : Feature
+    public class Cookable : CookingFeature
     {
         public float CookingDuration { get; set; } = 3f;
         public bool IsCooked {
@@ -14,7 +14,13 @@ namespace Features
                 if (_isCooked) OnCook?.Invoke();
             }
         }
+
+        public override bool Completed => IsCooked;
+        public override bool CanBePerformed => CanBeCooked();
+
         public Action OnCook;
+        public Action OnCookingStart;
+        public Action OnCookingEnd;
 
 
         #region Fields
@@ -25,6 +31,14 @@ namespace Features
         {
         }
 
+        public void StartCooking()
+        {
+            OnCookingStart?.Invoke();
+        }
+        public void StopCooking()
+        {
+            OnCookingEnd?.Invoke();
+        }
         public bool RequestCook() => TryCook();
         private bool TryCook()
         {
@@ -36,6 +50,7 @@ namespace Features
         private void Cook()
         {
             IsCooked = true;
+            StopCooking();
         }
         public bool CanBeCooked()
         {
