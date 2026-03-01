@@ -11,8 +11,9 @@ namespace Cooking
 {
 
 
-    public class Blender : MonoBehaviour, IFeatureCollection
+    public class Blender : MonoBehaviour //, IFeatureCollection
     {
+        /*
         #region Properties
         public float CutDuration { get => _cutDuration; set { _cutDuration = value; } }
         public float DefaultCutDuration { get => _defaultCutDuration; set { _defaultCutDuration = value; } }
@@ -171,6 +172,7 @@ namespace Cooking
         }
 
         #endregion
+        */
     }
 
 }

@@ -11,7 +11,8 @@ using UnityEngine;
 public class Plate : Item
 {
     #region Properties
-
+    public Cookable Cookable;
+    public Cookable OverCookable;
     #endregion
 
     #region Fields
@@ -32,13 +33,25 @@ public class Plate : Item
     {
         ContainerComponent = GetComponent<MultiSlotContainer>();
     }
+    protected override void Awake()
+    {
+        Cookable = new(this);
+        OverCookable = new(this);
+        OverCookable.Enabled = false;
+        base.Awake();
+    }
+    protected override void BindEvents()
+    {
+        base.BindEvents();
+        Cookable.OnCook += () => Cookable.Enabled = false;
+        Cookable.OnCook += () => OverCookable.Enabled = true;
+    }
     protected virtual void Start()
     {
-        Debug.Log("Get COntainer. Success : " + ContainerComponent.TryGetFeature(out Container));
+        ContainerComponent.TryGetFeature(out Container);
 
         if (ContainerComponent.TryGetFeature(out Interactable interactable))
         {
-            Debug.Log("Interactions cut");
             interactable.Enabled = false;
         }
 
@@ -53,46 +66,22 @@ public class Plate : Item
     }
     protected override void TryInteract(InteractionContext context)
     {
-        Debug.Log("Container is " + Container);
         if (context.TryGetFeature(out Container container))
         {
             // Try to take the player's ingredient
             if (container.CanDrop(container.HeldItem))
             {
-                Debug.Log("Take ingredient");
-                Debug.Log("Plate tries to grab. Success : " + Container.RequestGrab(container.HeldItem));
+                Container.RequestGrab(container.HeldItem);
             }
             // Or ask the player to grab this plate
             else
             {
-                Debug.Log("Plate tries to get grabbed");
                 container.RequestGrab(Grabbable);
             }
         }
 
     }
-    /*
-    public void Cook(float dT) 
-    {
-        SO_Recipe recipe = GetMatchingRecipe();
-        _targetCookDuration = recipe.timeToCook;
-        CookDuration += dT; 
-        UpdateTooltip();
-        SetItemColliders(false);
-
-        if (CookPercentage >= 1)
-        {
-            TransformToMeal(recipe);
-        }
-    }
-    public void StopCooking()
-    {
-        CookDuration = 0f;
-        UpdateTooltip();
-        SetItemColliders(true);
-    }
-    */
-
+    
     /// <summary>
     /// Checks if the current ingredient list can make a recipe. If so, it passes said recipe as ref
     /// </summary>

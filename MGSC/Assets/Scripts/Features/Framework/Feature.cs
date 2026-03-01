@@ -52,13 +52,21 @@ namespace Features
 
         public Feature(IFeatureCollection owner)
         {
-            Init();
             Owner = owner;
             Owner.Collection.Add(this);
         }
 
-        public virtual void Init() { }
+        public virtual void LateSetup()
+        {
+            Track();
+        }
         public virtual void Update() { }
+        public virtual void Reset()
+        {
+            Enabled = true;
+            OnEnable = null;
+            OnDisable = null;
+        }
         public virtual void Track() => Manager.Track(this);
         public virtual void Untrack() => Manager.Untrack(this);
         public virtual void IsTracked() => Manager.IsTracked(this);
@@ -67,11 +75,11 @@ namespace Features
             if (Owner == null) return null;
             return Owner.Get<T>();
         }
-        public bool TryGetSibling<T>(out T feature) where T : Feature
+        public bool TryGetSibling<T>(out T feature, bool mustBeEnabled=false) where T : Feature
         {
             feature = null;
             if (Owner == null) return false;
-            return Owner.TryGet(out feature);
+            return Owner.TryGet(out feature, mustBeEnabled);
         }
         /// <summary>
         /// Scans every owner in this feature's hierarchy and tries to find one that has a transform.

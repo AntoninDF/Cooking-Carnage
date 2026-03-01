@@ -148,7 +148,7 @@ namespace GameSystem
 
             foreach (var blender in Reference.GetAll<Cooking.Blender>())
             {
-                blender.Reset();
+                //blender.Reset();
             }
 
             foreach (var oven in Reference.GetAll<Oven>())

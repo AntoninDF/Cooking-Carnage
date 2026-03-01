@@ -66,7 +66,7 @@ namespace UI
                     foreach (var elm in Reference.GetAll<Blender>())
                     {
                         // Target event
-                        ev = elm.OnItemCut;
+                        //ev = elm.OnItemCut;
                         if (bind)
                             ev.AddListener(callback.Invoke);
                         else

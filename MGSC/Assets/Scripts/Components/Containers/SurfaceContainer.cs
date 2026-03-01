@@ -35,6 +35,7 @@ public class SurfaceContainer : MonoBehaviour, IFeatureCollection
         Interactable = new (this);
 
         BindEvents();
+        Collection.LateSetup();
     }
 
     private void BindEvents()
@@ -58,8 +59,6 @@ public class SurfaceContainer : MonoBehaviour, IFeatureCollection
         {
             if (Container.RequestGrab(container.HeldItem))
                 return;
-            if (Container.Passthrough)
-                container.RequestGrab(Container.HeldItem);
         }
     }
 

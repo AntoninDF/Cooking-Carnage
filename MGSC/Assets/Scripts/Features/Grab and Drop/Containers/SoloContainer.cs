@@ -50,11 +50,8 @@ namespace Features
         }
         public override bool CanGrab(Grabbable item)
         {
-            Debug.Log("A_1");
             if (item == HeldItem) return false;
-            Debug.Log("A_2");
             if (HeldItem != null) return false;
-            Debug.Log("A_3");
             return base.CanGrab(item);
         }
         public override bool CanDrop(Grabbable item = null)

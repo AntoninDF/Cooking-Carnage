@@ -31,9 +31,9 @@ namespace Features
             this.transform = transform;
         }
 
-        public override void Init()
+        public override void LateSetup()
         {
-            base.Init();
+            base.LateSetup();
             Container = new(this);
             this.Container.Filter.AddCondition(CanGrab);
             SetupSlots();
@@ -93,13 +93,9 @@ namespace Features
 
         public override bool CanGrab(Grabbable grabbable)
         {
-            UnityEngine.Debug.Log("0");
             if (!base.CanGrab(grabbable)) return false;
-            UnityEngine.Debug.Log("1");
             var slot = GetFirstAvailableSlot(grabbable);
-            UnityEngine.Debug.Log("2");
             if (slot == null) return false;
-            UnityEngine.Debug.Log("3");
 
             return true;
         }
@@ -122,10 +118,8 @@ namespace Features
         }
         private SoloContainer GetFirstAvailableSlot(Grabbable grabbable)
         {
-            Debug.Log("Length of SoloCcontainers is " + SoloContainers.Count);
             foreach (var slot in SoloContainers)
             {
-                Debug.Log("Slot is " + slot);
                 if (slot.CanGrab(grabbable))
                     return slot;
             }

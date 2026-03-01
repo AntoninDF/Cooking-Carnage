@@ -71,6 +71,7 @@ namespace GameSystem
             new DataManager();
             new CameraManager();
             new ItemManager();
+            new FeatureManager();
 
             // Instantiate the scene and create all the MonoBehaviour managers
             if (_gameProfile.ApplyScenePreset) ApplyScenePreset();

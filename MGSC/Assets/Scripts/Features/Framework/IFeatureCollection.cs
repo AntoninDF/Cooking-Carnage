@@ -14,10 +14,10 @@ namespace Features
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Get<T>() where T : Feature => Collection.Get<T>();
-        public T Get<T>(out T feature) where T : Feature { feature = Collection.Get<T>(); return feature; }
-        public bool TryGet<T>(out T feature) where T : Feature => Collection.TryGet(out feature);
-        public void Init() => Collection.Init();
+        public T Get<T>(bool mustBeEnabled=false) where T : Feature => Collection.Get<T>(mustBeEnabled);
+        public T Get<T>(out T feature, bool mustBeEnabled = false) where T : Feature { feature = Collection.Get<T>(mustBeEnabled); return feature; }
+        public bool TryGet<T>(out T feature, bool mustBeEnabled = false) where T : Feature => Collection.TryGet(out feature, mustBeEnabled);
+        public void LateSetup() => Collection.LateSetup();
         public void Update() => Collection.Update();
     }
 }

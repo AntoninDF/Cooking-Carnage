@@ -14,9 +14,12 @@ public class FeatureManager : IManager
 
 
     #region Methods
+    public FeatureManager()
+    {
+        Register();
+    }
     public void Init()
     {
-        throw new System.NotImplementedException();
     }
 
     public void Register() => Reference.SetManager(this);

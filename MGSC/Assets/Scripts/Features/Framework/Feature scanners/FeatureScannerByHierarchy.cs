@@ -14,6 +14,8 @@ namespace Features
         {
             GameObject = gameObject;
         }
+        public static List<Feature> Get(GameObject go) => new FeatureScannerByHierarchy(go).Get();
+        public static List<T> Get<T>(GameObject go) where T : Feature => new FeatureScannerByHierarchy(go).Get<T>();
         public override List<Feature> Get()
         {
             List<Feature> result = new();

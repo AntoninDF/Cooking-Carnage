@@ -24,7 +24,7 @@ public class Player : MonoBehaviour, IFeatureCollection
         Container = new (this, hand);
         PlayerInputs = new PlayerInputReader(this);
         PlayerMovement = new(this, transform, head, GetComponent<CharacterController>());
-        Collection.Init();
+        Collection.LateSetup();
 
         BindPlayerActions();
         AddInteractions();

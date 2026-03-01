@@ -23,9 +23,9 @@ namespace Features
         {
         }
 
-        public override void Init()
+        public override void LateSetup()
         {
-            base.Init();
+            base.LateSetup();
             InputActions = Reference.AssetReferences.InputActions;
             SetInputReferences();
         }

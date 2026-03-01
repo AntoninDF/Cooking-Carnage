@@ -33,7 +33,7 @@ namespace Features
         {
         }
 
-        public override void Init()
+        public override void LateSetup()
         {
             _container = new(this);
         }

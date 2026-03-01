@@ -11,10 +11,6 @@ namespace Features
         /// </summary>
         public virtual bool IsLocked { get; set; }
         /// <summary>
-        /// A passthrough container can be directly interacted with by the player to get the contained item, rather than being accessed through it's contained item.
-        /// </summary>
-        public virtual bool Passthrough { get; set; }
-        /// <summary>
         /// Returns the first/default/only object contained by the container, or null if there is none.
         /// </summary>
         public virtual Grabbable HeldItem { get; protected set; }

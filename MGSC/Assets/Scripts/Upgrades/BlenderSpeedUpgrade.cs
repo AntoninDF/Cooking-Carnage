@@ -28,7 +28,7 @@ namespace Upgrades
 
             foreach (Blender b in _targetBlenders)
             {
-                b.CutDuration = b.DefaultCutDuration / (_level + 1);
+                //b.CutDuration = b.DefaultCutDuration / (_level + 1);
             }
         }
         public override void LevelUp()

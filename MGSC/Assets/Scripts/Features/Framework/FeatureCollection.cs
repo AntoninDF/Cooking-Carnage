@@ -29,10 +29,10 @@ namespace Features
 
         #region Methods
 
-        public void Init()
+        public void LateSetup()
         {
             foreach (var feature in AllFeatures)
-                feature.Init();
+                feature.LateSetup();
         }
         public void Update()
         {
@@ -47,17 +47,18 @@ namespace Features
                 DirectFeatures.Add(feature);
         }
         public void Remove(Feature feature) => DirectFeatures.Remove(feature);
-        public T Get<T>() where T : Feature
+        public T Get<T>(bool mustBeEnabled = false) where T : Feature
         {
             foreach (var feature in DirectFeatures)
                 if (feature is T)
-                    return (T)feature;
+                    if ((mustBeEnabled && feature.Enabled) || !mustBeEnabled)
+                        return (T)feature;
 
             return null;
         }
-        public bool TryGet<T>(out T feature) where T : Feature
+        public bool TryGet<T>(out T feature, bool mustBeEnabled = false) where T : Feature
         {
-            feature = Get<T>();
+            feature = Get<T>(mustBeEnabled);
             return feature != null;
         }
         #endregion

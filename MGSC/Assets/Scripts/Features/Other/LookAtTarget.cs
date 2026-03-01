@@ -81,11 +81,11 @@ namespace Features
         {
             if (_timerManager != null)
             {
-                _timerManager.StartTimer("Reset lookat (" + Time.time + ")", 3, Reset, true);
+                _timerManager.StartTimer("Reset lookat (" + Time.time + ")", 3, TryReset, true);
             }
         }
 
-        protected virtual void Reset()
+        protected virtual void TryReset()
         {
             if (_lastCheckedFrame < Time.frameCount - 1) // Reset only if the last check is at least two frames old
             {

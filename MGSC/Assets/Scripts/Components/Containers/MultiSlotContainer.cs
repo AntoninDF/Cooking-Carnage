@@ -27,8 +27,9 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
     {
         EnforceSlotList();
 
-        Collection.Init();
+        Collection.LateSetup();
         BindEvents();
+        Collection.LateSetup();
     }
     private void Update()
     {
@@ -60,8 +61,7 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
         {
             if (detectSlots)
             {
-                FeatureScannerByHierarchy scanner = new(gameObject);
-                _soloContainers = scanner.Get<SoloContainer>();
+                _soloContainers = FeatureScannerByHierarchy.Get<SoloContainer>(gameObject);
             }
             else
                 Debug.LogWarning("No slots were added or detected on MultiSlotContainer '" + name + "'");
@@ -72,9 +72,8 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
             if (transform != null) slots.Add(transform.gameObject);
             else Debug.LogWarning("Slot transform is null");
 
-            Debug.Log("Adding a slot. Success : " + Container.TryAddSlot(obj));
+            Container.TryAddSlot(obj);
         }
-        Debug.Log(Container.SoloContainers.Count + " slots found on " + name);
     }
     #endregion
 }

@@ -58,7 +58,6 @@ namespace Features
         {
             if (!base.CanGrab(item)) return false;
             if (HeldItems.Contains(item)) return false;
-            UnityEngine.Debug.Log("Multicontainer cangrab condition passed");
 
             return true;
         }

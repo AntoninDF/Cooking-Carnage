@@ -54,7 +54,6 @@ public static class ExtensionMethods
         feature = null;
         if (obj is IFeatureCollection col)
         {
-            UnityEngine.Debug.Log("There are " + col.DirectFeatures.Count + " features in object");
             feature = col.Get<T>();
             if (feature != null) return true;
         }

@@ -12,7 +12,7 @@ namespace Tutorials
         {
             foreach (var b in Reference.GetAll<Blender>())
             {
-                b.IsLocked = !active;
+                //b.IsLocked = !active;
             }
         }
         public void SetAllActive_SittingCounters(bool active)
