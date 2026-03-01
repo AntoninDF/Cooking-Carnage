@@ -19,7 +19,6 @@ public class Ingredient : Item
     [SerializeField] protected SO_Ingredient _model;
 
 
-    private ItemManager ItemManager => Reference.GetManager<ItemManager>();
 
     #endregion
 
@@ -28,8 +27,9 @@ public class Ingredient : Item
     protected override void Awake()
     {
         base.Awake();
-        if (_model == null)
-            throw new MissingReferenceException("Please assign an ingredient model in the inspector : " + name);
+        IngredientFeature = new(this);
+        //if (_model == null)
+            //throw new MissingReferenceException("Please assign an ingredient model in the inspector : " + name);
     }
     void Start()
     {

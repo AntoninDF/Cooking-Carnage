@@ -6,6 +6,7 @@ namespace Features
     {
         public SoloContainer(IFeatureCollection owner) : base(owner)
         {
+            this.transform = GetParentTransform();
         }
         public SoloContainer(IFeatureCollection owner, Transform transform) : base(owner, transform)
         {

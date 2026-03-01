@@ -47,6 +47,10 @@ public class Furnace : MonoBehaviour, IFeatureCollection
         Interactable.OnInteraction += TryInteract;
         Cooker.OnTransformationStart += _ => Container.IsLocked = true;
         Cooker.OnTransformationOver += _ => Container.IsLocked = false;
+
+        Cooker.OnTransformationStart += _ => Debug.Log("Cooker.OnTransformationStart");
+        Cooker.OnTransformationOver += _ => Debug.Log("Cooker.OnTransformationOver");
+
     }
     private void TryInteract(InteractionContext context)
     {

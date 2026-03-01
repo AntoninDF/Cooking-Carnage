@@ -303,15 +303,15 @@ public class PropertyOrFieldInfo
     {
         if (field != null)
         {
-            Debug.Log("Getting value through field on object " + obj);
+            //Debug.Log("Getting value through field on object " + obj);
             return field.GetValue(obj);
         }
         if (property != null)
         {
-            Debug.Log("Getting value through property on object " + obj);
+            //Debug.Log("Getting value through property on object " + obj);
             return property.GetValue(obj);
         }
-        Debug.Log("GetValue is null because the reference member is invalid");
+        //Debug.Log("GetValue is null because the reference member is invalid");
         return null;
     }
     public void SetValue(object obj, object value)

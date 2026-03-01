@@ -75,11 +75,11 @@ namespace Features
             if (Owner == null) return null;
             return Owner.Get<T>();
         }
-        public bool TryGetSibling<T>(out T feature, bool mustBeEnabled=false) where T : Feature
+        public bool TryGetSibling<T>(out T feature, bool mustBeEnabled=false, bool scanOnlyDirectFeatures = false) where T : Feature
         {
             feature = null;
             if (Owner == null) return false;
-            return Owner.TryGet(out feature, mustBeEnabled);
+            return Owner.TryGet(out feature, mustBeEnabled, scanOnlyDirectFeatures);
         }
         /// <summary>
         /// Scans every owner in this feature's hierarchy and tries to find one that has a transform.

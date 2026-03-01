@@ -52,18 +52,18 @@ namespace Features
                 DirectFeatures.Add(feature);
         }
         public void Remove(Feature feature) => DirectFeatures.Remove(feature);
-        public T Get<T>(bool mustBeEnabled = false) where T : Feature
+        public T Get<T>(bool mustBeEnabled = false, bool scanOnlyDirectFeatures = false) where T : Feature
         {
-            foreach (var feature in DirectFeatures)
+            foreach (var feature in scanOnlyDirectFeatures?DirectFeatures:AllFeatures)
                 if (feature is T)
                     if ((mustBeEnabled && feature.Enabled) || !mustBeEnabled)
                         return (T)feature;
 
             return null;
         }
-        public bool TryGet<T>(out T feature, bool mustBeEnabled = false) where T : Feature
+        public bool TryGet<T>(out T feature, bool mustBeEnabled = false, bool scanOnlyDirectFeatures = false) where T : Feature
         {
-            feature = Get<T>(mustBeEnabled);
+            feature = Get<T>(mustBeEnabled, scanOnlyDirectFeatures);
             return feature != null;
         }
         #endregion
