@@ -64,10 +64,24 @@ public class EventDisplayEditor : Editor
             var wrapper = (UnityEventWrapper)elementProperty.boxedValue;
             SerializedProperty serializedEvent = elementProperty.FindPropertyRelative("Event");
 
-            GUILayout.BeginHorizontal();
-            bool showChildren = EditorGUILayout.PropertyField(serializedEvent,new GUIContent(wrapper.name.Replace("/", " -> ")));
+            string propertyName = wrapper.name.Replace("/", " -> ");
 
-            GUILayout.BeginVertical(GUILayout.MaxWidth(60));
+            GUILayout.BeginHorizontal();
+
+            if (display.IsValid(wrapper))
+            {
+                EditorGUILayout.PropertyField(serializedEvent,new GUIContent(propertyName));
+            }
+            else
+            {
+                Color previous = GUI.color;
+                GUI.color = new Color(1f, 0.5f, 0.5f);
+
+                EditorGUILayout.PropertyField(serializedEvent, new GUIContent(propertyName));
+                GUI.color = previous;
+            }
+
+                GUILayout.BeginVertical(GUILayout.MaxWidth(60));
             if (GUILayout.Button("Remove", GUILayout.Height(EditorGUI.GetPropertyHeight(serializedEvent)/2)))
             {
                 display.Events.RemoveAt(i);

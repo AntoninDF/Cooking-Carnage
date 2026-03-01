@@ -18,6 +18,16 @@ public class EventDisplay : MonoBehaviour
         BindEvents();
     }
 
+    public bool IsValid(UnityEventWrapper eventWrapper)
+    {
+
+        MemberInfo actionMember = GetMember(eventWrapper.featureType.SystemType, eventWrapper.actionMemberInfoName);
+        MemberInfo featureMember = GetMember(eventWrapper.componentType.SystemType, eventWrapper.featureMemberInfoName);
+        if (actionMember == null || featureMember == null)
+            return false;
+        return true;
+    }
+
     private void BindEvents()
     {
         bindEventProfilerMarker.Begin();
@@ -25,6 +35,7 @@ public class EventDisplay : MonoBehaviour
         var components = GetComponentsFromGameObjects(hierarchy);
         foreach (var e in Events)
         {
+            // Parse the name to get the GameObject's name and the component's name
             string[] parsedName = e.name.Split('/', '-');
             if (parsedName.Length < 4) continue;
             string goName = parsedName[0];
@@ -32,6 +43,7 @@ public class EventDisplay : MonoBehaviour
             string featureName = parsedName[2];
             string actionName = parsedName[3];
 
+            // Get the member infos on the component and on it's feature
             MemberInfo actionMember = GetMember(e.featureType.SystemType, e.actionMemberInfoName);
             MemberInfo featureMember = GetMember(e.componentType.SystemType, e.featureMemberInfoName);
             var actionInfo = new PropertyOrFieldInfo(actionMember);
