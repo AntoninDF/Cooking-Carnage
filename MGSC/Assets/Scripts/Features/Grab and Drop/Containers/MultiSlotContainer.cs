@@ -35,7 +35,7 @@ namespace Features
         {
             base.LateSetup();
             Container = new(this);
-            this.Container.Filter.AddCondition(CanGrab);
+            this.Container.Filter.AddCondition(item => CanGrab(item as Grabbable));
             SetupSlots();
         }
 

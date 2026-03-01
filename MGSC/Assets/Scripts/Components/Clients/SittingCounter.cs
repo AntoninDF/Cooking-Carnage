@@ -75,24 +75,24 @@ namespace Clients
                 Debug.LogError("Please reference a slot on the sitting counter '" + name + "' for the meal to be served");
 
             /*
-            ContainerFilter filter;
+            Conditions filter;
             foreach (var slot in _slotsToSpawn)
             {
-                if (slot.Filter == null)
+                if (slot.Conditions == null)
                 {
-                    filter = slot.AddComponent<ContainerFilter>();
+                    filter = slot.AddComponent<Conditions>();
                 }
                 else
                 {
-                    filter = slot.GetComponent<ContainerFilter>();
+                    filter = slot.GetComponent<Conditions>();
                 }
                 filter.Clear();
                 filter.AddFilter(EFilterCondition.MustBe, EItemType.Ingredient);
             }
-            if (_mealSlot.Filter == null)
-                filter = _mealSlot.AddComponent<ContainerFilter>();
+            if (_mealSlot.Conditions == null)
+                filter = _mealSlot.AddComponent<Conditions>();
             else
-                filter = _mealSlot.GetComponent<ContainerFilter>();
+                filter = _mealSlot.GetComponent<Conditions>();
             filter.Clear();
             filter.AddFilter(EFilterCondition.MustBe, EItemType.Meal);
             */

@@ -28,12 +28,17 @@ namespace Features
         #endregion
 
         #region Methods
-
+        /// <summary>
+        /// LateSetup should be called in Behaviour.Start()
+        /// </summary>
         public void LateSetup()
         {
             foreach (var feature in AllFeatures)
                 feature.LateSetup();
         }
+        /// <summary>
+        /// Update should be called in Behaviour.Update()
+        /// </summary>
         public void Update()
         {
             foreach (var feature in AllFeatures)

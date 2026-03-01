@@ -1,19 +1,10 @@
-
-
 namespace Features
 {
-    public class Cutter : Feature
+    public class Cutter : TransformAfterTimer
     {
-
-
-
-
-        #region Methods
         public Cutter(IFeatureCollection owner) : base(owner)
         {
+            Conditions.AddCondition(item => item is Cuttable);
         }
-
-
-        #endregion
     }
 }

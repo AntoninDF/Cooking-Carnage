@@ -11,8 +11,8 @@ using UnityEngine;
 public class Plate : Item
 {
     #region Properties
-    public Cookable Cookable;
-    public Cookable OverCookable;
+    public Cookable CookableFlag;
+    public Cookable OverCookableFlag;
     #endregion
 
     #region Fields
@@ -35,16 +35,16 @@ public class Plate : Item
     }
     protected override void Awake()
     {
-        Cookable = new(this);
-        OverCookable = new(this);
-        OverCookable.Enabled = false;
+        CookableFlag = new(this);
+        OverCookableFlag = new(this);
+        OverCookableFlag.Enabled = false;
         base.Awake();
     }
     protected override void BindEvents()
     {
         base.BindEvents();
-        Cookable.OnCook += () => Cookable.Enabled = false;
-        Cookable.OnCook += () => OverCookable.Enabled = true;
+        CookableFlag.OnTransformation += () => CookableFlag.Enabled = false;
+        CookableFlag.OnTransformation += () => OverCookableFlag.Enabled = true;
     }
     protected virtual void Start()
     {
@@ -120,7 +120,7 @@ public class Plate : Item
         //DespawnContent();
         //_ingredientSlots.Reset();
 
-        //StopCooking();
+        //StopCutting();
         _itemManager.Despawn(this);
     }
     /*

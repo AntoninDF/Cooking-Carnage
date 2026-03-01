@@ -15,7 +15,7 @@ namespace Features
         /// </summary>
         public virtual Grabbable HeldItem { get; protected set; }
         public Transform transform { get; set; }
-        public ContainerFilter Filter { get; set; }
+        public Conditions Filter { get; set; }
 
         public FeatureCollection Collection { get; set; } = new();
 
@@ -25,13 +25,21 @@ namespace Features
         protected Container(IFeatureCollection owner) : base(owner)
         {
             Filter = new(this);
+            SetupFilter();
             transform = GetParentTransform();
         }
         protected Container(IFeatureCollection owner, Transform transform) : base(owner)
         {
             Filter = new(this);
+            SetupFilter();
             this.transform = transform;
         }
+
+        private void SetupFilter()
+        {
+            Filter.AddCondition(item => item is Grabbable);
+        }
+
 
         public abstract bool RequestGrab(Grabbable item);
         public abstract bool RequestDrop(Grabbable item = null);

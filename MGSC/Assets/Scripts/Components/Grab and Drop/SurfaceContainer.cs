@@ -13,7 +13,7 @@ public class SurfaceContainer : MonoBehaviour, IFeatureCollection
 
     public FeatureCollection Collection { get; set; } = new();
     public MultiContainer Container { get; set; }
-    public ContainerFilter Filter { get; set; }
+    public Conditions Filter { get; set; }
     public LookAtTarget LookAtTarget { get; set; }
     public Interactable Interactable { get; set; }
     #endregion

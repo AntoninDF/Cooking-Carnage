@@ -6,6 +6,7 @@ namespace Features
 
         public FeatureCollection Collection {get;set;} = new ();
         public Cookable Cookable {get;set;}
+        public Cuttable Cuttable {get;set;}
 
 
         #endregion
@@ -16,6 +17,7 @@ namespace Features
         public Ingredient(IFeatureCollection owner) : base(owner)
         {
             Cookable = new(this);
+            Cuttable = new(this);
         }
 
 

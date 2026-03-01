@@ -57,11 +57,11 @@ namespace Cooking
                 /*
             foreach (var slot in _slots)
             {
-                ContainerFilter filter;
-                if (slot.Filter == null)
-                    filter = slot.AddComponent<ContainerFilter>();
+                Conditions filter;
+                if (slot.Conditions == null)
+                    filter = slot.AddComponent<Conditions>();
                 else
-                    filter = slot.Filter;
+                    filter = slot.Conditions;
                 filter.Clear();
                 filter.AddFilter(EFilterCondition.MustBe, EItemType.Oven);
             }

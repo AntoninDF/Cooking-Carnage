@@ -20,7 +20,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     {
         Interactable = new(this);
         Container = new (this, itemSlot);
-        Container.Filter.AddCondition((item) => item.TryGetSibling<Cookable>(out var temp));
+        Container.Filter.AddCondition(item => item is Feature feature && feature.TryGetSibling<Cookable>(out var temp));
         Cooker = new(this);
 
         BindEvents();
@@ -45,8 +45,8 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     private void BindEvents()
     {
         Interactable.OnInteraction += TryInteract;
-        Cooker.OnCookingStart += _ => Container.IsLocked = true;
-        Cooker.OnCookingOver += _ => Container.IsLocked = false;
+        Cooker.OnTransformationStart += _ => Container.IsLocked = true;
+        Cooker.OnTransformationOver += _ => Container.IsLocked = false;
     }
     private void TryInteract(InteractionContext context)
     {
@@ -61,10 +61,10 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     private void TryStartCooking(InteractionContext context)
     {
         if (Container.HeldItem == null) return;
-        if (!Container.HeldItem.TryGetSibling(out Cookable cookable, true) || !cookable.CanBeCooked()) return;
-        if (!Cooker.CanStartCooking(cookable)) return;
+        if (!Container.HeldItem.TryGetSibling(out Cookable cookable, true) || !cookable.CanBeTransformed) return;
+        if (!Cooker.CanStartTransformation(cookable)) return;
 
-        Cooker.RequestStartCooking(cookable);
+        Cooker.RequestStartTransformation(cookable);
     }
     
 }

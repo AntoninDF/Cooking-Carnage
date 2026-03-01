@@ -151,7 +151,7 @@ public class ItemPile : ObjectPile, IFeatureCollection
         if (item.Grabbable.Container != null && item.Grabbable.Container.IsLocked) return false;
         if (HeldItems.Contains(item.Grabbable)) return false;
         if (item is not Item) return false;
-        if (TryGetComponent<ContainerFilter>(out var filter) && !filter.IsValid(item.Grabbable)) return false;
+        if (TryGetComponent<Conditions>(out var filter) && !filter.IsValid(item.Grabbable)) return false;
 
         return true;
     }
