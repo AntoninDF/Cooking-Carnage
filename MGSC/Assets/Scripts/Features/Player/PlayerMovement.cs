@@ -95,7 +95,8 @@ namespace Features
         private void ApplyVerticalRotation(float rotationAmount)
         {
             _verticalRotation = Mathf.Clamp(_verticalRotation - rotationAmount, -VerticalLookRange, VerticalLookRange);
-            HeadTransform.localRotation = Quaternion.Euler(_verticalRotation, 0, 0);
+            if (HeadTransform != null)
+                HeadTransform.localRotation = Quaternion.Euler(_verticalRotation, 0, 0);
         }
 
         private void HandleRotation()

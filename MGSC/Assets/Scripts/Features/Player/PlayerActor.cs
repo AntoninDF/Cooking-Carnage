@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace Features
 {
+    /// <summary>
+    /// The PlayerActor's role is to find objects and their features in sight, and interact with them.
+    /// The detail of the interactions must be handled externally with AddPlayerAction or AddConstantAction
+    /// </summary>
     public class PlayerActor : Feature, IFeatureCollection
     {
 
@@ -19,7 +23,6 @@ namespace Features
         #region Fields
 
         private FeatureScannerByRaycast _scanner = new ();
-        private SoloContainer _container;
         private Dictionary<PlayerActionType, Dictionary<System.Type, List<Func<Feature, bool>>>> _playerActions = new();
         private Dictionary<System.Type, List<Func<Feature, bool>>> _constantActions = new();
 
@@ -35,7 +38,6 @@ namespace Features
 
         public override void LateSetup()
         {
-            _container = new(this);
         }
 
         public override void Update()
@@ -130,6 +132,7 @@ namespace Features
         public void AddConstantAction<T>(Func<Feature, bool> action) where T : Feature => AddConstantAction(typeof(T), action);
         /// <summary>
         /// Constant actions are executed every frame.
+        /// Don't forget to call Collection.Update() for it to work
         /// </summary>
         /// <param name="type"></param>
         /// <param name="action"></param>

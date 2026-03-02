@@ -73,7 +73,7 @@ public class GoToAnimation : Feature
             endPos = worldPos;
         }
 
-            targetTransform = dest;
+        targetTransform = dest;
         if (duration == 0f)
             SetPos(1);
         else

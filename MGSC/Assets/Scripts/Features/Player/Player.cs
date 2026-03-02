@@ -12,22 +12,30 @@ public class Player : MonoBehaviour, IFeatureCollection
     public PlayerMovement PlayerMovement { get; private set; }
 
     [SerializeField] private Transform head;
-    [SerializeField] private Transform hand;
+    [SerializeField] private SlotContainer hand;
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         PlayerActor = new(this);
         PlayerActor.SortFeaturesByDistance = true;
         PlayerActor.GetAllFeaturesInSight = false;
-        Container = new (this, hand);
-        PlayerInputs = new PlayerInputReader(this);
-        PlayerMovement = new(this, transform, head, GetComponent<CharacterController>());
-        Collection.LateSetup();
+        PlayerInputs = new PlayerInputReader(this); Collection.LateSetup();
 
         BindPlayerActions();
         AddInteractions();
+    }
+    void Start()
+    {
+        if (hand != null)
+        {
+            Container = hand.Container;
+            Collection.Add(Container);
+        }
+        else
+            Container = new(this, transform);
+        PlayerMovement = new(this, transform, head, GetComponent<CharacterController>());
+        
 
     }
 
