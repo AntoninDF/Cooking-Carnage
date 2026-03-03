@@ -12,7 +12,7 @@ namespace Features
         public Action<float> OnTransformationProgress { get; set; }
         public Action<TransformableAfterTimer> OnTransformationOver { get; set; }
         public Action<TransformableAfterTimer> OnTransformationStart { get; set; }
-        private TimerManager TimerManager => Reference.GetManager<TimerManager>();
+        protected TimerManager TimerManager => Reference.GetManager<TimerManager>();
 
 
         #region Methods
@@ -33,7 +33,7 @@ namespace Features
             OnTransformationOver?.Invoke(cookable as Cookable);
         }
 
-        private void StartTransformation(TransformableAfterTimer target)
+        protected virtual void StartTransformation(TransformableAfterTimer target)
         {
             string timerName = "Cooking (" + UnityEngine.Time.frameCount.ToString("X") + ")";
             var duration = GetTransformationDuration(target);
@@ -43,14 +43,14 @@ namespace Features
         }
 
         // Starting to cook something and actually cooking it is different, hence the separate methods, despite them doing the same thing.
-        public bool CanStartTransformation(TransformableAfterTimer cookable) => CanTransform(cookable);
+        public virtual bool CanStartTransformation(TransformableAfterTimer cookable) => CanTransform(cookable);
 
-        public float GetTransformationDuration(TransformableAfterTimer target)
+        public virtual float GetTransformationDuration(TransformableAfterTimer target)
         {
             return target.TransformationDuration * SpeedMultiplier;
         }
 
-        private void Progress(float progress, float duration)
+        protected virtual void Progress(float progress, float duration)
         {
             if (duration == 0) duration = 1f;
             OnTransformationProgress?.Invoke(progress / duration);

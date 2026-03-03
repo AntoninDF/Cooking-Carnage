@@ -1,21 +1,35 @@
 using Features;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class EventDisplay : MonoBehaviour
+public class EventDisplay : MonoBehaviour, IFeatureCollection
 {
     [SerializeField] public List<UnityEventWrapper> Events = new();
 
 
 
     ProfilerMarker bindEventProfilerMarker = new ProfilerMarker("EventDisplay.BindEventsWithReflection");
+
+    public FeatureCollection Collection { get; set; } = new();
+    public BaseEvents BaseEvents { get; set; }
+
+    private void Awake()
+    {
+        BaseEvents = new(this);
+    }
     void Start()
     {
         BindEvents();
+        Collection.LateSetup();
+    }
+    void Update()
+    {
+        Collection.Update();
     }
 
     public bool IsValid(UnityEventWrapper eventWrapper)
@@ -28,6 +42,7 @@ public class EventDisplay : MonoBehaviour
         return true;
     }
 
+    private void SkippedEventWarning(UnityEventWrapper w) => Debug.LogWarning("The UnityEvent " + w.name + " couldn't be bound");
     private void BindEvents()
     {
         bindEventProfilerMarker.Begin();
@@ -37,7 +52,11 @@ public class EventDisplay : MonoBehaviour
         {
             // Parse the name to get the GameObject's name and the component's name
             string[] parsedName = e.name.Split('/', '-');
-            if (parsedName.Length < 4) continue;
+            if (parsedName.Length < 4)
+            {
+                SkippedEventWarning(e);
+                continue;
+            }
             string goName = parsedName[0];
             string compName = parsedName[1];
             string featureName = parsedName[2];
@@ -49,28 +68,63 @@ public class EventDisplay : MonoBehaviour
             var actionInfo = new PropertyOrFieldInfo(actionMember);
             var featureInfo = new PropertyOrFieldInfo(featureMember);
 
-
             Type actionType = actionInfo.Type;
-            if (actionType == null) continue;
-
+            if (actionType == null)
+            {
+                SkippedEventWarning(e);
+                continue;
+            }
+            // Ensure the detected field is actually an action and not something else
             if (IsValidActionType(actionType, out var args))
             {
+                // Find the owning GameObject and Component
                 foreach (GameObject go in hierarchy)
                     if (go.name == goName)
                         foreach (var comp in go.GetComponents<Component>())
                             if (comp.GetType().Name == compName)
                             {
+                                // Once the component is found, find it's feature, then it's feature's Action field/property
                                 var feature = (Feature)featureInfo.GetValue(comp);
                                 object actionToBe = actionInfo.GetValue(feature);
-                                if (actionToBe == null) continue;
+                                if (actionToBe == null)
+                                {
+                                    actionToBe = NewGenericAction(actionType);
+                                    if (actionToBe == null)
+                                    {
+                                        SkippedEventWarning(e);
+                                        goto LoopIterationEnd;
+                                    }
+                                }
 
+                                //Debug.Log("Binding " + e.name);
+                                // Finally, bind the UnityEvent to the Action and reassign the new value.
                                 BindActions(ref actionToBe, () => e.Event?.Invoke());
                                 actionInfo.SetValue(feature, actionToBe);
                             }
                                     
             }
+            LoopIterationEnd: continue;
         }
         bindEventProfilerMarker.End();
+    }
+
+    public void EmptyMethod0() { }
+    public void EmptyMethod1<T>() { }
+    public void EmptyMethod2<T1, T2>() { }
+    public void EmptyMethod3<T1, T2, T3>() { }
+    private object NewGenericAction(Type actionType)
+    {
+        object result = null;
+
+        int argCount = actionType.GetGenericArguments().Length;
+        MethodInfo emptyMethod = this.GetType().GetMethod("EmptyMethod" + argCount) ;
+
+        if (argCount > 0)
+            emptyMethod = emptyMethod.MakeGenericMethod(actionType.GetGenericArguments());
+
+        result = Delegate.CreateDelegate(actionType, this, emptyMethod);
+
+        return result;
     }
 
     public object BindActionsGeneric0(object action, Action boundDelegate)

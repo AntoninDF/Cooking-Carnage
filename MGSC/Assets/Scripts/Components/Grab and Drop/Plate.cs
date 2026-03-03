@@ -35,6 +35,7 @@ public class Plate : Item
     }
     protected override void Awake()
     {
+        if (ContainerComponent == null) ContainerComponent = GetComponent<MultiSlotContainer>();
         CookableFlag = new(this);
         OverCookableFlag = new(this);
         OverCookableFlag.Enabled = false;
@@ -48,14 +49,14 @@ public class Plate : Item
     }
     protected virtual void Start()
     {
-        ContainerComponent.TryGetFeature(out Container);
-
+        if (ContainerComponent.TryGetFeature(out Container))
+            Container.OnGrab += TryLock; // This is not in BindEvents because it depends on other components being initialized
         if (ContainerComponent.TryGetFeature(out Interactable interactable))
         {
             interactable.Enabled = false;
         }
 
-        Container.OnGrab += TryLock; // This is not in BindEvents because it depends on other components being initialized
+        
     }
     private void TryLock(Grabbable item)
     {

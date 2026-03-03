@@ -30,6 +30,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
         Collection.LateSetup();
         BindExternalEvents();
     }
+    
 
     private void BindExternalEvents()
     {
@@ -66,7 +67,6 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     {
         if (Container.HeldItem == null) return;
         if (!Container.HeldItem.TryGetSibling(out Cookable cookable, true) || !cookable.CanBeTransformed) return;
-        if (!Cooker.CanStartTransformation(cookable)) return;
 
         Cooker.RequestStartTransformation(cookable);
     }

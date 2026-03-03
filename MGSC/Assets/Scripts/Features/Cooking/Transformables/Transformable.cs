@@ -1,6 +1,7 @@
 
 
 using System;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace Features
 {
@@ -10,9 +11,14 @@ namespace Features
         public bool CanBeTransformed => CanBeTransformed_Method();
         public bool Transformed
         {
-            get => _transformed;
+            get
+            {
+                UnityEngine.Debug.Log("Transformed getter : " + _transformed);
+                return _transformed;
+            }
             set
             {
+                UnityEngine.Debug.Log("Transformed set to : " + value);
                 if (_transformed == value) return;
                 _transformed = value;
                 if (_transformed) OnTransformation?.Invoke();
@@ -23,9 +29,9 @@ namespace Features
         public Conditions Conditions { get; set; }
 
 
-        public Action OnTransformation;
-        public Action OnBeginTransformation;
-        public Action OnEndTransformation;
+        public Action OnTransformation { get; set; }
+        public Action OnBeginTransformation { get; set; }
+        public Action OnEndTransformation { get; set; }
 
         #endregion
 

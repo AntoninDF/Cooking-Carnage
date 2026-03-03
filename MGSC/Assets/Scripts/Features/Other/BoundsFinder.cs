@@ -10,7 +10,11 @@ namespace Features
         {
             this.transform = transform;
         }
-
+        public float GetVolume()
+        {
+            Bounds b = Get();
+            return b.size.x * b.size.y * b.size.z;
+        }
         public Bounds Get()
         {
             var renderers = transform.GetComponentsInChildren<MeshRenderer>();

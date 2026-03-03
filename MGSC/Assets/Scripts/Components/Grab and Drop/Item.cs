@@ -59,10 +59,7 @@ public class Item : MonoBehaviour, IFeatureCollection
     {
         Transform containerTransform = Grabbable.Container.transform;
 
-        UnityEngine.Debug.Log("Grabbable.Container's owner is " + (Grabbable.Container.Owner) + " ");
-        UnityEngine.Debug.Log("Grabbable.Container.transform is " + Grabbable.Container.transform + " ");
         if (containerTransform == null) Grabbable.Container.GetParentTransform();
-        UnityEngine.Debug.Log("Grabbable.Container.transform is " + Grabbable.Container.transform + " after GetParentTransform()");
         if (Grabbable.Container == null || containerTransform == null)
         {
             Anim.GoTo(Vector3.down * Bounds.FindLocalLowestPoint());
