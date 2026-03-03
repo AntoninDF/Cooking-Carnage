@@ -31,6 +31,8 @@ namespace Features
         public virtual void AllowCastShadows(ShadowCastingMode shadowCastingMode) => Apply(obj => obj.AllowCastShadows(shadowCastingMode));
         public virtual void DisableShadows() => Apply(obj => obj.DisableShadows());
         public virtual void EnableShadows() => Apply(obj => obj.EnableShadows());
+        public virtual void ReplaceMesh(Mesh mesh) => Apply(obj => obj.ReplaceMesh(mesh));
+        public virtual void ResetMeshToDefault() => Apply(obj => obj.ResetMeshToDefault());
 
         #endregion    
     }

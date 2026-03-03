@@ -1,7 +1,7 @@
 using Features;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Linq;
 using System.Reflection;
 using Unity.Profiling;
 using UnityEngine;
@@ -32,80 +32,69 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
         Collection.Update();
     }
 
-    public bool IsValid(UnityEventWrapper eventWrapper)
+    public bool IsValid(UnityEventWrapper wrapper)
     {
+        if (wrapper.ActionPath == null) return false;
+        if (!wrapper.ActionPath.IsValid()) return false;
 
-        MemberInfo actionMember = GetMember(eventWrapper.featureType.SystemType, eventWrapper.actionMemberInfoName);
-        MemberInfo featureMember = GetMember(eventWrapper.componentType.SystemType, eventWrapper.featureMemberInfoName);
-        if (actionMember == null || featureMember == null)
-            return false;
         return true;
     }
 
-    private void SkippedEventWarning(UnityEventWrapper w) => Debug.LogWarning("The UnityEvent " + w.name + " couldn't be bound");
+    private void SkippedEventWarning(UnityEventWrapper e) => 
+        Debug.LogWarning("The UnityEvent " + e.ActionPath.FullName + " couldn't be bound");
     private void BindEvents()
     {
         bindEventProfilerMarker.Begin();
-        var hierarchy = GetChildren(gameObject);
-        var components = GetComponentsFromGameObjects(hierarchy);
+
         foreach (var e in Events)
         {
-            // Parse the name to get the GameObject's name and the component's name
-            string[] parsedName = e.name.Split('/', '-');
-            if (parsedName.Length < 4)
+            if (IsValidActionType(e.ActionPath.Type))
             {
+                Component comp = e.ActionPath.FeaturePath.OwningComponent;
+                if (comp != null)
+                {
+                    Feature feature;
+                    if (!e.ActionPath.FeaturePath.TryGetInstance(out feature))
+                    {
+                        SkippedEventWarning(e);
+                        continue;
+                    }
+
+                    PropertyOrFieldInfo actionInfo = new PropertyOrFieldInfo(e.ActionPath.GetMemberInfo());
+                    if (!TryBindCallbackToFeature(feature, () => e.Event?.Invoke(), actionInfo))
+                    {
+                        SkippedEventWarning(e);
+                        continue;
+                    }
+                }
+            }
+            else
                 SkippedEventWarning(e);
-                continue;
-            }
-            string goName = parsedName[0];
-            string compName = parsedName[1];
-            string featureName = parsedName[2];
-            string actionName = parsedName[3];
-
-            // Get the member infos on the component and on it's feature
-            MemberInfo actionMember = GetMember(e.featureType.SystemType, e.actionMemberInfoName);
-            MemberInfo featureMember = GetMember(e.componentType.SystemType, e.featureMemberInfoName);
-            var actionInfo = new PropertyOrFieldInfo(actionMember);
-            var featureInfo = new PropertyOrFieldInfo(featureMember);
-
-            Type actionType = actionInfo.Type;
-            if (actionType == null)
-            {
-                SkippedEventWarning(e);
-                continue;
-            }
-            // Ensure the detected field is actually an action and not something else
-            if (IsValidActionType(actionType, out var args))
-            {
-                // Find the owning GameObject and Component
-                foreach (GameObject go in hierarchy)
-                    if (go.name == goName)
-                        foreach (var comp in go.GetComponents<Component>())
-                            if (comp.GetType().Name == compName)
-                            {
-                                // Once the component is found, find it's feature, then it's feature's Action field/property
-                                var feature = (Feature)featureInfo.GetValue(comp);
-                                object actionToBe = actionInfo.GetValue(feature);
-                                if (actionToBe == null)
-                                {
-                                    actionToBe = NewGenericAction(actionType);
-                                    if (actionToBe == null)
-                                    {
-                                        SkippedEventWarning(e);
-                                        goto LoopIterationEnd;
-                                    }
-                                }
-
-                                //Debug.Log("Binding " + e.name);
-                                // Finally, bind the UnityEvent to the Action and reassign the new value.
-                                BindActions(ref actionToBe, () => e.Event?.Invoke());
-                                actionInfo.SetValue(feature, actionToBe);
-                            }
-                                    
-            }
-            LoopIterationEnd: continue;
         }
         bindEventProfilerMarker.End();
+    }
+
+    /// <summary>
+    /// Binds value to the Action described by actionInfo that is a member of feature.
+    /// </summary>
+    /// <param name="feature"></param>
+    /// <param name="value"></param>
+    /// <param name="actionInfo"></param>
+    /// <returns></returns>
+    private bool TryBindCallbackToFeature(Feature feature, Action value, PropertyOrFieldInfo actionInfo)
+    {
+        object actionToBe = actionInfo.GetValue(feature);
+        if (actionToBe == null)
+        {
+            actionToBe = NewGenericAction(actionInfo.Type);
+            if (actionToBe == null)
+            {
+                return false;
+            }
+        }
+        BindCallbackToAction(ref actionToBe, value);
+        actionInfo.SetValue(feature, actionToBe);
+        return true;
     }
 
     public void EmptyMethod0() { }
@@ -154,8 +143,12 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
         finalAction += (a,b,c) => boundDelegate?.Invoke();
         return finalAction;
     }
-
-    void BindActions(ref object action, Action boundDelegate)
+    /// <summary>
+    /// Binds a non-generic callback to a generic or non-generic action
+    /// </summary>
+    /// <param name="action"></param>
+    /// <param name="callback"></param>
+    void BindCallbackToAction(ref object action, Action callback)
     {
         Type actionType = action.GetType();
         Type[] typeArgs = actionType.GetGenericArguments();
@@ -181,7 +174,7 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
             MethodInfo closedMethod = method;
             if (typeArgs.Length > 0)
                 closedMethod = method.MakeGenericMethod(typeArgs);
-            action = closedMethod.Invoke(this, new object[] { action, boundDelegate });
+            action = closedMethod.Invoke(this, new object[] { action, callback });
         }
     }
 
@@ -198,77 +191,68 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
     }
 
     // First MemberInfo is the action's memberInfo inside the feature. The second MemberInfo is the feature's info inside the Component
-    public List<(string actionName, MemberInfo actionInfo, MemberInfo featureInfo)> GetAvailableActions()
+    public List<ActionPath> GetAvailableActions()
     {
         var hierarchy = GetChildren(gameObject);
         var components = GetComponentsFromGameObjects(hierarchy);
-        List<(string actionName, MemberInfo actionInfo, MemberInfo featureInfo)> result = new();
+        List<ActionPath> result = new();
 
         foreach (var component in components)
         {
-            var features = GetFeatures(component);
-            foreach (var feature in features)
+            if (component is IFeatureCollection)
             {
-                result.AddRange(GetActions(feature));
+                var features = GetFeatures(component.GetType());
+                foreach (var feature in features)
+                {
+                    feature.OwningComponent = component;
+                    result.AddRange(feature.GetActions());
+                }
             }
         }
         return result;
     }
-    private bool IsValidActionType(Type type) => IsValidActionType(type, out var temp);
-    private bool IsValidActionType(Type type, out int args)
+    private bool IsValidActionType(Type type)
     {
-        args = 0;
+        if (type == null) return false;
         if (type == typeof(System.Action)) return true;
         Type generic = null;
         if (type.IsGenericTypeDefinition) generic = type;
         else if (type.IsGenericType) generic = type.GetGenericTypeDefinition();
         if (generic == null) return false;
-        args = 1;
         if (generic == typeof(System.Action<>)) return true;
-        args = 2;
         if (generic == typeof(System.Action<,>)) return true;
+        if (generic == typeof(System.Action<,,>)) return true;
         return false;
     }
-    private List<(string actionName, MemberInfo actionInfo, MemberInfo featureInfo)> GetActions((string owningObject, MemberInfo info) feature)
+    
+
+    
+
+    private List<FeaturePath> GetFeatures(Type targetType, List<FeaturePath> currentPath=null)
     {
-        List<(string actionName, MemberInfo actionInfo, MemberInfo featureInfo)> result = new();
-        string name = feature.owningObject + "/" + feature.info.DeclaringType.Name + "-" + feature.info.Name;
+        List<FeaturePath> result = new();
 
-        // Get the declaring feature type
+        // Only retrieve features if the given type is a feature collection
+        if (!typeof(IFeatureCollection).IsAssignableFrom(targetType))
+            return result;
 
-        Type featureType = new PropertyOrFieldInfo(feature.Item2).Type;
+        if (currentPath == null) currentPath = new();
 
-        foreach (var member in featureType.GetMembers())
+        // Scan the type
+        foreach (MemberInfo member in targetType.GetMembers())
         {
             Type type = new PropertyOrFieldInfo(member).Type;
             if (type == null)
                 continue;
-            if (IsValidActionType(type))
+            if (typeof(Feature).IsAssignableFrom(type))
             {
-                var tuple = (name, member, feature.Item2);
-                result.Add(tuple);
-            }
-        }
-        return result;
-    }
+                // Add the detected feature to the list
+                FeaturePath path = new(member.Name, new SerializableSystemType(type), currentPath, null);
+                result.Add(path);
 
-    
-
-    private List<(string owningObject, MemberInfo featureInfo)> GetFeatures(Component component)
-    {
-        List<(string owningObject, MemberInfo featureInfo)> result = new();
-        if (component is IFeatureCollection)
-        {
-            foreach (MemberInfo member in component.GetType().GetMembers())
-            {
-                Type type = new PropertyOrFieldInfo(member).Type;
-                if (type == null)
-                    continue;
-                if (typeof(Feature).IsAssignableFrom(type))
-                {
-                    var tuple = (component.name, member);
-                    result.Add(tuple);
-                }
+                // Add the child features as well
+                List<FeaturePath> newPath = currentPath.Concat(new FeaturePath[] { path }).ToList();
+                result.AddRange(GetFeatures(type, newPath));
             }
         }
         return result;
@@ -308,22 +292,15 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
 [System.Serializable]
 public struct UnityEventWrapper
 {
-    public string name;
+    public string name => ActionPath.FullName.Replace("/", " -> ");
+    public ActionPath ActionPath;
     public UnityEvent Event;
-    public string actionMemberInfoName;
-    public string featureMemberInfoName;
-    public SerializableSystemType featureType;
-    public SerializableSystemType componentType;
 
 
-    public UnityEventWrapper(string eventName, UnityEvent _event, string actionInfoName, string featureInfoName, Type featureType, Type componentType)
+    public UnityEventWrapper(ActionPath actionPath, UnityEvent _event)
     {
-        this.name = eventName;
+        this.ActionPath = actionPath;
         this.Event = _event;
-        this.actionMemberInfoName = actionInfoName;
-        this.featureMemberInfoName = featureInfoName;
-        this.featureType = new SerializableSystemType(featureType);
-        this.componentType = new SerializableSystemType(componentType);
     }
 
     public MemberInfo GetMember(Type type, string name)
@@ -333,45 +310,4 @@ public struct UnityEventWrapper
             return null;
         return members[0];
     }
-}
-
-public class PropertyOrFieldInfo
-{
-    MemberInfo reference;
-    FieldInfo field => reference as FieldInfo;
-    PropertyInfo property => reference as PropertyInfo;
-
-    public Type Type { get 
-        {
-                if (field != null) 
-                    return field.FieldType;
-                if (property != null) 
-                    return property.PropertyType;
-                return null;
-            } }
-    public PropertyOrFieldInfo(MemberInfo info)
-    {
-        reference = info;
-    }
-    public object GetValue(object obj)
-    {
-        if (field != null)
-        {
-            //Debug.Log("Getting value through field on object " + obj);
-            return field.GetValue(obj);
-        }
-        if (property != null)
-        {
-            //Debug.Log("Getting value through property on object " + obj);
-            return property.GetValue(obj);
-        }
-        //Debug.Log("GetValue is null because the reference member is invalid");
-        return null;
-    }
-    public void SetValue(object obj, object value)
-    {
-        if (field != null) field.SetValue(obj, value);
-        else if (property != null) property.SetValue(obj, value);
-    }
-
 }

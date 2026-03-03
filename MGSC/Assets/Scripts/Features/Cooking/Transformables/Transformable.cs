@@ -13,12 +13,10 @@ namespace Features
         {
             get
             {
-                UnityEngine.Debug.Log("Transformed getter : " + _transformed);
                 return _transformed;
             }
             set
             {
-                UnityEngine.Debug.Log("Transformed set to : " + value);
                 if (_transformed == value) return;
                 _transformed = value;
                 if (_transformed) OnTransformation?.Invoke();

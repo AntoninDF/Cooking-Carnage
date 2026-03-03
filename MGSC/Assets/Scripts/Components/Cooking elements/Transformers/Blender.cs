@@ -74,11 +74,9 @@ namespace Cooking
         }
         private void TryCut(InteractionContext context)
         {
-            Debug.Log("My mama always said, life was like a box of chocolates");
             if (Container.HeldItem == null) return;
             if (!Container.HeldItem.TryGetSibling(out Cuttable cuttable, true) || !cuttable.CanBeTransformed) return;
             if (!Cutter.CanStartTransformation(cuttable)) return;
-            Debug.Log("AVENGERS, ASSEEEEEMBLEEEE");
             Cutter.RequestStartTransformation(cuttable);
         }
         #endregion

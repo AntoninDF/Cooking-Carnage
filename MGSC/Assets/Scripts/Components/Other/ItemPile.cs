@@ -9,6 +9,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// Needs fixing
+/// </summary>
 public class ItemPile : ObjectPile, IFeatureCollection
 {
     #region Properties
@@ -80,7 +83,8 @@ public class ItemPile : ObjectPile, IFeatureCollection
         if (_itemPrefab == null)
             Debug.LogWarning("The item prefab reference is null on '" + name + "', please reference it in the inspector");
 
-        NewTempItem();
+
+        // NewTempItem();
         //SetPlateComponentsEnabled(false);
     }
 

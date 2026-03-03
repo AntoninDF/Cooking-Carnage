@@ -1,7 +1,4 @@
-using FMODUnity;
-using NUnit.Framework.Internal;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 
 [CustomEditor(typeof(EventDisplay))]
@@ -18,20 +15,14 @@ public class EventDisplayEditor : Editor
         {
             GenericMenu menu = new GenericMenu();
             var fields = display.GetAvailableActions();
-            //Debug.Log(fields.Count + " fields found.");
-            foreach ( var action in fields )
+
+            foreach ( var actionPath in fields )
             {
-                string name = action.Item1 + "/" + action.actionInfo.Name;
-                //Debug.Log(action.Item1 + " " + action.Item2 + " " +  action.Item3);
                 var wrapper = new UnityEventWrapper(
-                    name,
-                    new UnityEngine.Events.UnityEvent(),
-                    action.actionInfo.Name, 
-                    action.featureInfo.Name, 
-                    action.actionInfo.DeclaringType, 
-                    action.featureInfo.DeclaringType
+                    actionPath,
+                    new UnityEngine.Events.UnityEvent()
                     );
-                menu.AddItem(new GUIContent(name), false, () => display.AddEvent(wrapper));
+                menu.AddItem(new GUIContent(actionPath.FullName), false, () => display.AddEvent(wrapper));
             }
             menu.ShowAsContext();
         }
@@ -99,12 +90,9 @@ public class EventDisplayEditor : Editor
             var e = display.Events[index];
 
             var wrapper = new UnityEventWrapper(
-                e.name,
-                new UnityEngine.Events.UnityEvent(),
-                e.actionMemberInfoName,
-                e.featureMemberInfoName,
-                e.featureType.SystemType,
-                e.componentType.SystemType);
+                e.ActionPath,
+                new UnityEngine.Events.UnityEvent()
+                );
 
             display.Events[index] = wrapper;
         }

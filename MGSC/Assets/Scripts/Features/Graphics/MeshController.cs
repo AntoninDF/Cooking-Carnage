@@ -72,6 +72,17 @@ namespace Features
 		public virtual void AllowCastShadows(ShadowCastingMode shadowCastingMode) => Renderer.shadowCastingMode = shadowCastingMode;
 		public virtual void DisableShadows() => AllowCastShadows(false);
 		public virtual void EnableShadows() => AllowCastShadows(true);
+		public virtual void ReplaceMesh(Mesh mesh)
+		{
+			if (Renderer.TryGetComponent(out MeshFilter filter))
+				filter.mesh = mesh;
+		}
+		public virtual void ResetMeshToDefault()
+        {
+            if (Renderer.TryGetComponent(out MeshFilter filter))
+                filter.mesh = DefaultState.sharedMesh;
+        }
+
         #endregion
     }
 

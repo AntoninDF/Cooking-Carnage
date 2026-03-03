@@ -28,7 +28,6 @@ namespace Features
 
 
             MeshController = new(this, DetectControlledRenderers());
-            Debug.Log("Renderers found : " + DetectControlledRenderers().Length);
 
         }
 
@@ -66,6 +65,8 @@ namespace Features
         public virtual void AllowCastShadows(ShadowCastingMode shadowCastingMode) => MeshController.AllowCastShadows(shadowCastingMode);
         public virtual void DisableShadows() => MeshController.DisableShadows();
         public virtual void EnableShadows() => MeshController.EnableShadows();
+        public virtual void ReplaceMesh(Mesh mesh) => MeshController.ReplaceMesh(mesh);
+        public virtual void ResetMeshToDefault() => MeshController.ResetMeshToDefault();
         #endregion
         #endregion
     }

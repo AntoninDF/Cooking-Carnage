@@ -11,6 +11,7 @@ namespace Features
         }
         public Action Start { get; set; }
         public Action FrameUpdate { get; set; }
+        public Action CustomEvent { get; set; }
 
         public override void LateSetup()
         {
@@ -23,6 +24,8 @@ namespace Features
             base.Update();
             FrameUpdate?.Invoke();
         }
+
+        public void InvokeCustomEvent()=>CustomEvent?.Invoke();
     }
 
 }
