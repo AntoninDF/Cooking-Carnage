@@ -11,8 +11,9 @@ using UnityEngine;
 public class Plate : Item
 {
     #region Properties
-    public Cookable CookableFlag;
-    public Cookable OverCookableFlag;
+    public Cookable Cookable;
+    public Cookable OverCookable;
+    public Servable Servable;
     #endregion
 
     #region Fields
@@ -36,28 +37,38 @@ public class Plate : Item
     protected override void Awake()
     {
         if (ContainerComponent == null) ContainerComponent = GetComponent<MultiSlotContainer>();
-        CookableFlag = new(this);
-        OverCookableFlag = new(this);
-        OverCookableFlag.Enabled = false;
+        Cookable = new(this);
+        OverCookable = new(this);
+        OverCookable.Enabled = false;
+        Servable = new(this);
         base.Awake();
     }
     protected override void BindEvents()
     {
         base.BindEvents();
-        CookableFlag.OnTransformation += () => CookableFlag.Enabled = false;
-        CookableFlag.OnTransformation += () => OverCookableFlag.Enabled = true;
+        Cookable.OnTransformation += () => Cookable.Enabled = false;
+        Cookable.OnTransformation += () => OverCookable.Enabled = true;
+        Cookable.OnTransformation += () => Servable.Enabled = true;
     }
     protected virtual void Start()
     {
+        BindExternalEvents();
+    }
+
+    private void BindExternalEvents()
+    {
         if (ContainerComponent.TryGetFeature(out Container))
-            Container.OnGrab += TryLock; // This is not in BindEvents because it depends on other components being initialized
+        {
+            Container.OnGrab += TryLock;
+            // Make sure only cut ingredients can be put in the plate
+            Container.Filter.AddCondition(item => item.TryGetFeature(out Cuttable cuttable) && cuttable.Transformed);
+        }
         if (ContainerComponent.TryGetFeature(out Interactable interactable))
         {
             interactable.Enabled = false;
         }
-
-        
     }
+
     private void TryLock(Grabbable item)
     {
         if (item != null)

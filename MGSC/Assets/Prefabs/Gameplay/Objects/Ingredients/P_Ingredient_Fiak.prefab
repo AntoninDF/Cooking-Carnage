@@ -249,13 +249,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 881813633348039983, guid: 809ff7325686ceb4b9296cb5ddbc49d5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6978350749801915016}
   m_SourcePrefab: {fileID: 100100000, guid: 809ff7325686ceb4b9296cb5ddbc49d5, type: 3}
 --- !u!1 &2608143487166005752 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 881813633348039983, guid: 809ff7325686ceb4b9296cb5ddbc49d5, type: 3}
   m_PrefabInstance: {fileID: 2886007453785863383}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6978350749801915016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2608143487166005752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Features.ModelController
+  _propagateChangesToChildren: 1
+  _disableShadowsIfSmallerThan: 0.5
 --- !u!4 &7809836583782799606 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4931217857128197153, guid: 809ff7325686ceb4b9296cb5ddbc49d5, type: 3}
@@ -413,6 +430,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3889558238914864316, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7170905765528334822, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       propertyPath: m_Name
       value: P_Ingredient_Fiak
@@ -441,18 +462,206 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5896125322217884917, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8202399918661952715}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7170905765528334822, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1451652940512824742}
+    - targetCorrespondingSourceObject: {fileID: 2823431857749569833, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6916818963761873016}
   m_SourcePrefab: {fileID: 100100000, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
 --- !u!4 &268222858925273893 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5896125322217884917, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
   m_PrefabInstance: {fileID: 5939075799966220240}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3598368636794244662 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7170905765528334822, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+  m_PrefabInstance: {fileID: 5939075799966220240}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1451652940512824742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3598368636794244662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
+  Events:
+  - ActionPath:
+      ActionVariableName: Start
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: BaseEvents
+        SerializedType:
+          m_Name: BaseEvents
+          m_AssemblyQualifiedName: Features.BaseEvents, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningComponent: {fileID: 1451652940512824742}
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 909440538217271090}
+          m_TargetAssemblyTypeName: Features.ModelController, Assembly-CSharp
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnTransformation
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Cuttable
+        SerializedType:
+          m_Name: Cuttable
+          m_AssemblyQualifiedName: Features.Cuttable, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path:
+        - rid: 681664321804828741
+        OwningComponent: {fileID: 9162809703396190410}
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6978350749801915016}
+          m_TargetAssemblyTypeName: Features.ModelController, Assembly-CSharp
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 909440538217271090}
+          m_TargetAssemblyTypeName: Features.ModelController, Assembly-CSharp
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  references:
+    version: 2
+    RefIds:
+    - rid: 681664321804828741
+      type: {class: FeaturePath, ns: , asm: Assembly-CSharp}
+      data:
+        FeatureVariableName: IngredientFeature
+        SerializedType:
+          m_Name: Ingredient
+          m_AssemblyQualifiedName: Features.Ingredient, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningComponent: {fileID: 9162809703396190410}
 --- !u!4 &7112028440370428212 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3519798225028237028, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
   m_PrefabInstance: {fileID: 5939075799966220240}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8450175299487125241 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2823431857749569833, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+  m_PrefabInstance: {fileID: 5939075799966220240}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6916818963761873016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8450175299487125241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
+  Events:
+  - ActionPath:
+      ActionVariableName: Start
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: BaseEvents
+        SerializedType:
+          m_Name: BaseEvents
+          m_AssemblyQualifiedName: Features.BaseEvents, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningComponent: {fileID: 6916818963761873016}
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2608143487166005752}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 5910804520715874398}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &9162809703396190410 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3261453964754048794, guid: 71f362e7766f9ef44b8f2b5582ee08cc, type: 3}
+  m_PrefabInstance: {fileID: 5939075799966220240}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3598368636794244662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5edfd288db0f094e812519f4825bef6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cooking.Ingredient
 --- !u!1001 &5953053765280084295
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -467,7 +676,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 43377653337080089, guid: f810fb06d47e05c4091303ce2de8057f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2542767559088526732, guid: f810fb06d47e05c4091303ce2de8057f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -475,7 +684,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2542767559088526732, guid: f810fb06d47e05c4091303ce2de8057f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.04
+      value: -0.003
       objectReference: {fileID: 0}
     - target: {fileID: 2542767559088526732, guid: f810fb06d47e05c4091303ce2de8057f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -516,13 +725,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 43377653337080089, guid: f810fb06d47e05c4091303ce2de8057f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 909440538217271090}
   m_SourcePrefab: {fileID: 100100000, guid: f810fb06d47e05c4091303ce2de8057f, type: 3}
 --- !u!1 &5910804520715874398 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 43377653337080089, guid: f810fb06d47e05c4091303ce2de8057f, type: 3}
   m_PrefabInstance: {fileID: 5953053765280084295}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &909440538217271090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5910804520715874398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Features.ModelController
+  _propagateChangesToChildren: 1
+  _disableShadowsIfSmallerThan: 0.5
 --- !u!4 &8202399918661952715 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2542767559088526732, guid: f810fb06d47e05c4091303ce2de8057f, type: 3}

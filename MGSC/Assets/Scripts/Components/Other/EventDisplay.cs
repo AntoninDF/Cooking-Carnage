@@ -98,9 +98,9 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
     }
 
     public void EmptyMethod0() { }
-    public void EmptyMethod1<T>() { }
-    public void EmptyMethod2<T1, T2>() { }
-    public void EmptyMethod3<T1, T2, T3>() { }
+    public void EmptyMethod1<T>(T arg) { }
+    public void EmptyMethod2<T1, T2>(T1 arg1, T2 arg2) { }
+    public void EmptyMethod3<T1, T2, T3>(T1 arg1, T2 arg2, T3 arg3) { }
     private object NewGenericAction(Type actionType)
     {
         object result = null;

@@ -21,6 +21,9 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
 
     #region Fields
     [SerializeField] private bool isInteractable = true;
+    [Tooltip("If the slot is passthrough, it will allow the player to grab the item by clicking " +
+        "on the slot's collider as well as the ingredient, instead of just the ingredient")]
+    [SerializeField] private bool passThrough = true;
     #endregion
 
     void Awake()
@@ -51,7 +54,11 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
     {
         if (context.TryGetFeature(out Container container))
         {
-            Container.RequestGrab(container.HeldItem);
+            bool hasGrabbed = Container.RequestGrab(container.HeldItem);
+            if (!hasGrabbed && passThrough)
+            {
+                container.RequestGrab(Container.HeldItem);
+            }
         }
     }
 }

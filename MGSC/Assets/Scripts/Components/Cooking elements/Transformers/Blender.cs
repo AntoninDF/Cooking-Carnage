@@ -18,12 +18,11 @@ namespace Cooking
 
         public SoloContainer Container { get; set; }
         public Cutter Cutter { get; set; }
-        public Interactable Interactable { get; set; }
         public Interactable Button;
         #endregion
 
         #region Fields
-        [SerializeField] private Transform _slotTransform;
+        [SerializeField] private SlotContainer _slotContainer;
         [SerializeField] private Button _cuttingTrigger;
         #endregion
 
@@ -37,17 +36,17 @@ namespace Cooking
 
         private void BindEvents()
         {
-            Container = new(this, _slotTransform);
             Cutter = new(this);
-            Interactable = new(this);
-
-            Interactable.OnInteraction += TryInteract;
-            Cutter.OnTransformationStart += _ => Container.IsLocked = true;
-            Cutter.OnTransformationOver += _ => Container.IsLocked = false;
         }
 
         void Start()
         {
+
+            if (_slotContainer == null)
+                Debug.LogWarning("Blender " + name + " has no slot referenced in the inspector");
+            else
+                Container = _slotContainer.Container;
+
             BindExternalEvents();
             Collection.LateSetup();
         }
@@ -61,8 +60,13 @@ namespace Cooking
                     Button.OnInteraction += TryCut;
                 }
             }
+            if (Container != null)
+            {
+                Cutter.OnTransformationStart += _ => Container.IsLocked = true;
+                Cutter.OnTransformationOver += _ => Container.IsLocked = false;
+            }
         }
-        private void TryInteract(InteractionContext context)
+        private void TryGrab(InteractionContext context)
         {
             if (context.TryGetFeature(out Container container))
             {

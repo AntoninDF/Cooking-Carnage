@@ -59,7 +59,6 @@ namespace Features
 		/// <param name="active"></param>
 		public virtual void SetActive(bool active)
 		{
-			Debug.Log("SeET ACTIVE");
 			Renderer.enabled = active;
 		}
 		public virtual void AllowCastShadows(bool allowCastShadows)
