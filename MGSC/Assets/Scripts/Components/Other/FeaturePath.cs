@@ -1,7 +1,6 @@
 using Features;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -12,14 +11,14 @@ public class FeaturePath
     public Type Type => SerializedType.SystemType;
     public SerializableSystemType SerializedType;
     [SerializeReference] public List<FeaturePath> Path; // The order is RootComponent -> This Feature
-    public Component OwningComponent;
+    public UnityEngine.Object OwningObject;
 
-    public FeaturePath(string featureVariableName, SerializableSystemType type, List<FeaturePath> path, Component owningComponent)
+    public FeaturePath(string featureVariableName, SerializableSystemType type, List<FeaturePath> path, UnityEngine.Object owningComponent)
     {
         FeatureVariableName = featureVariableName;
         this.SerializedType = type;
         this.Path = path;
-        OwningComponent = owningComponent;
+        OwningObject = owningComponent;
     }
 
     public List<ActionPath> GetActions()
@@ -56,15 +55,15 @@ public class FeaturePath
     public bool TryGetInstance(out Feature feature)
     {
         feature = null;
-        if (OwningComponent == null) return false;
+        if (OwningObject == null) return false;
 
         if (Path == null || Path.Count == 0)
         {
-            return TryGetInstance(out feature, OwningComponent as IFeatureCollection);
+            return TryGetInstance(out feature, OwningObject as IFeatureCollection);
         }
         else
         {
-            IFeatureCollection temp = OwningComponent as IFeatureCollection;
+            IFeatureCollection temp = OwningObject as IFeatureCollection;
             for (int i = 0; i < Path.Count; i++)
             {
                 if (!Path[i].TryGetInstance(out feature, temp))
@@ -93,7 +92,7 @@ public class FeaturePath
 
     public override string ToString()
     {
-        string result = OwningComponent.GetType().ToString() + "/";
+        string result = OwningObject.GetType().ToString() + "/";
         foreach (var feature in Path)
         {
             result += feature.FeatureVariableName;

@@ -18,6 +18,13 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
     public FeatureCollection Collection { get; set; } = new();
     public BaseEvents BaseEvents { get; set; }
 
+
+    public void InvokeCustomEvent0()=>BaseEvents.InvokeCustomEvent0();
+    public void InvokeCustomEvent1()=>BaseEvents.InvokeCustomEvent1();
+    public void InvokeCustomEvent2()=>BaseEvents.InvokeCustomEvent2();
+    public void InvokeCustomEvent3()=>BaseEvents.InvokeCustomEvent3();
+
+
     private void Awake()
     {
         BaseEvents = new(this);
@@ -50,7 +57,7 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
         {
             if (IsValidActionType(e.ActionPath.Type))
             {
-                Component comp = e.ActionPath.FeaturePath.OwningComponent;
+                UnityEngine.Object comp = e.ActionPath.FeaturePath.OwningObject;
                 if (comp != null)
                 {
                     Feature feature;
@@ -204,7 +211,7 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
                 var features = GetFeatures(component.GetType());
                 foreach (var feature in features)
                 {
-                    feature.OwningComponent = component;
+                    feature.OwningObject = component;
                     result.AddRange(feature.GetActions());
                 }
             }

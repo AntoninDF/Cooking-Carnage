@@ -49,12 +49,12 @@ public static class ExtensionMethods
         }
         return false;
     }
-    public static bool TryGetFeature<T>(this object obj, out T feature) where T : Features.Feature
+    public static bool TryGetFeature<T>(this object obj, out T feature, bool mustBeEnabled=false) where T : Features.Feature
     {
         feature = null;
         if (obj is IFeatureCollection col)
         {
-            feature = col.Get<T>();
+            feature = col.Get<T>(mustBeEnabled);
             if (feature != null) return true;
         }
         return false;

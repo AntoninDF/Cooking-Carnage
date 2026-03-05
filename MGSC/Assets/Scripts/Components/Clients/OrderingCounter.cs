@@ -30,8 +30,8 @@ namespace Clients
         {
             if (IsFree) return;
 
-            if (Reference.GetAll<SittingCounter>().Any(counter => counter.IsFree) 
-                && _currentClient.CheckClientCounterDistance(this))
+            //if (Reference.GetAll<ServingCounter>().Any(counter => counter.IsFree) 
+                //&& _currentClient.CheckClientCounterDistance(this))
             {
                 AcceptOrder(); 
             }
@@ -47,7 +47,7 @@ namespace Clients
             {
                 Debug.LogError("[OrderingCounter] AcceptOrder : The newly created order was null. Please look into that");
             }
-            _currentClient.AcceptOrder(newOrder);
+            //_currentClient.AcceptOrder(newOrder);
             Free();
         }
 

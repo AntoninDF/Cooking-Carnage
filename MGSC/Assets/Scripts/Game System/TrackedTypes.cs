@@ -15,7 +15,7 @@ public static class TrackedTypes
             // Add types to be tracked here
 
             typeof(OrderingCounter),
-            typeof(SittingCounter),
+            typeof(ServingCounter),
             typeof(Counter),
             typeof(Item),
             typeof(Ingredient),

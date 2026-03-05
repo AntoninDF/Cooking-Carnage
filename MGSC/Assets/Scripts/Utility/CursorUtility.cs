@@ -20,15 +20,15 @@ public static class CursorUtility
         }
     }
 
-    public static void TryFreeCursor(object obj)
+    public static void TryFreeCursor(object requester)
     {
-        _objectsRequiringCursor.Remove(obj);
+        _objectsRequiringCursor.Remove(requester);
         Update();
     }
-    public static void RequestCursor(object obj)
+    public static void RequestCursor(object requester)
     {
-        if (!_objectsRequiringCursor.Contains(obj))
-            _objectsRequiringCursor.Add(obj);
+        if (!_objectsRequiringCursor.Contains(requester))
+            _objectsRequiringCursor.Add(requester);
         Update();
     }
 }

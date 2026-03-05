@@ -144,8 +144,8 @@ namespace Clients
                     else
                     {
                         _state = EClientState.PlatformElevation;
-                        _currentCounter.GetComponent<SittingCounter>().HeightDeathTrap(deathTrapHeight); 
-                        _currentCounter.GetComponent<SittingCounter>().OnPlatformUp?.Invoke();
+                        //_currentCounter.GetComponent<ServingCounter>().HeightDeathTrap(deathTrapHeight); 
+                        //_currentCounter.GetComponent<ServingCounter>().OnPlatformUp?.Invoke();
                     }
                     _onCounterArrival?.Invoke();
                     break;
@@ -259,9 +259,10 @@ namespace Clients
             counter.Interaction();
         }
 
+        /*
         public void AcceptOrder(Order order)
         {
-            if (CheckForCounter(out SittingCounter counter))
+            if (CheckForCounter(out ServingCounter counter))
             {
                 _hasOrdered = true;
                 _state = EClientState.ReachingSpline;
@@ -273,7 +274,7 @@ namespace Clients
             {
                 return; // Pas de Sitting dispo
             }
-        }
+        }*/
 
         public void ResolveOrder(ServingInfo info, OrderRating rating)
         {
@@ -311,7 +312,7 @@ namespace Clients
         private void LeaveCounterFeedback()
         {
             _onCounterDeparture?.Invoke();
-            _currentCounter.GetComponent<SittingCounter>().OnPlatformDown?.Invoke(); 
+            //_currentCounter.GetComponent<ServingCounter>().OnPlatformDown?.Invoke(); 
             _state = EClientState.ReachingSpline;
         }
 

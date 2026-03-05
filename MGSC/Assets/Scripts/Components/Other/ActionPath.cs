@@ -36,7 +36,7 @@ public class ActionPath
     public bool IsValid()
     {
         if (GetMemberInfo() == null) return false;
-        if (FeaturePath.OwningComponent == null) return false;
+        if (FeaturePath.OwningObject == null) return false;
         return true;
     }
 }

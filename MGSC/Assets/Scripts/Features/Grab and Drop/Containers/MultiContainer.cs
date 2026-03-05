@@ -66,5 +66,22 @@ namespace Features
             if (!HeldItems.Contains(item)) return false;
             return base.CanDrop(item);
         }
+
+        public List<T> GetHeldItemsAs<T>() where T : Feature
+        {
+            List<T> result = new List<T>();
+            foreach(var heldItem in HeldItems)
+            {
+                if (heldItem.TryGetSibling(out T item))
+                    { result.Add(item); }
+            }
+            return result;
+        }
+        public bool TryGetHeldItemsAs<T>(out List<T> items) where T : Feature
+        {
+            items = GetHeldItemsAs<T>();
+            if (items == null) return false;
+            return true;
+        }
     }
 }
