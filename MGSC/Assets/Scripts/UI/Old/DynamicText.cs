@@ -84,10 +84,6 @@ namespace UI
                     var meal = _dataSource.GetComponent<Meal>();
                     if (meal != null) result = meal.Recipe.Name;
                     break;
-                case (EDataInfo.ClientName):
-                    var client = _dataSource.GetComponent<Client>();
-                    if (client != null) result = client.Model.name;
-                    break;
                 case (EDataInfo.MealIngredients):
                     var mel = _dataSource.GetComponent<Meal>();
                     if (mel != null) result = ToString(mel.Recipe.Ingredients);

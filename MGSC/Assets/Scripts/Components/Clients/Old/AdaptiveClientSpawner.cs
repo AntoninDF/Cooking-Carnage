@@ -40,7 +40,7 @@ namespace GameSystem
         private float clientSpeed = 1;
         private List<SO_Client> models;
         private SplineContainer spline;
-        private List<OrderingCounter> counters;
+        private List<object> counters;
         
         // Reference Fields
         private TimerManager _timerManager;
@@ -83,7 +83,7 @@ namespace GameSystem
 
             models = Reference.AssetReferences.clientList;
             spline = Reference.GetManager<PathManager>()?.SplineComponent;
-            counters = Reference.GetAll<OrderingCounter>();
+            counters = Reference.GetAll<object>();
 
             Reference.GetManager(out _timerManager);
             Reference.GetManager(out _clientManager);
@@ -116,7 +116,7 @@ namespace GameSystem
                 return false;
             }
 
-            return counters.Any(counter => counter.IsFree);
+            return false;
         }
 
         bool ShiftOngoing()
@@ -129,12 +129,14 @@ namespace GameSystem
         /// </summary>
         void AssignClientOrderingCounter(Client client)
         {
+            /*
             foreach (var counter in counters)
             {
                 if (!counter.IsFree) continue;
-                client.ReserveCounter(counter);
+                //client.ReserveCounter(counter);
                 return;
             }
+            */
             this.Log(LogType.Warning," No counter has been found to assign a client to");
         }
 
@@ -181,18 +183,18 @@ namespace GameSystem
                     
             // Spawns the client in the scene via ClientGenerator method Client.New()
             
-            Client client = Client.New(clientSO, Vector3.zero,clientSpeed);
-            client.SetSplinePath(spline);
+            //Client client = Client.New(clientSO, Vector3.zero,clientSpeed);
+            //client.SetSplinePath(spline);
             
             this.Log(LogType.Log,clientSO.name +" has been spawned into scene");
             
-            AssignClientOrderingCounter(client);
+            //AssignClientOrderingCounter(client);
 
-            _clientManager.AddClientData(client,false);
+            //_clientManager.AddClientData(client,false);
             //Reference.Get<Entrance>().OnClientEnter.Invoke();
                     
             Launch(GetRandomizedDelay);
-            OnNewClient?.Invoke(client);
+            //OnNewClient?.Invoke(client);
         }
 
         /// <summary>

@@ -13,21 +13,12 @@ public static class TrackedTypes
         return new System.Type[]
         {
             // Add types to be tracked here
-
-            typeof(OrderingCounter),
-            typeof(ServingCounter),
-            typeof(Counter),
             typeof(Item),
             typeof(Ingredient),
             typeof(Oven),
-            typeof(Meal),
             typeof(Blender),
-            typeof(SimpleClientSpawner),
             typeof(PlayerStart),
             typeof(Player),
-            typeof(OvenSetup),
-            typeof(UITarget),
-            typeof(Blender)
 
             // ...
         };

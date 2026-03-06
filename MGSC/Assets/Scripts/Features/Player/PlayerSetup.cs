@@ -14,12 +14,9 @@ namespace Controller
         public static Player TrySetupPlayer()
         {
             Player player = null;
-            if (Reference.GetAll<Player>().Count == 0)
-            {
-                TrySpawnPlayer(out player);
-            }
+            TrySpawnPlayer(out player);
             TryResetPlayer(player);
-            Reference.TryAdd(player);
+            //Reference.TryAdd(player);
 
             return player;
         }

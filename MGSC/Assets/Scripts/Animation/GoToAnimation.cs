@@ -49,6 +49,7 @@ public class GoToAnimation : Feature
 
         if (dest == null)
         {
+            Debug.LogWarning("[GoToAnimation] GoTo : Given destination transform is null");
             GoTo(worldPos, duration);
             return;
         }
@@ -65,7 +66,6 @@ public class GoToAnimation : Feature
             startPos = ControlledTransform.localPosition;
             endPos = worldPos - dest.position;
             endPos = new Vector3(endPos.x / (b.x == 0 ? 1 : b.x), endPos.y / (b.y == 0 ? 1 : b.y), endPos.z / (b.z == 0 ? 1 : b.z));
-
         }
         else
         {
@@ -77,13 +77,20 @@ public class GoToAnimation : Feature
         if (duration == 0f)
             SetPos(1);
         else
+        {
             timerManager.StartTimer("GoToAnimation", duration, EndAnimation, false, (elapsed) => SetPos(elapsed / duration));
+        }
     }
     public void GoTo(Transform dest, float duration=0.1f, bool setAsParent=true)
     {
         Vector3 pos = Vector3.zero;
-        if (dest != null) pos = dest.position;
-        GoTo(dest, dest.position, duration, setAsParent);
+        if (dest != null)
+        {
+            pos = dest.position;
+            GoTo(dest, dest.position, duration, setAsParent);
+        }
+        else
+            Debug.LogWarning("[GoToAnimation] GoTo : Given destination transform is null");
     }
 
     private void SetPos(float percentage)

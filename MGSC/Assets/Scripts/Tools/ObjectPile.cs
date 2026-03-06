@@ -86,7 +86,7 @@ public class ObjectPile : MonoBehaviour
 #if UNITY_EDITOR
                 DestroyImmediate(obj);
 #else
-            Destroy(go);
+            Destroy(obj);
 #endif
             }
         }

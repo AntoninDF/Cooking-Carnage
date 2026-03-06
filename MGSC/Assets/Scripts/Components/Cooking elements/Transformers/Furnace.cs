@@ -12,7 +12,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
 
     #region Fields
     [SerializeField] private Transform itemSlot;
-    [SerializeField] private Button button;
+    [SerializeField] private InteractionButton button;
 
     #endregion
 

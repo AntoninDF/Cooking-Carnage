@@ -1,8 +1,8 @@
 namespace Features
 {
-    public class ServingListener : Feature
+    public class ServingCounter : Feature
     {
-        public ServingListener(IFeatureCollection owner) : base(owner)
+        public ServingCounter(IFeatureCollection owner) : base(owner)
         {
         }
 

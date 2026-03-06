@@ -29,8 +29,24 @@ namespace GameSystem
 
         #region Methods
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Init()
+        {
+            MakeGameLoop();
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+            // Create all the pure managers
+            new OrderManager();
+            new ClientManager();
+            new TimerManager();
+            new ShiftManager(); // (_gameProfile.ShiftDuration, _gameProfile.ShiftNoonDuration, _gameProfile.RentPrice);
+            new MoneyManager();
+            new UpgradeManager();
+            new DataManager();
+            new CameraManager();
+            new ItemManager();
+            new FeatureManager();
+            new AdaptiveClientSpawner();
+        }
         void Awake()
         {
             ResetScene();
@@ -42,15 +58,8 @@ namespace GameSystem
         /// <summary>
         /// Instantiate all objects specified in the scene preset, and put them all in place
         /// </summary>
-        /// <exception cref="MissingReferenceException"></exception>
-        /// <exception cref="MissingComponentException"></exception>
         public void ResetScene()
         {
-            if (_gameProfile.ResetRefManager)
-            {
-                Reference.Reset();
-                Reference.RemoveAllManagers();
-            }
             if (_gameProfile == null)
                 throw new MissingReferenceException("[GameInitializer] : Please reference a game profile in the inspector.");
 
@@ -58,28 +67,13 @@ namespace GameSystem
 
             Reference.AssetReferences = _gameProfile.AssetReferences;
 
-            if (_gameProfile.RequireGameLoop) MakeGameLoop();
-
-            // Create all the pure managers
-            new OrderManager();
-            new ClientManager();
-            new TimerManager();
-            if (_gameProfile.AddClientSpawner) new AdaptiveClientSpawner();
-            new ShiftManager(_gameProfile.ShiftDuration, _gameProfile.ShiftNoonDuration, _gameProfile.RentPrice);
-            new MoneyManager();
-            new UpgradeManager();
-            new DataManager();
-            new CameraManager();
-            new ItemManager();
-            new FeatureManager();
-
             // Instantiate the scene and create all the MonoBehaviour managers
             if (_gameProfile.ApplyScenePreset) ApplyScenePreset();
 
             if (_gameProfile.AddUI) AddUI();
 
-            // Create the player
-            Reference.ScanHierarchy();
+            Reference.GetManager<ShiftManager>().Setup(_gameProfile.ShiftDuration, _gameProfile.ShiftNoonDuration, _gameProfile.RentPrice);
+
             if (_gameProfile.AddPlayer) PlayerSetup.TrySetupPlayer();
 
             SetupDebug();
@@ -95,8 +89,6 @@ namespace GameSystem
             // Apply the base logic to ensure all managers are setup to work correctly
             PostInitManagers();
 
-            // Enable the default UI menu and bind it's events
-            if (_gameProfile.AddUI) SetupUI();
 
             SetupMealPrices();
 
@@ -131,17 +123,11 @@ namespace GameSystem
                 Instantiate(go);
         }
 
-        private void MakeGameLoop()
+        private static void MakeGameLoop()
         {
-            // Init GameLoop
-            if (Reference.AssetReferences.GameLoop != null)
-            {
-                Instantiate(Reference.AssetReferences.GameLoop);
-            }
-            else
-            {
-                Debug.LogWarning("[GameInitializer] : Couldn't add the GameLoop prefab because it was not referenced in the asset references object");
-            }
+            GameObject go = new();
+            var gameLoop = go.AddComponent<GameLoop>();
+            gameLoop.StartRunning();
         }
 
         private void AddUI()
@@ -151,17 +137,6 @@ namespace GameSystem
             else
             {
                 Instantiate(Reference.AssetReferences.UI);
-            }
-        }
-
-        private void SetupUI()
-        {
-            if (Reference.TryGetManager(out UIManager ui))
-                ui.EnableMenu(_gameProfile.DefaultMenu);
-            if (Reference.TryGetManager(out ShiftManager sm))
-            {
-                sm.OnShiftSucceeded += () => ui.EnableMenu("ShiftRecap");
-                sm.OnShiftFailed += () => ui.EnableMenu("FailedShiftRecap");
             }
         }
 

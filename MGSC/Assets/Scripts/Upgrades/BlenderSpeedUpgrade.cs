@@ -23,7 +23,6 @@ namespace Upgrades
 
         public override void Apply()
         {
-            Reference.ScanHierarchy();
             _targetBlenders = Reference.GetAll<Blender>();
 
             foreach (Blender b in _targetBlenders)

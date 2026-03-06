@@ -1,27 +1,33 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
-public class UITab : MonoBehaviour
+public class UITabContent : MonoBehaviour
 {
-    public UnityEngine.UI.Button Button;
+    public bool Enabled { get; set; }
     public CanvasGroup Content;
     public UnityEvent OnEnable;
     public UnityEvent OnDisable;
 
+    private void Awake()
+    {
+        Content.alpha = 0f;
 
-
+    }
     public void Enable()
     {
+        if (Enabled) return;
         if (Content == null) return;
+        Enabled = true;
         Content.alpha = 1f;
         OnEnable?.Invoke();
     }
     public void Disable()
     {
+        if (!Enabled) return;
         if (Content == null) return;
+        Enabled = false;
         Content.alpha = 0f;
         OnDisable?.Invoke();
     }

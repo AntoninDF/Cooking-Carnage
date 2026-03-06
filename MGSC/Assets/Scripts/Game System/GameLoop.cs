@@ -110,7 +110,6 @@ namespace GameSystem
             if (!_updatables.Contains(updatable))
             {
                 _updatables.Add(updatable);
-                
                 this.Log(updatable.ToString() + " has been registered");
             }
             else

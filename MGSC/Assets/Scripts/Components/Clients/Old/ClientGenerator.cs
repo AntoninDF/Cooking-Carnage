@@ -13,7 +13,7 @@ namespace Clients
     /// </summary>
     public partial class Client : MonoBehaviour
     {
-
+        /*
         #region Client creation
         /// <summary>
         /// This is the advised way to spawn a new client
@@ -132,7 +132,7 @@ namespace Clients
         }
         #endregion
 
-
+        */
     }
 
 }

@@ -58,15 +58,15 @@ namespace GameSystem
         [Tooltip("Whether or not a player is required. It will try to snap to the playerStart")]
         [SerializeField] private bool _addPlayer;
         public bool AddPlayer => _addPlayer;
-
+        /*
         [Tooltip("Whether or not a gameloop is required.")]
         [SerializeField] private bool _addGameLoop;
         public bool RequireGameLoop => _addGameLoop;
-
+        
         [Tooltip("Whether or not a client spawner is required.")]
         [SerializeField] private bool _addClientSpawner;
         public bool AddClientSpawner => _addClientSpawner;
-
+        */
         [Tooltip("Whether or not the UI is required.")]
         [SerializeField] private bool _addUI;
         public bool AddUI => _addUI;

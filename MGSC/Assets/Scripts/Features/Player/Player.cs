@@ -49,7 +49,7 @@ public class Player : MonoBehaviour, IFeatureCollection
     {
         PlayerInputs.OnPrimaryAction += () => PlayerActor.TryAnyPlayerAction();
         PlayerInputs.OnMovement += () => PlayerMovement.MovementDirection = PlayerInputs.MovementDirection;
-        PlayerInputs.OnLook += () => PlayerMovement.LookDirection = PlayerInputs.LookOffset;
+        PlayerInputs.OnLook += () => PlayerMovement.LookOffset = PlayerInputs.LookOffset;
     }
 
     void AddInteractions()

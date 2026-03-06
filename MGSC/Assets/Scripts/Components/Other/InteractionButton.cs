@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
-public class Button : MonoBehaviour, IFeatureCollection
+public class InteractionButton : MonoBehaviour, IFeatureCollection
 {
     public FeatureCollection Collection { get; set; } = new();
     public Interactable Interactable;

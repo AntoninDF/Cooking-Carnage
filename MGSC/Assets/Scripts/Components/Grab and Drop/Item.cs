@@ -62,14 +62,17 @@ public class Item : MonoBehaviour, IFeatureCollection
         if (containerTransform == null) Grabbable.Container.GetParentTransform();
         if (Grabbable.Container == null || containerTransform == null)
         {
+            // Go to world origin
             Anim.GoTo(Vector3.down * Bounds.FindLocalLowestPoint());
         }
         if (Grabbable.Container.TryGetSibling(out LookAtTarget lookTarget))
         {
+            // Go to the new container at the spot pointed at (for surface containers)
             Anim.GoTo(containerTransform, lookTarget.LookPosition + Vector3.down * Bounds.FindLocalLowestPoint());
         }
         else
         {
+            // Go to 0,0,0 in the new container
             Anim.GoTo(containerTransform);
         }
     }

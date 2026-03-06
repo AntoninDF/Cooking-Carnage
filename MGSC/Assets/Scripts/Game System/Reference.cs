@@ -105,8 +105,8 @@ public class Reference
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static List<T> GetAll<T>() where T : class => Instance.GetElementsOfType_Instance<T>();
-    public static List<T> GetAll<T>(List<T> output) where T : class => output = Instance.GetElementsOfType_Instance<T>();
+    [Obsolete] public static List<T> GetAll<T>() where T : class => Instance.GetElementsOfType_Instance<T>();
+    [Obsolete] public static List<T> GetAll<T>(List<T> output) where T : class => output = Instance.GetElementsOfType_Instance<T>();
     /// <summary>
     /// Tries to retrieve an object of a given specific type from the scene.
     /// The type must be marked as a tracked type.
@@ -114,7 +114,7 @@ public class Reference
     /// <typeparam name="T"></typeparam>
     /// <param name="obj"></param>
     /// <returns></returns>
-    public static bool TryGet<T>(out T obj) where T : class
+    [Obsolete] public static bool TryGet<T>(out T obj) where T : class
     {
         obj = Instance.GetElementOfType_Instance<T>();
         return obj != null;
@@ -126,7 +126,7 @@ public class Reference
     /// <typeparam name="T"></typeparam>
     /// <param name="obj"></param>
     /// <returns></returns>
-    public static T Get<T>(out T obj) where T : class
+    [Obsolete] public static T Get<T>(out T obj) where T : class
     {
         obj = Get<T>();
         return obj;
@@ -138,25 +138,25 @@ public class Reference
     /// <typeparam name="T"></typeparam>
     /// <param name="obj"></param>
     /// <returns>Said object</returns>
-    public static T Get<T>() where T : class => Instance.GetElementOfType_Instance<T>();
+    [Obsolete] public static T Get<T>() where T : class => Instance.GetElementOfType_Instance<T>();
     /// <summary>
     /// Explicitly register an object for it to be accessible anywhere.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="obj"></param>
-    public static void TryAdd<T>(T obj) where T : class => Instance.TryAddElement_Instance(obj);
+    [Obsolete] public static void TryAdd<T>(T obj) where T : class => Instance.TryAddElement_Instance(obj);
     /// <summary>
     /// Explicitly unregisters an object for it not to be accessible anymore.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="obj"></param>
-    public static void TryRemove<T>(T obj) where T : class => Instance.TryRemoveElement_Instance(obj);
+    [Obsolete] public static void TryRemove<T>(T obj) where T : class => Instance.TryRemoveElement_Instance(obj);
     /// <summary>
     /// Scans the whole scene and stores a reference to every object whose type is marked as a tracked type (see TrackedTypes).
     /// Can be slow depending on the amount of GameObjects to scan
     /// </summary>
     /// <param name="clearDictBeforeScan"></param>
-    public static void ScanHierarchy(bool clearDictBeforeScan = true)
+    [Obsolete] public static void ScanHierarchy(bool clearDictBeforeScan = true)
     {
         Instance.ScanHierarchy_Instance(clearDictBeforeScan);
     }
@@ -170,6 +170,7 @@ public class Reference
     /// <summary>
     /// Logs to the Unity console how many objects of each type is registered to Reference, excluding managers
     /// </summary>
+    [Obsolete]
     public static void DebugTrackedObjectsCount()
     {
         string toPrint = "References tracked :\n";

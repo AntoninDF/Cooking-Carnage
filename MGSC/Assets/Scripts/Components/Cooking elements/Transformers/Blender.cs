@@ -23,7 +23,7 @@ namespace Cooking
 
         #region Fields
         [SerializeField] private SlotContainer _slotContainer;
-        [SerializeField] private Button _cuttingTrigger;
+        [SerializeField] private InteractionButton _cuttingTrigger;
         #endregion
 
 

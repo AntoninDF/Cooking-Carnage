@@ -15,7 +15,7 @@ namespace Clients
         #region Properties
         public FeatureCollection Collection { get; set; } = new();
         public SoloContainer Container { get; set; }
-        public ServingListener ServingListener { get; set; }
+        public Features.ServingCounter ServingListener { get; set; }
         public ServingEvaluator ServingEvaluator { get; set; }
 
         public Order CurrentOrder { get; set; }

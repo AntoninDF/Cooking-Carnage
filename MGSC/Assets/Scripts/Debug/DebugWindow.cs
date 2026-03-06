@@ -258,7 +258,7 @@ public class DebugWindow : MonoBehaviour
     }
 
         int currentCount = clientManager.CurrentClients?.Count ?? 0;
-        var history = clientManager.GetClientsHistory() ?? new List<ClientManager.ClientData>();
+        var history = clientManager.GetClientsHistory() ?? new List<ClientData>();
         
         int servedCount = 0;
         int killedCount = 0;
@@ -279,9 +279,9 @@ public class DebugWindow : MonoBehaviour
             foreach (var c in clientManager.CurrentClients)
             {
                 string name = c.name ?? "Unknown";
-                string type = c.Type.ToString();
-                string order = c.Order?.Recipe.Name ?? "None";
-                GUILayout.Label($"> {name} ({type}) : {order}");
+                //string type = c.Type.ToString();
+                //string order = c.Order?.Recipe.Name ?? "None";
+                //GUILayout.Label($"> {name} ({type}) : {order}");
             }
         }
 

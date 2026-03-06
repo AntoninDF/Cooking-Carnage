@@ -52,10 +52,8 @@ namespace GameSystem
         {
             Register();
         }
-
-        public ShiftManager(float shiftDuration,float shiftNoonDuration, AnimationCurve rentPriceCurve)
+        public void Setup(float shiftDuration, float shiftNoonDuration, AnimationCurve rentPriceCurve)
         {
-            Register();
             SetShiftDuration(shiftDuration);
             SetShiftNoonDuration(shiftNoonDuration);
             SetRentPriceCurve(rentPriceCurve);

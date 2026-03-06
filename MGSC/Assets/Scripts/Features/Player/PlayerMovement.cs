@@ -10,7 +10,24 @@ namespace Features
         public float VerticalLookRange { get; set; } = 80f;
         public float CharacterSize { get; set; } = 2f;
         public Vector2 MovementDirection { get; set; }
-        public Vector2 LookDirection { get; set; }
+        public Vector3 LookDirection
+        {
+            get => _lookDirection;
+            set
+            {
+                _lookDirection = value;
+                HandleRotation();
+            }
+        }
+        public Vector2 LookOffset
+        { 
+            get => _lastLookOffset; 
+            set
+            {
+                _lastLookOffset = value;
+                UpdateLookDirectionFromOffset(value);
+            }
+        }
         public Transform ControlledTransform { get; set; }
         public Transform HeadTransform { get; set; }
         public CharacterController CharacterController { get; set; }
@@ -19,6 +36,8 @@ namespace Features
         public Action OnStopWalking { get; set; }
 
         private Vector3 _currentMovement;
+        private Vector3 _lookDirection = Vector3.forward;
+        private Vector2 _lastLookOffset;
         private float _verticalRotation;
         private bool isMoving;
 
@@ -98,14 +117,40 @@ namespace Features
             if (HeadTransform != null)
                 HeadTransform.localRotation = Quaternion.Euler(_verticalRotation, 0, 0);
         }
+        private void ApplyLookDirection(Vector3 direction)
+        {
+            var yawDirection = new Vector3(direction.x, 0, direction.z).normalized;
+            ControlledTransform.rotation = Quaternion.LookRotation(yawDirection, Vector3.up);
 
+
+            double pitch = Mathf.Asin(direction.y) / 3.141592 * 180;
+            if (HeadTransform != null)
+                HeadTransform.localRotation = Quaternion.Euler((float)pitch, 0, 0);
+        }
+
+        private void UpdateLookDirectionFromOffset(Vector2 offset)
+        {
+            float yaw = offset.x * LookSpeed;
+            float pitch = Mathf.Clamp((offset.y * LookSpeed), -VerticalLookRange, VerticalLookRange);
+
+            LookDirection = Quaternion.Euler(pitch, yaw, 0) * LookDirection;
+            /*
+            var R = Quaternion.FromToRotation(Vector3.forward, LookDirection);
+
+
+            float currentYaw = (float)(Mathf.Atan2(LookDirection.z, LookDirection.x));
+            float currentPitch = (float)Mathf.Asin(LookDirection.y);
+
+            float newYaw = currentYaw + offset.x * LookSpeed;
+            float newPitch = Mathf.Clamp(currentPitch + (offset.y * LookSpeed), -VerticalLookRange, VerticalLookRange);
+
+            LookDirection = Quaternion.Euler(newPitch, newYaw, 0) * Vector3.forward;
+            LookDirection = R * LookDirection;
+            */
+        }
         private void HandleRotation()
         {
-            float mouseXRotation = LookDirection.x * LookSpeed;
-            float mouseYRotation = LookDirection.y * LookSpeed;
-
-            ApplyHorizontalRotation(mouseXRotation);
-            ApplyVerticalRotation(mouseYRotation);
+            ApplyLookDirection(LookDirection);
         }
     }
 }
