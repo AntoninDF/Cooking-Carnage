@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 
 namespace Features
 {
     public class GoToNearestOrderingCounter : BaseClientAction
     {
+        public Action OnCounterReached { get; set; }
+
 
         public GoToNearestOrderingCounter(ClientBehaviour owner) : base(owner)
         {
@@ -20,6 +23,7 @@ namespace Features
                 return;
             }
             ClientOwner.ClientMovement.SetDestination(target.transform.position);
+            ClientOwner.ClientMovement.OnDestinationReached += OnCounterReached;
         }
 
         public ClientSeat GetNearestOrderingCounter()

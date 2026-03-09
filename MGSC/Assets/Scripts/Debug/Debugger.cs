@@ -104,7 +104,7 @@ public static class Debugger
 
         return toDecrypt switch
         {
-            Orders.Order o               => $"Order n°{o.ID} for {o.Owner.name} ",
+            Order o               => $"Order n°{o.ID} for {o.Owner.name} ",
             SO_Ingredient ing            => $"{ing.Name} ",
             SO_Recipe r                  => $"{r.Name} ",
             SO_Client soClient           => $"{soClient.name} ",

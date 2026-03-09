@@ -28,7 +28,12 @@ public partial class Client : MonoBehaviour, IFeatureCollection
 
     private void Start()
     {
-        Behaviour.Perform(Behaviour.DefaultAction);
+        Behaviour.GoToOrderingCounter(() => Debug.Log("yippee"));
+    }
+
+    void Update()
+    {
+        Collection.Update();
     }
 
     // Find ClientTargets

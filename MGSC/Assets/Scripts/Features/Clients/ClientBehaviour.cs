@@ -23,14 +23,23 @@ namespace Features
             DefaultAction = new GoToNearestOrderingCounter(this);
         }
 
+        public override void Update()
+        {
+            base.Update();
+            Collection.Update();
+        }
+
         public void Perform(BaseClientAction action)
         {
             action.Perform();
             OnActionPerformed?.Invoke();
+            LastPerformedAction = action;
         }
-        public void GoToOrderingCounter()
+        public void GoToOrderingCounter(Action onDestinationReached=null)
         {
-
+            var action = new GoToNearestOrderingCounter(this);
+            action.OnCounterReached += onDestinationReached;
+            Perform(action);
         }
 
         public void GoToServingCounter()
