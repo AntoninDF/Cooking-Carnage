@@ -43,7 +43,7 @@ public class CameraManager : IManager
 
     public void Init()
     {
-        Reference.GetManager(out _uiManager);
+        //Reference.GetManager(out _uiManager);
         Reference.GetManager(out _timerManager);
 
         if (Reference.TryGet(out Player player))

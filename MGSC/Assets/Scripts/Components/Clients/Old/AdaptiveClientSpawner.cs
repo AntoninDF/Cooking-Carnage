@@ -82,7 +82,7 @@ namespace GameSystem
             // WIP : should also setup floats according to a Settings Data
 
             models = Reference.AssetReferences.clientList;
-            spline = Reference.GetManager<PathManager>()?.SplineComponent;
+            //spline = Reference.GetManager<PathManager>()?.SplineComponent;
             counters = Reference.GetAll<object>();
 
             Reference.GetManager(out _timerManager);

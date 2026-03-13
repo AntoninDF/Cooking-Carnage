@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Cooking;
 using System;
+using Orders;
 
 public class Order
 {
@@ -36,7 +37,6 @@ public class Order
 
     public Order()
     {
-
     }
     public Order(Client owner, SO_Recipe recipe, int id)
     {
@@ -50,6 +50,13 @@ public class Order
     {
         ServingInfo = info;
         OrderRating = rating;
+        _onResolve?.Invoke();
+        IsResolved = true;
+        //_owner.ResolveOrder(info, rating);
+    }
+    public void Resolve(Servable serving)
+    {
+        OrderRating = OrderEvaluator.Evaluate(this);
         _onResolve?.Invoke();
         IsResolved = true;
         //_owner.ResolveOrder(info, rating);

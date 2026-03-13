@@ -3,14 +3,17 @@ using System.Collections.Generic;
 
 public class OrderBuilder
 {
-
+    Order current;
     List<SO_Recipe> Recipes = new();
     Client Owner;
     int Price;
 
+    protected OrderBuilder() { }
     public static OrderBuilder New()
     {
-        return new OrderBuilder();
+        var builder = new OrderBuilder();
+        builder.current = new Order();
+        return builder;
     }
 
     public OrderBuilder AddRecipe(SO_Recipe recipe)
@@ -26,5 +29,5 @@ public class OrderBuilder
     {
         return this;
     }
-
+    public Order Build() => current;
 }

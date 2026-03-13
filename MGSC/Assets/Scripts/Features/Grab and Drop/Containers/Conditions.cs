@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Unity.VisualScripting;
 
 namespace Features
@@ -50,5 +51,7 @@ namespace Features
         public void RemoveCondition(Func<bool> condition) => _conditions0.Remove(condition);
 
         public static implicit operator bool(Conditions conditions) => conditions.IsValid();
+        public static Conditions operator +(Conditions left, Func<object, bool> right) { left.AddCondition(right); return left; }
+        public static Conditions operator -(Conditions left, Func<object, bool> right) { left.RemoveCondition(right); return left; }
     }        
 }

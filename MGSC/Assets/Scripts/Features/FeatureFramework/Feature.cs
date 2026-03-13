@@ -130,6 +130,18 @@ namespace Features
             return false;
         }
 
+        public void SetOwner(IFeatureCollection owner)
+        {
+            if (Owner == owner) return;
+            if (Owner != null)
+            {
+                Owner.Collection.Remove(this);
+            }
+            Owner = owner;
+            Owner.Collection.Add(this);
+        }
         #endregion
+
+        
     }
 }

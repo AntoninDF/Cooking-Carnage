@@ -19,7 +19,9 @@ namespace SourceGen
         }
         public override void ToFile(string fullPath)
         {
-            throw new System.NotImplementedException();
+            ScriptGenerator script = new(name);
+            script.Add(this);
+            script.ToFile(fullPath);
         }
         public override string ToString()
         {

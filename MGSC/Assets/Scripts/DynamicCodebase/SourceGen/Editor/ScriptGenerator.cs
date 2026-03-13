@@ -64,8 +64,11 @@ namespace SourceGen
             return result;
         }
 
-        public virtual void Using(string Namespace) => Add(new UsingNamespaceGenerator(Namespace));
-        public virtual void Namespace(string Namespace) => Add(new NamespaceGenerator(Namespace));
+        public virtual void Using(string Namespace)
+        {
+            AddFirst(new UsingNamespaceGenerator(Namespace));
+        }
+        //public virtual void Namespace(string Namespace) => Add(new NamespaceGenerator(Namespace));
         #endregion
     }
 }

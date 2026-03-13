@@ -1,4 +1,6 @@
 
+using FMODUnity;
+using JetBrains.Annotations;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -45,6 +47,18 @@ namespace SourceGen
             var ns = new NamespaceGenerator(Namespace);
             ns.Add(this);
             return ns;
+        }
+
+        public void AddContructor(AccessModifier accessModifier, string content, params (string parameterType, string parameterName)[] parameters)
+        {
+            string formattedParameters = "";
+            foreach (var parameter in parameters)
+            {
+                formattedParameters += parameter.parameterType + " " + parameter.parameterName + ", ";
+            }
+            if (formattedParameters != "") 
+                formattedParameters = formattedParameters.Remove(formattedParameters.Length - 2, 2);
+            Add(new RawTextGenerator("\n" + accessModifier.ToString() + name + "(" + ")" + "\n{" + "\n}"));
         }
 
         public override string ToString()

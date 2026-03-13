@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine.AI;
 
 namespace Features
@@ -20,7 +21,7 @@ namespace Features
             Agent = agent;
             ClientMovement = new(this, agent);
 
-            DefaultAction = new GoToNearestOrderingCounter(this);
+            DefaultAction = new GoToNearestClientSeat(this);
         }
 
         public override void Update()
@@ -35,16 +36,16 @@ namespace Features
             OnActionPerformed?.Invoke();
             LastPerformedAction = action;
         }
-        public void GoToOrderingCounter(Action onDestinationReached=null)
+        public void GoToOrderingCounter(Action<ClientSeat> onDestinationReached=null) => GoToCounter<OrderingCounter>(onDestinationReached);
+        public void GoToServingCounter(Action<ClientSeat> onDestinationReached=null) => GoToCounter<ServingCounter>(onDestinationReached);
+        // T is the type of a required sibling feature of the client seat
+        public void GoToCounter<T>(Action<ClientSeat> onDestinationReached = null) where T : Feature
         {
-            var action = new GoToNearestOrderingCounter(this);
-            action.OnCounterReached += onDestinationReached;
+            var action = new GoToNearestClientSeat(this);
+            action.Filter += (obj) => obj is ClientSeat seat && seat.TryGetSibling<T>(out var temp);
+            action.OnClientSeatReached += onDestinationReached;
+            action.NearestCounter.TryRegister(Owner as Client);
             Perform(action);
-        }
-
-        public void GoToServingCounter()
-        {
-
         }
 
         public void GoToEmptySeat()

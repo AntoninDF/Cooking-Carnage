@@ -33,6 +33,13 @@ namespace SourceGen
 
             sources.Add(element);
         }
+        public virtual void AddFirst(SourceGenerator element)
+        {
+            if (sources == null)
+                sources = new();
+
+            sources.Insert(0, element);
+        }
 
         public virtual void Comment(string comment) => Add(new CommentGenerator(comment));
 

@@ -210,7 +210,7 @@ namespace GameSystem
             Reference.GetManager(out _timerManager);
             Reference.GetManager(out _gameLoop);
             Reference.GetManager(out _clientManager);
-            Reference.GetManager(out _uiManager);
+            //Reference.GetManager(out _uiManager);
             Reference.GetManager(out _moneyManager);
             Reference.GetManager(out _itemManager);
         }

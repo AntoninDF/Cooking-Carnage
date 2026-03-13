@@ -43,6 +43,7 @@ public class Plate : Item
         OverCookable = new(this);
         OverCookable.Enabled = false;
         Servable = new(this);
+        Servable.Enabled = false;
         base.Awake();
     }
     protected override void BindEvents()
