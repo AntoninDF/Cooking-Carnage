@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: Readme
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: 9266273b8f123004195741f969177dda, type: 3}
+  title: The art folders
+  sections:
+  - heading: How do I organize art folders ?
+    text: Art folders should be organized by topic rather than by asset type. Prefer
+      "Environment", "Characters", "VFX" over "Meshes", "Materials" or "Shaders".
+    linkText: 
+    url: 
+  - heading: Why should I do that ?
+    text: Well because if you're looking for a specific asset type, you can use the
+      search filters to find it. If you look for a rock, Unity won't tell it apart
+      from a tree. Both are meshes, that's all it knows. Moreover, when working on
+      a specific asset or task, it's convenient to have all the files related to
+      this asset easily accessible in one place.
+    linkText: 
+    url: 
+  - heading: What if I still have many materials hanging next to many meshes ?
+    text: Once you've clearly separated assets from one another, you can start subdividing
+      by asset type. For example, in your "Rocks" folder, you can have a "Big rocks"
+      folder, that contains "Big rock 01", "Big rock 02" etc., which in turn contain
+      "Meshes", "Materials", "Textures" folders.
+    linkText: 
+    url: 
+  loadedLayout: 1
