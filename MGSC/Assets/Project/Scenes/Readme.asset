@@ -15,11 +15,13 @@ MonoBehaviour:
   icon: {fileID: 2800000, guid: 2a883f4c030cbad44a2565919e1a208b, type: 3}
   title: How to use scenes
   sections:
-  - heading: MainScene
+  - heading: Game
     text: This scene is used for building the game, and contains all the logic, UI,
-      visuals and other content necessary to play the game. Changes to this scene
-      should only be made when you are certain that your change should be reflected
-      in the game.
+      visuals and other content necessary to play the game. It works solely with
+      the GameInitializer, which instantiates everything that is needed to make the
+      game run (supposedly). You can switch the game profile for another one if you
+      want to test the game with ddifferent configurations. Be careful not to modify
+      the main game profile if you're not sure of what you're doing !
     linkText: 
     url: 
   - heading: Dev Scenes
