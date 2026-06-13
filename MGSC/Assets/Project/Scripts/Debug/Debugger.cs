@@ -104,12 +104,12 @@ public static class Debugger
 
         return toDecrypt switch
         {
-            Orders.Order o               => $"Order n°{o.ID} for {o.Owner.name} ",
+            Order o               => $"Order n°{o.ID} for {o.Owner.name} ",
             SO_Ingredient ing            => $"{ing.Name} ",
             SO_Recipe r                  => $"{r.Name} ",
             SO_Client soClient           => $"{soClient.name} ",
             Client c                     => $"{c.name} ",
-            ClientManager.ClientData cd  => $"Client{cd.id} ",
+            ClientData cd  => $"Client{cd.id} ",
             SO_RecipeBook rb             => $"{Decrypt(rb.Recipes)} ",
             MoneyInfo mi                 => $"{mi} $ ",
             Upgrade up                   => $"Upgrade {up.GetType().Name} - lvl {up.Level} ",

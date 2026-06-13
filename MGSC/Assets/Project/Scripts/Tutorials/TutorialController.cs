@@ -12,22 +12,22 @@ namespace Tutorials
         {
             foreach (var b in Reference.GetAll<Blender>())
             {
-                b.IsLocked = !active;
+                //b.IsLocked = !active;
             }
         }
         public void SetAllActive_SittingCounters(bool active)
         {
-            foreach (var b in Reference.GetAll<SittingCounter>())
+            foreach (var b in Reference.GetAll<ServingCounter>())
             {
-                b.ServingLocked = !active;
+                //b.ServingLocked = !active;
             }
         }
         
         public void SetAllActive_KillButtons(bool active)
         {
-            foreach (var b in Reference.GetAll<SittingCounter>())
+            foreach (var b in Reference.GetAll<ServingCounter>())
             {
-                b.LockWithTutorial = !active;
+                //b.LockWithTutorial = !active;
             }
         }
 

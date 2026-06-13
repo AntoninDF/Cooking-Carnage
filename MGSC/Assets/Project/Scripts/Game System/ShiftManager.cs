@@ -52,10 +52,8 @@ namespace GameSystem
         {
             Register();
         }
-
-        public ShiftManager(float shiftDuration,float shiftNoonDuration, AnimationCurve rentPriceCurve)
+        public void Setup(float shiftDuration, float shiftNoonDuration, AnimationCurve rentPriceCurve)
         {
-            Register();
             SetShiftDuration(shiftDuration);
             SetShiftNoonDuration(shiftNoonDuration);
             SetRentPriceCurve(rentPriceCurve);
@@ -148,14 +146,14 @@ namespace GameSystem
 
             foreach (var blender in Reference.GetAll<Cooking.Blender>())
             {
-                blender.Reset();
+                //blender.Reset();
             }
 
-            foreach (var oven in Reference.GetAll<Cooking.Oven>())
+            foreach (var oven in Reference.GetAll<Oven>())
             {
-                oven.Reset();
+                //oven.Reset();
             }
-            var player = Reference.Get<PlayerController>();
+            var player = Reference.Get<Player>();
             var playerStart = Reference.Get<PlayerStart>();
             if (player != null && playerStart != null)
             {
@@ -212,7 +210,7 @@ namespace GameSystem
             Reference.GetManager(out _timerManager);
             Reference.GetManager(out _gameLoop);
             Reference.GetManager(out _clientManager);
-            Reference.GetManager(out _uiManager);
+            //Reference.GetManager(out _uiManager);
             Reference.GetManager(out _moneyManager);
             Reference.GetManager(out _itemManager);
         }

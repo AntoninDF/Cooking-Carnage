@@ -23,12 +23,11 @@ namespace Upgrades
 
         public override void Apply()
         {
-            Reference.ScanHierarchy();
             _targetBlenders = Reference.GetAll<Blender>();
 
             foreach (Blender b in _targetBlenders)
             {
-                b.CutDuration = b.DefaultCutDuration / (_level + 1);
+                //b.CutDuration = b.DefaultCutDuration / (_level + 1);
             }
         }
         public override void LevelUp()

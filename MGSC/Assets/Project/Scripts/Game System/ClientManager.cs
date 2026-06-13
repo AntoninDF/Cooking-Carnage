@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using Clients;
-using Orders;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.Rendering.HighDefinition;
+using Features;
 
 namespace GameSystem
 {
     /// <summary>
     /// Keep track of all current and previous clients (Order,Type...) and more (Waiting, Eating, Served, Killed...)
     /// </summary>
-    public class ClientManager : IManager
+    public class ClientManager : IManager, IFeatureCollection
     {
         #region Properties
         
@@ -21,17 +20,18 @@ namespace GameSystem
         public int ClientsKilledThisShift {  get; private set; }
         public Dictionary<EClientType, float> ClientTypeAmount => UpdateClientTypeData();
 
+        public FeatureCollection Collection { get; set; } = new();
+        public ClientSeatCollection ClientSeats { get; set; }
         #endregion
-        
+
         #region Fields
-        
+
         // Clients Data Fields
         List<Client> currentClients = new List<Client>(); // script linked to entities
         List<ClientData> clientHistory =  new List<ClientData>(); // script copy
         
         Dictionary<EClientType, float> clientTypePart = new Dictionary<EClientType, float>();
 
-        private ShiftManager _shiftManager;
         #endregion
         
         #region Methods
@@ -39,6 +39,7 @@ namespace GameSystem
         public ClientManager()
         {
             Register();
+            ClientSeats = new(this);
         }
         
         /// <summary>
@@ -54,7 +55,6 @@ namespace GameSystem
         }
         public void Init()
         {
-            Reference.GetManager(out _shiftManager);
 
             foreach (var client in Reference.AssetReferences.clientList)
             {
@@ -64,10 +64,6 @@ namespace GameSystem
 
         public void PostInit()
         {
-            if (_shiftManager != null)
-            {
-                _shiftManager.OnNextShift += Reset;
-            }
         }
 
         private void Reset()
@@ -78,7 +74,13 @@ namespace GameSystem
             clientHistory = new();
         }
 
-        
+        public void Register(ClientSeat seat) => ClientSeats.Register(seat);
+        public List<ClientSeat> GetClientSeats(bool mustBeAvailable = true)
+            => ClientSeats.GetClientSeats(_ => true, mustBeAvailable);
+        public List<ClientSeat> GetClientSeats(Func<ClientSeat, bool> filter, bool mustBeAvailable = true)
+            => ClientSeats.GetClientSeats(filter, true);
+
+
         /// <summary>
         /// Add client data to the lists (creates a copy in case gameobject gets destroyed)
         /// </summary>
@@ -132,9 +134,9 @@ namespace GameSystem
             if (Reference.TryGetManager(out ShiftManager sm))
                 shiftCount = sm.ShiftCount;
 
-            ClientData clientData = new ClientData(client.GetEntityId(), client.Type, killed, -1, Time.time, client.Order, shiftCount);
+            //ClientData clientData = new ClientData(client.GetEntityId(), client.Type, killed, -1, Time.time, client.Order, shiftCount);
             
-            clientHistory.Add(clientData);
+            //clientHistory.Add(clientData);
             if (killed)
             {
                 ClientsKilledThisShift++;
@@ -180,7 +182,7 @@ namespace GameSystem
 
         public Dictionary<EClientType, int> GetSeenClientTypesCount(int amount = -1)
         {
-            List<EClientType> seenTypes = currentClients.Where((client) => client.HasOrdered).Select((client) => client.Type).ToList();
+            List<EClientType> seenTypes = currentClients.Where((client) => true).Select((client) => EClientType.None).ToList();
             seenTypes.InsertRange(0, clientHistory.Select((data) => data.ClientType).ToList());
             if (amount < -1) throw new ArgumentException("[ClientManager] : You cannot ask for a negative amount of client types. Only use -1 to get all of the seen types.");
             if (amount != -1)
@@ -219,7 +221,7 @@ namespace GameSystem
 
            foreach (var t in currentClients)
            {
-                clientTypePart[t.Type]++;
+                //clientTypePart[t.Type]++;
            }
            
            this.Log(LogType.Log, "Client type Data has been updated : " + clientTypePart);
@@ -237,37 +239,5 @@ namespace GameSystem
         
         #endregion
 
-        public class ClientData
-        {
-            public int id;
-            public EClientType ClientType;
-            public bool killed;
-            public float moneyGave;
-            public float timeWhenDone;
-            public Order order;
-            public int serviceIndex;
-            // Graphic data ? idk if needed, maybe a face icon for UI
-            
-            public ClientData(
-                int id,
-                EClientType clientType = EClientType.None,
-                bool killed = false,
-                float moneyGave = 0f,
-                float timeWhenDone = 0f,
-                Order order = null,
-                int serviceIndex = 0
-            )
-            {
-                this.id = id;
-                ClientType = clientType;
-                this.killed = killed;
-                this.moneyGave = moneyGave;
-                this.timeWhenDone = timeWhenDone;
-                this.order = order;
-                this.serviceIndex = serviceIndex;
-            }
-
-        }
-        
     }
 }

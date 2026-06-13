@@ -110,7 +110,6 @@ namespace GameSystem
             if (!_updatables.Contains(updatable))
             {
                 _updatables.Add(updatable);
-                
                 this.Log(updatable.ToString() + " has been registered");
             }
             else
@@ -127,6 +126,11 @@ namespace GameSystem
             _updatables.Remove(manager);
             
             this.Log(manager.ToString() + " has been removed");
+        }
+        
+        public bool HasUpdatable(UpdatableBase manager)
+        {
+            return _updatables.Contains(manager);
         }
         
         #endregion

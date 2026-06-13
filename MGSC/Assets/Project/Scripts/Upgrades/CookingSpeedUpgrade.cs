@@ -24,12 +24,11 @@ namespace Upgrades
 
         public override void Apply()
         {
-            Reference.ScanHierarchy();
             _targetOvens = Reference.GetAll<Oven>();
 
             foreach (Oven o in _targetOvens)
             {
-                o.SetStrength(_level * 2f);
+                //o.SetStrength(_level * 2f);
             }
         }
         public override void LevelUp()

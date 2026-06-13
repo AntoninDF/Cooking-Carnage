@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 // REFACTO : Support references to individual objects, to retrieve their specific Actions without making a global scan.
 
@@ -79,7 +81,7 @@ public partial class EventLinker : MonoBehaviour
 
 }
 
-
+#if UNITY_EDITOR
 
 [CustomEditor(typeof(EventLinker))]
 public class EventLinkerEditor : Editor
@@ -133,3 +135,5 @@ public class EventLinkerEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 }
+
+#endif
