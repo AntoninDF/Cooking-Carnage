@@ -10,7 +10,7 @@ namespace Upgrades
         #endregion
 
         #region Fields
-        private float dropRateIncrement = 1f;
+        //private float dropRateIncrement = 1f;
 
         private ClientManager _clientManager;
         #endregion

@@ -8,7 +8,7 @@ namespace Features
     /// The PlayerActor's role is to find objects and their features in sight, and interact with them.
     /// The detail of the interactions must be handled externally with AddPlayerAction or AddConstantAction
     /// </summary>
-    public class PlayerActor : Feature, IFeatureCollection
+    public class PlayerInteractor : Feature, IFeatureCollection
     {
 
         public FeatureCollection Collection { get; set; } = new();
@@ -32,7 +32,7 @@ namespace Features
         #region Methods
 
 
-        public PlayerActor(IFeatureCollection owner) : base(owner)
+        public PlayerInteractor(IFeatureCollection owner) : base(owner)
         {
         }
 

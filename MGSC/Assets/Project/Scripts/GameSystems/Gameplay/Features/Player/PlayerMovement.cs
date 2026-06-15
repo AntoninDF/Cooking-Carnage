@@ -130,23 +130,10 @@ namespace Features
 
         private void UpdateLookDirectionFromOffset(Vector2 offset)
         {
-            float yaw = offset.x * LookSpeed;
-            float pitch = Mathf.Clamp((offset.y * LookSpeed), -VerticalLookRange, VerticalLookRange);
-
-            LookDirection = Quaternion.Euler(pitch, yaw, 0) * LookDirection;
-            /*
-            var R = Quaternion.FromToRotation(Vector3.forward, LookDirection);
+            LookDirection = Quaternion.Euler(0, offset.x * LookSpeed, 0) * LookDirection;
+            LookDirection = Quaternion.AngleAxis(-offset.y * LookSpeed, Vector3.Cross(LookDirection, Vector3.up).normalized) * LookDirection;
 
 
-            float currentYaw = (float)(Mathf.Atan2(LookDirection.z, LookDirection.x));
-            float currentPitch = (float)Mathf.Asin(LookDirection.y);
-
-            float newYaw = currentYaw + offset.x * LookSpeed;
-            float newPitch = Mathf.Clamp(currentPitch + (offset.y * LookSpeed), -VerticalLookRange, VerticalLookRange);
-
-            LookDirection = Quaternion.Euler(newPitch, newYaw, 0) * Vector3.forward;
-            LookDirection = R * LookDirection;
-            */
         }
         private void HandleRotation()
         {

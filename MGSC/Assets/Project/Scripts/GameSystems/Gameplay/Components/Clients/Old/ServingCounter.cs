@@ -26,7 +26,7 @@ namespace Clients
         [Header("References")]
         [Tooltip("Slot on which the meal will be served.")]
         [SerializeField] private SlotContainer _mealSlot;
-        [SerializeField] private float _timeBeforeMealDisappears = 2.5f;
+        //[SerializeField] private float _timeBeforeMealDisappears = 2.5f;
         [SerializeField] private ClientSeat clientSeat;
 
         #endregion

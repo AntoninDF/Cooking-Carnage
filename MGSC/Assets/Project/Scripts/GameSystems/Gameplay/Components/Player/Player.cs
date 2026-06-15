@@ -6,7 +6,7 @@ public class Player : MonoBehaviour, IFeatureCollection
 {
     public FeatureCollection Collection { get; private set; } = new();
 
-    public PlayerActor PlayerActor { get; private set; }
+    public PlayerInteractor PlayerActor { get; private set; }
     public F_SoloContainer Container { get; private set; }
     public BasePlayerInputs PlayerInputs { get; private set; }
     public PlayerMovement PlayerMovement { get; private set; }
@@ -20,7 +20,8 @@ public class Player : MonoBehaviour, IFeatureCollection
         PlayerActor = new(this);
         PlayerActor.SortFeaturesByDistance = true;
         PlayerActor.GetAllFeaturesInSight = false;
-        PlayerInputs = new PlayerInputReader(this); Collection.LateSetup();
+        PlayerInputs = new PlayerInputReader(this);
+        Collection.LateSetup();
 
         BindPlayerActions();
         AddInteractions();

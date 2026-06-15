@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -82,7 +84,35 @@ namespace Features
                 filter.mesh = DefaultState.sharedMesh;
         }
 
-        #endregion
-    }
+		#region Outline
+		bool outlineEnabled;
+		GameObject outlineObject;
+		public virtual void ToggleOutline() => SetOutline(!outlineEnabled);
+		public virtual void SetOutline(bool active)
+		{
+			if (active) EnableOutline();
+			else DisableOutline();
+		}
+		public virtual void EnableOutline()
+		{
+			outlineEnabled = true;
+			if (outlineObject == null)
+			{
+				outlineObject = new("Outline_mesh", typeof(MeshRenderer), typeof(MeshFilter));
+				var mf = Renderer.GetComponent<MeshFilter>();
+				outlineObject.GetComponent<MeshFilter>().sharedMesh = mf.sharedMesh;
+			}
+			List<Material> newMats = Renderer.sharedMaterials.ToList();
+			newMats.Add(Globals.Rendering.Outline.Material);
+        }
+		public virtual void DisableOutline()
+		{
+			outlineEnabled = false;
+
+        }
+		#endregion
+
+		#endregion
+	}
 
 }
