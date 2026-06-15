@@ -6,7 +6,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
 {
     public FeatureCollection Collection { get; set; } = new();
     public Interactable Interactable { get; set;  }
-    public SoloContainer Container { get; set; }
+    public F_SoloContainer Container { get; set; }
     public Cooker Cooker { get; set; }
 
 
@@ -55,7 +55,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     }
     private void TryInteract(InteractionContext context)
     {
-        if ( context.TryGetFeature(out Container container))
+        if ( context.TryGetFeature(out F_Container container))
         {
             if (Container.RequestGrab(container.HeldItem))
                 return;

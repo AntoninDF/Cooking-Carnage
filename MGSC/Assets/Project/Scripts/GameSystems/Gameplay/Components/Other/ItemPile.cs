@@ -40,7 +40,7 @@ public class ItemPile : ObjectPile, IFeatureCollection
 
 
     public FeatureCollection Collection { get; set; } = new();
-    public MultiContainer Container { get; set; }
+    public F_MultiContainer Container { get; set; }
     #endregion
 
     #region Fields

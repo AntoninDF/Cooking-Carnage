@@ -7,7 +7,7 @@ public class Player : MonoBehaviour, IFeatureCollection
     public FeatureCollection Collection { get; private set; } = new();
 
     public PlayerActor PlayerActor { get; private set; }
-    public SoloContainer Container { get; private set; }
+    public F_SoloContainer Container { get; private set; }
     public BasePlayerInputs PlayerInputs { get; private set; }
     public PlayerMovement PlayerMovement { get; private set; }
 

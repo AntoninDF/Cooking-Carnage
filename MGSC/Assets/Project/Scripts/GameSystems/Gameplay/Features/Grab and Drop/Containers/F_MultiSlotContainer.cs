@@ -8,12 +8,12 @@ namespace Features
     /// <summary>
     /// The multi slot container contains slots, that hold items themselves. The multi slot container is useful to keep track of the content of a fixed set of items.
     /// </summary>
-    public class MultiSlotContainer : Container, IFeatureCollection
+    public class F_MultiSlotContainer : F_Container, IFeatureCollection
     {
         #region Properties
 
-        public MultiContainer Container { get; set; }
-        public List<SoloContainer> SoloContainers { get; set; } = new();
+        public F_MultiContainer Container { get; set; }
+        public List<F_SoloContainer> SoloContainers { get; set; } = new();
         #endregion
 
 
@@ -23,10 +23,10 @@ namespace Features
 
 
         #region Methods
-        public MultiSlotContainer(IFeatureCollection owner) : base(owner)
+        public F_MultiSlotContainer(IFeatureCollection owner) : base(owner)
         {
         }
-        public MultiSlotContainer(IFeatureCollection owner, Transform transform) : base(owner)
+        public F_MultiSlotContainer(IFeatureCollection owner, Transform transform) : base(owner)
         {
             this.transform = transform;
         }
@@ -52,7 +52,7 @@ namespace Features
         /// </summary>
         /// <param name="slot"></param>
         /// <returns></returns>
-        public bool TryAddSlot(SoloContainer slot)
+        public bool TryAddSlot(F_SoloContainer slot)
         {
             if (SoloContainers.Contains(slot)) return false;
             SoloContainers.Add(slot);
@@ -60,7 +60,7 @@ namespace Features
             TryBind(slot.OnDrop, Drop);
             return true;
         }
-        public bool TryRemoveSlot(SoloContainer slot)
+        public bool TryRemoveSlot(F_SoloContainer slot)
         {
             if (!SoloContainers.Contains(slot)) return false;
             SoloContainers.Remove(slot);
@@ -116,7 +116,7 @@ namespace Features
 
             return true;
         }
-        private SoloContainer GetFirstAvailableSlot(Grabbable grabbable)
+        private F_SoloContainer GetFirstAvailableSlot(Grabbable grabbable)
         {
             foreach (var slot in SoloContainers)
             {

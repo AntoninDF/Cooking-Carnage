@@ -98,6 +98,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7591977346864290166}
+  - component: {fileID: 1115627048526760843}
+  - component: {fileID: 2455500898832782184}
   m_Layer: 2
   m_Name: Hand
   m_TagString: Untagged
@@ -120,6 +122,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2616203363851650813}
   m_LocalEulerAnglesHint: {x: 6.665, y: -349.918, z: 4.405}
+--- !u!114 &1115627048526760843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116370139634909629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63a59fd62de223d418de0c80dab5994c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlotContainer
+  isInteractable: 1
+  passThrough: 1
+--- !u!135 &2455500898832782184
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116370139634909629}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1667480711654270360
 GameObject:
   m_ObjectHideFlags: 0
@@ -520,10 +557,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1840063740979463002}
   - component: {fileID: 532770150131431517}
-  - component: {fileID: 7891404858160394470}
-  - component: {fileID: 2210158232699748847}
-  - component: {fileID: 8997797185294905405}
-  - component: {fileID: 1921888590978429937}
+  - component: {fileID: 4047155480879845363}
   m_Layer: 2
   m_Name: P_Player
   m_TagString: Untagged
@@ -574,7 +608,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &7891404858160394470
+--- !u!114 &4047155480879845363
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -583,92 +617,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6331963460517924519}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b28d800e715d944baa069bb7be768e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 69e3978feb4bdc04192d63578318a3ea, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInterface
---- !u!114 &2210158232699748847
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6331963460517924519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5a021667056d014a998e6477a6a70ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Controller.PlayerController
-  _walkSpeed: 3
-  _mouseSensitivity: 0.1
-  _characterSize: 2
-  _upDownLookRange: 80
-  _characterController: {fileID: 532770150131431517}
-  headTransform: {fileID: 8218147531987726375}
-  _onStartWalking:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2164894560330692518}
-        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _onStopWalking:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2164894560330692518}
-        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
-        m_MethodName: Stop
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &8997797185294905405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6331963460517924519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac4c68215ec6684c859585a279671f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Controller.PlayerInputHandler
---- !u!114 &1921888590978429937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6331963460517924519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a48499cd513068749af638a254c990a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Controller.PlayerInteractor
-  <OnInteract>k__BackingField:
-    m_PersistentCalls:
-      m_Calls: []
-  <OnGrab>k__BackingField:
-    m_PersistentCalls:
-      m_Calls: []
-  <OnDrop>k__BackingField:
-    m_PersistentCalls:
-      m_Calls: []
-  _handSlot: {fileID: 7591977346864290166}
-  _reachDistance: 5
+  m_EditorClassIdentifier: Assembly-CSharp::Player
+  head: {fileID: 8218147531987726375}
+  hand: {fileID: 1115627048526760843}
 --- !u!1 &6477787026131637750
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,7 +667,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7709138840591867495}
-  - component: {fileID: 7508012559399416190}
   m_Layer: 0
   m_Name: PlayerInputHandler
   m_TagString: Untagged
@@ -737,18 +689,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 271075963665352893}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7508012559399416190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7208352091207048384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac4c68215ec6684c859585a279671f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Controller.PlayerInputHandler
 --- !u!1 &7475533244635095131
 GameObject:
   m_ObjectHideFlags: 0

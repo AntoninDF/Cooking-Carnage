@@ -16,7 +16,7 @@ namespace Cooking
         #region Properties
         public FeatureCollection Collection { get; set; } = new();
 
-        public SoloContainer Container { get; set; }
+        public F_SoloContainer Container { get; set; }
         public Cutter Cutter { get; set; }
         public Interactable Button;
         #endregion
@@ -68,7 +68,7 @@ namespace Cooking
         }
         private void TryGrab(InteractionContext context)
         {
-            if (context.TryGetFeature(out Container container))
+            if (context.TryGetFeature(out F_Container container))
             {
                 if (Container.RequestGrab(container.HeldItem))
                     return;

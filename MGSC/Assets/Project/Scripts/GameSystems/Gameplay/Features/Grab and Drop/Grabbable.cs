@@ -3,7 +3,7 @@ using System;
 
 public class Grabbable : Feature
 {
-    public Container Container;
+    public F_Container Container;
     public bool IsLocked { get; set; }
 
     public Action OnGrab {  get; set; }
@@ -12,7 +12,7 @@ public class Grabbable : Feature
     {
     }
 
-    public void GetGrabbedBy(Container container)
+    public void GetGrabbedBy(F_Container container)
     {
         if (Container == container) return;
         if (IsLocked) return;

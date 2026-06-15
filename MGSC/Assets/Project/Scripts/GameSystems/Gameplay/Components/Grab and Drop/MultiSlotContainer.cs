@@ -5,7 +5,7 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
 {
     #region Properties
     public FeatureCollection Collection { get; set; } = new();
-    public Features.MultiSlotContainer Container { get; set; }
+    public Features.F_MultiSlotContainer Container { get; set; }
     public Interactable Interactable{ get; set; }
     #endregion
 
@@ -14,7 +14,7 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
     [SerializeField] private bool detectSlots = true;
     [SerializeField] private bool lockItemsWhenAdded = false;
 
-    List<SoloContainer> _soloContainers = new();
+    List<F_SoloContainer> _soloContainers = new();
     #endregion
 
     #region Methods
@@ -44,7 +44,7 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
 
     private void OnInteract(InteractionContext context)
     {
-        if (context.TryGetFeature(out Container container))
+        if (context.TryGetFeature(out F_Container container))
         {
             Container.RequestGrab(container.HeldItem);
         }
@@ -61,7 +61,7 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
         {
             if (detectSlots)
             {
-                _soloContainers = FeatureScannerByHierarchy.Get<SoloContainer>(gameObject);
+                _soloContainers = FeatureScannerByHierarchy.Get<F_SoloContainer>(gameObject);
             }
             else
                 Debug.LogWarning("No slots were added or detected on MultiSlotContainer '" + name + "'");

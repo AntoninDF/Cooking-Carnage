@@ -10,7 +10,7 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
     public FeatureCollection Collection { get; set; } = new();
 
     public Grabbable HeldItem => Container.HeldItem;
-    public SoloContainer Container { get; set; }
+    public F_SoloContainer Container { get; set; }
     public Interactable Interactable { get; set; }
 
     public bool IsInteractable
@@ -52,7 +52,7 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
     }
     private void OnInteract(InteractionContext context)
     {
-        if (context.TryGetFeature(out Container container))
+        if (context.TryGetFeature(out F_Container container))
         {
             bool hasGrabbed = Container.RequestGrab(container.HeldItem);
             if (!hasGrabbed && passThrough)

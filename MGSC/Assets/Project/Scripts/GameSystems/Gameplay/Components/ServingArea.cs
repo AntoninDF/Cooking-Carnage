@@ -18,7 +18,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
 
     #endregion
 
-    private void Awake()
+    private void Start()
     {
         ClientSeat = new(this, SeatTransform);
         ServingCounter = new(this);

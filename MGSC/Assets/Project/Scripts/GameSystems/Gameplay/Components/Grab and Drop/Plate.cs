@@ -26,7 +26,7 @@ public class Plate : Item
 
 
 
-    Features.MultiSlotContainer Container;
+    Features.F_MultiSlotContainer Container;
     #endregion
         
         
@@ -80,7 +80,7 @@ public class Plate : Item
     }
     protected override void TryInteract(InteractionContext context)
     {
-        if (context.TryGetFeature(out Container container))
+        if (context.TryGetFeature(out F_Container container))
         {
             // Try to take the player's ingredient
             if (container.CanDrop(container.HeldItem))

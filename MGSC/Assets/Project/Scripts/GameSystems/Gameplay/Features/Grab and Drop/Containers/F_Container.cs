@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Features
 {
-    public abstract class Container : Feature, IFeatureCollection
+    public abstract class F_Container : Feature, IFeatureCollection
     {
 
         /// <summary>
@@ -22,13 +22,13 @@ namespace Features
         public Action<Grabbable> OnGrab;
         public Action<Grabbable> OnDrop;
 
-        protected Container(IFeatureCollection owner) : base(owner)
+        protected F_Container(IFeatureCollection owner) : base(owner)
         {
             Filter = new(this);
             SetupFilter();
             transform = GetParentTransform();
         }
-        protected Container(IFeatureCollection owner, Transform transform) : base(owner)
+        protected F_Container(IFeatureCollection owner, Transform transform) : base(owner)
         {
             Filter = new(this);
             SetupFilter();

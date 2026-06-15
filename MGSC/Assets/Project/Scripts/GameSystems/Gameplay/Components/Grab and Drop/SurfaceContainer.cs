@@ -12,7 +12,7 @@ public class SurfaceContainer : MonoBehaviour, IFeatureCollection
     public bool Passthrough => false;
 
     public FeatureCollection Collection { get; set; } = new();
-    public MultiContainer Container { get; set; }
+    public F_MultiContainer Container { get; set; }
     public Conditions Filter { get; set; }
     public LookAtTarget LookAtTarget { get; set; }
     public Interactable Interactable { get; set; }
@@ -45,10 +45,10 @@ public class SurfaceContainer : MonoBehaviour, IFeatureCollection
 
     private void TryGrabObject(InteractionContext context)
     {
-        Container container = null;
-        if (context.Interactor is Container)
+        F_Container container = null;
+        if (context.Interactor is F_Container)
         {
-            container = (Container)context.Interactor;
+            container = (F_Container)context.Interactor;
         }
         else if (context.Interactor is IFeatureCollection col)
         {

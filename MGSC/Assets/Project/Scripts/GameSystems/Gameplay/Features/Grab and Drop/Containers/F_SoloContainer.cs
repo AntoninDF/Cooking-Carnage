@@ -2,13 +2,13 @@ using UnityEngine;
 
 namespace Features
 {
-    public class SoloContainer : Container
+    public class F_SoloContainer : F_Container
     {
-        public SoloContainer(IFeatureCollection owner) : base(owner)
+        public F_SoloContainer(IFeatureCollection owner) : base(owner)
         {
             this.transform = GetParentTransform();
         }
-        public SoloContainer(IFeatureCollection owner, Transform transform) : base(owner, transform)
+        public F_SoloContainer(IFeatureCollection owner, Transform transform) : base(owner, transform)
         {
             this.transform = transform;
         }

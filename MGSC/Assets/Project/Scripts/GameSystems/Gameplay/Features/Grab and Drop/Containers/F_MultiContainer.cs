@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace Features
 {
-    public class MultiContainer : Container
+    public class F_MultiContainer : F_Container
     {
         public List<Grabbable> HeldItems { get; set; } = new();
         public override Grabbable HeldItem => HeldItems.Count > 0 ? HeldItems[0] : null;
 
-        public MultiContainer(IFeatureCollection owner) : base(owner)
+        public F_MultiContainer(IFeatureCollection owner) : base(owner)
         {
         }
-        public MultiContainer(IFeatureCollection owner, Transform transform) : base(owner, transform)
+        public F_MultiContainer(IFeatureCollection owner, Transform transform) : base(owner, transform)
         {
             this.transform = transform;
         }

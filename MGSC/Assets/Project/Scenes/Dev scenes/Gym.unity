@@ -1697,13 +1697,23 @@ MonoBehaviour:
   OnAnyButton:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   Buttons:
-  - {Button: {fileID: 1638300657}, Event:
+  - Button: {fileID: 1638300657}
+    Event:
       m_PersistentCalls:
         m_Calls:
-        - {m_Target: {fileID: 70495447}, m_TargetAssemblyTypeName: EventAsset, Assembly-CSharp: }
-}
+        - m_Target: {fileID: 70495447}
+          m_TargetAssemblyTypeName: EventAsset
+          m_MethodName: 
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: 
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &70495447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2507,16 +2517,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 744c93df68d88ce45b04b52cbbf3bde2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UITab
-  <Enabled>k__BackingField: 0
   Content: {fileID: 115704455}
   OnEnable:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnDisable:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
 --- !u!1 &116752656
 GameObject:
   m_ObjectHideFlags: 0
@@ -2791,16 +2798,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 744c93df68d88ce45b04b52cbbf3bde2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UITab
-  <Enabled>k__BackingField: 0
   Content: {fileID: 130411042}
   OnEnable:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnDisable:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
 --- !u!1 &130682652
 GameObject:
   m_ObjectHideFlags: 0
@@ -5544,16 +5548,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 744c93df68d88ce45b04b52cbbf3bde2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UITab
-  <Enabled>k__BackingField: 0
   Content: {fileID: 231871665}
   OnEnable:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnDisable:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
 --- !u!1 &239461637
 GameObject:
   m_ObjectHideFlags: 0
@@ -8044,27 +8045,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a59fd62de223d418de0c80dab5994c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlotContainer
-  OnDrop_Raw:
-    m_PersistentCalls:
-      m_Calls: []
-  _disableColliderIfHandEmpty: 1
-  _itemSlot: {fileID: 0}
-  _allowPassthrough: 0
-  _onGrab:
-    m_PersistentCalls:
-      m_Calls: []
-  _onDrop:
-    m_PersistentCalls:
-      m_Calls: []
-  _onLookAt:
-    m_PersistentCalls:
-      m_Calls: []
-  _onStopLookAt:
-    m_PersistentCalls:
-      m_Calls: []
-  _onTryGrabIncorrectItem:
-    m_PersistentCalls:
-      m_Calls: []
+  isInteractable: 1
+  passThrough: 1
 --- !u!1 &315240360
 GameObject:
   m_ObjectHideFlags: 0
@@ -15628,53 +15610,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61d23b3a8a3d6804180130f7178c64f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Client
-  _timeToEat: 2
-  _timeBeforeDisappearingAfterLeaving: 15
-  _timeBeforeDisappearingAfterDying: 3
-  deathTrapHeight: -1
-  _speed: 1
-  _onLookAt:
-    m_PersistentCalls:
-      m_Calls: []
-  _onStopLookAt:
-    m_PersistentCalls:
-      m_Calls: []
-  _onStartEating:
-    m_PersistentCalls:
-      m_Calls: []
-  _onEndEating:
-    m_PersistentCalls:
-      m_Calls: []
-  _onStartWalking:
-    m_PersistentCalls:
-      m_Calls: []
-  _onEndWalking:
-    m_PersistentCalls:
-      m_Calls: []
-  _onCounterRegister:
-    m_PersistentCalls:
-      m_Calls: []
-  _onCounterArrival:
-    m_PersistentCalls:
-      m_Calls: []
-  _onCounterDeparture:
-    m_PersistentCalls:
-      m_Calls: []
-  _onKilled:
-    m_PersistentCalls:
-      m_Calls: []
-  _onSatisfactoryOrder:
-    m_PersistentCalls:
-      m_Calls: []
-  _onWrongOrder:
-    m_PersistentCalls:
-      m_Calls: []
-  _onStart:
-    m_PersistentCalls:
-      m_Calls: []
-  _onDestroy:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &753617537
 GameObject:
   m_ObjectHideFlags: 0
@@ -22328,8 +22263,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6908c0c74aa954f99b943ea6c5e5c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameSystem.GameInitializer
-  _gameProfile: {fileID: 11400000, guid: f50af25046c9b6c4590a5c040799cdf1, type: 2}
-  _debugProfile: {fileID: 0}
+  _gameProfile: {fileID: 11400000, guid: 453160ab21e6b364a95719366f906ea6, type: 2}
+  _debugProfile: {fileID: 11400000, guid: 3153ee07907974b489cc879917f9cd5b, type: 2}
 --- !u!4 &1170031890
 Transform:
   m_ObjectHideFlags: 0
@@ -25684,13 +25619,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e90d09eb9dda9c547b01a38eab317479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SurfaceContainer
-  _maxItemCount: 100
-  _onGrab:
-    m_PersistentCalls:
-      m_Calls: []
-  _onDrop:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &1377330685
 GameObject:
   m_ObjectHideFlags: 0
@@ -27035,7 +26963,21 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls:
-        - {m_Target: {fileID: 70495447}, m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp: }
+        - m_Target: {fileID: 70495447}
+          m_TargetAssemblyTypeName: UIMenu
+          m_MethodName: 
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: 
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &1419231720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33643,7 +33585,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1778068796}
-  - component: {fileID: 1778068795}
+  - component: {fileID: 1778068797}
   m_Layer: 0
   m_Name: Navmesh
   m_TagString: Untagged
@@ -33651,7 +33593,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1778068795
+--- !u!4 &1778068796
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778068794}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.03567, y: 0, z: 5.90189}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1778068797
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -33669,6 +33626,7 @@ MonoBehaviour:
   m_Size: {x: 10, y: 10, z: 10}
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
+    serializedVersion: 2
     m_Bits: 4294967295
   m_UseGeometry: 0
   m_DefaultArea: 0
@@ -33680,25 +33638,8 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: f50cd47669d1a1545a2cd708ed76f253, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: e8052d4f515b54e419c0a8ca3b90011d, type: 2}
   m_BuildHeightMesh: 0
-  m_LastPosition: {x: -6.03567, y: 0, z: 5.90189}
-  m_LastRotation: {x: 0, y: 0, z: 0, w: 1}
---- !u!4 &1778068796
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1778068794}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.03567, y: 0, z: 5.90189}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1788256037
 GameObject:
   m_ObjectHideFlags: 0
@@ -44579,13 +44520,23 @@ MonoBehaviour:
   OnAnyButton:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   Buttons:
-  - {Button: {fileID: 4893680602271022397}, Event:
+  - Button: {fileID: 4893680602271022397}
+    Event:
       m_PersistentCalls:
         m_Calls:
-        - {m_Target: {fileID: 7241955441500379751}, m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp: }
-}
+        - m_Target: {fileID: 7241955441500379751}
+          m_TargetAssemblyTypeName: UIMenu
+          m_MethodName: 
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: 
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &4614750138374797136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45140,12 +45091,9 @@ MonoBehaviour:
   OnTabEnabled:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnTabDisabled:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
-  _enabled: 0
 --- !u!1 &6644094915611146809
 GameObject:
   m_ObjectHideFlags: 0
@@ -45182,12 +45130,9 @@ MonoBehaviour:
   OnTabEnabled:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnTabDisabled:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
-  _enabled: 0
 --- !u!224 &6910177979243467289
 RectTransform:
   m_ObjectHideFlags: 0
@@ -45227,12 +45172,9 @@ MonoBehaviour:
   OnTabEnabled:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnTabDisabled:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
-  _enabled: 0
 --- !u!224 &6922860513679384347
 RectTransform:
   m_ObjectHideFlags: 0
@@ -45287,16 +45229,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 744c93df68d88ce45b04b52cbbf3bde2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UITab
-  <Enabled>k__BackingField: 0
   Content: {fileID: 2139000531208266312}
   OnEnable:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnDisable:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
 --- !u!1 &7177140354209519050
 GameObject:
   m_ObjectHideFlags: 0
@@ -45333,12 +45272,9 @@ MonoBehaviour:
   OnTabEnabled:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnTabDisabled:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
-  _enabled: 0
 --- !u!114 &7241955441500379751
 MonoBehaviour:
   m_ObjectHideFlags: 0

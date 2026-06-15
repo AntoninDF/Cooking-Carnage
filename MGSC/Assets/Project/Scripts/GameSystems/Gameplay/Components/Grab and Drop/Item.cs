@@ -83,7 +83,7 @@ public class Item : MonoBehaviour, IFeatureCollection
     }
     protected virtual void TryGetGrabbed(InteractionContext context)
     {
-        if (context.TryGetFeature(out Container container))
+        if (context.TryGetFeature(out F_Container container))
         {
             container.RequestGrab(Grabbable);
         }
