@@ -107,16 +107,16 @@ public partial class Client : MonoBehaviour, IFeatureCollection
     {
         if (order == null) return;
         if (CurrentOrder != null) return;
-        Debug.Log("Order accepted");
+        //Debug.Log("Order accepted");
         CurrentOrder = order;
         CurrentSeat.TryUnregister(this);
         Behaviour.GoToServingCounter(Sit);
     }
     private void TryAcceptServing(Servable serving)
     {
-        Debug.Log("TryAcceptServing");
+        //Debug.Log("TryAcceptServing");
         if (serving == null || !serving.Enabled) return;
-        Debug.Log("Something was served");
+        //Debug.Log("Something was served");
         CurrentOrder.Resolve(serving);
         Behaviour.GoToCounter<Exit>();
     }

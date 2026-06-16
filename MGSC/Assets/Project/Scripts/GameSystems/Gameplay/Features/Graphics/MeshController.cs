@@ -5,11 +5,15 @@ using UnityEngine.Rendering;
 
 namespace Features
 {
-    public class MeshController : Feature
+    public class MeshController : Feature, IFeatureCollection
     {
 		#region Properties
 		public MeshRenderer Renderer { get; set; }
 		public virtual MeshRendererState DefaultState { get; set; }
+
+		public FeatureCollection Collection { get; set; } = new();
+
+        public OutlineController OutlineController;
 
         #endregion
 
@@ -19,6 +23,7 @@ namespace Features
         {
 			Renderer = target;
 			DefaultState = new MeshRendererState(target);
+			OutlineController = new(this, target);
         }
 
 		public virtual void ResetToDefault()
@@ -83,36 +88,26 @@ namespace Features
             if (Renderer.TryGetComponent(out MeshFilter filter))
                 filter.mesh = DefaultState.sharedMesh;
         }
-
-		#region Outline
-		bool outlineEnabled;
-		GameObject outlineObject;
-		public virtual void ToggleOutline() => SetOutline(!outlineEnabled);
-		public virtual void SetOutline(bool active)
+		public Mesh GetMesh()
 		{
-			if (active) EnableOutline();
-			else DisableOutline();
-		}
-		public virtual void EnableOutline()
-		{
-			outlineEnabled = true;
-			if (outlineObject == null)
-			{
-				outlineObject = new("Outline_mesh", typeof(MeshRenderer), typeof(MeshFilter));
-				var mf = Renderer.GetComponent<MeshFilter>();
-				outlineObject.GetComponent<MeshFilter>().sharedMesh = mf.sharedMesh;
-			}
-			List<Material> newMats = Renderer.sharedMaterials.ToList();
-			newMats.Add(Globals.Rendering.Outline.Material);
+			if (Renderer.TryGetComponent(out MeshFilter filter))
+				return filter.mesh;
+			return new();
         }
-		public virtual void DisableOutline()
-		{
-			outlineEnabled = false;
 
-        }
-		#endregion
+		// Forward all the outline methods
+		public virtual void ToggleOutline() => OutlineController.ToggleOutline();
+		public virtual void EnableOutline() => OutlineController.EnableOutline();
+		public virtual void DisableOutline() => OutlineController.DisableOutline();
+		public virtual void SetOutline(bool active) => OutlineController.SetOutline(active);
+		public virtual void SetOutlineColor(Color color) => OutlineController.SetColor(color);
+		public virtual void SetOutlineThickness(float thickness) => OutlineController.SetThickness(thickness);
+        public virtual void SetOutlineVisible() => OutlineController.SetVisible();
+        public virtual void SetOutlineInvisible() => OutlineController.SetInvisible();
+		public virtual void SetOutlineVisibility(bool visible) => OutlineController.SetVisibility(visible);
 
-		#endregion
-	}
+
+        #endregion
+    }
 
 }

@@ -11,6 +11,7 @@ namespace GameSystem
     /// The GameInitializer is responsible for instantiating and setting up every object at the start of the game.
     /// No other script should hold a reference to the GameInitializer
     /// </summary>
+    [HideScriptField]
     public class GameInitializer : MonoBehaviour
     {
         #region Fields
@@ -65,6 +66,7 @@ namespace GameSystem
 
             if (_gameProfile.DestroyEveryOtherObject) DestroyEverything();
 
+            //Debug.Log("Asset references set");
             Reference.AssetReferences = _gameProfile.AssetReferences;
 
             // Instantiate the scene and create all the MonoBehaviour managers

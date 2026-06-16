@@ -30,7 +30,7 @@ namespace Features
         protected override void Transform(Transformable cookable)
         {
             base.Transform(cookable);
-            OnTransformationOver?.Invoke(cookable as Cookable);
+            OnTransformationOver?.Invoke(cookable as F_Cookable);
         }
 
         protected virtual void StartTransformation(TransformableAfterTimer target)

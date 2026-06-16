@@ -52,7 +52,7 @@ namespace Clients
             Container.OnGrab += OnGrab;
         }
 
-        private void OnGrab(Grabbable grabbable)
+        private void OnGrab(F_Grabbable grabbable)
         {
             if (grabbable.TryGetSibling(out Servable servedObj))
             {

@@ -11,8 +11,8 @@ using UnityEngine;
 public class Plate : Item
 {
     #region Properties
-    public Cookable Cookable;
-    public Cookable OverCookable;
+    public F_Cookable Cookable;
+    public F_Cookable OverCookable;
     public Servable Servable;
     #endregion
 
@@ -52,8 +52,9 @@ public class Plate : Item
         Cookable.OnTransformation += OnCook;
         
     }
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
         BindExternalEvents();
     }
 
@@ -63,15 +64,15 @@ public class Plate : Item
         {
             Container.OnGrab += TryLock;
             // Make sure only cut ingredients can be put in the plate
-            Container.Filter.AddCondition(item => item.TryGetFeature(out Cuttable cuttable) && cuttable.Transformed);
+            Container.Filter.AddCondition(item => item.TryGetFeature(out F_Cuttable cuttable) && cuttable.Transformed);
         }
-        if (ContainerComponent.TryGetFeature(out Interactable interactable))
+        if (ContainerComponent.TryGetFeature(out F_Interactable interactable))
         {
             interactable.Enabled = false;
         }
     }
 
-    private void TryLock(Grabbable item)
+    private void TryLock(F_Grabbable item)
     {
         if (item != null)
         {
@@ -112,7 +113,7 @@ public class Plate : Item
 
         recipe = RecipeComponent.RecipeFeature.GetMatchingRecipe();
 
-        RecipeComponent.RecipeFeature.SetIngredients(Container.Container.GetHeldItemsAs<Features.Ingredient>());
+        RecipeComponent.RecipeFeature.SetIngredients(Container.Container.GetHeldItemsAs<Features.F_Ingredient>());
 
         if (recipe == null) return false;
         return true;

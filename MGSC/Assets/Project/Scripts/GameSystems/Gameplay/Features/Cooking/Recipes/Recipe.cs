@@ -7,7 +7,7 @@ namespace Features
     {
         #region Properties
 
-        public List<Ingredient> Ingredients;
+        public List<F_Ingredient> Ingredients;
         public List<SO_Ingredient> IngredientModels => GetIngredientModels();
 
         #endregion
@@ -30,8 +30,8 @@ namespace Features
             return result;
         }
 
-        public void SetIngredients(List<Ingredient> ingredients) => Ingredients = ingredients;
-        public void AddIngredient(Ingredient ingredient) => Ingredients.Add(ingredient);
-        public void RemoveIngredient(Ingredient ingredient) => Ingredients.Remove(ingredient);
+        public void SetIngredients(List<F_Ingredient> ingredients) => Ingredients = ingredients;
+        public void AddIngredient(F_Ingredient ingredient) => Ingredients.Add(ingredient);
+        public void RemoveIngredient(F_Ingredient ingredient) => Ingredients.Remove(ingredient);
     }
 }

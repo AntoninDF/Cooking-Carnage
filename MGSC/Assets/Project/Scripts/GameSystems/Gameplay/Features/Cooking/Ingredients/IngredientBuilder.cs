@@ -3,11 +3,11 @@ using Features;
 
 public class IngredientBuilder
 {
-    private Features.Ingredient current;
+    private Features.F_Ingredient current;
 
     protected IngredientBuilder() { }
 
-    private static IngredientBuilder Make(Features.Ingredient ing)
+    private static IngredientBuilder Make(Features.F_Ingredient ing)
     {
         IngredientBuilder builder = new();
         builder.current = ing;
@@ -28,5 +28,5 @@ public class IngredientBuilder
         return this;
     }
 
-    public Features.Ingredient Build() => current;
+    public Features.F_Ingredient Build() => current;
 }

@@ -8,7 +8,7 @@ namespace Features
         #region Properties
         public FeatureCollection Collection { get; set; } = new ();
         public MultiMeshController MeshController { get; set; }
-        public BoundsFinder BoundsFinder { get; set; }
+        public F_BoundsFinder BoundsFinder { get; set; }
 
         #endregion
 
@@ -67,6 +67,16 @@ namespace Features
         public virtual void EnableShadows() => MeshController.EnableShadows();
         public virtual void ReplaceMesh(Mesh mesh) => MeshController.ReplaceMesh(mesh);
         public virtual void ResetMeshToDefault() => MeshController.ResetMeshToDefault();
+        // Forward all the outline methods
+        public virtual void ToggleOutline() => MeshController.ToggleOutline();
+        public virtual void EnableOutline() => MeshController.EnableOutline();
+        public virtual void DisableOutline() => MeshController.DisableOutline();
+        public virtual void SetOutline(bool active) => MeshController.SetOutline(active);
+        public virtual void SetOutlineColor(Color color) => MeshController.SetOutlineColor(color);
+        public virtual void SetOutlineThickness(float thickness) => MeshController.SetOutlineThickness(thickness);
+        public virtual void SetOutlineVisible() => MeshController.SetOutlineVisible();
+        public virtual void SetOutlineInvisible() => MeshController.SetOutlineInvisible();
+        public virtual void SetOutlineVisibility(bool visible) => MeshController.SetOutlineVisibility(visible);
         #endregion
         #endregion
     }

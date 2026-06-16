@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Features
 {
-    public class Interactable : Feature
+    public class F_Interactable : Feature
     {
 
         public Action<InteractionContext> OnInteraction { get; set; }
         protected List<Func<InteractionContext, bool>> _conditions = new();
 
-        public Interactable(IFeatureCollection owner) : base(owner)
+        public F_Interactable(IFeatureCollection owner) : base(owner)
         {
         }
 

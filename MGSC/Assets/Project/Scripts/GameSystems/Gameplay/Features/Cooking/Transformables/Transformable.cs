@@ -1,7 +1,6 @@
 
 
 using System;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace Features
 {
@@ -26,9 +25,17 @@ namespace Features
         public FeatureCollection Collection { get; set; } = new();
         public Conditions Conditions { get; set; }
 
-
+        /// <summary>
+        /// OnTransformation is invoked immediately every time the transformable is transformed
+        /// </summary>
         public Action OnTransformation { get; set; }
+        /// <summary>
+        /// OnBeginTransformation is invoked when a transformation isn't instantaneous and is started.
+        /// </summary>
         public Action OnBeginTransformation { get; set; }
+        /// <summary>
+        /// OnEndTransformation is invoked right after OnTransformation every time the transformable is transformed
+        /// </summary>
         public Action OnEndTransformation { get; set; }
 
         #endregion

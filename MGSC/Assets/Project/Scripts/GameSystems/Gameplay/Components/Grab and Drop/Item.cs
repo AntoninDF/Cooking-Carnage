@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Adds every necessary item behaviour
 /// </summary>
-[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(MeshCollider))]
 public class Item : MonoBehaviour, IFeatureCollection
 {
     #region Properties
@@ -16,17 +16,20 @@ public class Item : MonoBehaviour, IFeatureCollection
 
 
     public FeatureCollection Collection { get; set; } = new();
-    public Grabbable Grabbable {get; set;}
-    public GoToAnimation Anim { get; set; }
-    public Collider Collider { get; set; }
-    public LookAtTarget LookAtTarget { get; set; }
-    public Interactable Interactable { get; set; }
-    public BoundsFinder Bounds { get; set; }
+    public F_Grabbable Grabbable {get; set;}
+    public F_GoToAnimation Anim { get; set; }
+    public F_LookAtTarget LookAtTarget { get; set; }
+    public F_Interactable Interactable { get; set; }
+    public MeshCollider Collider { get; set; }
+    public F_BoundsFinder Bounds { get; set; }
     #endregion
 
     #region Fields
 
+    [SerializeField] protected ModelController defaultModel;
     protected Bounds bounds;
+
+    protected ModelController activeModel;
 
     #endregion
 
@@ -34,8 +37,10 @@ public class Item : MonoBehaviour, IFeatureCollection
 
     protected virtual void Awake()
     {
-        Collider = GetComponent<Collider>();
-
+        Collider = GetComponent<MeshCollider>();
+        if (defaultModel == null)
+            defaultModel = GetComponent<ModelController>();
+        SetActiveModel(defaultModel);
 
         Grabbable = new(this);
         Anim = new(this, transform);
@@ -46,6 +51,10 @@ public class Item : MonoBehaviour, IFeatureCollection
 
         BindEvents();
     }
+    protected virtual void Start()
+    {
+        Collection.LateSetup();
+    }
     /// <summary>
     /// BindEvents is called in Awake. It should not depend on other objects being initialized.
     /// </summary>
@@ -53,6 +62,11 @@ public class Item : MonoBehaviour, IFeatureCollection
     {
         Grabbable.OnGrab += TriggerAnim;
         Interactable.OnInteraction += TryInteract;
+        if (defaultModel != null)
+        {
+            LookAtTarget.OnStartLookAt += defaultModel.EnableOutline;
+            LookAtTarget.OnStopLookAt += defaultModel.DisableOutline;
+        }
     }
 
     protected void TriggerAnim()
@@ -65,7 +79,7 @@ public class Item : MonoBehaviour, IFeatureCollection
             // Go to world origin
             Anim.GoTo(Vector3.down * Bounds.FindLocalLowestPoint());
         }
-        if (Grabbable.Container.TryGetSibling(out LookAtTarget lookTarget))
+        if (Grabbable.Container.TryGetSibling(out F_LookAtTarget lookTarget))
         {
             // Go to the new container at the spot pointed at (for surface containers)
             Anim.GoTo(containerTransform, lookTarget.LookPosition + Vector3.down * Bounds.FindLocalLowestPoint());
@@ -88,6 +102,23 @@ public class Item : MonoBehaviour, IFeatureCollection
             container.RequestGrab(Grabbable);
         }
     }
+
+    public void SetActiveModel(ModelController model)
+    {
+        if (activeModel != null)
+        {
+            activeModel.SetActive(false);
+        }
+
+        activeModel = model;
+        if (activeModel == null)
+            return;
+        activeModel.SetActive(true);
+        Mesh colliderMesh = activeModel.MeshController.GetCombinedMeshes(transform);
+        Collider.sharedMesh = colliderMesh;
+    }
     #endregion
+
+    
 }
 

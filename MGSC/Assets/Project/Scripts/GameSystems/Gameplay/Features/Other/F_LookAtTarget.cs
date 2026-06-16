@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Features
 {
-    public class LookAtTarget : Feature
+    public class F_LookAtTarget : Feature
     {
 
         public Transform transform { get; set; }
@@ -45,7 +45,7 @@ namespace Features
         private int _lastCheckedFrame;
         #endregion
 
-        public LookAtTarget(IFeatureCollection owner, Transform transform) : base(owner)
+        public F_LookAtTarget(IFeatureCollection owner, Transform transform) : base(owner)
         {
             this.transform = transform;
         }

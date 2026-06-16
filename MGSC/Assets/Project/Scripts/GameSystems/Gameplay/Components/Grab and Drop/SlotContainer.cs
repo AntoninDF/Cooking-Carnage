@@ -9,9 +9,9 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
 {
     public FeatureCollection Collection { get; set; } = new();
 
-    public Grabbable HeldItem => Container.HeldItem;
+    public F_Grabbable HeldItem => Container.HeldItem;
     public F_SoloContainer Container { get; set; }
-    public Interactable Interactable { get; set; }
+    public F_Interactable Interactable { get; set; }
 
     public bool IsInteractable
     {

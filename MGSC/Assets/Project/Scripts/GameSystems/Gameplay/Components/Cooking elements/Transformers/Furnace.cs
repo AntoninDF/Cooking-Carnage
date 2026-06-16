@@ -5,7 +5,7 @@ using UnityEngine;
 public class Furnace : MonoBehaviour, IFeatureCollection
 {
     public FeatureCollection Collection { get; set; } = new();
-    public Interactable Interactable { get; set;  }
+    public F_Interactable Interactable { get; set;  }
     public F_SoloContainer Container { get; set; }
     public Cooker Cooker { get; set; }
 
@@ -20,7 +20,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     {
         Interactable = new(this);
         Container = new (this, itemSlot);
-        Container.Filter.AddCondition(item => item is Feature feature && feature.TryGetSibling<Cookable>(out var temp));
+        Container.Filter.AddCondition(item => item is Feature feature && feature.TryGetSibling<F_Cookable>(out var temp));
         Cooker = new(this);
 
         BindEvents();
@@ -36,7 +36,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     {
         if (button != null)
         {
-            if (button.TryGetFeature(out Interactable interactable))
+            if (button.TryGetFeature(out F_Interactable interactable))
             {
                 interactable.OnInteraction += TryStartCooking;
             }
@@ -66,7 +66,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     private void TryStartCooking(InteractionContext context)
     {
         if (Container.HeldItem == null) return;
-        if (!Container.HeldItem.TryGetSibling(out Cookable cookable, true) || !cookable.CanBeTransformed) return;
+        if (!Container.HeldItem.TryGetSibling(out F_Cookable cookable, true) || !cookable.CanBeTransformed) return;
 
         Cooker.RequestStartTransformation(cookable);
     }

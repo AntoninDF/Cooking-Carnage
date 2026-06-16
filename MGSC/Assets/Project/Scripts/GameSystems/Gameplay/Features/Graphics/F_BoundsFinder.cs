@@ -2,11 +2,11 @@ using UnityEngine;
 
 namespace Features
 {
-    public class BoundsFinder : Feature
+    public class F_BoundsFinder : Feature
     {
         public Transform transform { get; set; }
         public Bounds LastComputedBounds { get; set; }
-        public BoundsFinder(IFeatureCollection owner, Transform transform) : base(owner)
+        public F_BoundsFinder(IFeatureCollection owner, Transform transform) : base(owner)
         {
             this.transform = transform;
         }

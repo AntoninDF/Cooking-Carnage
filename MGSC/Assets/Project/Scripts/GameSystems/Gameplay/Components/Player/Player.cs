@@ -21,13 +21,13 @@ public class Player : MonoBehaviour, IFeatureCollection
         PlayerActor.SortFeaturesByDistance = true;
         PlayerActor.GetAllFeaturesInSight = false;
         PlayerInputs = new PlayerInputReader(this);
-        Collection.LateSetup();
 
         BindPlayerActions();
         AddInteractions();
     }
     void Start()
     {
+        Collection.LateSetup();
         if (hand != null)
         {
             Container = hand.Container;
@@ -55,20 +55,20 @@ public class Player : MonoBehaviour, IFeatureCollection
 
     void AddInteractions()
     {
-        PlayerActor.AddPlayerAction(typeof(Interactable), PlayerActionType.Primary,
+        PlayerActor.AddPlayerAction(typeof(F_Interactable), PlayerActionType.Primary,
             (feature) =>
             {
-                var obj = feature as Interactable;
+                var obj = feature as F_Interactable;
                 return obj.TryInteract(new InteractionContext(this));
             }
             );
 
-        PlayerActor.AddConstantAction(typeof(LookAtTarget),
+        PlayerActor.AddConstantAction(typeof(F_LookAtTarget),
             (feature) =>
             {
                 // The look at target is always looked at by default, since it is only triggered if in line of sight.
                 // So there is no need to check with CheckIfLookedAt().
-                var obj = feature as LookAtTarget;
+                var obj = feature as F_LookAtTarget;
                 obj.IsLookedAt = true;
                 obj.LookPosition = PlayerActor.LookPosition;
                 return true;
@@ -80,5 +80,13 @@ public class Player : MonoBehaviour, IFeatureCollection
     public Transform GetCameraTransform()
     {
         return Camera.main.transform;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(Camera.main.transform.position, PlayerActor.LookPosition);
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(Camera.main.transform.position, Camera.main.ScreenToWorldPoint(new Vector3(1920/2, 1080/2, 0.5f)));
     }
 }

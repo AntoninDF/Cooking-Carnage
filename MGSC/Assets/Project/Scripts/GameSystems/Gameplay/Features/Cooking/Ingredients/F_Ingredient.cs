@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Features
 {
-    public class Ingredient : Feature, IFeatureCollection
+    public class F_Ingredient : Feature, IFeatureCollection
     {
         #region Properties
 
@@ -15,8 +15,8 @@ namespace Features
 
 
         #region Methods
-        public Ingredient(IFeatureCollection owner) : base(owner) { }
-        public Ingredient(IFeatureCollection owner, SO_Ingredient model) : base(owner)
+        public F_Ingredient(IFeatureCollection owner) : base(owner) { }
+        public F_Ingredient(IFeatureCollection owner, SO_Ingredient model) : base(owner)
         {
             Model = model;
         }

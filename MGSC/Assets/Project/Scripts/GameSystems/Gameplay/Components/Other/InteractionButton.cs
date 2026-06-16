@@ -6,7 +6,7 @@ using UnityEngine;
 public class InteractionButton : MonoBehaviour, IFeatureCollection
 {
     public FeatureCollection Collection { get; set; } = new();
-    public Interactable Interactable;
+    public F_Interactable Interactable;
     public Action<InteractionContext> OnInteraction => Interactable.OnInteraction;
 
     void Awake()

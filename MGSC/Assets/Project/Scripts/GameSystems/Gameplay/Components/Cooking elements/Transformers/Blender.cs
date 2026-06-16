@@ -18,7 +18,7 @@ namespace Cooking
 
         public F_SoloContainer Container { get; set; }
         public Cutter Cutter { get; set; }
-        public Interactable Button;
+        public F_Interactable Button;
         #endregion
 
         #region Fields
@@ -79,7 +79,7 @@ namespace Cooking
         private void TryCut(InteractionContext context)
         {
             if (Container.HeldItem == null) return;
-            if (!Container.HeldItem.TryGetSibling(out Cuttable cuttable, true) || !cuttable.CanBeTransformed) return;
+            if (!Container.HeldItem.TryGetSibling(out F_Cuttable cuttable, true) || !cuttable.CanBeTransformed) return;
             if (!Cutter.CanStartTransformation(cuttable)) return;
             Cutter.RequestStartTransformation(cuttable);
         }

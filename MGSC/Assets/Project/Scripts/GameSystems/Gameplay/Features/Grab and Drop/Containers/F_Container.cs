@@ -13,14 +13,14 @@ namespace Features
         /// <summary>
         /// Returns the first/default/only object contained by the container, or null if there is none.
         /// </summary>
-        public virtual Grabbable HeldItem { get; protected set; }
+        public virtual F_Grabbable HeldItem { get; protected set; }
         public Transform transform { get; set; }
         public Conditions Filter { get; set; }
 
         public FeatureCollection Collection { get; set; } = new();
 
-        public Action<Grabbable> OnGrab;
-        public Action<Grabbable> OnDrop;
+        public Action<F_Grabbable> OnGrab;
+        public Action<F_Grabbable> OnDrop;
 
         protected F_Container(IFeatureCollection owner) : base(owner)
         {
@@ -37,14 +37,14 @@ namespace Features
 
         private void SetupFilter()
         {
-            Filter.AddCondition(item => item is Grabbable);
+            Filter.AddCondition(item => item is F_Grabbable);
         }
 
 
-        public abstract bool RequestGrab(Grabbable item);
-        public abstract bool RequestDrop(Grabbable item = null);
+        public abstract bool RequestGrab(F_Grabbable item);
+        public abstract bool RequestDrop(F_Grabbable item = null);
         public abstract void Empty();
-        public virtual bool CanGrab(Grabbable item)
+        public virtual bool CanGrab(F_Grabbable item)
         {
             if (!Enabled) return false;
             if (item == null) return false;
@@ -55,7 +55,7 @@ namespace Features
 
             return true;
         }
-        public virtual bool CanDrop(Grabbable item = null)
+        public virtual bool CanDrop(F_Grabbable item = null)
         {
             if (!Enabled) return false;
             if (IsLocked) return false;

@@ -17,8 +17,8 @@ namespace Features
         #endregion
 
 
-        private Action<Grabbable> Grab => (item) => RequestGrab(item);
-        private Action<Grabbable> Drop => (item) => RequestDrop(item);
+        private Action<F_Grabbable> Grab => (item) => RequestGrab(item);
+        private Action<F_Grabbable> Drop => (item) => RequestDrop(item);
 
 
 
@@ -35,7 +35,7 @@ namespace Features
         {
             base.LateSetup();
             Container = new(this);
-            this.Container.Filter.AddCondition(item => CanGrab(item as Grabbable));
+            this.Container.Filter.AddCondition(item => CanGrab(item as F_Grabbable));
             SetupSlots();
         }
 
@@ -82,16 +82,16 @@ namespace Features
             action -= invocation;
             return true;
         }
-        public override bool RequestGrab(Grabbable item) => TryGrab(item);
+        public override bool RequestGrab(F_Grabbable item) => TryGrab(item);
 
-        private bool TryGrab(Grabbable item)
+        private bool TryGrab(F_Grabbable item)
         {
             if (!CanGrab(item)) return false;
             GrabByFirstAvailableSlot(item);
             return true;
         }
 
-        public override bool CanGrab(Grabbable grabbable)
+        public override bool CanGrab(F_Grabbable grabbable)
         {
             if (!base.CanGrab(grabbable)) return false;
             var slot = GetFirstAvailableSlot(grabbable);
@@ -102,21 +102,21 @@ namespace Features
 
         
 
-        public override bool RequestDrop(Grabbable item = null) => TryDrop(item);
-        private bool TryDrop(Grabbable item)
+        public override bool RequestDrop(F_Grabbable item = null) => TryDrop(item);
+        private bool TryDrop(F_Grabbable item)
         {
             if (!CanDrop(item)) return false;
             DropByFirstAvailableSlot(item);
             return true;
         }
-        public override bool CanDrop(Grabbable item = null)
+        public override bool CanDrop(F_Grabbable item = null)
         {
             if (!base.CanDrop(item)) return false;
             if (!Container.CanDrop(item)) return false;
 
             return true;
         }
-        private F_SoloContainer GetFirstAvailableSlot(Grabbable grabbable)
+        private F_SoloContainer GetFirstAvailableSlot(F_Grabbable grabbable)
         {
             foreach (var slot in SoloContainers)
             {
@@ -125,7 +125,7 @@ namespace Features
             }
             return null;
         }
-        private void DropByFirstAvailableSlot(Grabbable grabbable)
+        private void DropByFirstAvailableSlot(F_Grabbable grabbable)
         {
             var slot = GetFirstAvailableSlot(grabbable);
             if (slot != null)
@@ -135,7 +135,7 @@ namespace Features
             }
         }
 
-        private void GrabByFirstAvailableSlot(Grabbable grabbable)
+        private void GrabByFirstAvailableSlot(F_Grabbable grabbable)
         {
             var slot = GetFirstAvailableSlot(grabbable);
             if (slot != null)

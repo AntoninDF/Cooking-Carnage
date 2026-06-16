@@ -8,20 +8,20 @@ using Features;
 public class Ingredient : Item
 {
     #region Properties
-    public SO_Ingredient Model => _model;
+    public SO_Ingredient Model => data;
     public bool IsBaseIngredient => Model.IsBaseIngredient;
-    public Features.Ingredient IngredientFeature { get; set; }
-    public Cuttable Cuttable { get; set; }
-    public Cookable Cookable { get; set; }
+    public F_Ingredient IngredientFeature { get; set; }
+    public F_Cuttable Cuttable { get; set; }
+    public F_Cookable Cookable { get; set; }
 
     #endregion
 
     #region Fields
     [Header("Ingredient references")]
     [Tooltip("Data model for this ingredient")]
-    [SerializeField] protected SO_Ingredient _model;
-
-
+    [SerializeField] protected SO_Ingredient data;
+    [Tooltip("The collider that serves as viewing target for the player")]
+    [SerializeField] protected ModelController cutModel;
 
     #endregion
 
@@ -33,13 +33,18 @@ public class Ingredient : Item
         IngredientFeature = new(this, Model);
         Cuttable = new(this);
         Cookable = new(this);
-        //if (_model == null)
-            //throw new MissingReferenceException("Please assign an ingredient model in the inspector : " + name);
+        
+
+        if (cutModel != null)
+            Cuttable.OnTransformation += () => SetActiveModel(cutModel);
+
+
+        //if (data == null)
+        //throw new MissingReferenceException("Please assign an ingredient data in the inspector : " + name);
     }
-    void Start()
-    {
-        Collection.LateSetup();
-    }
+
+    
+
     #endregion
 
 }

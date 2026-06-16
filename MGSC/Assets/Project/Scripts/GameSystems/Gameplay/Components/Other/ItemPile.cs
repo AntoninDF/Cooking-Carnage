@@ -17,14 +17,14 @@ public class ItemPile : ObjectPile, IFeatureCollection
     #region Properties
 
 
-    public List<Grabbable> HeldItems { get; set; } = new();
+    public List<F_Grabbable> HeldItems { get; set; } = new();
 
 
     public bool IsLocked { get; set; }
 
     public bool Passthrough => true;
 
-    public Grabbable HeldItem
+    public F_Grabbable HeldItem
     {
         get
         {
