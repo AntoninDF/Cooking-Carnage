@@ -23,12 +23,12 @@ public partial class Client : MonoBehaviour, IFeatureCollection
         get => _currentOrder;
         set
         {
-            Debug.Log("Current order is accessed");
+            //Debug.Log("Current order is accessed");
             if (_currentOrder == value) return;
             _currentOrder = value;
             if (value != null)
             {
-                Debug.Log("Current order is set");
+                //Debug.Log("Current order is set");
                 OnNewOrder?.Invoke(value);
             }
         }

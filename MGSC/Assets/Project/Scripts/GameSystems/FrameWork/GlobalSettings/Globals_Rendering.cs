@@ -7,15 +7,40 @@ public static partial class Globals
         public static class Outline
         {
             public static Param<bool> AllowOutlines = true;
-            public static Param<UnityEngine.Material> DefaultMaterial = new Material(Shader.Find("CookingCarnage/SH_Outline"));
-            public static Param<float> Thickness = 0.1f;
+            public static Param<float> Thickness = 0.01f;
             public static Param<UnityEngine.Color> Color = UnityEngine.Color.white;
+            public static Param<OutlineMode> Mode = OutlineMode.Offset;
+            public static Param<OutlineOptions> Options => new OutlineOptions(Color, Thickness, Mode);
 
-            static Outline()
+            /// <summary>
+            /// Creates a new instance of an outline material setup with the global parameters
+            /// </summary>
+            /// <returns></returns>
+            public static Material GetDefaultMaterial()
             {
+                Material result = new Material(Shader.Find("CookingCarnage/SH_Outline"));
                 // Make sure the outline cull mode is correct. It can break even if the shader has the right cull mode set as defaut (idk why)
-                DefaultMaterial.Value.SetFloat("_CullMode", 1);
-                DefaultMaterial.Value.SetFloat("_CullModeForward", 1);
+                result.SetFloat("_CullMode", 1);
+                result.SetFloat("_CullModeForward", 1);
+                return result;
+            }
+
+            public enum OutlineMode { Scale, Offset }
+
+            [Serializable]
+            public struct OutlineOptions
+            {
+                
+                public Color Color;
+                public float Thickness;
+                public OutlineMode Mode;
+
+                public OutlineOptions(Color color, float thickness, OutlineMode mode)
+                {
+                    Color = color;
+                    Thickness = thickness;
+                    Mode = mode;
+                }
             }
         }
     }

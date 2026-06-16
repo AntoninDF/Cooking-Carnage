@@ -33,6 +33,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
 
     private void BindEvents()
     {
+        // WIP ?
     }
 
     public bool TryServe()

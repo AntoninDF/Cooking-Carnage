@@ -48,6 +48,7 @@ namespace Features
             for (int i = 0; i < Controllers.Length; i++)
             {
                 var Controller = Controllers[i];
+                if (Controller.Renderer.enabled == false) continue;
 
                 Matrix4x4 child = Controller.Renderer.transform.localToWorldMatrix;
                 Matrix4x4 parent = Matrix4x4.identity;
@@ -79,16 +80,6 @@ namespace Features
         public virtual void EnableShadows() => Apply(obj => obj.EnableShadows());
         public virtual void ReplaceMesh(Mesh mesh) => Apply(obj => obj.ReplaceMesh(mesh));
         public virtual void ResetMeshToDefault() => Apply(obj => obj.ResetMeshToDefault());
-        // Forward all the outline methods
-        public virtual void ToggleOutline() => Apply(obj => obj.ToggleOutline());
-        public virtual void EnableOutline() => Apply(obj => obj.EnableOutline());
-        public virtual void DisableOutline() => Apply(obj => obj.DisableOutline());
-        public virtual void SetOutline(bool active) => Apply(obj => obj.SetOutline(active));
-        public virtual void SetOutlineColor(Color color) => Apply(obj => obj.SetOutlineColor(color));
-        public virtual void SetOutlineThickness(float thickness) => Apply(obj => obj.SetOutlineThickness(thickness));
-        public virtual void SetOutlineVisible() => Apply(obj => obj.SetOutlineVisible());
-        public virtual void SetOutlineInvisible() => Apply(obj => obj.SetOutlineInvisible());
-        public virtual void SetOutlineVisibility(bool visible) => Apply(obj => obj.SetOutlineVisibility(visible));
 
         #endregion    
     }

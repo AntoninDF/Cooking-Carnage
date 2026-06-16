@@ -10,7 +10,6 @@ using UnityEngine.Events;
 namespace Cooking
 {
 
-
     public class Blender : MonoBehaviour, IFeatureCollection
     {
         #region Properties

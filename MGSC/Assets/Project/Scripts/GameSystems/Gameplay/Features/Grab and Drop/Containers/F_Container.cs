@@ -16,6 +16,7 @@ namespace Features
         public virtual F_Grabbable HeldItem { get; protected set; }
         public Transform transform { get; set; }
         public Conditions Filter { get; set; }
+        public bool AllowItemPlacedOnSurfaceRatherThanTransform;
 
         public FeatureCollection Collection { get; set; } = new();
 

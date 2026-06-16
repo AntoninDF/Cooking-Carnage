@@ -13,8 +13,6 @@ namespace Features
 
 		public FeatureCollection Collection { get; set; } = new();
 
-        public OutlineController OutlineController;
-
         #endregion
 
 
@@ -23,7 +21,6 @@ namespace Features
         {
 			Renderer = target;
 			DefaultState = new MeshRendererState(target);
-			OutlineController = new(this, target);
         }
 
 		public virtual void ResetToDefault()
@@ -91,20 +88,9 @@ namespace Features
 		public Mesh GetMesh()
 		{
 			if (Renderer.TryGetComponent(out MeshFilter filter))
-				return filter.mesh;
+				return filter.sharedMesh;
 			return new();
         }
-
-		// Forward all the outline methods
-		public virtual void ToggleOutline() => OutlineController.ToggleOutline();
-		public virtual void EnableOutline() => OutlineController.EnableOutline();
-		public virtual void DisableOutline() => OutlineController.DisableOutline();
-		public virtual void SetOutline(bool active) => OutlineController.SetOutline(active);
-		public virtual void SetOutlineColor(Color color) => OutlineController.SetColor(color);
-		public virtual void SetOutlineThickness(float thickness) => OutlineController.SetThickness(thickness);
-        public virtual void SetOutlineVisible() => OutlineController.SetVisible();
-        public virtual void SetOutlineInvisible() => OutlineController.SetInvisible();
-		public virtual void SetOutlineVisibility(bool visible) => OutlineController.SetVisibility(visible);
 
 
         #endregion

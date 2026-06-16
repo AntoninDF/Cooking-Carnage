@@ -340,7 +340,7 @@ GameObject:
   - component: {fileID: 7451567629354828775}
   - component: {fileID: 1857627047578693840}
   - component: {fileID: 368072395188174107}
-  - component: {fileID: 7230707049242695254}
+  - component: {fileID: 6760648227851162312}
   m_Layer: 7
   m_Name: P_Plate
   m_TagString: Untagged
@@ -403,6 +403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6aebbf6966ed742bc6d3062f00f7a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.Plate
+  defaultModel: {fileID: 0}
   _recipeBook: {fileID: 11400000, guid: 367f956cce92a474abe807c44ec4f8ab, type: 2}
   ContainerComponent: {fileID: 368072395188174107}
   RecipeComponent: {fileID: 0}
@@ -421,7 +422,7 @@ MonoBehaviour:
   slots: []
   detectSlots: 1
   lockItemsWhenAdded: 0
---- !u!114 &7230707049242695254
+--- !u!114 &6760648227851162312
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -433,38 +434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
-  Events:
-  - ActionPath:
-      ActionVariableName: OnStartLookAt
-      SerializedType:
-        m_Name: Action
-        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-      FeaturePath:
-        FeatureVariableName: LookAtTarget
-        SerializedType:
-          m_Name: LookAtTarget
-          m_AssemblyQualifiedName: Features.LookAtTarget, Assembly-CSharp, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        Path: []
-        OwningObject: {fileID: 1857627047578693840}
-    Event:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 5455638146099090410}
-          m_TargetAssemblyTypeName: 
-          m_MethodName: 
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+  Events: []
   references:
     version: 2
     RefIds: []
@@ -692,6 +662,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Features.ModelController
   _propagateChangesToChildren: 1
   _disableShadowsIfSmallerThan: 0.5
+  _outline:
+    Color: {r: 0, g: 0, b: 0, a: 0}
+    Thickness: 0
+    Mode: 0
 --- !u!1 &6130664868189106072
 GameObject:
   m_ObjectHideFlags: 0

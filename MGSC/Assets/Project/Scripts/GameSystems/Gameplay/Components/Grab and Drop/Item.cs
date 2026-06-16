@@ -64,8 +64,8 @@ public class Item : MonoBehaviour, IFeatureCollection
         Interactable.OnInteraction += TryInteract;
         if (defaultModel != null)
         {
-            LookAtTarget.OnStartLookAt += defaultModel.EnableOutline;
-            LookAtTarget.OnStopLookAt += defaultModel.DisableOutline;
+            LookAtTarget.OnStartLookAt += defaultModel.Outline.EnableOutline;
+            LookAtTarget.OnStopLookAt += defaultModel.Outline.DisableOutline;
         }
     }
 
@@ -79,7 +79,7 @@ public class Item : MonoBehaviour, IFeatureCollection
             // Go to world origin
             Anim.GoTo(Vector3.down * Bounds.FindLocalLowestPoint());
         }
-        if (Grabbable.Container.TryGetSibling(out F_LookAtTarget lookTarget))
+        if (Grabbable.Container.TryGetSibling(out F_LookAtTarget lookTarget) && Grabbable.Container.AllowItemPlacedOnSurfaceRatherThanTransform)
         {
             // Go to the new container at the spot pointed at (for surface containers)
             Anim.GoTo(containerTransform, lookTarget.LookPosition + Vector3.down * Bounds.FindLocalLowestPoint());

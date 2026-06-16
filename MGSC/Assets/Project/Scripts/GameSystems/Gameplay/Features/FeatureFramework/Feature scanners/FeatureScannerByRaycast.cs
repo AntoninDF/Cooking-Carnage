@@ -68,7 +68,6 @@ namespace Features
             foreach (RaycastHit hit in results)
             {
                 var go = hit.transform.gameObject;
-                Debug.Log("Looking at " + go.name);
                 if (go == null) continue;
 
                 if (hit.distance < minDistance)

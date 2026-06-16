@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Features
@@ -11,7 +10,8 @@ namespace Features
     public class OutlineController : Feature
     {
         #region Properties
-        public MeshRenderer Target { get; set; }
+        public Mesh Mesh { get; set; }
+        public Transform TargetParent { get; set; }
         public GameObject OutlineObject { get; set; }
         public MeshRenderer OutlineRenderer { get => outlineRenderer; set => outlineRenderer = value; }
         protected MeshRenderer outlineRenderer;
@@ -28,15 +28,22 @@ namespace Features
             set => SetThickness(value);
         }
         protected float thickness = Globals.Rendering.Outline.Thickness;
+        public Globals.Rendering.Outline.OutlineMode Mode
+        {
+            get => mode;
+            set => SetMode(value);
+        }
+        protected Globals.Rendering.Outline.OutlineMode mode = Globals.Rendering.Outline.Mode;
         public bool Visible { get => visible; set => SetVisibility(value); }
         protected bool visible = Globals.Rendering.Outline.AllowOutlines;
         #endregion
 
 
         #region Methods
-        public OutlineController(IFeatureCollection owner, MeshRenderer target) : base(owner)
+        public OutlineController(IFeatureCollection owner, Mesh target, Transform targetParent) : base(owner)
         {
-            Target = target;
+            Mesh = target;
+            TargetParent = targetParent;
             OnEnable += EnableOutline;
             OnDisable += DisableOutline;
 
@@ -53,18 +60,21 @@ namespace Features
         }
         public virtual void EnableOutline()
         {
-            Debug.Log("Enabling outline");
             enabled = true;
             if (OutlineObject == null)
             {
-                OutlineObject = MakeOutlineVariant(Target, out outlineRenderer);
+                OutlineObject = MakeOutlineVariant(Mesh, out outlineRenderer);
+                SetParent(TargetParent);
+                // Apply the parameters
+                SetColor(Color);
+                SetThickness(Thickness);
+                SetMode(Mode);
+                SetVisibility(Visible);
             }
             OutlineObject.SetActive(true);
         }
         public virtual void DisableOutline()
         {
-
-            Debug.Log("Disabling outline");
             enabled = false;
             if (OutlineObject == null) return;
             OutlineObject.SetActive(false);
@@ -78,43 +88,38 @@ namespace Features
             if (OutlineRenderer != null)
                 OutlineRenderer.enabled = visible;
         }
-
-        public GameObject MakeOutlineVariant(MeshRenderer target, out MeshRenderer outlineRenderer)
+        public void SetParent(Transform target)
+        {
+            if (OutlineObject == null || target == null) return;
+            // Place the object in the world and hierarchy
+            OutlineObject.transform.SetParent(target.transform);
+            OutlineObject.transform.localPosition = Vector3.zero;
+            OutlineObject.transform.localScale = Vector3.one;
+            OutlineObject.transform.localRotation = Quaternion.identity;
+            // Rename the object according to it's parent
+            OutlineObject.name = "Outline variant (" + target.name + ")";
+        }
+        public GameObject MakeOutlineVariant(Mesh target, out MeshRenderer outlineRenderer)
         {
             // Make an object dedicated to rendering the outline
             GameObject result = new("Outline variant (" + target.name + ")", typeof(MeshFilter), typeof(MeshRenderer));
             outlineRenderer = result.GetComponent<MeshRenderer>();
 
-            // Place the object in the world and hierarchy
-            result.transform.SetParent(target.transform);
-            result.transform.localPosition = Vector3.zero;
-            result.transform.localScale = Vector3.one;
-            result.transform.localRotation = Quaternion.identity;
-
-
-            // Apply the right mesh on said object
+            // Apply the right mesh on the outline object
             var filter = result.GetComponent<MeshFilter>();
-            filter.sharedMesh = target.GetComponent<MeshFilter>().sharedMesh;
+            filter.sharedMesh = target;
 
             // Shadows shouldn't be cast by the outline geometry
             outlineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
-            int matCount = target.sharedMaterials.Length;
-            Material outlineMat = Globals.Rendering.Outline.DefaultMaterial;
-
-            // 0 = Outline by scaling ; 1 = Outline by normal offset
-            outlineMat.SetInt("_OUTLINEMODE", 1);
+            int matCount = target.subMeshCount;
+            Material outlineMat = Globals.Rendering.Outline.GetDefaultMaterial();
 
             Material[] materials = new Material[matCount];
             for (int i = 0; i < matCount; i++)
                 materials[i] = new(outlineMat);
 
             outlineRenderer.sharedMaterials = materials;
-
-            // Apply the parameters
-            SetColor(Color);
-            SetThickness(Thickness);
-            SetVisibility(Visible);
 
             return result;
         }
@@ -138,6 +143,13 @@ namespace Features
             // Reapply
             OutlineRenderer.materials = newMaterials;
         }
+
+        public void SetParameters(Globals.Rendering.Outline.OutlineOptions parameters)
+        {
+            SetColor(parameters.Color);
+            SetThickness(parameters.Thickness);
+            SetMode(parameters.Mode);
+        }
         public void SetColor(Color color)
         {
             this.color = color;
@@ -156,7 +168,35 @@ namespace Features
 
             ApplyOnAllMaterials(mat => mat.SetFloat("_Thickness", thickness));
         }
+        public void SetMode(Globals.Rendering.Outline.OutlineMode mode)
+        {
+            this.mode = mode;
 
+            if (OutlineObject == null || OutlineRenderer == null)
+                return;
+
+            ApplyOnAllMaterials(mat => SetKeyWord(mat, "_OUTLINEMODE", mode));
+        }
+        /// <summary>
+        /// From StackOverflow https://discussions.unity.com/t/how-to-manipulate-a-shader-graph-enum-using-c/926912/5
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="material"></param>
+        /// <param name="parameterBaseName"></param>
+        /// <param name="selectedKeyword"></param>
+        private void SetKeyWord<T>(Material material, string parameterBaseName, T selectedKeyword) where T : Enum
+        {
+            var allKeywords = Enum.GetValues(typeof(T));
+            foreach (T keyword in allKeywords)
+            {
+                var keywordText = $"{parameterBaseName}_{keyword.ToString().ToUpper()}";
+
+                if (keyword.Equals(selectedKeyword))
+                    material.EnableKeyword(keywordText);
+                else
+                    material.DisableKeyword(keywordText);
+            }
+        }
         #endregion
     }
 
