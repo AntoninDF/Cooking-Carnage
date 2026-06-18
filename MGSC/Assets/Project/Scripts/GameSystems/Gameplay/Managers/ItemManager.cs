@@ -11,8 +11,6 @@ public class ItemManager : IManager
 
     #region Fields
     
-    Dictionary<string, List<Item>> _itemsByID = new Dictionary<string, List<Item>>();
-    
     List<Item> spawnItems = new List<Item>();
     
     List<Vector3> spawnPositions = new List<Vector3>(); //REFACTO
@@ -57,7 +55,7 @@ public class ItemManager : IManager
     public void PostInit()
     {
     }
-
+    
     private void DetectSpawnItems()
     {
         foreach (var item in Reference.GetAll<Item>())
@@ -71,12 +69,12 @@ public class ItemManager : IManager
         for (var index = spawnItems.Count - 1; index >= 0; index--)
         {
             var initialItem = spawnItems[index];
-            StoreCopy(initialItem);
 
             UpdateActiveList(initialItem);
         }
         */
     }
+
 
     private void UpdateActiveList(Item item)
     {
@@ -100,38 +98,92 @@ public class ItemManager : IManager
         }
         
     }
+    
 
-    private void TryStore(Item item, string id =null)
+    private List<Item> correspondingItems;
+    
+    public GameObject TrySpawn(GameObject item ,Vector3 position = default, Quaternion rotation = default, Transform parent = null)
     {
-        if (item == null )
+        if (!item.TryGetComponent<Item>(out Item prefabItem))
         {
-            this.Log(LogType.Error, item.name + " can't be stored because it is null");
+            this.Log(LogType.Error, item.name + " cannot be spawned because it isn't an item");
+            
+            return null;
+        }
+        
+        GameObject spawned = GameObject.Instantiate(item, position, rotation, parent);
+        
+        UpdateActiveList(item.GetComponent<Item>());
+        
+        this.Log(LogType.Log, "Spawned " + item.name);
+        
+        return spawned;
+    }
+    
+    
+    public void Despawn(Item itemToDespawn, bool reset = false)
+    {
+        if (itemToDespawn.gameObject == null)
+        {
+            this.Log(LogType.Error, itemToDespawn.name + " gameobject not found, probably destroyed ?");
             return;
         }
+        if (!itemToDespawn.gameObject.activeSelf)
+        {
+            this.Log(LogType.Warning, itemToDespawn.name + " is not active and probably shouldn't be despawned  "+itemToDespawn.GetEntityId().ToString());
+        }
+        itemToDespawn.gameObject.SetActive(false);
+        
 
+<<<<<<< Updated upstream:MGSC/Assets/Project/Scripts/GameSystems/Gameplay/Managers/ItemManager.cs
         if (id == null)
         {
             id = item.GetEntityId().ToString();
         }
+=======
+        UpdateActiveList(itemToDespawn);
+>>>>>>> Stashed changes:MGSC/Assets/Scripts/Game System/ItemManager.cs
         
-        if (!_itemsByID.ContainsKey(id))
-        {
-            _itemsByID.Add(id, new List<Item>());
-            this.Log(LogType.Log, id + " has been added");
-        }
+        this.Log(LogType.Log, "Despawned " + itemToDespawn.name );
         
-        if (!_itemsByID[id].Contains(item))
-        {
-            _itemsByID[id].Add(item);
-            this.Log(LogType.Log, "There is now "+ _itemsByID[id].Count + " item of ID "+ id);
-        }
-        else
-        {
-            this.Log(LogType.Log, item.name+ " has already been added at ID "+id);
-        }
+        GameObject.Destroy(itemToDespawn.gameObject);
         
     }
-    private void TryRemove(Item item, string id=null)
+    
+
+    public void DestroyAllActive()
+    {
+        //Debug.Log("Active items : " + activeItems.Count + " (being stored)");
+        for (var index = activeItems.Count-1; index >= 0; index--)
+        {
+            var item = activeItems[index];
+            Despawn(item);
+        }
+        activeItems.Clear();
+    }
+
+    public void SpawnInitialItems(int shiftCount)
+    {
+        this.Log("Spawning initial items");
+        int i = 0;
+        foreach (var item in spawnItems)
+        {
+            if (_maxSpawnItemsPerShift.ContainsKey(shiftCount))
+                if (_maxSpawnItemsPerShift[shiftCount] <= i)
+                    break;
+            this.Log(item.transform.position);
+            int index = spawnItems.IndexOf(item);
+            TrySpawn(item.gameObject, spawnPositions[index], item.transform.rotation, item.transform.parent);
+            i++;
+        }
+    }
+    
+    #region Item Pooling Archive 
+    /*
+     
+     Dictionary<string, List<Item>> _itemsByID = new Dictionary<string, List<Item>>();
+     
+     private void TryRemove(Item item, string id=null)
     {
         if (item == null)
         {
@@ -168,8 +220,63 @@ public class ItemManager : IManager
         
         return null;
     }
+     
+    private void TryStore(Item item, string id =null)
+    {
+        if (item == null )
+        {
+            this.Log(LogType.Error, item.name + " can't be stored because it is null");
+            return;
+        }
 
-    private List<Item> correspondingItems;
+        if (id == null)
+        {
+            id = item.GetEntityId().ToString();
+        }
+        
+        if (!_itemsByID.ContainsKey(id))
+        {
+            _itemsByID.Add(id, new List<Item>());
+            this.Log(LogType.Log, id + " has been added");
+        }
+        
+        if (!_itemsByID[id].Contains(item))
+        {
+            _itemsByID[id].Add(item);
+            this.Log(LogType.Log, "There is now "+ _itemsByID[id].Count + " item of ID "+ id);
+        }
+        else
+        {
+            this.Log(LogType.Log, item.name+ " has already been added at ID "+id);
+        }
+        
+    }
+    
+    public void Despawn(Item itemToStore, bool reset = false)
+    {
+        if (itemToStore.gameObject == null)
+        {
+            this.Log(LogType.Error, itemToStore.name + " gameobject not found, probably destroyed ?");
+            return;
+        }
+        if (!itemToStore.gameObject.activeSelf)
+        {
+            this.Log(LogType.Warning, itemToStore.name + " is not active and probably shouldn't be stored now at ID "+itemToStore.GetEntityId().ToString());
+        }
+        itemToStore.gameObject.SetActive(false);
+        //itemToStore.OnDisable();
+        itemToStore.transform.parent = _itemsPooled;
+        //if (itemToStore.Container != null)
+            //itemToStore.Container.RequestDrop(itemToStore);
+        UpdateActiveList(itemToStore);
+        
+        //if (reset || spawnItems.Contains(itemToStore))
+            //itemToStore.Reset();
+        this.Log(LogType.Log, "Despawned " + itemToStore.name + ", will now try to store it at ID "+itemToStore.GetEntityId().ToString());
+
+        TryStore(itemToStore);
+    }
+    
     public GameObject TrySpawn(GameObject prefab ,Vector3 position = default, Quaternion rotation = default, Transform parent = null)
     {
         if (!prefab.TryGetComponent<Item>(out Item prefabItem))
@@ -219,6 +326,7 @@ public class ItemManager : IManager
         
         return spawned;
     }
+<<<<<<< Updated upstream:MGSC/Assets/Scripts/Game System/ItemManager.cs
     GameObject Spawn(Item item, Vector3 position, Quaternion rotation, Transform parent)
     {
         item.transform.SetParent(parent);
@@ -304,4 +412,8 @@ public class ItemManager : IManager
     {
         SpawnInitialItems(1000);
     }
+=======
+    
+    */
+    #endregion
 }
