@@ -142,12 +142,8 @@ namespace GameSystem
         private void ResetAll()
         {
             this.Log("Reset everything for the next shift");
-<<<<<<< Updated upstream:MGSC/Assets/Project/Scripts/GameSystems/Gameplay/Managers/ShiftManager.cs
-            _itemManager.StoreAllActive();
-=======
 
-            ReferenceManager.Instance.GetManager<ItemManager>()?.DestroyAllActive();
->>>>>>> Stashed changes:MGSC/Assets/Scripts/Game System/ShiftManager.cs
+            Reference.GetManager<ItemManager>()?.DestroyAllActive();
 
             foreach (var blender in Reference.GetAll<Cooking.Blender>())
             {
@@ -195,18 +191,11 @@ namespace GameSystem
             }
 
             _dataManager.SaveGameData();
-
-<<<<<<< Updated upstream:MGSC/Assets/Project/Scripts/GameSystems/Gameplay/Managers/ShiftManager.cs
-            _itemManager.StoreAllActive();
+            
+            _itemManager.DestroyAllActive();
+            
             _itemManager.SpawnInitialItems(shiftCount);
-=======
 
-            im.SpawnInitialItems(shiftCount);
-
-            im.DestroyAllActive();
-            im.SpawnInitialItems(shiftCount);
-
->>>>>>> Stashed changes:MGSC/Assets/Scripts/Game System/ShiftManager.cs
         }
 
         public void Register()

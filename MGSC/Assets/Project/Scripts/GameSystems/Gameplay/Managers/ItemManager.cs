@@ -133,16 +133,8 @@ public class ItemManager : IManager
             this.Log(LogType.Warning, itemToDespawn.name + " is not active and probably shouldn't be despawned  "+itemToDespawn.GetEntityId().ToString());
         }
         itemToDespawn.gameObject.SetActive(false);
-        
 
-<<<<<<< Updated upstream:MGSC/Assets/Project/Scripts/GameSystems/Gameplay/Managers/ItemManager.cs
-        if (id == null)
-        {
-            id = item.GetEntityId().ToString();
-        }
-=======
         UpdateActiveList(itemToDespawn);
->>>>>>> Stashed changes:MGSC/Assets/Scripts/Game System/ItemManager.cs
         
         this.Log(LogType.Log, "Despawned " + itemToDespawn.name );
         
