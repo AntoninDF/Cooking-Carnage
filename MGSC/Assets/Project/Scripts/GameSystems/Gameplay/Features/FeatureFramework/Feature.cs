@@ -81,6 +81,11 @@ namespace Features
             if (Owner == null) return false;
             return Owner.TryGet(out feature, mustBeEnabled, scanOnlyDirectFeatures);
         }
+        public bool HasSibling(Type featureType, bool mustBeEnabled=false, bool scanOnlyDirectFeatures = false)
+        { 
+            if (Owner == null) return false;
+            return Owner.Has(featureType, mustBeEnabled, scanOnlyDirectFeatures);
+        }
         /// <summary>
         /// Scans every owner in this feature's hierarchy and tries to find one that has a transform.
         /// </summary>

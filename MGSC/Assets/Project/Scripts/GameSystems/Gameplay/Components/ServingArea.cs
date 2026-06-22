@@ -26,13 +26,14 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         else
         {
             MealSlot.Container.OnGrab += _ => TryServe();
-            MealSlot.Container.Filter += (obj) => obj is Grabbable grab && grab.TryGetSibling(out Servable temp, true);
+            MealSlot.Container.Filter += (obj) => obj is F_Grabbable grab && grab.TryGetSibling(out Servable temp, true);
         }
         BindEvents();
     }
 
     private void BindEvents()
     {
+        // WIP ?
     }
 
     public bool TryServe()

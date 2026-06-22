@@ -4,6 +4,9 @@ using UnityEngine.Rendering;
 
 namespace Features
 {
+    /// <summary>
+    /// MultiMeshController is just a MeshController that works on multiple Renderers. Every method is (and must be) forwarded from MeshController
+    /// </summary>
     public class MultiMeshController : Feature, IFeatureCollection
     {
         public MeshController[] Controllers { get; set; }
@@ -18,7 +21,56 @@ namespace Features
 
         public FeatureCollection Collection { get; set; } = new();
 
+        public Mesh[] GetMeshes()
+        {
+            Mesh[] meshes = new Mesh[Controllers.Length];
+            for (int i = 0; i < meshes.Length; i++)
+            {
+                meshes[i] = Controllers[i].GetMesh();
+            }
+            return meshes;
+        }
+        public Mesh GetFirstMesh()
+        {
+            if (Controllers.Length == 0) return new();
+            return Controllers[0].GetMesh();
+        }
+        /// <summary>
+        /// Combines all the meshes from all the renderers tracked into one mesh, taking into account their relative positions in the world.
+        /// </summary>
+        /// <returns>A single mesh representing all the meshes from the MeshRenderers, with one single submesh</returns>
+        public Mesh GetCombinedMeshes(Transform relativeTo=null, bool combineInactiveMeshes=false)
+        {
+            if (Controllers.Length == 0) return new();
 
+            CombineInstance[] instances = new CombineInstance[Controllers.Length];
+
+            for (int i = 0; i < Controllers.Length; i++)
+            {
+                var Controller = Controllers[i];
+                if (!Controller.Renderer.enabled && !combineInactiveMeshes) continue;
+
+                Matrix4x4 child = Controller.Renderer.transform.localToWorldMatrix;
+                Matrix4x4 parent = Matrix4x4.identity;
+                if (relativeTo != null)
+                    parent = relativeTo.worldToLocalMatrix;
+                instances[i] = new CombineInstance
+                {
+                    mesh = Controller.GetMesh(),
+                    transform = parent * child
+                };
+
+                if (!instances[i].mesh.isReadable)
+                {
+                    Debug.LogWarning("Tried to combine mesh '" + Controller.GetMesh().name + "', but it is not marked as read/write. Please check the import settings.");
+                }
+            }
+
+            Mesh result = new();
+            result.name = "Combined mesh";
+            result.CombineMeshes(instances);
+            return result;
+        }
         #region ForwardedMethods
 
         private void Apply(Action<MeshController> action) { foreach (var controller in Controllers) action(controller); }
@@ -26,7 +78,7 @@ namespace Features
         public virtual void ReplaceAllMaterialsBy(Material material) => Apply(obj => obj.ReplaceAllMaterialsBy(material));
         public virtual void AddMaterial(Material material) => Apply(obj => obj.AddMaterial(material));
         public virtual void ResetMaterialsToDefault() => Apply(obj => obj.ResetMaterialsToDefault());
-        public virtual void SetActive(bool active) => Apply(obj => obj.SetActive(active));
+        public virtual void SetActive(bool active) {Apply(obj => obj.SetActive(active)); enabled = active; }
         public virtual void AllowCastShadows(bool allowCastShadows) => Apply(obj => obj.AllowCastShadows(allowCastShadows));
         public virtual void AllowCastShadows(ShadowCastingMode shadowCastingMode) => Apply(obj => obj.AllowCastShadows(shadowCastingMode));
         public virtual void DisableShadows() => Apply(obj => obj.DisableShadows());

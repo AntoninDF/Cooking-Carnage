@@ -20,42 +20,42 @@ namespace Features
             HeldItem = null;
         }
 
-        public override bool RequestGrab(Grabbable item) => TryGrab(item);
+        public override bool RequestGrab(F_Grabbable item) => TryGrab(item);
 
-        public override bool RequestDrop(Grabbable item = null) => TryDrop(item);
-        protected bool TryGrab(Grabbable item)
+        public override bool RequestDrop(F_Grabbable item = null) => TryDrop(item);
+        protected bool TryGrab(F_Grabbable item)
         {
             if (!CanGrab(item))
                 return false;
             Grab(item);
             return true;
         }
-        protected bool TryDrop(Grabbable item = null)
+        protected bool TryDrop(F_Grabbable item = null)
         {
             if (!CanDrop(item))
                 return false;
             Drop(item);
             return true;
         }
-        protected virtual void Grab(Grabbable item)
+        protected virtual void Grab(F_Grabbable item)
         {
             HeldItem = item;
             item.Container?.RequestDrop(item);
             item.GetGrabbedBy(this);
             OnGrab?.Invoke(item);
         }
-        protected virtual void Drop(Grabbable item = null)
+        protected virtual void Drop(F_Grabbable item = null)
         {
             OnDrop?.Invoke(HeldItem);
             HeldItem = null;
         }
-        public override bool CanGrab(Grabbable item)
+        public override bool CanGrab(F_Grabbable item)
         {
             if (item == HeldItem) return false;
             if (HeldItem != null) return false;
             return base.CanGrab(item);
         }
-        public override bool CanDrop(Grabbable item = null)
+        public override bool CanDrop(F_Grabbable item = null)
         {
             if (item != null && item != HeldItem) return false;
             if (item == null && HeldItem == null) return false;

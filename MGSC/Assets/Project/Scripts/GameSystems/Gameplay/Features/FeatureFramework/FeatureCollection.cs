@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Features
@@ -38,6 +39,7 @@ namespace Features
         }
         /// <summary>
         /// Update should be called in Behaviour.Update()
+        /// To Do : Remove useless calls
         /// </summary>
         public void Update()
         {
@@ -65,6 +67,14 @@ namespace Features
         {
             feature = Get<T>(mustBeEnabled, scanOnlyDirectFeatures);
             return feature != null;
+        }
+        public bool Has(Type featureType, bool mustBeEnabled = false, bool scanOnlyDirectFeatures = false)
+        {
+            foreach (var feature in scanOnlyDirectFeatures ? DirectFeatures : AllFeatures)
+            {
+                if (featureType.IsInstanceOfType(feature) && (!mustBeEnabled || feature.Enabled)) return true;
+            }
+            return false;
         }
         #endregion
 

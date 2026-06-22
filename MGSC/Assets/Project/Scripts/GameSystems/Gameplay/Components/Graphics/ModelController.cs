@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -6,9 +7,10 @@ namespace Features
     public class ModelController : MonoBehaviour, IFeatureCollection
     {
         #region Properties
-        public FeatureCollection Collection { get; set; } = new ();
+        public FeatureCollection Collection { get; set; } = new();
         public MultiMeshController MeshController { get; set; }
-        public BoundsFinder BoundsFinder { get; set; }
+        public F_BoundsFinder BoundsFinder { get; set; }
+        public OutlineController Outline { get; set; }
 
         #endregion
 
@@ -17,7 +19,8 @@ namespace Features
         [SerializeField] private bool _propagateChangesToChildren = true;
         [Tooltip("Set it to 0 to disable. Otherwise, if the volume of the object's bounding box is smaller than this, the object won't cast shadows")]
         [SerializeField] private float _disableShadowsIfSmallerThan = 0.5f;
-
+        [SerializeField] private bool _allowCustomOutlineValues = false;
+        [SerializeField] private Globals.Rendering.Outline.OutlineOptions _outline = Globals.Rendering.Outline.Options;
         #endregion
 
         #region Methods
@@ -26,17 +29,29 @@ namespace Features
             
             BoundsFinder = new(this, transform);
 
-
             MeshController = new(this, DetectControlledRenderers());
 
+            Outline = new(this, MeshController.GetCombinedMeshes(transform), transform);
+            
+            if (!_allowCustomOutlineValues)
+            {
+                _outline = Globals.Rendering.Outline.Options;
+            }
         }
 
         private void Start()
         {
-
+            Outline.SetParameters(_outline);
+            MeshController.OnDisable += Outline.DisableOutline;
+        }
+        void OnValidate()
+        {
+            if (Outline != null)
+                Outline.SetParameters(_outline);
         }
         private MeshRenderer[] DetectControlledRenderers()
         {
+            Debug.Log("Detecting renderers");
             MeshRenderer[] result;
             if (_propagateChangesToChildren)
                 result = GetComponentsInChildren<MeshRenderer>();
@@ -55,7 +70,7 @@ namespace Features
         
 
         #region Forwarded
-
+        public virtual Mesh GetCombinedMeshes(Transform relativeTo=null) => MeshController.GetCombinedMeshes(relativeTo);
         public virtual void ResetToDefault() => MeshController.ResetToDefault();
         public virtual void ReplaceAllMaterialsBy(Material material) => MeshController.ReplaceAllMaterialsBy(material);
         public virtual void AddMaterial(Material material) => MeshController.AddMaterial(material);
@@ -67,6 +82,7 @@ namespace Features
         public virtual void EnableShadows() => MeshController.EnableShadows();
         public virtual void ReplaceMesh(Mesh mesh) => MeshController.ReplaceMesh(mesh);
         public virtual void ResetMeshToDefault() => MeshController.ResetMeshToDefault();
+
         #endregion
         #endregion
     }

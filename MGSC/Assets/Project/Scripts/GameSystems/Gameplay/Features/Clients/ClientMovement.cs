@@ -50,7 +50,6 @@ namespace Features
         }
         public override void Update()
         {
-            base.Update();
             HasReachedDestination();
         }
 

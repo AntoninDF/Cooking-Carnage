@@ -1,17 +1,20 @@
 using UnityEngine;
 using Features;
 using System;
+using Unity.VisualScripting;
 
 /// <summary>
 /// The slot container can receive up to one IGrabbable object
 /// </summary>
+[RequireComponent(typeof(Collider))]
 public class SlotContainer : MonoBehaviour, IFeatureCollection
 {
     public FeatureCollection Collection { get; set; } = new();
 
-    public Grabbable HeldItem => Container.HeldItem;
+    public F_Grabbable HeldItem => Container.HeldItem;
     public F_SoloContainer Container { get; set; }
-    public Interactable Interactable { get; set; }
+    public F_Interactable Interactable { get; set; }
+    public F_LookAtTarget LookAtTarget { get; set; }
 
     public bool IsInteractable
     {
@@ -20,18 +23,25 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
     }
 
     #region Fields
-    [SerializeField] private bool isInteractable = true;
+    [SerializeField] protected bool isInteractable = true;
     [Tooltip("If the slot is passthrough, it will allow the player to grab the item by clicking " +
         "on the slot's collider as well as the ingredient, instead of just the ingredient")]
-    [SerializeField] private bool passThrough = true;
+    [SerializeField] protected bool passThrough = true;
+    [SerializeField] protected ModelController Model;
     #endregion
 
     void Awake()
     {
         Container = new(this);
         Interactable = new(this);
-        BindEvents();
+        LookAtTarget = new(this, transform);
         IsInteractable = isInteractable;
+    }
+    void Start()
+    {
+        BindEvents();
+
+        SetupMeshCollider();
     }
     void Reset()
     {
@@ -46,11 +56,17 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
         }
     }
 
-    private void BindEvents()
+    protected virtual void BindEvents()
     {
         Interactable.OnInteraction += OnInteract;
+        if (Model != null)
+        {
+            LookAtTarget.OnStartLookAt += Model.Outline.EnableOutline;
+            LookAtTarget.OnStopLookAt += Model.Outline.DisableOutline;
+
+        }
     }
-    private void OnInteract(InteractionContext context)
+    protected void OnInteract(InteractionContext context)
     {
         if (context.TryGetFeature(out F_Container container))
         {
@@ -60,5 +76,21 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
                 container.RequestGrab(Container.HeldItem);
             }
         }
+    }
+
+    protected void SetupMeshCollider()
+    {
+        if (Model == null) return;
+
+        MeshCollider col;
+        if (!TryGetComponent(out col))
+        {
+            foreach (var collider in transform.GetComponents<Collider>())
+            {
+                collider.enabled = false;
+            }
+            col = transform.AddComponent<MeshCollider>();
+        }
+        col.sharedMesh = Model.GetCombinedMeshes(transform);
     }
 }

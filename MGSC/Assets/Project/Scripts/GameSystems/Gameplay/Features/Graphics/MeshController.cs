@@ -1,13 +1,17 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Features
 {
-    public class MeshController : Feature
+    public class MeshController : Feature, IFeatureCollection
     {
 		#region Properties
 		public MeshRenderer Renderer { get; set; }
 		public virtual MeshRendererState DefaultState { get; set; }
+
+		public FeatureCollection Collection { get; set; } = new();
 
         #endregion
 
@@ -81,6 +85,13 @@ namespace Features
             if (Renderer.TryGetComponent(out MeshFilter filter))
                 filter.mesh = DefaultState.sharedMesh;
         }
+		public Mesh GetMesh()
+		{
+			if (Renderer.TryGetComponent(out MeshFilter filter))
+				return filter.sharedMesh;
+			return new();
+        }
+
 
         #endregion
     }

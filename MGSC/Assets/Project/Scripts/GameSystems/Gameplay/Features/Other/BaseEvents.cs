@@ -24,7 +24,6 @@ namespace Features
 
         public override void Update()
         {
-            base.Update();
             FrameUpdate?.Invoke();
         }
         public void InvokeCustomEvent0() => CustomEvent0?.Invoke();
