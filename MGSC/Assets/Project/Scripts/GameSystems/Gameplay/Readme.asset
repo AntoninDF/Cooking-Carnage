@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: Readme
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: 9266273b8f123004195741f969177dda, type: 3}
+  title: Gameplay
+  sections:
+  - heading: Features
+    text: "Features are the main types that define the behaviours of any gameplay
+      elements. Features are C# types that don't derive from MonoBehaviour, but that
+      derive from Feature. They are meant to be lightweight, as independant as possible,
+      and should work by composition (see \u2192 components)"
+    linkText: 
+    url: 
+  - heading: Components
+    text: Components are MonoBehaviours that work by composition. They store various
+      features, and implement the interface IFeatureCollection. The benefit of using
+      features and components is that we only program things once, and can reuse
+      them easily without copy-pasting code.
+    linkText: 
+    url: 
+  - heading: Data
+    text: Mostly ScriptableObjects, see the readme inside the data folder
+    linkText: 
+    url: 
+  - heading: Upgrades
+    text: ToDO
+    linkText: 
+    url: 
+  loadedLayout: 1
