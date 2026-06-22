@@ -1,5 +1,6 @@
 using System;
 using Controller;
+using Features;
 using NaughtyAttributes;
 using UI;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace GameSystem
     /// No other script should hold a reference to the GameInitializer
     /// </summary>
     [HideScriptField]
-    public class GameInitializer : MonoBehaviour
+    public class GameInitializer : MonoBehaviour, IFeatureCollection
     {
         #region Fields
 
@@ -23,6 +24,8 @@ namespace GameSystem
         
         [Expandable]
         [SerializeField] private SO_DebugProfile _debugProfile;
+
+        public FeatureCollection Collection { get; set; } = new FeatureCollection();
 
         // PRIVATE FIELDS
 

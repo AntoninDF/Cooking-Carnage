@@ -26,7 +26,7 @@ public class Plate : Item
 
 
 
-    Features.F_MultiSlotContainer Container;
+    F_MultiSlotContainer Container;
     #endregion
         
         

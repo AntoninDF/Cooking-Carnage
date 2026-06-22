@@ -39,7 +39,7 @@ namespace Features
         /// Combines all the meshes from all the renderers tracked into one mesh, taking into account their relative positions in the world.
         /// </summary>
         /// <returns>A single mesh representing all the meshes from the MeshRenderers, with one single submesh</returns>
-        public Mesh GetCombinedMeshes(Transform relativeTo=null)
+        public Mesh GetCombinedMeshes(Transform relativeTo=null, bool combineInactiveMeshes=false)
         {
             if (Controllers.Length == 0) return new();
 
@@ -48,7 +48,7 @@ namespace Features
             for (int i = 0; i < Controllers.Length; i++)
             {
                 var Controller = Controllers[i];
-                if (Controller.Renderer.enabled == false) continue;
+                if (!Controller.Renderer.enabled && !combineInactiveMeshes) continue;
 
                 Matrix4x4 child = Controller.Renderer.transform.localToWorldMatrix;
                 Matrix4x4 parent = Matrix4x4.identity;
@@ -59,6 +59,11 @@ namespace Features
                     mesh = Controller.GetMesh(),
                     transform = parent * child
                 };
+
+                if (!instances[i].mesh.isReadable)
+                {
+                    Debug.LogWarning("Tried to combine mesh '" + Controller.GetMesh().name + "', but it is not marked as read/write. Please check the import settings.");
+                }
             }
 
             Mesh result = new();
@@ -73,7 +78,7 @@ namespace Features
         public virtual void ReplaceAllMaterialsBy(Material material) => Apply(obj => obj.ReplaceAllMaterialsBy(material));
         public virtual void AddMaterial(Material material) => Apply(obj => obj.AddMaterial(material));
         public virtual void ResetMaterialsToDefault() => Apply(obj => obj.ResetMaterialsToDefault());
-        public virtual void SetActive(bool active) => Apply(obj => obj.SetActive(active));
+        public virtual void SetActive(bool active) {Apply(obj => obj.SetActive(active)); enabled = active; }
         public virtual void AllowCastShadows(bool allowCastShadows) => Apply(obj => obj.AllowCastShadows(allowCastShadows));
         public virtual void AllowCastShadows(ShadowCastingMode shadowCastingMode) => Apply(obj => obj.AllowCastShadows(shadowCastingMode));
         public virtual void DisableShadows() => Apply(obj => obj.DisableShadows());

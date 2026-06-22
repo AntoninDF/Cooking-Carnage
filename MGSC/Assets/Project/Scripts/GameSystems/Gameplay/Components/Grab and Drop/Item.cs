@@ -40,7 +40,6 @@ public class Item : MonoBehaviour, IFeatureCollection
         Collider = GetComponent<MeshCollider>();
         if (defaultModel == null)
             defaultModel = GetComponent<ModelController>();
-        SetActiveModel(defaultModel);
 
         Grabbable = new(this);
         Anim = new(this, transform);
@@ -49,6 +48,7 @@ public class Item : MonoBehaviour, IFeatureCollection
         Bounds.Get(out bounds);
         Interactable = new(this);
 
+        SetActiveModel(defaultModel);
         BindEvents();
     }
     protected virtual void Start()
@@ -62,11 +62,6 @@ public class Item : MonoBehaviour, IFeatureCollection
     {
         Grabbable.OnGrab += TriggerAnim;
         Interactable.OnInteraction += TryInteract;
-        if (defaultModel != null)
-        {
-            LookAtTarget.OnStartLookAt += defaultModel.Outline.EnableOutline;
-            LookAtTarget.OnStopLookAt += defaultModel.Outline.DisableOutline;
-        }
     }
 
     protected void TriggerAnim()
@@ -108,16 +103,27 @@ public class Item : MonoBehaviour, IFeatureCollection
         if (activeModel != null)
         {
             activeModel.SetActive(false);
+            activeModel.gameObject.SetActive(false);
+            LookAtTarget.OnStartLookAt -= activeModel.Outline.EnableOutline;
+            LookAtTarget.OnStopLookAt -= activeModel.Outline.DisableOutline;
         }
 
         activeModel = model;
         if (activeModel == null)
             return;
+
+        Debug.Log("Setting active...");
         activeModel.gameObject.SetActive(true);
-        Debug.Log("MeshControllers : " + activeModel.MeshController.Controllers.Length);
         activeModel.SetActive(true);
-        Mesh colliderMesh = activeModel.MeshController.GetCombinedMeshes(transform);
+        Debug.Log("Has set active");
+
+        Debug.Log("MeshControllers : " + activeModel.MeshController.Controllers.Length);
+        Mesh colliderMesh = activeModel.MeshController.GetCombinedMeshes(transform, true);
+        Debug.Log("Collider mesh set");
         Collider.sharedMesh = colliderMesh;
+
+        LookAtTarget.OnStartLookAt += activeModel.Outline.EnableOutline;
+        LookAtTarget.OnStopLookAt += activeModel.Outline.DisableOutline;
     }
     #endregion
 

@@ -19,6 +19,7 @@ namespace Features
         [SerializeField] private bool _propagateChangesToChildren = true;
         [Tooltip("Set it to 0 to disable. Otherwise, if the volume of the object's bounding box is smaller than this, the object won't cast shadows")]
         [SerializeField] private float _disableShadowsIfSmallerThan = 0.5f;
+        [SerializeField] private bool _allowCustomOutlineValues = false;
         [SerializeField] private Globals.Rendering.Outline.OutlineOptions _outline = Globals.Rendering.Outline.Options;
         #endregion
 
@@ -32,11 +33,16 @@ namespace Features
 
             Outline = new(this, MeshController.GetCombinedMeshes(transform), transform);
             
+            if (!_allowCustomOutlineValues)
+            {
+                _outline = Globals.Rendering.Outline.Options;
+            }
         }
 
         private void Start()
         {
             Outline.SetParameters(_outline);
+            MeshController.OnDisable += Outline.DisableOutline;
         }
         void OnValidate()
         {
@@ -45,6 +51,7 @@ namespace Features
         }
         private MeshRenderer[] DetectControlledRenderers()
         {
+            Debug.Log("Detecting renderers");
             MeshRenderer[] result;
             if (_propagateChangesToChildren)
                 result = GetComponentsInChildren<MeshRenderer>();

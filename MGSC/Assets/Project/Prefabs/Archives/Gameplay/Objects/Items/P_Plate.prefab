@@ -136,6 +136,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1907422649916565476
 GameObject:
@@ -327,6 +328,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &3612904375386818980
 GameObject:
@@ -403,7 +405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6aebbf6966ed742bc6d3062f00f7a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.Plate
-  defaultModel: {fileID: 0}
+  defaultModel: {fileID: 1285799769407449856}
   _recipeBook: {fileID: 11400000, guid: 367f956cce92a474abe807c44ec4f8ab, type: 2}
   ContainerComponent: {fileID: 368072395188174107}
   RecipeComponent: {fileID: 0}
@@ -419,7 +421,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fec9a93a78252747a2f2b22401a4f75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MultiSlotContainer
-  slots: []
+  slots:
+  - {fileID: 7340294628020263516}
+  - {fileID: 5348711314295999115}
+  - {fileID: 1922115560366162396}
+  - {fileID: 0}
   detectSlots: 1
   lockItemsWhenAdded: 0
 --- !u!114 &6760648227851162312
@@ -541,6 +547,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -662,6 +669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Features.ModelController
   _propagateChangesToChildren: 1
   _disableShadowsIfSmallerThan: 0.5
+  _allowCustomOutlineValues: 0
   _outline:
     Color: {r: 0, g: 0, b: 0, a: 0}
     Thickness: 0
@@ -1365,7 +1373,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
@@ -1677,7 +1685,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
@@ -1983,7 +1991,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
