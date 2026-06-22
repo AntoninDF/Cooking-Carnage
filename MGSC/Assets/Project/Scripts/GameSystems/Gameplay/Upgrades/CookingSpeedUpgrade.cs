@@ -1,8 +1,6 @@
-using Cooking;
-using GameSystem;
-using NUnit.Framework;
-using System;
+
 using System.Collections.Generic;
+using Project.Scripts.GameSystems.Gameplay.Upgrades;
 
 namespace Upgrades
 {
@@ -18,7 +16,7 @@ namespace Upgrades
 
         #region Methods
 
-        public CookingSpeedUpgrade() : base()
+        public CookingSpeedUpgrade(UpgradeConfig config) : base(config)
         {
         }
 
@@ -31,11 +29,7 @@ namespace Upgrades
                 //o.SetStrength(_level * 2f);
             }
         }
-        public override void LevelUp()
-        {
-            _level++;
-            OnLevelUp?.Invoke(_level);
-        }
+        
 
         public override float GetPrice()
         {

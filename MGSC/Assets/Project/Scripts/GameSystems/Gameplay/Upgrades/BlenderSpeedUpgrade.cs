@@ -1,6 +1,7 @@
 using Cooking;
 using GameSystem;
 using System.Collections.Generic;
+using Project.Scripts.GameSystems.Gameplay.Upgrades;
 
 namespace Upgrades
 {
@@ -16,10 +17,7 @@ namespace Upgrades
 
         #region Methods
 
-        public BlenderSpeedUpgrade() : base()
-        {
-            _maxLevel = 1;
-        }
+        public BlenderSpeedUpgrade(UpgradeConfig config ) : base(config) { }
 
         public override void Apply()
         {
@@ -29,11 +27,6 @@ namespace Upgrades
             {
                 //b.CutDuration = b.DefaultCutDuration / (_level + 1);
             }
-        }
-        public override void LevelUp()
-        {
-            _level++;
-            OnLevelUp?.Invoke(_level);
         }
 
         public override float GetPrice()

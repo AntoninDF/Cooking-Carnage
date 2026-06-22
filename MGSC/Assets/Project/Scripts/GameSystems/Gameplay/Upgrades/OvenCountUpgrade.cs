@@ -1,6 +1,7 @@
 using Cooking;
 using GameSystem;
 using System;
+using Project.Scripts.GameSystems.Gameplay.Upgrades;
 
 namespace Upgrades
 {
@@ -16,7 +17,7 @@ namespace Upgrades
 
         #region Methods
 
-        public OvenCountUpgrade() : base()
+        public OvenCountUpgrade(UpgradeConfig config) : base(config)
         {
             _targetOvenSetup = Reference.Get<OvenSetup>();
         }
@@ -25,11 +26,6 @@ namespace Upgrades
         {
             if (_targetOvenSetup == null) return;
             _targetOvenSetup.Setup(_level +1);
-        }
-        public override void LevelUp()
-        {
-            _level++;
-            OnLevelUp?.Invoke(_level);
         }
 
         public override float GetPrice()

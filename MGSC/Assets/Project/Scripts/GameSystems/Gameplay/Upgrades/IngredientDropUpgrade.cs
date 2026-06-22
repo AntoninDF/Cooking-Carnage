@@ -1,5 +1,6 @@
 using UnityEngine;
 using GameSystem;
+using Project.Scripts.GameSystems.Gameplay.Upgrades;
 
 namespace Upgrades
 {
@@ -17,9 +18,7 @@ namespace Upgrades
 
         #region Methods
 
-        public IngredientDropUpgrade() : base()
-        {
-        }
+        public IngredientDropUpgrade(UpgradeConfig config) : base(config) { }
 
         public override void Apply()
         {
@@ -39,11 +38,7 @@ namespace Upgrades
             //Vector2 newRate = client.Model.dropRate + Vector2.one * dropRateIncrement * _level;
             //client.SetLoot(client.Model.loot, newRate);
         }
-        public override void LevelUp()
-        {
-            _level++;
-            OnLevelUp?.Invoke(_level);
-        }
+        
 
         public override float GetPrice()
         {
