@@ -503,6 +503,7 @@ GameObject:
   - component: {fileID: 625836047271861289}
   - component: {fileID: 635096726968732557}
   - component: {fileID: 6451744229821037227}
+  - component: {fileID: 4897398713364045886}
   m_Layer: 0
   m_Name: ItemSlot
   m_TagString: Untagged
@@ -562,6 +563,24 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &4897398713364045886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8303796760491296730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e37f4e869000b6b41a939ed4fc1b8ca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ContainerFilter
+  Filters: 00000000
+  Types:
+  - m_Name: F_Cuttable
+    m_AssemblyQualifiedName: Features.F_Cuttable, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!1001 &4935361170302236354
 PrefabInstance:
   m_ObjectHideFlags: 0

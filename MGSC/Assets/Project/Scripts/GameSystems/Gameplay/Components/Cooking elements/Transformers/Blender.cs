@@ -65,22 +65,14 @@ namespace Cooking
                 Cutter.OnTransformationOver += _ => Container.IsLocked = false;
             }
         }
-        private void TryGrab(InteractionContext context)
-        {
-            if (context.TryGetFeature(out F_Container container))
-            {
-                if (Container.RequestGrab(container.HeldItem))
-                    return;
-
-                container.RequestGrab(Container.HeldItem);
-            }
-        }
         private void TryCut(InteractionContext context)
         {
+            Debug.Log("TryCut");
             if (Container.HeldItem == null) return;
-            if (!Container.HeldItem.TryGetSibling(out F_Cuttable cuttable, true) || !cuttable.CanBeTransformed) return;
+            if (!Container.HeldItem.TryGetSibling(out F_Cuttable cuttable, true) || !cuttable.CanBeTransformed) return; // Ensure it is cuttable and not already cut
             if (!Cutter.CanStartTransformation(cuttable)) return;
             Cutter.RequestStartTransformation(cuttable);
+            Debug.Log("Cutting");
         }
         #endregion
     }

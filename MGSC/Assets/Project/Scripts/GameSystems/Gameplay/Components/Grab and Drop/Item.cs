@@ -113,6 +113,8 @@ public class Item : MonoBehaviour, IFeatureCollection
         activeModel = model;
         if (activeModel == null)
             return;
+        activeModel.gameObject.SetActive(true);
+        Debug.Log("MeshControllers : " + activeModel.MeshController.Controllers.Length);
         activeModel.SetActive(true);
         Mesh colliderMesh = activeModel.MeshController.GetCombinedMeshes(transform);
         Collider.sharedMesh = colliderMesh;
