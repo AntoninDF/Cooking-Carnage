@@ -1,6 +1,5 @@
 
 using System.Collections.Generic;
-using Project.Scripts.GameSystems.Gameplay.Upgrades;
 
 namespace Upgrades
 {
@@ -16,8 +15,9 @@ namespace Upgrades
 
         #region Methods
 
-        public CookingSpeedUpgrade(UpgradeConfig config) : base(config)
+        public CookingSpeedUpgrade() : base()
         {
+            _config = UpgradeManagerConfig.instance.CookingSpeed;
         }
 
         public override void Apply()
@@ -29,14 +29,7 @@ namespace Upgrades
                 //o.SetStrength(_level * 2f);
             }
         }
-        
 
-        public override float GetPrice()
-        {
-            return 100f;
-        }
-
-        public override bool CanLevelUp() => _level < 3;
         #endregion
     }
 }

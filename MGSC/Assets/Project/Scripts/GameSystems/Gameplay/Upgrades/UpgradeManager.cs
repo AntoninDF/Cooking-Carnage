@@ -1,13 +1,11 @@
 using System;
 using GameSystem;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
-using Project.Scripts.GameSystems.Gameplay.Upgrades;
 using UnityEngine;
-using UI;
-using UnityEditor.Compilation;
-using Assembly = System.Reflection.Assembly;
+using System.Reflection;
+using UnityEngine.Events;
+
 
 namespace Upgrades
 {
@@ -18,6 +16,9 @@ namespace Upgrades
         
         public List<Upgrade> Upgrades => _upgrades;
         
+        public UnityEvent OnUpgradeFail;
+        public UnityEvent OnUpgradeSuccess;
+        
         #endregion
 
         #region Fields
@@ -25,6 +26,7 @@ namespace Upgrades
         private List<Upgrade>        _upgrades;
         private MoneyManager         _moneyManager;
         private UpgradeManagerConfig _config;
+        
         #endregion
 
         #region Methods
@@ -33,31 +35,28 @@ namespace Upgrades
         {
             Register();
         }
-
         
-        /// <summary>
-        /// Run before the initialization, make sure that the config is injected
-        /// </summary>
-        public void SetConfig(UpgradeManagerConfig config)
-        {
-            _config = config ?? throw new ArgumentNullException(nameof(config),"[UpgradeManager] UpgradeManagerConfig cannot be null.");
-        }
         
         /// <summary>
         /// Init all the Upgrades and give them their ScriptableObject
         /// </summary>
         public void Init()
         {
+            _config = UpgradeManagerConfig.instance;
+            
             if (_config == null)
                 throw new InvalidOperationException("[UpgradeManager] SetConfig() must be called before Init().");
             
-            _upgrades = new List<Upgrade>
+
+            //Get all the inherited upgrades 
+            var allUpgrade = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(Upgrade)) && !t.IsAbstract);
+
+            //Init every upgrades and add them to the upgrade list
+            foreach (var upgrade in allUpgrade)
             {
-                new OvenCountUpgrade(_config.ovenCount),
-                new CookingSpeedUpgrade(_config.cookingSpeed),
-                new IngredientDropUpgrade(_config.ingredientDrop),
-                new BlenderSpeedUpgrade(_config.blenderSpeed),
-            };
+                _upgrades.Add((Upgrade)Activator.CreateInstance(upgrade));
+            }
 
             if (!Reference.TryGetManager(out _moneyManager))
             {
@@ -161,26 +160,26 @@ namespace Upgrades
         
         private bool TryLevelUpInternal(Upgrade upgrade)
         {
-            bool hasUI = Reference.TryGetManager(out UIManager uiManager);
 
             if (!upgrade.CanLevelUp())
             {
-                if (hasUI) uiManager.OnUpgradeFail?.Invoke();
+                OnUpgradeFail?.Invoke();
                 return false;
             }
+            
             //check if the player have enough money
             float price = upgrade.GetPrice();
             if (_moneyManager.MoneyInfo < price)
             {
                 this.Log(LogType.Log, $"Not enough money for {upgrade.GetType().Name}");
-                if (hasUI) uiManager.OnUpgradeFail?.Invoke();
+                OnUpgradeFail?.Invoke();
                 return false;
             }
             
             _moneyManager.AddMoney(-price);
             upgrade.LevelUp();
             this.Log(LogType.Log, $"{upgrade.GetType().Name} leveled up to {upgrade.Level}");
-            if (hasUI) uiManager.OnUpgradeSuccess?.Invoke();
+            OnUpgradeSuccess?.Invoke();
             return true;
         }
         

@@ -1,6 +1,5 @@
 using UnityEngine;
 using GameSystem;
-using Project.Scripts.GameSystems.Gameplay.Upgrades;
 
 namespace Upgrades
 {
@@ -18,7 +17,10 @@ namespace Upgrades
 
         #region Methods
 
-        public IngredientDropUpgrade(UpgradeConfig config) : base(config) { }
+        public IngredientDropUpgrade() : base()
+        {
+            _config = UpgradeManagerConfig.instance.IngredientDrop;
+        }
 
         public override void Apply()
         {
@@ -39,12 +41,6 @@ namespace Upgrades
             //client.SetLoot(client.Model.loot, newRate);
         }
         
-
-        public override float GetPrice()
-        {
-            return 100f;
-        }
-        public override bool CanLevelUp() => _level < 3;
         #endregion
     }
 }
