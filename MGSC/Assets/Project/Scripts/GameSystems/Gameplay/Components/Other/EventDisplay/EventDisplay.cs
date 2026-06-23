@@ -1,18 +1,19 @@
 using Features;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Reflection;
 using Unity.Profiling;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class EventDisplay : MonoBehaviour, IFeatureCollection
 {
     [SerializeField] public List<UnityEventWrapper> Events = new();
-
-
-
+    private static List<ActionPath> _cachedGlobalActions = null;
+    
     ProfilerMarker bindEventProfilerMarker = new ProfilerMarker("EventDisplay.BindEventsWithReflection");
 
     public FeatureCollection Collection { get; set; } = new();
@@ -23,8 +24,7 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
     public void InvokeCustomEvent1()=>BaseEvents.InvokeCustomEvent1();
     public void InvokeCustomEvent2()=>BaseEvents.InvokeCustomEvent2();
     public void InvokeCustomEvent3()=>BaseEvents.InvokeCustomEvent3();
-
-
+    
     private void Awake()
     {
         BaseEvents = new(this);
@@ -42,6 +42,7 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
     public bool IsValid(UnityEventWrapper wrapper)
     {
         if (wrapper.ActionPath == null) return false;
+        if(wrapper.ActionPath.source == ActionPath.ActionSource.Global) return true;
         if (!wrapper.ActionPath.IsValid()) return false;
 
         return true;
@@ -55,7 +56,9 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
 
         foreach (var e in Events)
         {
-            if (IsValidActionType(e.ActionPath.Type))
+            if(!IsValid(e)) {SkippedEventWarning(e); continue;}
+
+            if (e.ActionPath.source == ActionPath.ActionSource.Local)
             {
                 UnityEngine.Object comp = e.ActionPath.FeaturePath.OwningObject;
                 if (comp != null)
@@ -74,23 +77,52 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
                         continue;
                     }
                 }
+                else
+                    SkippedEventWarning(e);
             }
             else
-                SkippedEventWarning(e);
+            {
+                BindGlobalEvent(e);
+            }
+            
+            
         }
         bindEventProfilerMarker.End();
     }
 
+    private void BindGlobalEvent(UnityEventWrapper e)
+    {
+        string targetName = e.ActionPath.ActionVariableName;
+        bool bound = false;
+
+        foreach (var mono in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+        {
+            foreach (var field in  mono.GetType().GetFields())
+            {
+                var attr = field.GetCustomAttribute<BindEventAttribute>();
+                if(attr == null || attr.Name != targetName)continue;
+                if(!IsValidActionType(field.FieldType)) continue;
+                
+                var actionInfo = new PropertyOrFieldInfo(field);
+                TryBindCallbackToFeature(mono, () => e.Event?.Invoke(), actionInfo);
+                bound = true;
+            }
+        }
+        if (!bound) SkippedEventWarning(e);
+    }
+
+    
+
     /// <summary>
     /// Binds value to the Action described by actionInfo that is a member of feature.
     /// </summary>
-    /// <param name="feature"></param>
+    /// <param name="target"></param>
     /// <param name="value"></param>
     /// <param name="actionInfo"></param>
     /// <returns></returns>
-    private bool TryBindCallbackToFeature(Feature feature, Action value, PropertyOrFieldInfo actionInfo)
+    private bool TryBindCallbackToFeature(object target, Action value, PropertyOrFieldInfo actionInfo)
     {
-        object actionToBe = actionInfo.GetValue(feature);
+        object actionToBe = actionInfo.GetValue(target);
         if (actionToBe == null)
         {
             actionToBe = NewGenericAction(actionInfo.Type);
@@ -100,7 +132,7 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
             }
         }
         BindCallbackToAction(ref actionToBe, value);
-        actionInfo.SetValue(feature, actionToBe);
+        actionInfo.SetValue(target, actionToBe);
         return true;
     }
 
@@ -185,13 +217,7 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
         }
     }
 
-
-
-
-
-
-
-
+    
     public void AddEvent(UnityEventWrapper wrapper)
     {
         Events.Add(wrapper);
@@ -200,6 +226,7 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
     // First MemberInfo is the action's memberInfo inside the feature. The second MemberInfo is the feature's info inside the Component
     public List<ActionPath> GetAvailableActions()
     {
+        // Local actions
         var hierarchy = GetChildren(gameObject);
         var components = GetComponentsFromGameObjects(hierarchy);
         List<ActionPath> result = new();
@@ -216,9 +243,34 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
                 }
             }
         }
+
+        
+        // Global Actions
+        if(_cachedGlobalActions != null) result.AddRange(_cachedGlobalActions);
+        else
+        {
+            BuildGlobalActionCache();
+            result.AddRange(_cachedGlobalActions);
+        }
+        
+        
         return result;
     }
-    private bool IsValidActionType(Type type)
+    
+    public static void BuildGlobalActionCache()
+    {
+        _cachedGlobalActions = new();
+        foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+        foreach (var type in asm.GetTypes())
+        foreach (var field in type.GetFields())
+        {
+            var attr = field.GetCustomAttribute<BindEventAttribute>();
+            if (attr == null) continue;
+            if (!IsValidActionType(field.FieldType)) continue;
+            _cachedGlobalActions.Add(new ActionPath(attr.Name, field.FieldType));
+        }
+    }
+    private static bool IsValidActionType(Type type)
     {
         if (type == null) return false;
         if (type == typeof(System.Action)) return true;
@@ -294,6 +346,8 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
             return null;
         return members[0];
     }
+
+    
 }
 
 [System.Serializable]

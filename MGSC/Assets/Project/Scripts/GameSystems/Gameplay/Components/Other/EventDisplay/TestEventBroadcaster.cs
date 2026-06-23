@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 public class TestEventBroadcaster : MonoBehaviour
 {
-    [BindEvent("Action1")]
+    [BindEvent("TEST/Action1")]
     public Action MyAction;
     [BindEvent("Action2")]
     public Action MyOtherAction;
@@ -29,10 +29,6 @@ public class TestEventBroadcaster : MonoBehaviour
             MyNewAction?.Invoke();
         }
     }
-
-    private void Start()
-    {
-        EventLinker.Bind(this);
-    }
+    
 
 }

@@ -72,7 +72,7 @@ public class EventDisplayEditor : Editor
                 GUI.color = previous;
             }
 
-                GUILayout.BeginVertical(GUILayout.MaxWidth(60));
+            GUILayout.BeginVertical(GUILayout.MaxWidth(60));
             if (GUILayout.Button("Remove", GUILayout.Height(EditorGUI.GetPropertyHeight(serializedEvent)/2)))
             {
                 display.Events.RemoveAt(i);
