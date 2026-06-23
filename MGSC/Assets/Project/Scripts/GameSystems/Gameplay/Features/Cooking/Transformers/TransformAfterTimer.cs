@@ -30,12 +30,12 @@ namespace Features
         protected override void Transform(Transformable cookable)
         {
             base.Transform(cookable);
-            OnTransformationOver?.Invoke(cookable as Cookable);
+            OnTransformationOver?.Invoke(cookable as F_Cookable);
         }
 
         protected virtual void StartTransformation(TransformableAfterTimer target)
         {
-            string timerName = "Cooking (" + UnityEngine.Time.frameCount.ToString("X") + ")";
+            string timerName = "Transforming (" + UnityEngine.Time.frameCount.ToString("X") + ")";
             var duration = GetTransformationDuration(target);
             TimerManager.StartTimer(timerName, duration, () => RequestTransformation(target), false, (elapsed) => Progress(elapsed, duration));
             OnTransformationStart?.Invoke(target);
@@ -52,6 +52,7 @@ namespace Features
 
         protected virtual void Progress(float progress, float duration)
         {
+            UnityEngine.Debug.Log("Transformation " + progress);
             if (duration == 0) duration = 1f;
             OnTransformationProgress?.Invoke(progress / duration);
         }

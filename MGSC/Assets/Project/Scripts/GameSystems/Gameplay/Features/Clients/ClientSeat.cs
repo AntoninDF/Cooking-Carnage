@@ -24,7 +24,7 @@ namespace Features
                 if (value != null)
                     OnClientRegister?.Invoke(value);
                 _registeredClient = value;
-                Debug.Log("Registered client is " + value);
+                //Debug.Log("Registered client is " + value);
             }
         }
         public Client SittingClient
@@ -38,7 +38,7 @@ namespace Features
                 if (value != null)
                     OnClientSitting?.Invoke(value);
                 _sittingClient = value;
-                Debug.Log("Sitting client is " + value);
+                //Debug.Log("Sitting client is " + value);
             }
         }
 
@@ -51,8 +51,10 @@ namespace Features
         public ClientManager ClientManager => Reference.GetManager<ClientManager>();
         public ClientSeat(IFeatureCollection owner, Transform seatTransform) : base(owner)
         {
+            /*
             if (seatTransform == null)
                 Debug.LogWarning("ClientSeat transform is null");
+            */
             transform = seatTransform;
 
             ClientManager.Register(this);
@@ -69,13 +71,13 @@ namespace Features
         }
         public bool TryUnregister(Client client)
         {
-            Debug.Log("Trying to unregister...");
+            //Debug.Log("Trying to unregister...");
             if (client == null) return false;
             if (RegisteredClient != client) return false;
 
             RegisteredClient = null;
             SittingClient = null;
-            Debug.Log("Unregistered !");
+            //Debug.Log("Unregistered !");
             return true;
         }
         public bool TrySit(Client client)

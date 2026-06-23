@@ -42,8 +42,6 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         if (client == null) return;
         if (NextOrder == null)
             NextOrder = OrderingCounter.GetNewOrder();
-
-        Debug.Log("AssignOrder");
         client.TryAcceptOrder(NextOrder);
     }
 
@@ -53,7 +51,6 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         if (!Application.isPlaying) return;
         if (ClientSeat.SittingClient != null)
         {
-            Debug.Log("CLIENT SEATED");
             Gizmos.color = Color.green;
             Gizmos.DrawCube(transform.position, transform.localScale * 1.01f);
             Gizmos.DrawSphere(ClientSeat.SittingClient.transform.position + Vector3.up * 1f, 0.1f);

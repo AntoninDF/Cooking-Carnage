@@ -23,12 +23,12 @@ public partial class Client : MonoBehaviour, IFeatureCollection
         get => _currentOrder;
         set
         {
-            Debug.Log("Current order is accessed");
+            //Debug.Log("Current order is accessed");
             if (_currentOrder == value) return;
             _currentOrder = value;
             if (value != null)
             {
-                Debug.Log("Current order is set");
+                //Debug.Log("Current order is set");
                 OnNewOrder?.Invoke(value);
             }
         }
@@ -107,16 +107,16 @@ public partial class Client : MonoBehaviour, IFeatureCollection
     {
         if (order == null) return;
         if (CurrentOrder != null) return;
-        Debug.Log("Order accepted");
+        //Debug.Log("Order accepted");
         CurrentOrder = order;
         CurrentSeat.TryUnregister(this);
         Behaviour.GoToServingCounter(Sit);
     }
     private void TryAcceptServing(Servable serving)
     {
-        Debug.Log("TryAcceptServing");
+        //Debug.Log("TryAcceptServing");
         if (serving == null || !serving.Enabled) return;
-        Debug.Log("Something was served");
+        //Debug.Log("Something was served");
         CurrentOrder.Resolve(serving);
         Behaviour.GoToCounter<Exit>();
     }

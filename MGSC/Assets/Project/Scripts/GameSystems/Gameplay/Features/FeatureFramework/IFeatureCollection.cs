@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Features
@@ -17,6 +18,7 @@ namespace Features
         public T Get<T>(bool mustBeEnabled=false) where T : Feature => Collection.Get<T>(mustBeEnabled);
         public T Get<T>(out T feature, bool mustBeEnabled = false) where T : Feature { feature = Collection.Get<T>(mustBeEnabled); return feature; }
         public bool TryGet<T>(out T feature, bool mustBeEnabled = false, bool scanOnlyDirectFeatures = false) where T : Feature => Collection.TryGet(out feature, mustBeEnabled, scanOnlyDirectFeatures);
+        public bool Has(Type feature, bool mustBeEnabled = false, bool scanOnlyDirectFeatures = false) => Collection.Has(feature, mustBeEnabled, scanOnlyDirectFeatures);
         public void LateSetup() => Collection.LateSetup();
         public void Update() => Collection.Update();
     }

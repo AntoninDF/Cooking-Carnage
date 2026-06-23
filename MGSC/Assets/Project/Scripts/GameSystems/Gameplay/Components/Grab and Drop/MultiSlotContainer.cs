@@ -6,7 +6,7 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
     #region Properties
     public FeatureCollection Collection { get; set; } = new();
     public Features.F_MultiSlotContainer Container { get; set; }
-    public Interactable Interactable{ get; set; }
+    public F_Interactable Interactable{ get; set; }
     #endregion
 
     #region Fields
@@ -49,7 +49,7 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
             Container.RequestGrab(container.HeldItem);
         }
     }
-    private void TryLockItem(Grabbable item)
+    private void TryLockItem(F_Grabbable item)
     {
         if (lockItemsWhenAdded)
             item.IsLocked = true;
@@ -66,6 +66,16 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
             else
                 Debug.LogWarning("No slots were added or detected on MultiSlotContainer '" + name + "'");
         }
+        else
+        {
+            Debug.Log("SoloContainers has " + _soloContainers.Count + " elements");
+            foreach (GameObject slot in slots)
+            {
+                if (!slot.TryGetComponent<SlotContainer>(out var container)) continue;
+                _soloContainers.Add(container.Container);
+            }
+        }
+        Debug.Log("SoloContainers has " + _soloContainers.Count + " elements");
         foreach (var obj in _soloContainers)
         {
             var transform = obj.GetParentTransform();

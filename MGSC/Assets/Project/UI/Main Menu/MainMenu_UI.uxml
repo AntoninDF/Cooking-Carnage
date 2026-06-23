@@ -1,0 +1,40 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" engine="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Project/UI/UI.uss?fileID=7433441132597879392&amp;guid=21ff664a8abdbee42b0ab74b63c70e6a&amp;type=3#UI" />
+    <ui:VisualElement name="MainMenuRoot" style="position: absolute; width: 100%; height: 100%;">
+        <ui:VisualElement name="Background" style="flex-grow: 1; position: absolute; background-image: url(&quot;project://database/Assets/Project/Art/UI/Menus/CookingCarnage_UI_MainMenuRougeFond.png?fileID=2800000&amp;guid=c95501cba3e6db542905e19e36e7d8e9&amp;type=3#CookingCarnage_UI_MainMenuRougeFond&quot;); top: 0; left: 0; right: 0; bottom: 0;" />
+        <ui:VisualElement name="MainPanel" style="position: absolute; width: 100%; height: 100%; display: flex;">
+            <ui:VisualElement name="MainMenuBackground" style="position: absolute; width: 100%; height: 100%;">
+                <ui:VisualElement name="MainBackground" style="flex-grow: 1; position: absolute; top: 0; right: 0; bottom: 0; left: 0; background-image: url(&quot;project://database/Assets/Project/Art/UI/Menus/MENU_DEMARRAGE/CookingCarnage_MenuDemarrage_Fond.png?fileID=2800000&amp;guid=9ad57746022f2ca48ae03a416771d2d2&amp;type=3#CookingCarnage_MenuDemarrage_Fond&quot;);" />
+            </ui:VisualElement>
+            <ui:VisualElement name="GameTitle" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Project/Art/UI/Menus/MENU_DEMARRAGE/CookingCarnage_MenuDemarrage_Titre.png?fileID=2800000&amp;guid=6acadfe622d27354f8e8e2156687fdad&amp;type=3#CookingCarnage_MenuDemarrage_Titre&quot;); -unity-background-scale-mode: scale-to-fit; position: absolute; top: 0; left: 42px; right: 368px; bottom: 189px; width: auto; height: auto;" />
+            <ui:VisualElement name="ShiftNumberContainer" style="position: absolute; top: 386px; right: 250px; height: 45px; width: 202px; rotate: -5deg; flex-direction: row;">
+                <UICustomShadow name="ShiftText" text-color="#F7F7BAFF" text="SHIFT N." shadow-color="#4D4D34FF" shadow-offset="-2,-0.5" class="MainMenuText" />
+                <UICustomShadow name="ShiftNumber" text-color="#F7F7BAFF" text="1" shadow-color="#4D4D34FF" shadow-offset="-2,-0.5" class="MainMenuText" />
+            </ui:VisualElement>
+            <ui:VisualElement name="ButtonContainer" style="justify-content: center; align-items: flex-end; position: absolute; top: auto; left: 0; rotate: -5deg; width: 40%; height: 192px; align-self: flex-end; bottom: 0;">
+                <ui:Button name="BtnPlay" class="menu-btn MainMenuButtons">
+                    <UICustomShadow text="PLAY" name="BtnText" shadow-color="#4D4D34FF" shadow-offset="-2,-19" text-color="#F7F7BAFF" language-direction="Inherit" class="MainMenuTextButtons MainMenuText" style="-unity-font-definition: url(&quot;project://database/Assets/Project/Art/UI/Fonts/allegro/allegro.ttf?fileID=12800000&amp;guid=f1ec3ccc8eb48954cbf95ec695dba501&amp;type=3#allegro&quot;); align-items: auto;" />
+                </ui:Button>
+                <ui:Button name="BtnSettings" class="menu-btn MainMenuButtons">
+                    <UICustomShadow text="SETTINGS" name="BtnText" shadow-color="#4D4D34FF" shadow-offset="-2,-19" text-color="#F7F7BAFF" language-direction="Inherit" class="MainMenuTextButtons MainMenuText" style="-unity-font-definition: url(&quot;project://database/Assets/Project/Art/UI/Fonts/allegro/allegro.ttf?fileID=12800000&amp;guid=f1ec3ccc8eb48954cbf95ec695dba501&amp;type=3#allegro&quot;); align-items: auto;" />
+                </ui:Button>
+                <ui:Button name="BtnCredits" class="menu-btn MainMenuButtons">
+                    <UICustomShadow text="CREDITS" name="BtnText" shadow-color="#4D4D34FF" shadow-offset="-2,-19" text-color="#F7F7BAFF" language-direction="Inherit" class="MainMenuTextButtons MainMenuText" style="-unity-font-definition: url(&quot;project://database/Assets/Project/Art/UI/Fonts/allegro/allegro.ttf?fileID=12800000&amp;guid=f1ec3ccc8eb48954cbf95ec695dba501&amp;type=3#allegro&quot;); align-items: auto;" />
+                </ui:Button>
+                <ui:Button name="BtnReset" class="menu-btn MainMenuButtons" style="display: none;">
+                    <UICustomShadow text="RESET SAVE" name="BtnText" shadow-color="#4D4D34FF" shadow-offset="-2,-19" text-color="#F7F7BAFF" language-direction="Inherit" class="MainMenuTextButtons MainMenuText" style="-unity-font-definition: url(&quot;project://database/Assets/Project/Art/UI/Fonts/allegro/allegro.ttf?fileID=12800000&amp;guid=f1ec3ccc8eb48954cbf95ec695dba501&amp;type=3#allegro&quot;); align-items: auto;" />
+                </ui:Button>
+                <ui:Button name="BtnQuit" class="menu-btn MainMenuButtons">
+                    <UICustomShadow text="QUIT" name="BtnText" shadow-color="#4D4D34FF" shadow-offset="-2,-19" text-color="#F7F7BAFF" language-direction="Inherit" class="MainMenuTextButtons MainMenuText" style="-unity-font-definition: url(&quot;project://database/Assets/Project/Art/UI/Fonts/allegro/allegro.ttf?fileID=12800000&amp;guid=f1ec3ccc8eb48954cbf95ec695dba501&amp;type=3#allegro&quot;); align-items: auto;" />
+                </ui:Button>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="CreditsPanel" style="position: absolute; width: 100%; height: 100%; display: none;">
+            <ui:VisualElement name="CreditsBackgroundStickers" style="position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Project/Art/UI/Menus/CREDITS/CookingCarnage_CreditsStickers.png?fileID=2800000&amp;guid=5b69f0993e4955744aa70eb15a25d4cb&amp;type=3#CookingCarnage_CreditsStickers&quot;);" />
+            <ui:VisualElement name="CreditsBackgroundLayout" style="position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Project/Art/UI/Menus/CREDITS/CookingCarnage_CreditsCadre.png?fileID=2800000&amp;guid=78b76101d9b23a648a2d74c4c741c68b&amp;type=3#CookingCarnage_CreditsCadre&quot;);" />
+            <ui:VisualElement name="GameTitle" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Project/Art/UI/Menus/CREDITS/CookingCarnage_Credits.png?fileID=2800000&amp;guid=7281eb873b2801543afb61534342dc32&amp;type=3#CookingCarnage_Credits&quot;); -unity-background-scale-mode: scale-to-fit; width: auto; height: auto;" />
+            <ui:Button name="BtnCreditsBack" text="&#10;" style="position: absolute; bottom: 5%; align-self: center; background-image: url(&quot;project://database/Assets/Project/Art/UI/Menus/MENU_SHIFTRECAP/CookingCarnage_BoutonBackON.png?fileID=2800000&amp;guid=71da140d66661a5499cc483c7f585026&amp;type=3#CookingCarnage_BoutonBackON&quot;); background-size: contain; width: 160px; background-color: rgba(188, 188, 188, 0); height: 40px; left: 0;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="SplashscreenPanel" style="flex-grow: 1; display: none; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-size: cover; background-image: none;" />
+    </ui:VisualElement>
+</ui:UXML>

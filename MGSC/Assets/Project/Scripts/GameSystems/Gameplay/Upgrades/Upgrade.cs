@@ -8,29 +8,40 @@ namespace Upgrades
     public abstract class Upgrade
     {
         #region Properties
-        public int Level => _level;
         
-        public Action<int> OnLevelUp { get; set; }
+        public int           Level     => _level;
+        public Action<int>   OnLevelUp { get; set; }
+        public UpgradeConfig Config    => _config;
+        
         #endregion
 
         #region Fields
 
-
-        protected int _level; // Starts at 0
-        protected int _maxLevel = 999; // => Means 1000 levels in total
+        protected UpgradeConfig _config;
+        protected int           _level;          // Starts at 0
+        
         #endregion
 
         #region Methods
 
-        public Upgrade()
+        //Initialize the config in the constructor
+        protected Upgrade()
         {
+            
+            //_config = config ?? throw new ArgumentNullException(nameof(config), $"[{GetType().Name}] UpgradeConfig cannot be null");
             OnLevelUp += (level) => Apply();
         }
 
         public abstract void Apply();
-        public abstract void LevelUp();
-        public abstract float GetPrice();
-        public virtual bool CanLevelUp() => _level < _maxLevel;
+
+        //Defined here because all the inherited class use the same implementation
+        public virtual void LevelUp()
+        {
+            _level++;
+            OnLevelUp?.Invoke(_level);
+        }
+        public virtual float GetPrice() => _config.PriceCurve.Evaluate(_level);
+        public virtual bool CanLevelUp() => _level < _config.MaxLevel;
         #endregion
     }
 }

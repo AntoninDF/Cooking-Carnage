@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Features
 {
-    public class LookAtTargetByRaycast : LookAtTarget
+    public class LookAtTargetByRaycast : F_LookAtTarget
     {
 
         public Collider Collider { get; set; }

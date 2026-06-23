@@ -1,5 +1,6 @@
 using System;
 using Controller;
+using Features;
 using NaughtyAttributes;
 using UI;
 using UnityEngine;
@@ -11,7 +12,8 @@ namespace GameSystem
     /// The GameInitializer is responsible for instantiating and setting up every object at the start of the game.
     /// No other script should hold a reference to the GameInitializer
     /// </summary>
-    public class GameInitializer : MonoBehaviour
+    [HideScriptField]
+    public class GameInitializer : MonoBehaviour, IFeatureCollection
     {
         #region Fields
 
@@ -22,6 +24,8 @@ namespace GameSystem
         
         [Expandable]
         [SerializeField] private SO_DebugProfile _debugProfile;
+
+        public FeatureCollection Collection { get; set; } = new FeatureCollection();
 
         // PRIVATE FIELDS
 
@@ -65,6 +69,7 @@ namespace GameSystem
 
             if (_gameProfile.DestroyEveryOtherObject) DestroyEverything();
 
+            //Debug.Log("Asset references set");
             Reference.AssetReferences = _gameProfile.AssetReferences;
 
             // Instantiate the scene and create all the MonoBehaviour managers

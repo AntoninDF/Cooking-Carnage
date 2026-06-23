@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using Upgrades;
 
 namespace UI
 {
@@ -111,13 +112,15 @@ namespace UI
             DisableAllMenus();
 
             SubscribeToEvents();
+            AssignUpgradeDelegates();
 
             Vector2 resolution = GetAdaptedFullScreenResolution(widthRatio,heightRatio);
             
             Screen.SetResolution((int)resolution.x, (int)resolution.y, FullScreenMode.FullScreenWindow , new RefreshRate { numerator = 60, denominator = 1 });
             
             _onStart?.Invoke();
-        }        
+        }    
+        
         public void PostInit()
         {
             if (_dataManager.ShiftCount >= 1)
@@ -128,7 +131,17 @@ namespace UI
             {
                 _onTutorialSetup?.Invoke();
             }
-        }        
+        }
+
+        void AssignUpgradeDelegates()
+        {
+            if (Reference.TryGetManager(out UpgradeManager upgradeManager))
+            {
+                upgradeManager.OnUpgradeSuccess.AddListener(PlayOnUpgradeSuccess);
+                upgradeManager.OnUpgradeFail.AddListener(PlayOnUpgradeFail);
+            }
+        }
+        
         Vector2  GetAdaptedFullScreenResolution(float ratioX, float ratioY)
         {
             float x = Screen.currentResolution.width / ratioX;
@@ -340,6 +353,10 @@ namespace UI
         public void HideAllUI() => _canvas?.SetActive(false);
         public void ShowAllUI() => _canvas?.SetActive(true);
         public void ToggleAllUI() => _canvas?.SetActive(!_canvas.activeSelf);
+        
+        private void PlayOnUpgradeSuccess() => OnUpgradeSuccess?.Invoke();
+        private void PlayOnUpgradeFail() => OnUpgradeFail?.Invoke();
+        
         public void TakeScreenshot()
         {
             string path = Application.persistentDataPath + "/Screenshots";

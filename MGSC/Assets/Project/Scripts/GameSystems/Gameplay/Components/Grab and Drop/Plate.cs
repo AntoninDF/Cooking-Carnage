@@ -1,6 +1,7 @@
-
+﻿
 using Cooking;
 using Features;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 /// <summary>
@@ -11,8 +12,8 @@ using UnityEngine;
 public class Plate : Item
 {
     #region Properties
-    public Cookable Cookable;
-    public Cookable OverCookable;
+    public F_Cookable Cookable;
+    public F_Cookable OverCookable;
     public Servable Servable;
     #endregion
 
@@ -23,10 +24,10 @@ public class Plate : Item
     [SerializeField] private SO_RecipeBook _recipeBook;
     [SerializeField] MultiSlotContainer ContainerComponent;
     [SerializeField] Recipe RecipeComponent;
+    [SerializeField] ModelController CookedVariant;
 
 
-
-    Features.F_MultiSlotContainer Container;
+    F_MultiSlotContainer Container;
     #endregion
         
         
@@ -52,9 +53,13 @@ public class Plate : Item
         Cookable.OnTransformation += OnCook;
         
     }
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
         BindExternalEvents();
+        CookedVariant.SetActive(false);
+        CookedVariant.gameObject.SetActive(false);
+        SetActiveModel(defaultModel);
     }
 
     private void BindExternalEvents()
@@ -63,15 +68,23 @@ public class Plate : Item
         {
             Container.OnGrab += TryLock;
             // Make sure only cut ingredients can be put in the plate
-            Container.Filter.AddCondition(item => item.TryGetFeature(out Cuttable cuttable) && cuttable.Transformed);
+            Container.Filter.AddCondition(GrabbableCondition);
         }
-        if (ContainerComponent.TryGetFeature(out Interactable interactable))
+        if (ContainerComponent.TryGetFeature(out F_Interactable interactable))
         {
             interactable.Enabled = false;
         }
     }
+    bool GrabbableCondition(object item)
+    {
+        F_Grabbable grabbable = (F_Grabbable)item;
+        if (grabbable == null) return false;
+        if (!grabbable.TryGetSibling(out F_Cuttable cuttable)) return false;
+        if (!cuttable.Transformed) return false;
+        return true;
+    }
 
-    private void TryLock(Grabbable item)
+    private void TryLock(F_Grabbable item)
     {
         if (item != null)
         {
@@ -102,8 +115,14 @@ public class Plate : Item
         OverCookable.Enabled = true;
         Servable.Enabled = true;
         TryDetectRecipe(out var temp);
+        SetActiveModel(CookedVariant);
     }
     
+    /// <summary>
+    /// REFACTO → Ne pas nécessiter de component de recette et tout faire self-contained
+    /// </summary>
+    /// <param name="recipe"></param>
+    /// <returns></returns>
     public bool TryDetectRecipe(out SO_Recipe recipe)
     {
         recipe = null;
@@ -112,7 +131,7 @@ public class Plate : Item
 
         recipe = RecipeComponent.RecipeFeature.GetMatchingRecipe();
 
-        RecipeComponent.RecipeFeature.SetIngredients(Container.Container.GetHeldItemsAs<Features.Ingredient>());
+        RecipeComponent.RecipeFeature.SetIngredients(Container.Container.GetHeldItemsAs<Features.F_Ingredient>());
 
         if (recipe == null) return false;
         return true;
