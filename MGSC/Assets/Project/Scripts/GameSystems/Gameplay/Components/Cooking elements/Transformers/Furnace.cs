@@ -1,5 +1,8 @@
 using Features;
-using GameSystem;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Furnace : MonoBehaviour, IFeatureCollection
@@ -13,6 +16,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     #region Fields
     [SerializeField] private SlotContainer _itemSlot;
     [SerializeField] private InteractionButton _button;
+    [SerializeField] private Feedbacks ProgressFeedbacks;
 
     #endregion
 
@@ -61,8 +65,10 @@ public class Furnace : MonoBehaviour, IFeatureCollection
         Interactable.OnInteraction += TryInteract;
         Cooker.OnTransformationStart += OnStartCooking;
         Cooker.OnTransformationOver += OnStopCooking;
-
+        Cooker.OnTransformationProgress += OnCookingProgress;
     }
+
+
     private void TryInteract(InteractionContext context)
     {
         if ( context.TryGetFeature(out F_Container container))
@@ -82,12 +88,46 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     }
     private void OnStartCooking(TransformableAfterTimer target)
     {
-        Debug.Log("Cooker.OnTransformationStart");
         Container.IsLocked = true;
     }
     private void OnStopCooking(TransformableAfterTimer target)
     {
-        Debug.Log("Cooker.OnTransformationStop");
         Container.IsLocked = false;
+    }
+
+    private void OnCookingProgress(float progression01)
+    {
+        if (ProgressFeedbacks.MaterialProperty.Material != null)
+        {
+            ProgressFeedbacks.MaterialProperty.Material.SetFloat(ProgressFeedbacks.MaterialProperty.Name, progression01);
+        }
+        if (ProgressFeedbacks.AnimatedTransform.Transform != null)
+        {
+            ProgressFeedbacks.AnimatedTransform.Transform.localRotation = Quaternion.Lerp(ProgressFeedbacks.AnimatedTransform.StartRotation, ProgressFeedbacks.AnimatedTransform.EndRotation, progression01);
+        }
+        if (ProgressFeedbacks.PercentageText != null)
+        {
+            ProgressFeedbacks.PercentageText.text = Mathf.Round(100f * progression01).ToString() + "%";
+        }
+    }
+    [Serializable]
+    public struct Feedbacks
+    {
+        public MaterialProperty MaterialProperty;
+        public AnimatedTransform AnimatedTransform;
+        public TMP_Text PercentageText;
+    }
+    [Serializable]
+    public struct MaterialProperty
+    {
+        public string Name;
+        public Material Material;
+    }
+    [Serializable]
+    public struct AnimatedTransform
+    {
+        public Transform Transform;
+        public Quaternion StartRotation;
+        public Quaternion EndRotation;
     }
 }

@@ -51,7 +51,6 @@ namespace Features
         }
         private MeshRenderer[] DetectControlledRenderers()
         {
-            Debug.Log("Detecting renderers");
             MeshRenderer[] result;
             if (_propagateChangesToChildren)
                 result = GetComponentsInChildren<MeshRenderer>();
