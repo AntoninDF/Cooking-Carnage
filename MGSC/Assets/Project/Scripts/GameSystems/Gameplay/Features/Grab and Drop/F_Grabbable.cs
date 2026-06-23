@@ -6,8 +6,20 @@ namespace Features
     public class F_Grabbable : Feature
     {
         public F_Container Container;
-        public bool IsLocked { get; set; }
-
+        public bool IsLocked
+        { 
+            get => _isLocked;
+            set
+            {
+                if (_isLocked == value) return;
+                _isLocked = value;
+                if (value) OnLock?.Invoke();
+                else OnUnlock?.Invoke();
+            }
+        }
+        private bool _isLocked = false;
+        public Action OnLock { get; set; }
+        public Action OnUnlock { get; set; }
         public Action OnGrab {  get; set; }
 
         public F_Grabbable(IFeatureCollection owner) : base(owner)

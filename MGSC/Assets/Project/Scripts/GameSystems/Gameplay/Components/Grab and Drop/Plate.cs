@@ -1,6 +1,7 @@
 
 using Cooking;
 using Features;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 /// <summary>
@@ -64,12 +65,20 @@ public class Plate : Item
         {
             Container.OnGrab += TryLock;
             // Make sure only cut ingredients can be put in the plate
-            Container.Filter.AddCondition(item => item.TryGetFeature(out F_Cuttable cuttable) && cuttable.Transformed);
+            Container.Filter.AddCondition(GrabbableCondition);
         }
         if (ContainerComponent.TryGetFeature(out F_Interactable interactable))
         {
             interactable.Enabled = false;
         }
+    }
+    bool GrabbableCondition(object item)
+    {
+        F_Grabbable grabbable = (F_Grabbable)item;
+        if (grabbable == null) return false;
+        if (!grabbable.TryGetSibling(out F_Cuttable cuttable)) return false;
+        if (!cuttable.Transformed) return false;
+        return true;
     }
 
     private void TryLock(F_Grabbable item)
