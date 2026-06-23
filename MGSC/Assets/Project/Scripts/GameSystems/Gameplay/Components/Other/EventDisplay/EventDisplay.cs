@@ -1,7 +1,6 @@
 using Features;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Reflection;
 using Unity.Profiling;
@@ -95,17 +94,22 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
         string targetName = e.ActionPath.ActionVariableName;
         bool bound = false;
 
-        foreach (var mono in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+        foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
         {
-            foreach (var field in  mono.GetType().GetFields())
+            foreach (var types in asm.GetTypes())
             {
-                var attr = field.GetCustomAttribute<BindEventAttribute>();
-                if(attr == null || attr.Name != targetName)continue;
-                if(!IsValidActionType(field.FieldType)) continue;
-                
-                var actionInfo = new PropertyOrFieldInfo(field);
-                TryBindCallbackToFeature(mono, () => e.Event?.Invoke(), actionInfo);
-                bound = true;
+                foreach (var member in types.GetMembers(BindingFlags.Static | BindingFlags.Public))
+                {
+                    var attr = member.GetCustomAttribute<GlobalEventAttribute>();
+                    if (attr == null || attr.Name != targetName) continue;
+                    
+                    var info = new PropertyOrFieldInfo(member);
+                    if(info.Type == null) continue;
+                    
+                    if(!IsValidActionType(info.Type)) continue;
+                    TryBindCallbackToFeature(null, () => e.Event?.Invoke(), info);
+                    bound = true;
+                }
             }
         }
         if (!bound) SkippedEventWarning(e);
@@ -257,18 +261,33 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
         return result;
     }
     
+    
     public static void BuildGlobalActionCache()
     {
         _cachedGlobalActions = new();
         foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
-        foreach (var type in asm.GetTypes())
-        foreach (var field in type.GetFields())
         {
-            var attr = field.GetCustomAttribute<BindEventAttribute>();
-            if (attr == null) continue;
-            if (!IsValidActionType(field.FieldType)) continue;
-            _cachedGlobalActions.Add(new ActionPath(attr.Name, field.FieldType));
+            foreach (var type in asm.GetTypes())
+            {
+                foreach (var member in type.GetMembers(BindingFlags.Public | BindingFlags.Static))
+                {
+                    var attr = member.GetCustomAttribute<GlobalEventAttribute>();
+                    if (attr == null) continue;
+
+                    if (!member.IsStatic())
+                    {
+                        Debug.LogWarning($"[GlobalEvent] field '{member.Name}' on '{type.Name}' must be static. Skipping.");
+                    }
+                    
+                    var info = new PropertyOrFieldInfo(member);
+                    if(info.Type == null) continue;
+                    if (!IsValidActionType(info.Type)) continue;
+                    _cachedGlobalActions.Add(new ActionPath(attr.Name, info.Type));
+                }
+            }
+            
         }
+        
     }
     private static bool IsValidActionType(Type type)
     {

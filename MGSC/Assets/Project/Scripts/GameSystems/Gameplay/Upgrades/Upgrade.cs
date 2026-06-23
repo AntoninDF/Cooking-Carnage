@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using Project.Scripts.GameSystems.Gameplay.Upgrades;
 using UnityEngine;
 
 namespace Upgrades
@@ -26,9 +25,10 @@ namespace Upgrades
         #region Methods
 
         //Initialize the config in the constructor
-        protected Upgrade(UpgradeConfig config)
+        protected Upgrade()
         {
-            _config = config ?? throw new ArgumentNullException(nameof(config), $"[{GetType().Name}] UpgradeConfig cannot be null");
+            
+            //_config = config ?? throw new ArgumentNullException(nameof(config), $"[{GetType().Name}] UpgradeConfig cannot be null");
             OnLevelUp += (level) => Apply();
         }
 
@@ -40,8 +40,8 @@ namespace Upgrades
             _level++;
             OnLevelUp?.Invoke(_level);
         }
-        public virtual float GetPrice() => _config.priceCurve.Evaluate(_level) * _config.basePrice;
-        public virtual bool CanLevelUp() => _level < _config.maxLevel;
+        public virtual float GetPrice() => _config.PriceCurve.Evaluate(_level);
+        public virtual bool CanLevelUp() => _level < _config.MaxLevel;
         #endregion
     }
 }

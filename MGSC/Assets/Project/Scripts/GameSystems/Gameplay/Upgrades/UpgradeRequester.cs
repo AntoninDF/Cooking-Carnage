@@ -1,11 +1,7 @@
-﻿using System;
-using GameSystem;
-using Project.Scripts.GameSystems.Gameplay.Upgrades;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
-using Upgrades;
 
-namespace Assets.Scripts.Upgrades
+namespace Upgrades
 {
     public class UpgradeRequester : MonoBehaviour
     {
