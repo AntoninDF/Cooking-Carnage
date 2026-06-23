@@ -48,11 +48,11 @@ public class Item : MonoBehaviour, IFeatureCollection
         Bounds.Get(out bounds);
         Interactable = new(this);
 
-        SetActiveModel(defaultModel);
         BindEvents();
     }
     protected virtual void Start()
     {
+        SetActiveModel(defaultModel);
         Collection.LateSetup();
     }
     /// <summary>
