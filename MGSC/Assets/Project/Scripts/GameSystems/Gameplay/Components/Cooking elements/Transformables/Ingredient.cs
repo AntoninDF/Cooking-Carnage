@@ -12,7 +12,6 @@ public class Ingredient : Item
     public bool IsBaseIngredient => Model.IsBaseIngredient;
     public F_Ingredient IngredientFeature { get; set; }
     public F_Cuttable Cuttable { get; set; }
-    public F_Cookable Cookable { get; set; }
 
     #endregion
 
@@ -32,7 +31,6 @@ public class Ingredient : Item
         base.Awake();
         IngredientFeature = new(this, Model);
         Cuttable = new(this);
-        Cookable = new(this);
         
 
         if (cutModel != null)

@@ -1,4 +1,4 @@
-
+﻿
 using Cooking;
 using Features;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -24,7 +24,7 @@ public class Plate : Item
     [SerializeField] private SO_RecipeBook _recipeBook;
     [SerializeField] MultiSlotContainer ContainerComponent;
     [SerializeField] Recipe RecipeComponent;
-
+    [SerializeField] ModelController CookedVariant;
 
 
     F_MultiSlotContainer Container;
@@ -57,6 +57,9 @@ public class Plate : Item
     {
         base.Start();
         BindExternalEvents();
+        CookedVariant.SetActive(false);
+        CookedVariant.gameObject.SetActive(false);
+        SetActiveModel(defaultModel);
     }
 
     private void BindExternalEvents()
@@ -112,8 +115,14 @@ public class Plate : Item
         OverCookable.Enabled = true;
         Servable.Enabled = true;
         TryDetectRecipe(out var temp);
+        SetActiveModel(CookedVariant);
     }
     
+    /// <summary>
+    /// REFACTO → Ne pas nécessiter de component de recette et tout faire self-contained
+    /// </summary>
+    /// <param name="recipe"></param>
+    /// <returns></returns>
     public bool TryDetectRecipe(out SO_Recipe recipe)
     {
         recipe = null;

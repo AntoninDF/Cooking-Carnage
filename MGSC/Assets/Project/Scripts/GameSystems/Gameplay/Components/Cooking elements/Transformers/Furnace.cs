@@ -11,16 +11,14 @@ public class Furnace : MonoBehaviour, IFeatureCollection
 
 
     #region Fields
-    [SerializeField] private Transform itemSlot;
-    [SerializeField] private InteractionButton button;
+    [SerializeField] private SlotContainer _itemSlot;
+    [SerializeField] private InteractionButton _button;
 
     #endregion
 
     void Awake()
     {
         Interactable = new(this);
-        Container = new (this, itemSlot);
-        Container.Filter.AddCondition(item => item is Feature feature && feature.TryGetSibling<F_Cookable>(out var temp));
         Cooker = new(this);
 
         BindEvents();
@@ -34,9 +32,24 @@ public class Furnace : MonoBehaviour, IFeatureCollection
 
     private void BindExternalEvents()
     {
-        if (button != null)
+        if (_itemSlot != null)
         {
-            if (button.TryGetFeature(out F_Interactable interactable))
+            Container = _itemSlot.Container;
+            Container.Filter.AddCondition(
+                item =>
+                {
+                    Debug.Log("Filter evaluation");
+                    if (item is not Feature feature) return false;
+                    Debug.Log("Feature detected");
+                    if (!feature.TryGetSibling<F_Cookable>(out var temp)) return false;
+                    Debug.Log("Cookable detected");
+                    return true;
+                }
+                );
+        }
+        if (_button != null)
+        {
+            if (_button.TryGetFeature(out F_Interactable interactable))
             {
                 interactable.OnInteraction += TryStartCooking;
             }
@@ -46,11 +59,8 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     private void BindEvents()
     {
         Interactable.OnInteraction += TryInteract;
-        Cooker.OnTransformationStart += _ => Container.IsLocked = true;
-        Cooker.OnTransformationOver += _ => Container.IsLocked = false;
-
-        Cooker.OnTransformationStart += _ => Debug.Log("Cooker.OnTransformationStart");
-        Cooker.OnTransformationOver += _ => Debug.Log("Cooker.OnTransformationOver");
+        Cooker.OnTransformationStart += OnStartCooking;
+        Cooker.OnTransformationOver += OnStopCooking;
 
     }
     private void TryInteract(InteractionContext context)
@@ -70,5 +80,14 @@ public class Furnace : MonoBehaviour, IFeatureCollection
 
         Cooker.RequestStartTransformation(cookable);
     }
-    
+    private void OnStartCooking(TransformableAfterTimer target)
+    {
+        Debug.Log("Cooker.OnTransformationStart");
+        Container.IsLocked = true;
+    }
+    private void OnStopCooking(TransformableAfterTimer target)
+    {
+        Debug.Log("Cooker.OnTransformationStop");
+        Container.IsLocked = false;
+    }
 }
