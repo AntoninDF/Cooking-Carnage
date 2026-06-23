@@ -18,9 +18,19 @@ public static partial class Globals
             /// <returns></returns>
             public static Material GetDefaultMaterial()
             {
+                // Shader.Find doesn't work here
                 Shader shader = Shader.Find("CookingCarnage/SH_Outline");
-                if (shader == null) shader = Shader.Find("Legacy Shaders/Diffuse");
-                Material result = new Material(shader);
+                Material result;
+                if (shader == null)
+                {
+                    Debug.LogError("Shader couldn't be found with Shader.Find()");
+                    result = Reference.AssetReferences.OutlineMaterial;
+                    //result = new Material(Shader.Find("Legacy Shaders/Diffuse"));
+                }
+                else
+                {
+                    result = new Material(shader);
+                }
                 // Make sure the outline cull mode is correct. It can break even if the shader has the right cull mode set as defaut (idk why)
                 result.SetFloat("_CullMode", 1);
                 result.SetFloat("_CullModeForward", 1);

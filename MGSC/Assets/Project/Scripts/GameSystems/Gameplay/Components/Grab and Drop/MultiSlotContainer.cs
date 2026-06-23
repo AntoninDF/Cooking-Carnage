@@ -68,14 +68,12 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
         }
         else
         {
-            Debug.Log("SoloContainers has " + _soloContainers.Count + " elements");
             foreach (GameObject slot in slots)
             {
                 if (!slot.TryGetComponent<SlotContainer>(out var container)) continue;
                 _soloContainers.Add(container.Container);
             }
         }
-        Debug.Log("SoloContainers has " + _soloContainers.Count + " elements");
         foreach (var obj in _soloContainers)
         {
             var transform = obj.GetParentTransform();

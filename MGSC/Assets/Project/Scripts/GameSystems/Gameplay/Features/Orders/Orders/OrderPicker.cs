@@ -36,7 +36,7 @@ namespace Orders
         {
             var ar = Reference.AssetReferences;
             var sm = Reference.GetManager<ShiftManager>() ;
-            SO_RecipeBook book = ar.defaultRecipeBook;
+            SO_RecipeBook book = ar.DefaultRecipeBook;
 
             if (sm != null)
                 foreach (var elm in ar.recipeBookByShiftCount)

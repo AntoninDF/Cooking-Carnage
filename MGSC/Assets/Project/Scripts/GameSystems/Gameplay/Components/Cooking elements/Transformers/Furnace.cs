@@ -31,6 +31,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     {
         Collection.LateSetup();
         BindExternalEvents();
+        OnCookingProgress(0f);
     }
     
 
@@ -93,6 +94,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
     private void OnStopCooking(TransformableAfterTimer target)
     {
         Container.IsLocked = false;
+        OnCookingProgress(0f);
     }
 
     private void OnCookingProgress(float progression01)

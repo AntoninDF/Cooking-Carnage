@@ -26,7 +26,6 @@ namespace Features
         #region Methods
         private void Awake()
         {
-            
             BoundsFinder = new(this, transform);
 
             MeshController = new(this, DetectControlledRenderers());
@@ -41,6 +40,9 @@ namespace Features
 
         private void Start()
         {
+
+            Shader shader = Shader.Find("CookingCarnage/SH_Outline");
+            Debug.Log("Shader is '" + shader + "'");
             Outline.SetParameters(_outline);
             MeshController.OnDisable += Outline.DisableOutline;
         }
