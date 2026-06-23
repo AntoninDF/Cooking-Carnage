@@ -1,15 +1,13 @@
-
-
 using System;
 using UnityEngine;
 public class TestEventBroadcaster : MonoBehaviour
 {
-    [BindEvent("TEST/Action1")]
-    public Action MyAction;
-    [BindEvent("Action2")]
-    public Action MyOtherAction;
-    [BindEvent("Action3")]
-    public Action MyNewAction;
+    [GlobalEvent("TEST/Action1")]
+    public static Action MyAction;
+    [GlobalEvent("Action2")]
+    public static Action MyOtherAction;
+    [GlobalEvent("Action3")]
+    public static Action MyNewAction;
 
     private void Update()
     {
