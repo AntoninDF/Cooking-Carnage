@@ -3,6 +3,7 @@ using Controller;
 using Features;
 using NaughtyAttributes;
 using UI;
+using Unity.AI.Navigation;
 using UnityEngine;
 using Upgrades;
 namespace GameSystem
@@ -28,7 +29,7 @@ namespace GameSystem
         public FeatureCollection Collection { get; set; } = new FeatureCollection();
 
         // PRIVATE FIELDS
-
+        
         #endregion
 
         #region Methods
@@ -50,6 +51,8 @@ namespace GameSystem
             new ItemManager();
             new FeatureManager();
             new AdaptiveClientSpawner();
+
+           
         }
         void Awake()
         {
@@ -134,6 +137,7 @@ namespace GameSystem
             var gameLoop = go.AddComponent<GameLoop>();
             gameLoop.StartRunning();
         }
+        
 
         private void AddUI()
         {

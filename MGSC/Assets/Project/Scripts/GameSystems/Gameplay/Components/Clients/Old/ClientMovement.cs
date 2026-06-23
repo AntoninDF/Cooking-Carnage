@@ -159,6 +159,16 @@ namespace Clients
 
             ControlledTransform.position = finalPos;
         }
+        
+        public float FindNearestSplineT(Vector3 worldPosition)
+        {
+            Vector3 saved = ControlledTransform.position;
+            ControlledTransform.position = worldPosition;
+            float t = FindNearestSplinePoint();
+            ControlledTransform.position = saved;
+            return t;
+        }
+        
         #endregion
     }
 

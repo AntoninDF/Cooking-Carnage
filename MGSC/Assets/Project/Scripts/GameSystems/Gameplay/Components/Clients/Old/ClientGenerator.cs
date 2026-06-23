@@ -13,7 +13,29 @@ namespace Clients
     /// </summary>
     public partial class Client : MonoBehaviour
     {
-        /*
+
+        #region Properties
+
+        public Clients.ClientMovement Movement         => _movement; 
+        public EClientType            Type             { get; private set; }
+        public SO_Client              Model            { get; private set; }
+        public SO_Ingredient          IngredientToDrop { get; private set; }
+        public Vector2                DropRate         { get; private set; }
+
+        #endregion
+        
+        
+        #region Fields
+
+        private bool _useUpgrades   = true;
+        private float _speed         = 1f;
+        private float _reachDistance = 1f;
+        private SplineContainer _splineComp;
+        private ClientMovement _movement;
+
+        #endregion
+        
+        
         #region Client creation
         /// <summary>
         /// This is the advised way to spawn a new client
@@ -95,7 +117,7 @@ namespace Clients
 
         public Client SetOrder(SO_Recipe recipe)
         {
-            RequestedRecipe = recipe;
+            //RequestedRecipe = recipe;
             return this;
         }
 
@@ -115,7 +137,9 @@ namespace Clients
         public Client SetSplinePath(SplineContainer splineObject)
         {
             _splineComp = splineObject;
-            if (_movement != null) _movement.SplineComponent = splineObject;
+            _movement   = new ClientMovement(transform, _speed, splineObject);
+
+           // if (_movement != null) _movement.SplineComponent = splineObject;
             return this;
         }
 
@@ -132,7 +156,7 @@ namespace Clients
         }
         #endregion
 
-        */
+        
     }
 
 }

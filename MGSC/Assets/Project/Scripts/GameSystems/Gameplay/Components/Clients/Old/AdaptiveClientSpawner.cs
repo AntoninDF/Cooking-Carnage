@@ -24,8 +24,7 @@ namespace GameSystem
         
         // Private Properties
         float GetRandomizedDelay => (delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
-        bool CanSpawnClient => OrderingCounterAvailable() && canSpawnClient && spline!=null;
-        
+        bool  CanSpawnClient     => canSpawnClient && spline != null;        
         #endregion
 
         #region Fields
@@ -82,7 +81,7 @@ namespace GameSystem
             // WIP : should also setup floats according to a Settings Data
 
             models = Reference.AssetReferences.clientList;
-            //spline = Reference.GetManager<PathManager>()?.SplineComponent;
+            spline = Reference.GetManager<PathManager>()?.SplineComponent;
             counters = Reference.GetAll<object>();
 
             Reference.GetManager(out _timerManager);
@@ -182,19 +181,18 @@ namespace GameSystem
             }
                     
             // Spawns the client in the scene via ClientGenerator method Client.New()
-            
-            //Client client = Client.New(clientSO, Vector3.zero,clientSpeed);
-            //client.SetSplinePath(spline);
+            Vector3 spawnPosition = spline.Spline.Evaluate(0, out var pos, out _, out _) ? (Vector3)pos + spline.transform.position : Vector3.zero;
+            Client client = Client.New(clientSO, spawnPosition,clientSpeed);
+            client.SetSplinePath(spline);
             
             this.Log(LogType.Log,clientSO.name +" has been spawned into scene");
             
-            //AssignClientOrderingCounter(client);
-
-            //_clientManager.AddClientData(client,false);
+            AssignClientOrderingCounter(client);
+            _clientManager.AddClientData(client,false);
             //Reference.Get<Entrance>().OnClientEnter.Invoke();
                     
             Launch(GetRandomizedDelay);
-            //OnNewClient?.Invoke(client);
+            OnNewClient?.Invoke(client);
         }
 
         /// <summary>

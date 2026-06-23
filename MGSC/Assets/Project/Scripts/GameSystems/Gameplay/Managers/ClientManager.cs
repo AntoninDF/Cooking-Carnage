@@ -4,6 +4,7 @@ using Clients;
 using UnityEngine;
 using System.Linq;
 using Features;
+using Unity.AI.Navigation;
 
 namespace GameSystem
 {
@@ -15,6 +16,7 @@ namespace GameSystem
         #region Properties
         
         // Public Properties
+        
         public List<Client> CurrentClients => currentClients;
         public int ClientsServedThisShift {  get; private set; }
         public int ClientsKilledThisShift {  get; private set; }
@@ -31,7 +33,6 @@ namespace GameSystem
         List<ClientData> clientHistory =  new List<ClientData>(); // script copy
         
         Dictionary<EClientType, float> clientTypePart = new Dictionary<EClientType, float>();
-
         #endregion
         
         #region Methods
@@ -55,11 +56,11 @@ namespace GameSystem
         }
         public void Init()
         {
-
             foreach (var client in Reference.AssetReferences.clientList)
             {
                 clientTypePart[client.clientType] = 0f;
             }
+            
         }
 
         public void PostInit()
@@ -78,7 +79,7 @@ namespace GameSystem
         public List<ClientSeat> GetClientSeats(bool mustBeAvailable = true)
             => ClientSeats.GetClientSeats(_ => true, mustBeAvailable);
         public List<ClientSeat> GetClientSeats(Func<ClientSeat, bool> filter, bool mustBeAvailable = true)
-            => ClientSeats.GetClientSeats(filter, true);
+            => ClientSeats.GetClientSeats(filter, mustBeAvailable); 
 
 
         /// <summary>

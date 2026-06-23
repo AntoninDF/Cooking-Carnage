@@ -28,7 +28,7 @@ namespace Features
             {
                 if (seat == null) continue;
                 if (!filter(seat)) continue;
-                if (seat.Enabled == false && mustBeAvailable) continue;
+                if (mustBeAvailable && (seat.Enabled == false || seat.RegisteredClient != null)) continue; 
                 result.Add(seat);
             }
             return result;
