@@ -114,14 +114,10 @@ public class Item : MonoBehaviour, IFeatureCollection
         if (activeModel == null)
             return;
 
-        Debug.Log("Setting active...");
         activeModel.gameObject.SetActive(true);
         activeModel.SetActive(true);
-        Debug.Log("Has set active");
 
-        Debug.Log("MeshControllers : " + activeModel.MeshController.Controllers.Length);
         Mesh colliderMesh = activeModel.MeshController.GetCombinedMeshes(transform, true);
-        Debug.Log("Collider mesh set");
         Collider.sharedMesh = colliderMesh;
 
         LookAtTarget.OnStartLookAt += activeModel.Outline.EnableOutline;

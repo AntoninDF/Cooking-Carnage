@@ -7,7 +7,7 @@ namespace Features
     {
         public float SpeedMultiplier { get; set; } = 1f;
         /// <summary>
-        /// The float parameter tells how far across the cooking is, in percentage (100% is fully cooked).
+        /// The float parameter tells how far across the cooking is, in percentage betwen 0 and 1 (1 is fully cooked).
         /// </summary>
         public Action<float> OnTransformationProgress { get; set; }
         public Action<TransformableAfterTimer> OnTransformationOver { get; set; }

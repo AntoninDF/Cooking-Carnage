@@ -18,7 +18,9 @@ public static partial class Globals
             /// <returns></returns>
             public static Material GetDefaultMaterial()
             {
-                Material result = new Material(Shader.Find("CookingCarnage/SH_Outline"));
+                Shader shader = Shader.Find("CookingCarnage/SH_Outline");
+                if (shader == null) shader = Shader.Find("Legacy Shaders/Diffuse");
+                Material result = new Material(shader);
                 // Make sure the outline cull mode is correct. It can break even if the shader has the right cull mode set as defaut (idk why)
                 result.SetFloat("_CullMode", 1);
                 result.SetFloat("_CullModeForward", 1);
