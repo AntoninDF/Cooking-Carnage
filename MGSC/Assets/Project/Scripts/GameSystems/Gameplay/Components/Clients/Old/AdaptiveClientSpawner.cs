@@ -24,7 +24,7 @@ namespace GameSystem
         
         // Private Properties
         float GetRandomizedDelay => (delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
-        bool  CanSpawnClient     => canSpawnClient && spline != null;        
+        bool  CanSpawnClient     => canSpawnClient && spline != null && SeatsOrQueueAvailable()&& SpawnPointIsClear();        
         #endregion
 
         #region Fields
@@ -46,6 +46,9 @@ namespace GameSystem
         private ClientManager _clientManager;
         
         private Queue<SO_Client> nextClients = new();
+        
+        private int   maxQueueSize    = 3;
+        private float _spawnSafeZoneT = 0.1f;
         
         #endregion
 
@@ -284,6 +287,31 @@ namespace GameSystem
             clientSpeed = speed;
         }
 
+        public void OnQueueSlotFreed()
+        {
+            TrySpawnClient();
+        }
+        
+        bool SeatsOrQueueAvailable()
+        {
+            var cm = Reference.GetManager<ClientManager>();
+            bool seatFree  = cm.GetClientSeats(mustBeAvailable: true).Count > 0;
+            bool queueFree = cm.WaitingQueue?.Count < maxQueueSize;
+            return seatFree || queueFree;
+        }
+        
+        bool SpawnPointIsClear()
+        {
+            var clients = Reference.GetManager<ClientManager>().CurrentClients;
+            foreach (var client in clients)
+            {
+                if (client.Movement == null) continue;
+                if (client.Movement.SplineComponent == null) continue; 
+                if (client.Movement.SplinePosition < _spawnSafeZoneT)
+                    return false;
+            }
+            return true;
+        }
         
         /// <summary>
         /// Add a client to the queue

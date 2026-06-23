@@ -76,18 +76,12 @@ namespace Clients
 
         private void Start()
         {
-            // When a client appears, he is hungry by nature.
-            if (CurrentOrder == null)
+            bool found = Behaviour.GoToOrderingCounter(Sit);
+            if (!found)
             {
-               // Behaviour.GoToOrderingCounter(Sit);
-                
-                bool found = Behaviour.GoToOrderingCounter(Sit);
-                if (!found)
-                {
-                    _waitT = CalculateWaitPosition();
-                }
+                var queue = Reference.GetManager<ClientManager>().WaitingQueue;
+                _waitT = queue.Enqueue(this);
             }
-           
         }
 
         void Update()
@@ -231,6 +225,17 @@ namespace Clients
             return count;
         }
         
+        public void SetWaitT(float t)
+        {
+            _waitT = t;
+        }
+
+        public void AssignSeat(ClientSeat seat)
+        {
+            seat.TryRegister(this); 
+            _waitT = -1f; 
+            Behaviour.ClientMovement.SetDestination(seat);
+        }
         
         private void OnDrawGizmos()
         {

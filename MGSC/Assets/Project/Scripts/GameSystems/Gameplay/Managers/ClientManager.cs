@@ -17,10 +17,11 @@ namespace GameSystem
         
         // Public Properties
         
-        public List<Client> CurrentClients => currentClients;
-        public int ClientsServedThisShift {  get; private set; }
-        public int ClientsKilledThisShift {  get; private set; }
-        public Dictionary<EClientType, float> ClientTypeAmount => UpdateClientTypeData();
+        public List<Client>                   CurrentClients         => currentClients;
+        public ClientWaitingQueue             WaitingQueue           { get;  private set; }
+        public int                            ClientsServedThisShift {  get; private set; }
+        public int                            ClientsKilledThisShift {  get; private set; }
+        public Dictionary<EClientType, float> ClientTypeAmount       => UpdateClientTypeData();
 
         public FeatureCollection Collection { get; set; } = new();
         public ClientSeatCollection ClientSeats { get; set; }
@@ -65,6 +66,13 @@ namespace GameSystem
 
         public void PostInit()
         {
+            var spline = Reference.GetManager<PathManager>()?.SplineComponent;
+            WaitingQueue = new(this, spline);
+
+            foreach (var seat in ClientSeats.Seats)
+            {
+                seat.OnClientUnregister += _ => WaitingQueue.OnSeatAvailable(seat);
+            }
         }
 
         private void Reset()
