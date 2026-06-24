@@ -71,7 +71,7 @@ namespace GameSystem
 
             foreach (var seat in ClientSeats.Seats)
             {
-                seat.OnClientUnregister += _ => WaitingQueue.OnSeatAvailable(seat);
+                seat.OnClientUnregister += _ => WaitingQueue.OnSeatFreed(seat);
             }
         }
 

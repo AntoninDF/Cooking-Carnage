@@ -10,10 +10,18 @@ namespace Features
     {
         #region Properties
         
+        public Transform ControlledTransform { get; set;}
+        public SplineContainer SplineComponent { get; set; }
+        public Spline Spline => SplineComponent?.Spline;
         
-        public float Speed { get;set;}
+        public Action OnDestinationReached { get; set; }
+        public Action OnStartMoving { get; set; }
+        public Action OnStopMoving { get; set; }
+        
+        public float Speed          { get; set;}
         public float SplinePosition { get; private set; }
-        
+
+        public bool  IsOnSpline     { get; private set; }
         public bool IsMoving
         {
             get => _isMoving;
@@ -25,126 +33,113 @@ namespace Features
                 else OnStopMoving?.Invoke();
             }
         }
-        public Action OnDestinationReached { get; set; }
-        public Action OnStartMoving { get; set; }
-        public Action OnStopMoving { get; set; }
-    
-        public Transform ControlledTransform { get; set;}
-        public SplineContainer SplineComponent { get; set; }
-        public List<Vector3> CheckedPositions { get; set; } = new();
-        public Spline Spline => SplineComponent?.Spline;
-
         
         #endregion
-
-       
-
+        
         #region Fields
 
-        NavMeshAgent _agent { get; set; } 
-        private bool _validSetup;
-        private bool _isMoving;
+        private List<Vector3> _checkedPositions { get; set; } = new();
+        private NavMeshAgent  _navmeshAgent            { get; set; }
+        private bool          _validSetup;
+        private bool          _isMoving;
 
         #endregion
-    
-    
-        #region Methods
-        public ClientMovement(IFeatureCollection owner,Transform controlledTransform, NavMeshAgent agent,  SplineContainer splineComponent, float speed) : base(owner)
+
+        #region setup
+        /// <summary>
+        /// Initialization of the Movement feature for the client
+        /// assign all the required parameters
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="controlledTransform"></param>
+        /// <param name="navmeshAgent"></param>
+        /// <param name="splineComponent"></param>
+        /// <param name="speed"></param>
+        public ClientMovement(IFeatureCollection owner,Transform controlledTransform, NavMeshAgent navmeshAgent,  SplineContainer splineComponent, float speed) : base(owner)
         {
-            _agent = agent;
+            _navmeshAgent              = navmeshAgent;
             ControlledTransform = controlledTransform;
-            SplineComponent = splineComponent;
-            Speed = speed;
-            _agent.speed = Speed;
-            if (ControlledTransform != null && SplineComponent != null)
-            {
-                
-                _validSetup = true;
-            }
-            else
-            {
-                Debug.Log($"The null component is ControlledTransform : {ControlledTransform == null} or SplineComponent : {SplineComponent == null}");
-                Debug.LogWarning("[ClientMovement] : The client's movement was not initialized properly");
-            }
+            SplineComponent     = splineComponent;
+            Speed               = speed;
+            _navmeshAgent.speed        = speed;
+            _validSetup         = controlledTransform != null && splineComponent != null;
+            
+            if(!_validSetup) 
+                Debug.LogWarning($"[ClientMovement] Invalid Setup - transform is null : {controlledTransform == null} or spline is null : {splineComponent == null}");
         }
-        
-        
-        public void SetDestination(Vector3 worldPosition)
-        {
-            _agent.SetDestination(worldPosition);
-            IsMoving = true;
-        }
-        public void SetDestination(ClientSeat seat)
-        {
-            if (seat == null)
-            {
-                Debug.LogWarning("ClientMovement.SetDestination : Seat is null");
-                return;
-            }
-            _agent.SetDestination(seat.transform.position);
-        }
+
+        #endregion
+
+        #region Unity Lifecycle
+
         public override void Update()
         {
-            HasReachedDestination();
+            if (!IsOnSpline) CheckNavDestination();
         }
-    
-        public bool HasReachedDestination()
-        {
-            // https://discussions.unity.com/t/how-can-i-tell-when-a-navmeshagent-has-reached-its-destination/52403/5
-            // Check if we've reached the destination
-            if (!_agent.pathPending)
-            {
-                if (_agent.remainingDistance <= _agent.stoppingDistance)
-                {
-                    if (!_agent.hasPath || _agent.velocity.sqrMagnitude == 0f)
-                    {
-                        if (IsMoving) OnDestinationReached?.Invoke();
-                        IsMoving = false;
-                        return true;
-                    }
-                }
-            }
-            return false;
-        } 
+
+        #endregion
         
+        #region Spline Methods
+
+        /// <summary>
+        /// Calculate the next position of the custommer on the spline
+        /// </summary>
         public void MoveAlongSpline()
         {
             if (!_validSetup)
             {
+                Debug.Log("[ClientMovement] Setup is not valid, cannot move along spline");
                 return;
             }
-            float length = Spline.GetLength();
-            SetSplinePos(SplinePosition + (Speed * Time.deltaTime / length));
-            
+            float lenght = Spline.GetLength();
+            SetSplinePos(SplinePosition + Speed * Time.deltaTime/lenght);
         }
         
+        /// <summary>
+        /// Apply the calculated next position of the customers on the spline
+        /// </summary>
+        /// <param name="t"></param>
         public void SetSplinePos(float t)
         {
             if (!_validSetup)
             {
+                Debug.Log($"[ClientMovement] Setup is not valid, cannot set the customer position at {t} on the spline");
                 return;
             }
-            SplinePosition = t;
+            SplinePosition               = t;
             ControlledTransform.position = GetSplinePos(t);
         }
         
-        public Vector3 GetSplinePos(float t)
+        /// <summary>
+        /// Evaluate the spline position of t (time) parameter
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public Vector3 GetSplinePos(float time)
         {
             if (!_validSetup)
             {
+                Debug.Log($"[ClientMovement] Setup is not valid, cannot get the position of {time} on the spline");
                 return Vector3.zero;
             }
 
-            Spline.Evaluate(
-                t,
-                out Unity.Mathematics.float3 pos,
-                out Unity.Mathematics.float3 tangent,
-                out Unity.Mathematics.float3 upVector);
+            Spline.Evaluate(time, out Unity.Mathematics.float3 pos, out _, out _);
             return (Vector3)pos + SplineComponent.transform.position;
         }
         
+        /// <summary>
+        /// Return the t value of a position in the spline
+        /// </summary>
+        /// <param name="worldPosition"></param>
+        /// <returns></returns>
         public float FindNearestSplineT(Vector3 worldPosition)
         {
+            if (!_validSetup)
+            {
+                Debug.Log($"[ClientMovement] Setup is not valid, cannot get the time value of {worldPosition} on the spline");
+                return 0f;
+            }
+
             Vector3 saved = ControlledTransform.position;
             ControlledTransform.position = worldPosition;
             float t = FindNearestSplinePoint();
@@ -152,58 +147,120 @@ namespace Features
             return t;
         }
         
+        #endregion
+        
+        #region NavMesh Methods
+
+        /// <summary>
+        /// Switch the movement mode to navMesh
+        /// The customer is moving toward the worldPosition parameter
+        /// OnDestinationReached is fired once it reach destination
+        /// </summary>
+        /// <param name="worldPosition"></param>
+        public void SwitchToNavMesh(Vector3 worldPosition)
+        {
+            IsOnSpline     = false;
+            _navmeshAgent.enabled = true;
+            _navmeshAgent.Warp(ControlledTransform.position);
+            SetNavDestination(worldPosition);
+        }
+
+        /// <summary>
+        /// Disable the NavigationMesh and move alog the spline
+        /// </summary>
+        /// <param name="startTime"></param>
+        public void SwitchToSpline(float startTime)
+        {
+            IsOnSpline     = true;
+            _navmeshAgent.enabled = false;
+            SetSplinePos(startTime);
+        }
+
+        /// <summary>
+        /// Setup the target of the NavMesh agent
+        /// </summary>
+        /// <param name="worldPosition"></param>
+        public void SetNavDestination(Vector3 worldPosition)
+        {
+            if (!_navmeshAgent.enabled) return;
+            _navmeshAgent.SetDestination(worldPosition);
+            IsMoving = true;
+        }
+
+        /// <summary>
+        /// Check if the NavMesh agent have reach the destination
+        /// </summary>
+        private void CheckNavDestination()
+        {
+            if (!_navmeshAgent.enabled || !IsMoving) return;
+            if (_navmeshAgent.pathPending) return;
+
+            if (_navmeshAgent.remainingDistance <= _navmeshAgent.stoppingDistance &&
+                (!_navmeshAgent.hasPath || _navmeshAgent.velocity.sqrMagnitude == 0f))
+            {
+                IsMoving = false;
+                OnDestinationReached?.Invoke();
+                OnDestinationReached = null;
+            }
+        }
+        #endregion
+
+        #region Privates Methods
+
+        /// <summary>
+        /// Find the closest spline point to the customer
+        /// Return the time value of this point
+        /// </summary>
+        /// <returns></returns>
         private float FindNearestSplinePoint()
         {
-            if (!_validSetup)
-            {
-                return 0.0f;
-            }
-            CheckedPositions.Clear();
-            float t = 0;
+            _checkedPositions.Clear();
             float errorMargin = 0.001f;
-            int maxChecks = 40;
+            int   maxChecks    = 40;
 
+            float distanceBetweenInitialsChecks = 1f;
+            int initialChecks = Mathf.Min(maxChecks / 2,
+                                          Mathf.CeilToInt(Spline.GetLength() / distanceBetweenInitialsChecks));
             float lastDistance = float.MaxValue;
-
-            float distanceBetweenInitialChecks = 1f;
-            int initialChecks = Mathf.CeilToInt(Spline.GetLength() / distanceBetweenInitialChecks);
-            initialChecks = Mathf.Min(maxChecks/2, initialChecks);
-
+            float t            = 0;
+            
             for (int i = 0; i <= initialChecks; i++)
             {
-                float dist = Vector3.Distance(ControlledTransform.position, GetSplinePos(1f/initialChecks * i));
+                float sampleT = 1f / initialChecks * i;
+                float dist    = Vector3.Distance(ControlledTransform.position, GetSplinePos(sampleT));
                 if (dist < lastDistance)
                 {
                     lastDistance = dist;
-                    t = 1f / initialChecks * i;
+                    t            = sampleT;
                 }
-                CheckedPositions.Add(GetSplinePos(1f / initialChecks * i));
             }
 
-
             float offset = 0.5f/initialChecks;
-            for (int i = 0; i < maxChecks/2; i++)
+            for (int i = 0; i < maxChecks; i++)
             {
-                float currentDistance = Vector3.Distance(ControlledTransform.position, GetSplinePos(t));
-                CheckedPositions.Add(GetSplinePos(t));
-                if (currentDistance > lastDistance)
-                {
+                float currentDist = Vector3.Distance(ControlledTransform.position, GetSplinePos(t));
+                if (currentDist > lastDistance)
                     offset *= -0.5f;
-                }
-                lastDistance = currentDistance;
-
-                if (Mathf.Abs(offset) <= errorMargin)
-                {
-                    return t;
-                }
-
-                t += offset;
-                t = Mathf.Clamp(t, 0, 1);
+                lastDistance = currentDist;
+                if (Mathf.Abs(offset) <= errorMargin) return t;
+                t = Mathf.Clamp(t + offset, 0, 1f);
             }
 
             return t;
         }
-        
+
         #endregion
+        
+
+        
+        
+        
+       
+        
+        
+        
+       
+        
+        
     }
 }

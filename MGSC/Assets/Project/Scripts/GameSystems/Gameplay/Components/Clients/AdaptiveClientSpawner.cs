@@ -38,10 +38,9 @@ namespace GameSystem
         private float randomDelayRange = 10;
         private float retryDelay = 2;
         private string timerName = "clientSpawn";
-        private float clientSpeed = 1;
+        private float clientSpeed = 0.5f;
         private List<SO_Client> models;
         private SplineContainer spline;
-        private List<object> counters;
         
         // Reference Fields
         private TimerManager _timerManager;
@@ -83,66 +82,27 @@ namespace GameSystem
         /// </summary>
         public void Init()
         {
-            // WIP : should also setup floats according to a Settings Data
-
             models = Reference.AssetReferences.clientList;
             spline = Reference.GetManager<PathManager>()?.SplineComponent;
-            counters = Reference.GetAll<object>();
 
             Reference.GetManager(out _timerManager);
             Reference.GetManager(out _clientManager);
-            _timerManager.StartTimer( "AdaptiveClientSpawner Init", 1, () => Launch(),true);
+    
+            _timerManager.StartTimer("AdaptiveClientSpawner Init", 1, () => Launch(), true);
 
-            if (models.Count <= 0 || !spline || counters.Count <= 0)
-            {
-                this.Log(LogType.Warning," Initialization is incomplete");
-            }
+            if (models.Count <= 0 || !spline)
+                this.Log(LogType.Warning, " Initialization is incomplete");
             else
-            {
                 this.Log(" has been initialized");
-            }
         }
         
-        
-        /// <summary>
-        /// Check if a counter is free to order
-        /// </summary>
-        bool OrderingCounterAvailable() 
-        {
-            if (!ShiftOngoing())
-            {
-                return false;
-            }
-            
-            if (counters.Count == 0)
-            {
-                this.Log(LogType.Error," No ordering counter has been detected");
-                return false;
-            }
-
-            return false;
-        }
+       
 
         bool ShiftOngoing()
         {
             return !_timerManager.IsTimerRunning("shiftEndDelay");
         }
         
-        /// <summary>
-        /// Assign a Client to the ordering counter when it spawns
-        /// </summary>
-        void AssignClientOrderingCounter(Client client)
-        {
-            /*
-            foreach (var counter in counters)
-            {
-                if (!counter.IsFree) continue;
-                //client.ReserveCounter(counter);
-                return;
-            }
-            */
-            this.Log(LogType.Warning," No counter has been found to assign a client to");
-        }
 
         
         /// <summary>
@@ -172,29 +132,30 @@ namespace GameSystem
         /// Spawn a new Client if it is possible
         /// </summary>
         void SpawnClient(SO_Client clientSO = null)
-        {     
+        {
             if (clientSO == null)
             {
-                // If the queue is empty enqueues a new client then it dequeues the first one
                 if (nextClients.Count == 0)
                 {
                     EnqueueClient(NewClient());
-                    
-                    this.Log(LogType.Log," No client in queue so, a new one has been generated");
+                    this.Log(LogType.Log, " No client in queue so, a new one has been generated");
                 }
                 clientSO = nextClients.Dequeue();
             }
-                    
-            // Spawns the client in the scene via ClientGenerator method Client.New()
-            Vector3 spawnPosition = spline.Spline.Evaluate(0, out var pos, out _, out _) ? (Vector3)pos + spline.transform.position : Vector3.zero;
-            Client client = Client.New(clientSO, spawnPosition,clientSpeed).SetSplinePath(spline).SetSpeed(clientSpeed);
-            
-            this.Log(LogType.Log,clientSO.name +" has been spawned into scene");
-            
-            AssignClientOrderingCounter(client);
-            _clientManager.AddClientData(client,false);
-            //Reference.Get<Entrance>().OnClientEnter.Invoke();
-                    
+
+            Vector3 spawnPosition = spline.Spline.Evaluate(0, out var pos, out _, out _)
+                ? (Vector3)pos + spline.transform.position
+                : Vector3.zero;
+
+            Client client = Client.New(clientSO, spawnPosition, clientSpeed)
+                                  .SetSplinePath(spline)
+                                  .SetSpeed(clientSpeed);
+
+            client.Begin();
+
+            this.Log(LogType.Log, clientSO.name + " has been spawned into scene");
+
+            _clientManager.AddClientData(client, false);
             Launch(GetRandomizedDelay);
             OnNewClient?.Invoke();
         }
@@ -281,11 +242,6 @@ namespace GameSystem
             this.Log(LogType.Error, "Error with the selection of new client's type");
             
             return EClientType.None;
-        }
-
-        public void SetClientSpeed(float speed)
-        {
-            clientSpeed = speed;
         }
 
         public void OnQueueSlotFreed()

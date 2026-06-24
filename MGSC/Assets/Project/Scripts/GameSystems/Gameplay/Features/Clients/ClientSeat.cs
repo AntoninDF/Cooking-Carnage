@@ -16,7 +16,7 @@ namespace Features
         public Action<Client> OnClientSitting {get; set; }
         public Action<Client> OnClientLeaving {get; set; }
         
-        
+        public Action OnMealReady { get; set; }
         
         public Client RegisteredClient
         {

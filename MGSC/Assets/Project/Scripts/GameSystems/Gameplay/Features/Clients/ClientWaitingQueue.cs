@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Clients;
 using GameSystem;
@@ -19,7 +20,9 @@ namespace Features
         /// <summary>
         /// the starting point of the waiting line in the spline (in time)
         /// </summary>
-        public float StartWaitingTimeOffset { get; set; } = 0.25f;
+        public float StartWaitingTimeOffset { get;               set; } = 0.25f;
+        public Action<Client, ClientSeat> OnSeatAvailable { get; set; }
+
 
         private Queue<Client>   _queue = new();
         private SplineContainer _spline;
@@ -38,15 +41,15 @@ namespace Features
             return GetWaitTime(_queue.Count - 1);
         }
 
-        public void OnSeatAvailable(ClientSeat freedSeat)
+        public void OnSeatFreed(ClientSeat freedSeat)
         {
             if (_queue.Count == 0) return;
 
             Client first = _queue.Dequeue();
             freedSeat.TryRegister(first);
-            first.AssignSeat(freedSeat);
 
             RefreshPositions();
+            OnSeatAvailable?.Invoke(first, freedSeat);
 
             Reference.GetManager<AdaptiveClientSpawner>()?.OnQueueSlotFreed();
         }
@@ -57,7 +60,7 @@ namespace Features
             foreach (var client in _queue)
             {
                 float waitT = GetWaitTime(index);
-                client.SetWaitT(waitT);
+                client.Behaviour.SetWaitPosition(waitT);
                 index++;
             }
         }

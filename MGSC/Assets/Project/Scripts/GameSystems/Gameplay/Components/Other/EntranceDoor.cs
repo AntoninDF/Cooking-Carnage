@@ -20,7 +20,6 @@ public class EntranceDoor : MonoBehaviour
         /// </summary>
         public void PlayDirector()
         {
-            Debug.Log("Open Door");
             PlayableDirector.Stop();
             PlayableDirector.Play();
         }

@@ -1,5 +1,6 @@
 using System;
 using Clients;
+using GameSystem;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,61 +10,123 @@ namespace Features
 {
     public class ClientBehaviour : Feature, IFeatureCollection
     {
-        public FeatureCollection Collection { get; set; } = new();
+        
+        #region Properties
 
-        public ClientMovement ClientMovement { get; set; }
-        public NavMeshAgent Agent { get; set; }
+        public FeatureCollection Collection     { get; set; } = new();
+        public ClientMovement    ClientMovement { get; set; }
+        public NavMeshAgent      Agent          { get; set; }
 
-        public BaseClientAction DefaultAction;
-        public BaseClientAction LastPerformedAction;
+        public BaseClientAction CurrentAction { get; private set; }
 
-        public Action OnActionPerformed { get; set; }
+        public Action OnSplineUpdate { get; set; }
+
+        #endregion
+
+        #region Fields
+
+        private IFeatureCollection _owner;
+        private Transform          _clientTransform;
+        private SplineContainer    _splineComponent;
+        private float              _speed;
+
+        private WaitInQueue _waitAction;
+        
+        #endregion
 
         public ClientBehaviour(IFeatureCollection owner, Transform clientTransform, NavMeshAgent agent, SplineContainer splineComponent, float speed) : base(owner)
         {
-            Agent = agent;
-            ClientMovement = new(this, clientTransform, agent, splineComponent, speed);
-
-            DefaultAction = new GoToNearestClientSeat(this);
+            _owner           = owner;
+            _clientTransform = clientTransform;
+            _splineComponent = splineComponent;
+            _speed           = speed;
+            Agent            = agent;
         }
 
         public override void Update()
         {
+            if (ClientMovement == null) return;
             Collection.Update();
+            ClientMovement.Update();
+            OnSplineUpdate?.Invoke();
         }
 
-        public void Perform(BaseClientAction action)
+        #region Behavior Logic
+
+        public void Begin()
         {
+            var client = _owner as Client;
+            ClientMovement = new ClientMovement(this, _clientTransform, Agent, client.SplineComp, client.Speed);         
+            ClientMovement.SwitchToSpline(0f);
+            
+            
+            var select = new SelectSeat(this);
+            select.OnSeatFound    += seat => Perform(BuildMoveToSeat(seat));
+            select.OnSeatNotFound += EnqueueAndWait;
+            Perform(select);
+        }
+        
+        private void EnqueueAndWait()
+        {
+            _waitAction = new WaitInQueue(this);
+            Perform(_waitAction);
+
+            var queue = Reference.GetManager<ClientManager>().WaitingQueue;
+            queue.OnSeatAvailable += OnQueueSeatAvailable;
+        }
+
+        private void OnQueueSeatAvailable(Client client, ClientSeat seat)
+        {
+            if (client != Owner as Client) return;
+
+            var queue = Reference.GetManager<ClientManager>().WaitingQueue;
+            queue.OnSeatAvailable -= OnQueueSeatAvailable;
+    
+            _waitAction?.StopWaiting();
+            _waitAction = null;
+
+            Perform(BuildMoveToSeat(seat));
+        }
+        
+        private void Perform(BaseClientAction action)
+        {
+            CurrentAction = action;
             action.Perform();
-            OnActionPerformed?.Invoke();
-            LastPerformedAction = action;
+        }
+
+        #endregion
+
+        #region BaseClientAction Builds
+
+        private MoveToSeat BuildMoveToSeat(ClientSeat seat)
+        {
+            var move            = new MoveToSeat(this, seat);
+            move.OnSeatReached  += s => Perform(BuildSitAndWait(s));
+            return move;
+        }
+
+        private SitAndWaitForServing BuildSitAndWait(ClientSeat seat)
+        {
+            var sit        = new SitAndWaitForServing(this, seat);
+            sit.OnServed   += () => Perform(BuildLeave());
+            return sit;
+        }
+
+        private Leave BuildLeave()
+        {
+            var leave      = new Leave(this);
+            leave.OnExited += () => UnityEngine.Object.Destroy((Owner as Client)?.gameObject);
+            return leave;
+        }
+
+        #endregion
+        
+        public void SetWaitPosition(float t)
+        {
+            ClientMovement.SetSplinePos(t);
         }
         
-        public void GoToServingCounter(Action<ClientSeat> onDestinationReached=null) => GoToCounter<ServingCounter>(onDestinationReached);
         
-        public bool GoToCounter<T>(Action<ClientSeat> onDestinationReached = null) where T : Feature
-        {
-            var action = new GoToNearestClientSeat(this);
-            action.Filter += (obj) => obj is ClientSeat seat && seat.TryGetSibling<T>(out var temp);
-
-            ClientSeat target = action.GetNearestClientSeat();
-            if (target == null) return false; 
-
-            target.TryRegister(Owner as Client);
-            action.OnClientSeatReached += onDestinationReached;
-            Perform(action);
-            return true;
-        }
-
-        public bool GoToOrderingCounter(Action<ClientSeat> onDestinationReached = null) => GoToCounter<OrderingCounter>(onDestinationReached);
-
-        public void GoToEmptySeat()
-        {
-
-        }
-        public void WaitForMeal()
-        {
-
-        }
+        
     }
 }

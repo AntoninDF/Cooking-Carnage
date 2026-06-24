@@ -23,6 +23,9 @@ namespace Clients
         public SO_Ingredient IngredientToDrop { get; private set; }
         public Vector2 DropRate { get; private set; }
 
+        public SplineContainer SplineComp => _splineComp;
+        public float           Speed      => _speed;
+        
         #endregion
         
         
