@@ -6,10 +6,7 @@ namespace Features
     public class F_Recipe : Feature
     {
         #region Properties
-        /// <summary>
-        /// Shortcut for GetMatchingRecipe
-        /// </summary>
-        public SO_Recipe Recipe => GetMatchingRecipe();
+        public SO_Recipe Recipe => RecipeFinder.GetMatchingRecipe(IngredientModels);
         public List<F_Ingredient> Ingredients { get; set; }
         public List<SO_Ingredient> IngredientModels => GetIngredientModels();
 
@@ -21,11 +18,6 @@ namespace Features
         {
         }
 
-        /// <summary>
-        ///  Finds a recipe model based on the ingredients currently stored in this recipe feature
-        /// </summary>
-        /// <returns></returns>
-        public SO_Recipe GetMatchingRecipe() => RecipeFinder.GetMatchingRecipe(IngredientModels);
 
 
         /// <summary>

@@ -2,6 +2,7 @@
 using Cooking;
 using Features;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ public class Plate : Item
     #region Properties
     public F_Cookable Cookable;
     public F_Cookable OverCookable;
+    public F_MultiSlotContainer Container;
     #endregion
 
     #region Fields
@@ -23,10 +25,9 @@ public class Plate : Item
     [Tooltip("The recipe book should contain every possible recipe for this object.")]
     [SerializeField] private SO_RecipeBook _recipeBook;
     [SerializeField] MultiSlotContainer ContainerComponent;
-    [SerializeField] ModelController CookedVariant;
 
 
-    F_MultiSlotContainer Container;
+    private ModelController cookedVariant;
     #endregion
         
         
@@ -54,8 +55,8 @@ public class Plate : Item
     {
         base.Start();
         BindExternalEvents();
-        CookedVariant.SetActive(false);
-        CookedVariant.gameObject.SetActive(false);
+        cookedVariant.SetActive(false);
+        cookedVariant.gameObject.SetActive(false);
         SetActiveModel(defaultModel);
     }
 
@@ -127,9 +128,23 @@ public class Plate : Item
         OverCookable.Enabled = true;
         DetectRecipe(out var recipe);
         EnableRecipeModel(recipe);
-        SetActiveModel(CookedVariant);
+        SetActiveModel(cookedVariant);
+        DeleteContent();
     }
-    
+
+    private void DeleteContent()
+    {
+        Reference.GetManager(out ItemManager manager);
+        foreach(var slot in Container.SoloContainers)
+        {
+            if (slot.HeldItem == null) continue;
+            Item item = slot.HeldItem.Owner as Item;
+            if (item == null) continue;
+            manager.Despawn(item);
+
+        }
+    }
+
     public void DetectRecipe(out SO_Recipe recipe)
     {
         recipe = null;
@@ -142,7 +157,21 @@ public class Plate : Item
 
     void EnableRecipeModel(SO_Recipe recipe)
     {
-        // TODO
+        ModelController mc = recipe.mealPrefab;
+        if (mc == null)
+        {
+            Debug.LogWarning("The meal prefab on the recipe " + recipe.name + " was null");
+            return;
+        }
+
+        // Setup
+        GameObject go = Instantiate(mc.gameObject);
+        go.transform.SetParent(defaultModel.transform.parent);
+        go.transform.localPosition = Vector3.zero;
+        go.transform.localScale = Vector3.one;
+        go.transform.localRotation = Quaternion.identity;
+        cookedVariant = go.GetComponent<ModelController>();
+        SetActiveModel(cookedVariant);
 
 
     }
