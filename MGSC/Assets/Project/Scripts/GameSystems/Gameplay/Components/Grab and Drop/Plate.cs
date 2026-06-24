@@ -1,6 +1,8 @@
 ﻿
 using Cooking;
 using Features;
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -13,7 +15,6 @@ public class Plate : Item
     #region Properties
     public F_Cookable Cookable;
     public F_Cookable OverCookable;
-    public Servable Servable;
     #endregion
 
     #region Fields
@@ -22,7 +23,6 @@ public class Plate : Item
     [Tooltip("The recipe book should contain every possible recipe for this object.")]
     [SerializeField] private SO_RecipeBook _recipeBook;
     [SerializeField] MultiSlotContainer ContainerComponent;
-    [SerializeField] Recipe RecipeComponent;
     [SerializeField] ModelController CookedVariant;
 
 
@@ -42,8 +42,6 @@ public class Plate : Item
         Cookable = new(this);
         OverCookable = new(this);
         OverCookable.Enabled = false;
-        Servable = new(this);
-        Servable.Enabled = false;
         base.Awake();
     }
     protected override void BindEvents()
@@ -127,28 +125,39 @@ public class Plate : Item
     {
         Cookable.Enabled = false;
         OverCookable.Enabled = true;
-        Servable.Enabled = true;
-        TryDetectRecipe(out var temp);
+        DetectRecipe(out var recipe);
+        EnableRecipeModel(recipe);
         SetActiveModel(CookedVariant);
     }
     
-    /// <summary>
-    /// REFACTO → Ne pas nécessiter de component de recette et tout faire self-contained
-    /// </summary>
-    /// <param name="recipe"></param>
-    /// <returns></returns>
-    public bool TryDetectRecipe(out SO_Recipe recipe)
+    public void DetectRecipe(out SO_Recipe recipe)
     {
         recipe = null;
-        if (RecipeComponent == null && !TryGetComponent(out RecipeComponent))
-            return false;
+        var recipeComponent = gameObject.AddComponent<Recipe>();
+        var recipeFeature = recipeComponent.GetFeature<F_Recipe>();
 
-        recipe = RecipeComponent.RecipeFeature.GetMatchingRecipe();
+        recipeFeature.Ingredients = GetContainedIngredients();
+        recipe = recipeFeature.Recipe;
+    }
 
-        RecipeComponent.RecipeFeature.SetIngredients(Container.Container.GetHeldItemsAs<Features.F_Ingredient>());
+    void EnableRecipeModel(SO_Recipe recipe)
+    {
+        // TODO
 
-        if (recipe == null) return false;
-        return true;
+
+    }
+
+    List<F_Ingredient> GetContainedIngredients()
+    {
+        List<F_Ingredient> result = new();
+        foreach (var slot in Container.SoloContainers)
+        {
+            if (slot == null) continue;
+            if (slot.HeldItem == null) continue;
+            if (!slot.HeldItem.TryGetSibling(out F_Ingredient ingredient)) continue;
+            result.Add(ingredient);
+        }
+        return result;
     }
     #endregion
 }

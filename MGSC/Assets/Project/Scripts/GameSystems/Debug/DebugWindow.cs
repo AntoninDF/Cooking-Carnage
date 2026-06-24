@@ -280,7 +280,7 @@ public class DebugWindow : MonoBehaviour
             {
                 string name = c.name ?? "Unknown";
                 //string type = c.Type.ToString();
-                //string order = c.Order?.Recipe.Name ?? "None";
+                //string order = c.Order?.F_Recipe.Name ?? "None";
                 //GUILayout.Label($"> {name} ({type}) : {order}");
             }
         }
