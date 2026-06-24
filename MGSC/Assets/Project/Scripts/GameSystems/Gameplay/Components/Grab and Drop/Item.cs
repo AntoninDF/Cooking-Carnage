@@ -68,21 +68,30 @@ public class Item : MonoBehaviour, IFeatureCollection
 
     protected void TriggerAnim()
     {
-        Transform containerTransform = Grabbable.Container.transform;
+        if (Grabbable.Container == null)
+        {
+            // Go to world origin
+            Anim.GoTo(Vector3.down * Bounds.FindLocalLowestPoint());
+            return;
+        }
 
-        if (containerTransform == null) Grabbable.Container.GetParentTransform();
-        if (Grabbable.Container == null || containerTransform == null)
+        // Find target transform
+        Transform containerTransform = Grabbable.Container.transform;
+        if (containerTransform == null) containerTransform = Grabbable.Container.GetParentTransform();
+
+        if (containerTransform == null)
         {
             // Go to world origin
             Anim.GoTo(Vector3.down * Bounds.FindLocalLowestPoint());
         }
-        if (Grabbable.Container.TryGetSibling(out F_LookAtTarget lookTarget) && Grabbable.Container.AllowItemPlacedOnSurfaceRatherThanTransform)
+        else if (Grabbable.Container.TryGetSibling(out F_LookAtTarget lookTarget) && Grabbable.Container.AllowItemPlacedOnSurfaceRatherThanTransform)
         {
             // Go to the new container at the spot pointed at (for surface containers)
             Anim.GoTo(containerTransform, lookTarget.LookPosition + Vector3.down * Bounds.FindLocalLowestPoint());
         }
         else
         {
+            Debug.Log("Go to transform");
             // Go to 0,0,0 in the new container
             Anim.GoTo(containerTransform);
         }

@@ -42,7 +42,7 @@ namespace Features
         {
 
             Shader shader = Shader.Find("CookingCarnage/SH_Outline");
-            Debug.Log("Shader is '" + shader + "'");
+            //Debug.Log("Shader is '" + shader + "'");
             Outline.SetParameters(_outline);
             MeshController.OnDisable += Outline.DisableOutline;
         }

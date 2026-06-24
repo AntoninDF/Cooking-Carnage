@@ -1,7 +1,6 @@
 ﻿
 using Cooking;
 using Features;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 /// <summary>
@@ -93,17 +92,31 @@ public class Plate : Item
     }
     protected override void TryInteract(InteractionContext context)
     {
-        if (context.TryGetFeature(out F_Container container))
+        if (context.TryGetFeature(out F_Container playerContainer))
         {
-            // Try to take the player's ingredient
-            if (container.CanDrop(container.HeldItem))
+            // Try to take the player's ingredient, otherwise, try to get grabbed
+            if (!Container.RequestGrab(playerContainer.HeldItem))
             {
-                Container.RequestGrab(container.HeldItem);
-            }
-            // Or ask the player to grab this plate
-            else
-            {
-                container.RequestGrab(Grabbable);
+                // Try to swap the plates
+                if (playerContainer.HeldItem != null && playerContainer.HeldItem.Owner is Plate playerPlate)
+                {
+                    var otherItem = playerContainer.HeldItem;
+                    var currentContainer = Grabbable.Container;
+                    var targetPos = transform.position;
+                    playerContainer.RequestDrop(otherItem);
+                    playerContainer.RequestGrab(Grabbable);
+                    if (currentContainer != null)
+                    {
+                        currentContainer.RequestGrab(otherItem);
+                        var otherPlate = otherItem.Owner as Plate;
+                        otherPlate.Anim.GoTo(currentContainer.transform, targetPos);
+                    }
+                }
+                // Or just take this one
+                else
+                {
+                    playerContainer.RequestGrab(Grabbable);
+                }
             }
         }
 

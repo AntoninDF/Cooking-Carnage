@@ -23,7 +23,7 @@ public static partial class Globals
                 Material result;
                 if (shader == null)
                 {
-                    Debug.LogError("Shader couldn't be found with Shader.Find()");
+                    //Debug.LogError("Shader couldn't be found with Shader.Find()");
                     result = Reference.AssetReferences.OutlineMaterial;
                     //result = new Material(Shader.Find("Legacy Shaders/Diffuse"));
                 }
