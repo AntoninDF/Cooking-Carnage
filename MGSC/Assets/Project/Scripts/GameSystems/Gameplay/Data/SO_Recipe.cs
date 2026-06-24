@@ -20,7 +20,7 @@ namespace Cooking
         [SerializeField] new private string name;
 
         [Tooltip("The item prefab should contain the graphics and a meal component")]
-        public GameObject mealPrefab;
+        public ModelController mealPrefab;
         [Tooltip("How much money does a recipe give")]
         public float Price;
         [Tooltip("How long does it take to go from raw to cooked ?")]

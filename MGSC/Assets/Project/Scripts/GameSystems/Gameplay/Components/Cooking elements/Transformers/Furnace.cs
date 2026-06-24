@@ -1,9 +1,9 @@
 using Features;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Furnace : MonoBehaviour, IFeatureCollection
 {
@@ -32,6 +32,7 @@ public class Furnace : MonoBehaviour, IFeatureCollection
         Collection.LateSetup();
         BindExternalEvents();
         OnCookingProgress(0f);
+        ResetDisplayedSprites();
     }
     
 
@@ -43,14 +44,13 @@ public class Furnace : MonoBehaviour, IFeatureCollection
             Container.Filter.AddCondition(
                 item =>
                 {
-                    Debug.Log("Filter evaluation");
                     if (item is not Feature feature) return false;
-                    Debug.Log("Feature detected");
                     if (!feature.TryGetSibling<F_Cookable>(out var temp)) return false;
-                    Debug.Log("Cookable detected");
                     return true;
                 }
                 );
+            Container.OnGrab += _ => ShowRecipeSprites();
+            Container.OnDrop += _ => ResetDisplayedSprites();
         }
         if (_button != null)
         {
@@ -112,12 +112,71 @@ public class Furnace : MonoBehaviour, IFeatureCollection
             ProgressFeedbacks.PercentageText.text = Mathf.Round(100f * progression01).ToString() + "%";
         }
     }
+    public List<F_Ingredient> GetContainedIngredients()
+    {
+        List<F_Ingredient> result = new();
+        if (Container.HeldItem == null) return result;
+        Debug.Log("1");
+        if (!Container.HeldItem.TryGetSibling(out F_MultiSlotContainer multiContainer)) return result;
+        Debug.Log("2");
+        foreach(var slot in multiContainer.SoloContainers)
+        {
+            // Gros pavelard de if oulala
+            if (slot == null) continue;
+            if (slot.HeldItem == null) continue;
+            if (!slot.HeldItem.TryGetSibling(out F_Grabbable grabbable)) continue;
+            if (grabbable == null) continue;
+            if (!grabbable.TryGetSibling(out F_Ingredient ingredient)) continue;
+            result.Add(ingredient);
+        }
+        return result;
+    }
+    public List<Sprite> GetSpritesFromIngredients(List<F_Ingredient> ingredients)
+    {
+        List<Sprite> result = new();
+        foreach(var  ingredient in ingredients)
+        {
+            if (ingredient == null) continue;
+            if (ingredient.Model == null) continue;
+            if (ingredient.Model.Sprite == null) continue;
+            result.Add(ingredient.Model.Sprite);
+        }
+        return result;
+    }
+    public void ShowSpriteList(List<Sprite> sprites)
+    {
+        ResetDisplayedSprites();
+
+        // Show as many sprites as possible given the input sprites and the available Image components
+        int minLength = Mathf.Min(ProgressFeedbacks.IngredientInfoScreens.Count, sprites.Count);
+        for (int i = 0; i < minLength; i++)
+        {
+            Image img = ProgressFeedbacks.IngredientInfoScreens[i];
+            Sprite sprite = sprites[i];
+
+            img.gameObject.SetActive(true);
+            img.sprite = sprite;
+        }
+    }
+
+    public void ResetDisplayedSprites()
+    {
+        // Reset sprites
+        foreach (var img in ProgressFeedbacks.IngredientInfoScreens)
+        {
+            img.sprite = null;
+            img.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowRecipeSprites() => ShowSpriteList(GetSpritesFromIngredients(GetContainedIngredients()));
     [Serializable]
     public struct Feedbacks
     {
         public MaterialProperty MaterialProperty;
         public AnimatedTransform AnimatedTransform;
         public TMP_Text PercentageText;
+        public List<Image> IngredientInfoScreens;
     }
     [Serializable]
     public struct MaterialProperty

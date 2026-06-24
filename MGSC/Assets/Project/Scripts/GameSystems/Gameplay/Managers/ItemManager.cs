@@ -137,6 +137,11 @@ public class ItemManager : IManager
         UpdateActiveList(itemToDespawn);
         
         this.Log(LogType.Log, "Despawned " + itemToDespawn.name );
+
+        if (itemToDespawn.Grabbable.Container != null)
+        {
+            itemToDespawn.Grabbable.Container.RequestDrop(itemToDespawn.Grabbable);
+        }
         
         GameObject.Destroy(itemToDespawn.gameObject);
         
