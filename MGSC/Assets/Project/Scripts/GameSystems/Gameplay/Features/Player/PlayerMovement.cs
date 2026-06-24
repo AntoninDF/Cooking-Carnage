@@ -117,13 +117,15 @@ namespace Features
             if (HeadTransform != null)
                 HeadTransform.localRotation = Quaternion.Euler(_verticalRotation, 0, 0);
         }
+        // Refacto / to do : fix angles when looking up or down (the player can get stuck looking up or down)
         private void ApplyLookDirection(Vector3 direction)
         {
             var yawDirection = new Vector3(direction.x, 0, direction.z).normalized;
+            yawDirection = yawDirection == Vector3.zero ? Vector3.forward : yawDirection;
             ControlledTransform.rotation = Quaternion.LookRotation(yawDirection, Vector3.up);
 
 
-            double pitch = Mathf.Asin(direction.y) / 3.141592 * 180;
+            double pitch = Mathf.Asin(Mathf.Clamp(direction.y, -0.95f, 0.95f)) / 3.141592 * 180;
             if (HeadTransform != null)
                 HeadTransform.localRotation = Quaternion.Euler((float)pitch, 0, 0);
         }
@@ -132,8 +134,6 @@ namespace Features
         {
             LookDirection = Quaternion.Euler(0, offset.x * LookSpeed, 0) * LookDirection;
             LookDirection = Quaternion.AngleAxis(-offset.y * LookSpeed, Vector3.Cross(LookDirection, Vector3.up).normalized) * LookDirection;
-
-
         }
         private void HandleRotation()
         {

@@ -87,7 +87,7 @@ public class Item : MonoBehaviour, IFeatureCollection
         else if (Grabbable.Container.TryGetSibling(out F_LookAtTarget lookTarget) && Grabbable.Container.AllowItemPlacedOnSurfaceRatherThanTransform)
         {
             // Go to the new container at the spot pointed at (for surface containers)
-            Anim.GoTo(containerTransform, lookTarget.LookPosition + Vector3.down * Bounds.FindLocalLowestPoint());
+            Anim.GoTo(containerTransform, lookTarget.LookPosition ); // + Vector3.down * Bounds.FindLocalLowestPoint()
         }
         else
         {
@@ -107,6 +107,31 @@ public class Item : MonoBehaviour, IFeatureCollection
         return container.RequestGrab(Grabbable);
     }
 
+    public void SwapWith(F_Grabbable other)
+    {
+        if (other == null) return;
+        var otherContainer = other.Container;
+        var currentContainer = Grabbable.Container;
+        var targetPos = transform.position;
+        var parent = transform.parent;
+
+        otherContainer?.RequestDrop(other);
+        otherContainer?.RequestGrab(Grabbable);
+
+        currentContainer?.RequestGrab(other);
+        if (other.TryGetSibling(out F_GoToAnimation anim))
+        {
+            if (currentContainer != null)
+            {
+                anim.GoTo(currentContainer.transform, targetPos);
+            }
+            else if (parent != null)
+            {
+                anim.GoTo(parent, targetPos);
+            }
+        }
+
+    }
     public void SetActiveModel(ModelController model)
     {
         if (activeModel != null)
