@@ -52,7 +52,8 @@ namespace Features
 
         protected virtual void Progress(float progress, float duration)
         {
-            UnityEngine.Debug.Log("Transformation " + progress);
+            // Debug once every ten frame (approximatively)
+            if ((progress * 100) % 10 < 1) UnityEngine.Debug.Log("Transformation " + (UnityEngine.Mathf.Round(progress * 10f)/10f).ToString());
             if (duration == 0) duration = 1f;
             OnTransformationProgress?.Invoke(progress / duration);
         }

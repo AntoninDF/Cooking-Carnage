@@ -68,6 +68,7 @@ public class Plate : Item
             Container.OnGrab += TryLock;
             // Make sure only cut ingredients can be put in the plate
             Container.Filter.AddCondition(GrabbableCondition);
+            Collection.Add(Container);
         }
         if (ContainerComponent.TryGetFeature(out F_Interactable interactable))
         {

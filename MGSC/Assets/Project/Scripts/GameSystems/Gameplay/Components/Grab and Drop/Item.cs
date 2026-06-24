@@ -101,12 +101,11 @@ public class Item : MonoBehaviour, IFeatureCollection
     {
         TryGetGrabbed(context);
     }
-    protected virtual void TryGetGrabbed(InteractionContext context)
+    protected virtual bool TryGetGrabbed(InteractionContext context)
     {
-        if (context.TryGetFeature(out F_Container container))
-        {
-            container.RequestGrab(Grabbable);
-        }
+        if (!context.TryGetFeature(out F_Container container)) return false;
+
+        return container.RequestGrab(Grabbable);
     }
 
     public void SetActiveModel(ModelController model)
