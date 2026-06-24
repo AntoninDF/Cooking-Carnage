@@ -2,6 +2,7 @@ using System;
 using Controller;
 using Features;
 using NaughtyAttributes;
+using Orders;
 using UI;
 using UnityEngine;
 using Upgrades;
@@ -147,9 +148,10 @@ namespace GameSystem
 
         private void SetupMealPrices()
         {
-            MoneyEvaluator.RawMealPrice = _gameProfile.DefaultRecipePrices.rawMealPrice;
-            MoneyEvaluator.WrongMealPrice = _gameProfile.DefaultRecipePrices.wrongMealPrice;
-            MoneyEvaluator.OvercookedMealPrice = _gameProfile.DefaultRecipePrices.overcookedMealPrice;
+            //OrderEvaluator.WrongMealPrice = _gameProfile.DefaultRecipePrices.rawMealPrice;
+            OrderEvaluator.WrongMealPrice = _gameProfile.DefaultRecipePrices.wrongMealPrice;
+            OrderEvaluator.OvercookedMealPrice = _gameProfile.DefaultRecipePrices.overcookedMealPrice;
+            OrderEvaluator.PlainJellyPrice = _gameProfile.DefaultRecipePrices.emptyMealPrice;
         }
 
         private void SetupDebug()
