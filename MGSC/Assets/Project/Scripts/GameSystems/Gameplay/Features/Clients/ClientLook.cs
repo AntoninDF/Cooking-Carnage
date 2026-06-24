@@ -8,47 +8,65 @@ namespace Features
     /// </summary>
     public class ClientLook : Feature
     {
-
-        #region Properties
-
-        #endregion
         
         #region Fields
+
+        private Vector3        _lookDirection     = Vector3.forward;
+        private Vector3        _previousDirection = Vector3.forward;
+        private Transform      _client;
+        private ClientMovement _movement;
+        private bool           _isSitting;
         
-        private Vector3 _lookDirection =  Vector3.forward;
-        private Vector3 _previousDirection;
-        private Transform _client;
-        private bool isSitting;
+        private Vector3 _currentDirection;
+        private Vector3 _smoothVelocity;
+        private float   _smoothTime = 0.15f;
 
         #endregion
 
-        public ClientLook(IFeatureCollection owner, Transform clientTransform) : base(owner)
+        public ClientLook(IFeatureCollection owner, Transform clientTransform, ClientMovement movement) : base(owner)
         {
-            _client = clientTransform;
+            _client   = clientTransform;
+            _movement = movement;
         }
 
         public override void Update()
         {
-            if (isSitting)
-            {
-                Debug.Log("Is Not rotating");
-                return;
-            }
-            Quaternion targetRot = Quaternion.LookRotation(Vector3.Lerp(_previousDirection, _lookDirection, Time.deltaTime * 5));
-            Quaternion applyedRot = new Quaternion(0, targetRot.y, 0, targetRot.w);
-            _client.rotation = Quaternion.Lerp(_client.rotation, applyedRot, Time.deltaTime * 5f);
+            if (_isSitting) return;
+
+            Vector3 targetDirection = GetMovementDirection();
+            if (targetDirection == Vector3.zero) return;
+            _currentDirection = Vector3.SmoothDamp(_currentDirection, targetDirection, ref _smoothVelocity, _smoothTime);
+            if (_currentDirection.sqrMagnitude < 0.001f) return;
+            _client.rotation = Quaternion.LookRotation(_currentDirection) * Quaternion.Euler(0, 0, 0);
+            _client.rotation = Quaternion.Euler(0, _client.eulerAngles.y, 0);
         }
-        
-        
-        public void SetTarget(Vector3 targetDir)
+
+        private Vector3 GetMovementDirection()
         {
-            _previousDirection = _lookDirection;
-            _lookDirection = targetDir;
+            if (_movement.IsOnSpline)
+            {
+                float   t       = _movement.SplinePosition;
+                Vector3 current = _movement.GetSplinePos(t);
+                Vector3 ahead   = _movement.GetSplinePos(Mathf.Clamp01(t + 0.02f));
+                Vector3 dir     = (ahead - current);
+                return dir.sqrMagnitude > 0.0001f ? dir.normalized : Vector3.zero;
+            }
+            else
+            {
+                Vector3 velocity = _movement.AgentVelocity;
+                return velocity.sqrMagnitude > 0.01f ? velocity.normalized : Vector3.zero;
+            }
         }
 
         public void SetClientSitting(Client client)
         {
-            isSitting = true;
+            _isSitting      = true;
+            _smoothVelocity = Vector3.zero;
+        }
+
+        public void SetClientLeaving(Client client)
+        {
+            _isSitting = false;
         }
         
         

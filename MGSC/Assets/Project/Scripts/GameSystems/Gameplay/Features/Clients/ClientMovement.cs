@@ -18,6 +18,8 @@ namespace Features
         public Action OnStartMoving { get; set; }
         public Action OnStopMoving { get; set; }
         
+        public Vector3 AgentVelocity => _navmeshAgent.enabled ? _navmeshAgent.velocity : Vector3.zero;
+        
         public float Speed          { get; set;}
         public float SplinePosition { get; private set; }
 

@@ -67,8 +67,8 @@ namespace Clients
        {
            NavMeshAgent agent = GetComponent<NavMeshAgent>();
            Behaviour   = new ClientBehaviour(this, transform, agent, _splineComp, _speed);
-           _clientLook = new ClientLook(this, transform);
-           Collection.Add(_clientLook);
+           
+           OnSeatRegister += OnNewSeatRegister;
        }
 
        public void Begin()
@@ -82,6 +82,12 @@ namespace Clients
        }
 
        #endregion
+
+       public void InitLook(ClientMovement movement)
+       {
+           _clientLook = new ClientLook(this, transform, movement);
+           Collection.Add(_clientLook);
+       }
 
        #region Seat
 
@@ -146,6 +152,8 @@ namespace Clients
                                          transform.position + Vector3.up * 1.2f,
                                          "CurrentSeat is " + (CurrentSeat.Owner as UnityEngine.Object)?.name);
            }
+           
+           
        }
 
        #endregion

@@ -59,6 +59,7 @@ namespace Features
             ClientMovement = new ClientMovement(this, _clientTransform, Agent, client.SplineComp, client.Speed);         
             ClientMovement.SwitchToSpline(0f);
             
+            client.InitLook(ClientMovement);
             
             var select = new SelectSeat(this);
             select.OnSeatFound    += seat => Perform(BuildMoveToSeat(seat));

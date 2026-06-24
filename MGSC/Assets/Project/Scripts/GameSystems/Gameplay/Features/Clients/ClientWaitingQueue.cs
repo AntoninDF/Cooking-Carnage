@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Clients;
 using GameSystem;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -20,7 +21,7 @@ namespace Features
         /// <summary>
         /// the starting point of the waiting line in the spline (in time)
         /// </summary>
-        public float StartWaitingTimeOffset { get;               set; } = 0.25f;
+        public float QueueStartT { get;                          set; } = 0.3f;
         public Action<Client, ClientSeat> OnSeatAvailable { get; set; }
 
 
@@ -72,10 +73,7 @@ namespace Features
         /// <returns></returns>
         private float GetWaitTime(int index)
         {
-            if (_anchorTime < 0f)
-                _anchorTime = ComputeAnchorTime() - StartWaitingTimeOffset;
-
-            return Mathf.Clamp(_anchorTime - (index + 1) * SpacingTime, 0f, 1f);
+            return Mathf.Clamp(QueueStartT - (index + 1) * SpacingTime, 0f, 1f);
         }
 
         /// <summary>
@@ -124,6 +122,12 @@ namespace Features
                 }
             }
             return bestT;
+        }
+
+        public Vector3 GetStartPosition()
+        {
+            _spline.Spline.Evaluate(QueueStartT, out var pos, out _, out _);
+            return pos;
         }
     }
 }
