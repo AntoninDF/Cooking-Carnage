@@ -91,7 +91,6 @@ public class Item : MonoBehaviour, IFeatureCollection
         }
         else
         {
-            Debug.Log("Go to transform");
             // Go to 0,0,0 in the new container
             Anim.GoTo(containerTransform);
         }
