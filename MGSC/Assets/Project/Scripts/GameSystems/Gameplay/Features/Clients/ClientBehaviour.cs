@@ -3,6 +3,7 @@ using Clients;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Splines;
 
 namespace Features
 {
@@ -18,10 +19,10 @@ namespace Features
 
         public Action OnActionPerformed { get; set; }
 
-        public ClientBehaviour(IFeatureCollection owner, NavMeshAgent agent) : base(owner)
+        public ClientBehaviour(IFeatureCollection owner, Transform clientTransform, NavMeshAgent agent, SplineContainer splineComponent, float speed) : base(owner)
         {
             Agent = agent;
-            ClientMovement = new(this, agent);
+            ClientMovement = new(this, clientTransform, agent, splineComponent, speed);
 
             DefaultAction = new GoToNearestClientSeat(this);
         }
@@ -54,8 +55,7 @@ namespace Features
             return true;
         }
 
-        public bool GoToOrderingCounter(Action<ClientSeat> onDestinationReached = null)
-            => GoToCounter<OrderingCounter>(onDestinationReached);
+        public bool GoToOrderingCounter(Action<ClientSeat> onDestinationReached = null) => GoToCounter<OrderingCounter>(onDestinationReached);
 
         public void GoToEmptySeat()
         {

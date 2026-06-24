@@ -84,10 +84,8 @@ namespace GameSystem
         }
 
         public void Register(ClientSeat seat) => ClientSeats.Register(seat);
-        public List<ClientSeat> GetClientSeats(bool mustBeAvailable = true)
-            => ClientSeats.GetClientSeats(_ => true, mustBeAvailable);
-        public List<ClientSeat> GetClientSeats(Func<ClientSeat, bool> filter, bool mustBeAvailable = true)
-            => ClientSeats.GetClientSeats(filter, mustBeAvailable); 
+        public List<ClientSeat> GetClientSeats(bool mustBeAvailable = true) => ClientSeats.GetClientSeats(_ => true, mustBeAvailable);
+        public List<ClientSeat> GetClientSeats(Func<ClientSeat, bool> filter, bool mustBeAvailable = true) => ClientSeats.GetClientSeats(filter, mustBeAvailable); 
 
 
         /// <summary>

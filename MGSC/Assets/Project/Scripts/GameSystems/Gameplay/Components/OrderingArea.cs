@@ -7,7 +7,6 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
 {
     #region Properties
     public FeatureCollection Collection { get; set; } = new();
-
     public ClientSeat ClientSeat { get; set; }
     public OrderingCounter OrderingCounter { get; set; }
     public Order NextOrder { get; set; }

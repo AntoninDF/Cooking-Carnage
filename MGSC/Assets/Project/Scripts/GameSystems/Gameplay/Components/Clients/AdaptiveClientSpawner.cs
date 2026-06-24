@@ -20,10 +20,12 @@ namespace GameSystem
         // Public Properties
         public int NextClientsCount => nextClients.Count;
         public SO_Client GetNextClient() => nextClients.Count > 0 ? nextClients.Peek() : null;
-        public Action<Client> OnNewClient;
+        
+        [GlobalEvent("On New Client Spawned")]
+        public static Action OnNewClient;
         
         // Private Properties
-        float GetRandomizedDelay => (delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
+        float GetRandomizedDelay => Mathf.Max(5, delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
         bool  CanSpawnClient     => canSpawnClient && spline != null && SeatsOrQueueAvailable()&& SpawnPointIsClear();        
         #endregion
 
@@ -47,7 +49,7 @@ namespace GameSystem
         
         private Queue<SO_Client> nextClients = new();
         
-        private int   maxQueueSize    = 3;
+        private int   maxQueueSize    = 1;
         private float _spawnSafeZoneT = 0.1f;
         
         #endregion
@@ -160,7 +162,7 @@ namespace GameSystem
             }
             else
             {
-                this.Log(LogType.Log," Client couldn't be spawned so it will try again in "+retryDelay+" seconds");
+                this.Log(LogType.Log," Client couldn't be spawned so it will try again in "+ retryDelay +" seconds");
                 Launch(retryDelay);
                 return false;
             }
@@ -185,8 +187,7 @@ namespace GameSystem
                     
             // Spawns the client in the scene via ClientGenerator method Client.New()
             Vector3 spawnPosition = spline.Spline.Evaluate(0, out var pos, out _, out _) ? (Vector3)pos + spline.transform.position : Vector3.zero;
-            Client client = Client.New(clientSO, spawnPosition,clientSpeed);
-            client.SetSplinePath(spline);
+            Client client = Client.New(clientSO, spawnPosition,clientSpeed).SetSplinePath(spline).SetSpeed(clientSpeed);
             
             this.Log(LogType.Log,clientSO.name +" has been spawned into scene");
             
@@ -195,7 +196,7 @@ namespace GameSystem
             //Reference.Get<Entrance>().OnClientEnter.Invoke();
                     
             Launch(GetRandomizedDelay);
-            OnNewClient?.Invoke(client);
+            OnNewClient?.Invoke();
         }
 
         /// <summary>
@@ -305,9 +306,9 @@ namespace GameSystem
             var clients = Reference.GetManager<ClientManager>().CurrentClients;
             foreach (var client in clients)
             {
-                if (client.Movement == null) continue;
-                if (client.Movement.SplineComponent == null) continue; 
-                if (client.Movement.SplinePosition < _spawnSafeZoneT)
+                if (client.Behaviour.ClientMovement == null) continue;
+                if (client.Behaviour.ClientMovement.SplineComponent == null) continue; 
+                if (client.Behaviour.ClientMovement.SplinePosition < _spawnSafeZoneT)
                     return false;
             }
             return true;

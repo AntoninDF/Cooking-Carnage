@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cooking;
 using System.Collections.Generic;
+using Features;
 using UnityEngine.Splines;
 using Upgrades;
 using GameSystem;
@@ -16,11 +17,11 @@ namespace Clients
 
         #region Properties
 
-        public Clients.ClientMovement Movement         => _movement; 
-        public EClientType            Type             { get; private set; }
-        public SO_Client              Model            { get; private set; }
-        public SO_Ingredient          IngredientToDrop { get; private set; }
-        public Vector2                DropRate         { get; private set; }
+        //public ClientMovement Movement => _movement;
+        public EClientType Type { get; private set; }
+        public SO_Client Model { get; private set; }
+        public SO_Ingredient IngredientToDrop { get; private set; }
+        public Vector2 DropRate { get; private set; }
 
         #endregion
         
@@ -31,7 +32,7 @@ namespace Clients
         private float _speed         = 1f;
         private float _reachDistance = 1f;
         private SplineContainer _splineComp;
-        private ClientMovement _movement;
+        //private ClientMovement _movement;
 
         #endregion
         
@@ -133,25 +134,23 @@ namespace Clients
             Model = model;
             return this;
         }
+        
 
-        public Client SetSplinePath(SplineContainer splineObject)
+        public Client SetReachDistance(float distance)
         {
-            _splineComp = splineObject;
-            _movement   = new ClientMovement(transform, _speed, splineObject);
-
-           // if (_movement != null) _movement.SplineComponent = splineObject;
+            _reachDistance = distance;
             return this;
         }
-
+        
         public Client SetSpeed(float speed)
         {
             _speed = speed;
             return this;
         }
-
-        public Client SetReachDistance(float distance)
+        
+        public Client SetSplinePath(SplineContainer splineObject)
         {
-            _reachDistance = distance;
+            _splineComp = splineObject;
             return this;
         }
         #endregion

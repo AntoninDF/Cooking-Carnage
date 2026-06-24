@@ -4,6 +4,7 @@ using GameSystem;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Splines;
 
 namespace Clients
 {
@@ -16,114 +17,140 @@ namespace Clients
     public partial class Client : MonoBehaviour, IFeatureCollection
     {
         #region Properties
-        public FeatureCollection Collection { get; set; } = new();
-        public Action<Order> OnNewOrder {  get; set; }
-        public Action<ClientSeat> OnSeatRegister { get; set; }
-        public Action<ClientSeat> OnSeatUnregister { get; set; }
-        public ClientBehaviour Behaviour { get; set; }
-        public Order CurrentOrder
+       public FeatureCollection Collection { get; set; } = new();
+       public Action<Order> OnNewOrder {  get; set; }
+       public Action<ClientSeat> OnSeatRegister { get; set; }
+       public Action<ClientSeat> OnSeatUnregister { get; set; }
+       public ClientBehaviour Behaviour { get; set; }
+       public Order CurrentOrder
+       {
+           get => _currentOrder;
+           set
+           {
+               //Debug.Log("Current order is accessed");
+               if (_currentOrder == value) return;
+               _currentOrder = value;
+               if (value != null)
+               {
+                   //Debug.Log("Current order is set");
+                   OnNewOrder?.Invoke(value);
+               }
+           }
+       }
+       public ClientSeat CurrentSeat
+       {
+           get => _currentSeat;
+           set
+           {
+               if (_currentSeat == value) return;
+               OnSeatUnregister?.Invoke(_currentSeat);
+               if (value != null)
+               {
+                   OnSeatRegister?.Invoke(value);
+                   value.OnClientSitting += _clientLook.SetClientSitting;
+                   value.OnClientSitting += DebugSeat;
+               }
+
+               _currentSeat = value;
+           }
+       }
+
+       #endregion
+
+       #region Fields
+       
+       private Order _currentOrder;
+       private ClientSeat _currentSeat;
+       private ClientLook _clientLook;
+       
+       private float _splineExitTime       = -1f; 
+       private bool  _returningOnSpline = false;
+       private float _waitTime             = 0.9f;
+       
+       
+       #endregion
+
+        public void DebugSeat(Client client)
         {
-            get => _currentOrder;
-            set
-            {
-                //Debug.Log("Current order is accessed");
-                if (_currentOrder == value) return;
-                _currentOrder = value;
-                if (value != null)
-                {
-                    //Debug.Log("Current order is set");
-                    OnNewOrder?.Invoke(value);
-                }
-            }
+            Debug.Log(client.name);
         }
-        public ClientSeat CurrentSeat
-        {
-            get => _currentSeat;
-            set
-            {
-                if (_currentSeat == value) return;
-                OnSeatUnregister?.Invoke(_currentSeat);
-                if (value != null)
-                {
-                    OnSeatRegister?.Invoke(value);
-                }
-
-                _currentSeat = value;
-            }
-        }
-
-        #endregion
-
-        #region Fields
-        Order _currentOrder;
-        ClientSeat _currentSeat;
-        
-        private float _splineExitT       = -1f; 
-        private bool  _returningOnSpline = false;
-        private float _waitT             = 0.9f;
-        
-        
-        #endregion
-
         private void Awake()
         {
-            NavMeshAgent agent = GetComponent<NavMeshAgent>();
-            Behaviour = new(this, agent);
-            // OnNewOrder += TryAcceptOrder;
             OnSeatRegister += OnNewSeatRegister;
-            //_movement      =  new ClientMovement(transform, _speed, _splineComp);
         }
 
         private void Start()
         {
+            NavMeshAgent agent = GetComponent<NavMeshAgent>();
+            Behaviour = new(this, transform, agent, _splineComp, _speed);
+            _clientLook = new(this, transform);
+            Collection.Add(_clientLook);
+            
+            //Not he client to decide
+            //decaler ça dans une Behavior Action
+            
             bool found = Behaviour.GoToOrderingCounter(Sit);
             if (!found)
             {
                 var queue = Reference.GetManager<ClientManager>().WaitingQueue;
-                _waitT = queue.Enqueue(this);
+                _waitTime = queue.Enqueue(this);
             }
+            
         }
 
+        
         void Update()
         {
             Collection.Update();
 
-            if (_movement == null || _splineComp == null) return;
+            //Ce n'est pas non plus le role du client 
+            //ClientMovement s'occupe d'appliquer le movement
+            //le Behavior action s'occupes des choix
+            //Client doit soccuper grand max d'executer
+            
+            if (Behaviour.ClientMovement == null || _splineComp == null) return;
 
             if (_returningOnSpline)
             {
-                _movement.MoveAlongSpline();
-                if (_movement.SplinePosition >= 1f)
+                Behaviour.ClientMovement.MoveAlongSpline();
+                if (Behaviour.ClientMovement.SplinePosition >= 1f)
                 {
-                    GameObject.Destroy(gameObject);
+                    Destroy(gameObject);
                 }
                 return;
             }
 
             ClientSeat targetSeat = CurrentSeat;
+            float currentT = Behaviour.ClientMovement.SplinePosition;
             if (targetSeat != null)
             {
-                float nearestT = GetNearestTOnSpline(targetSeat.transform.position);
-    
-                if (_movement.SplinePosition >= nearestT)
+                Vector3 blendedPos = targetSeat.transform.position - transform.position;
+                float nearestT = GetNearestTOnSpline(targetSeat.transform.position) - 0.05f;
+                if (currentT >= nearestT)
                 {
-                    _splineExitT = _movement.SplinePosition;
+                    _splineExitTime = Behaviour.ClientMovement.SplinePosition;
                     _splineComp  = null;
                     Behaviour.ClientMovement.SetDestination(targetSeat);
+                    _clientLook.SetTarget((blendedPos).normalized);
                     return;
                 }
+
             }
             else
             {
-                if (_movement.SplinePosition >= _waitT)
+                if (Behaviour.ClientMovement.SplinePosition >= _waitTime)
+                {
+                    
                     return;
+                }
             }
-
-            _movement.MoveAlongSpline();
-
-            _movement.MoveAlongSpline();
+            
+            _clientLook.SetTarget(((Behaviour.ClientMovement.GetSplinePos(currentT + 0.03f) - transform.position)).normalized);
+            Behaviour.ClientMovement.MoveAlongSpline();
+            
         }
-
+        
+        //Peux être mis dans une Action du behavior 
         public void Sit(ClientSeat seat)
         {
             if (seat == null) return;
@@ -137,14 +164,14 @@ namespace Clients
             {
                 if (CurrentOrder == null)
                 {
-                    //orderingCounter.OnNewOrder += TryAcceptOrder;
+                    orderingCounter.OnNewOrder += TryAcceptOrder;
                     return;
                 }
             }
-           //if (seat.TryGetSibling(out ServingCounter servingCounter))
-           //{
-           //    servingCounter.OnServe += TryAcceptServing;
-           //}
+           if (seat.TryGetSibling(out ServingCounter servingCounter))
+           {
+               servingCounter.OnServe += TryAcceptServing;
+           }
         }
 
         public void TryAcceptOrder(Order order)
@@ -169,11 +196,12 @@ namespace Clients
             
         }
         
+        //Logique à bouger dans ClientMovement
         public void StartReturn()
         {
             _returningOnSpline = true;
-            _splineComp        = _movement.SplineComponent; 
-            _movement.SetSplinePos(_splineExitT);
+            _splineComp        = Behaviour.ClientMovement.SplineComponent; 
+            Behaviour.ClientMovement.SetSplinePos(_splineExitTime);
     
             var agent                        = GetComponent<UnityEngine.AI.NavMeshAgent>();
             if (agent != null) agent.enabled = false;
@@ -181,61 +209,35 @@ namespace Clients
 
         private float GetNearestTOnSpline(Vector3 worldPosition)
         {
-            return _movement.FindNearestSplineT(worldPosition);
+            return Behaviour.ClientMovement.FindNearestSplineT(worldPosition);
         }
 
         
-        private float CalculateWaitPosition()
-        {
-            var allSeats = Reference.GetManager<ClientManager>()
-                                    .GetClientSeats(_ => true, mustBeAvailable: false);
-    
-            float closestT = 0.9f;
-            float minDist  = float.MaxValue;
-
-            foreach (var seat in allSeats)
-            {
-                if (seat?.transform == null) continue;
-                float t    = GetNearestTOnSpline(seat.transform.position);
-                float dist = Vector3.Distance(
-                                              _movement.GetSplinePos(t), 
-                                              seat.transform.position
-                                             );
-                if (dist < minDist)
-                {
-                    minDist  = dist;
-                    closestT = t;
-                }
-            }
-            
-            int   waitingCount = CountClientsWaiting();
-            float offset       = 0.05f + waitingCount * 0.04f;
-            return Mathf.Clamp(closestT - offset, 0f, 1f);
-        }
-
-        private int CountClientsWaiting()
-        {
-            int count         = 0;
-            var clientManager = Reference.GetManager<ClientManager>();
-            foreach (var client in clientManager.CurrentClients)
-            {
-                if (client != this && client.CurrentSeat == null && client.Movement != null)
-                    count++;
-            }
-            return count;
-        }
+        //
+        // private int CountClientsWaiting()
+        // {
+        //     int count         = 0;
+        //     var clientManager = Reference.GetManager<ClientManager>();
+        //     foreach (var client in clientManager.CurrentClients)
+        //     {
+        //         if (client != this && client.CurrentSeat == null && Behaviour.ClientMovement != null)
+        //             count++;
+        //     }
+        //     return count;
+        // }
         
         public void SetWaitT(float t)
         {
-            _waitT = t;
+            _waitTime = t;
         }
 
         public void AssignSeat(ClientSeat seat)
         {
             seat.TryRegister(this); 
-            _waitT = -1f; 
+            _waitTime = -1f; 
             Behaviour.ClientMovement.SetDestination(seat);
         }
+        
         
         private void OnDrawGizmos()
         {

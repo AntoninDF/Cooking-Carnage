@@ -6,13 +6,24 @@ using UnityEngine.Splines;
 
 namespace Features
 {
+    /// <summary>
+    /// The feature in charge of the Waiting Behavior
+    /// </summary>
 	public class ClientWaitingQueue : Feature
 	{
-        public float SpacingT { get; set; } = 0.075f;
+        /// <summary>
+        /// The ecart betwen two customers in the waiting Line (in time)
+        /// </summary>
+        public float SpacingTime { get; set; } = 0.075f;
+        
+        /// <summary>
+        /// the starting point of the waiting line in the spline (in time)
+        /// </summary>
+        public float StartWaitingTimeOffset { get; set; } = 0.25f;
 
         private Queue<Client>   _queue = new();
         private SplineContainer _spline;
-        private float           _anchorT = -1f; 
+        private float           _anchorTime = -1f; 
 
         public int Count => _queue.Count;
 
@@ -24,7 +35,7 @@ namespace Features
         public float Enqueue(Client client)
         {
             _queue.Enqueue(client);
-            return GetWaitT(_queue.Count - 1);
+            return GetWaitTime(_queue.Count - 1);
         }
 
         public void OnSeatAvailable(ClientSeat freedSeat)
@@ -45,31 +56,39 @@ namespace Features
             int index = 0;
             foreach (var client in _queue)
             {
-                float waitT = GetWaitT(index);
+                float waitT = GetWaitTime(index);
                 client.SetWaitT(waitT);
                 index++;
             }
         }
 
-        private float GetWaitT(int index)
+        /// <summary>
+        /// Convert the wanted wait position in curve t parameter
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        private float GetWaitTime(int index)
         {
-            if (_anchorT < 0f)
-                _anchorT = ComputeAnchorT();
+            if (_anchorTime < 0f)
+                _anchorTime = ComputeAnchorTime() - StartWaitingTimeOffset;
 
-            return Mathf.Clamp(_anchorT - (index + 1) * SpacingT, 0f, 1f);
+            return Mathf.Clamp(_anchorTime - (index + 1) * SpacingTime, 0f, 1f);
         }
 
-        private float ComputeAnchorT()
+        /// <summary>
+        /// Find the closest point to the nearest seat of the begining of the curve (t = 0 point)
+        /// </summary>
+        /// <returns></returns>
+        private float ComputeAnchorTime()
         {
-            var seats = Reference.GetManager<ClientManager>()
-                                 .GetClientSeats(_ => true, mustBeAvailable: false);
+            var seats = Reference.GetManager<ClientManager>().GetClientSeats(_ => true, mustBeAvailable: false);
 
             float closestT = 1f;
 
             foreach (var seat in seats)
             {
                 if (seat?.transform == null) continue;
-                float t = FindNearestT(seat.transform.position);
+                float t = FindNearestTime(seat.transform.position);
                 if (t < closestT)
                     closestT = t;
             }
@@ -77,7 +96,12 @@ namespace Features
             return closestT;
         }
 
-        private float FindNearestT(Vector3 worldPosition)
+        /// <summary>
+        /// Give the closest point of the curve to a world position
+        /// </summary>
+        /// <param name="worldPosition"></param>
+        /// <returns></returns>
+        private float FindNearestTime(Vector3 worldPosition)
         {
             if (_spline == null) return 0f;
             var spline = _spline.Spline;

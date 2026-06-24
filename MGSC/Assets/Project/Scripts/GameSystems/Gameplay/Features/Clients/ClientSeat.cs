@@ -12,8 +12,12 @@ namespace Features
         // Usually, a client unregisters at the same time they leave
         public Action<Client> OnClientRegister {  get; set; }
         public Action<Client> OnClientUnregister {get; set; }
+        
         public Action<Client> OnClientSitting {get; set; }
         public Action<Client> OnClientLeaving {get; set; }
+        
+        
+        
         public Client RegisteredClient
         {
             get => _registeredClient;
