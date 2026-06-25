@@ -95,6 +95,7 @@ public abstract class PlayableGraphicsController : GraphicsController
         switch (AnimationMode)
         {
             case EAnimationMode.PlayOnce:
+                IsReversed = false;
                 TimeElapsed += Dt;
                 if (TimeElapsed >= Duration)
                 {
