@@ -99,9 +99,13 @@ public class Oven : MonoBehaviour, IFeatureCollection
 
     private void OnCookingProgress(float progression01)
     {
-        if (ProgressFeedbacks.MaterialProperty.Material != null)
+        var renderer = ProgressFeedbacks.MaterialProperty.TargetRenderer;
+        if (renderer != null)
         {
-            ProgressFeedbacks.MaterialProperty.Material.SetFloat(ProgressFeedbacks.MaterialProperty.Name, progression01);
+            MaterialPropertyBlock mpb = new();
+            renderer.GetPropertyBlock(mpb);
+            mpb.SetFloat(ProgressFeedbacks.MaterialProperty.Name, progression01);
+            renderer.SetPropertyBlock(mpb);
         }
         if (ProgressFeedbacks.AnimatedTransform.Transform != null)
         {
@@ -180,7 +184,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
     public struct MaterialProperty
     {
         public string Name;
-        public Material Material;
+        public MeshRenderer TargetRenderer;
     }
     [Serializable]
     public struct AnimatedTransform

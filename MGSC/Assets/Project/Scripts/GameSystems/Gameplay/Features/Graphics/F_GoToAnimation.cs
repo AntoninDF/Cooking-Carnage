@@ -69,6 +69,7 @@ namespace Features
                 ControlledTransform.localRotation = Quaternion.identity; 
                 startPos = ControlledTransform.localPosition;
                 endPos = worldPos - dest.position;
+                endPos = Quaternion.Inverse(dest.rotation) * endPos;
                 // Compensate the local offset by the local scale so that 1m is 1m regardless of the parent's scale.
                 endPos = new Vector3(endPos.x / (b.x == 0 ? 1 : b.x), endPos.y / (b.y == 0 ? 1 : b.y), endPos.z / (b.z == 0 ? 1 : b.z));
             }
