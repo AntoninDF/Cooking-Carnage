@@ -1,8 +1,12 @@
+using System;
+
 namespace Features
 {
 	
 	public class WaitInQueue : BaseClientAction
 	{
+		public Action OnEnterQueue { get; set; }
+		public Action OnExitQueue { get; set; }
 		
 		private float          _targetT;
 		private ClientMovement _movement => ClientOwner.ClientMovement;
@@ -16,6 +20,7 @@ namespace Features
 			var queue  = Reference.GetManager<GameSystem.ClientManager>().WaitingQueue;
 			_targetT                   =  queue.Enqueue(client);
 			
+			OnEnterQueue?.Invoke();
 			ClientOwner.OnSplineUpdate += TickSpline;
 		}
 		
@@ -32,6 +37,7 @@ namespace Features
 
 		public void StopWaiting()
 		{
+			OnExitQueue?.Invoke();
 			ClientOwner.OnSplineUpdate -= TickSpline;
 		}
     

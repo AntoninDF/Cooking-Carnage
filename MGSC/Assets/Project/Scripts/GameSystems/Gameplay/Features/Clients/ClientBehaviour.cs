@@ -19,7 +19,8 @@ namespace Features
 
         public BaseClientAction CurrentAction { get; private set; }
 
-        public Action OnSplineUpdate { get; set; }
+        public Action      OnSplineUpdate { get; set; }
+        public WaitInQueue WaitInQueue    { get; private set; }
 
         #endregion
 
@@ -59,7 +60,7 @@ namespace Features
             ClientMovement = new ClientMovement(this, _clientTransform, Agent, client.SplineComp, client.Speed);         
             ClientMovement.SwitchToSpline(0f);
             
-            client.InitLook(ClientMovement);
+            client.InitFeatures(ClientMovement);
             
             var select = new SelectSeat(this);
             select.OnSeatFound    += seat => Perform(BuildMoveToSeat(seat));
@@ -69,12 +70,15 @@ namespace Features
         
         private void EnqueueAndWait()
         {
-            _waitAction = new WaitInQueue(this);
+            WaitInQueue = new WaitInQueue(this);
+            _waitAction = WaitInQueue;
             Perform(_waitAction);
 
             var queue = Reference.GetManager<ClientManager>().WaitingQueue;
             queue.OnSeatAvailable += OnQueueSeatAvailable;
         }
+        
+        public void OnQueueSeatAvailablePublic(Client client, ClientSeat seat) => OnQueueSeatAvailable(client, seat);
 
         private void OnQueueSeatAvailable(Client client, ClientSeat seat)
         {

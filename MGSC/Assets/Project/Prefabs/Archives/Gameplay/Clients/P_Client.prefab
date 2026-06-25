@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 3091706671942166073}
   - component: {fileID: 7884375622220360648}
   - component: {fileID: 1025367866159278415}
+  - component: {fileID: 6459460630727871890}
   m_Layer: 0
   m_Name: P_Client
   m_TagString: Untagged
@@ -248,6 +249,64 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6459460630727871890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5687090777271108394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
+  Events:
+  - ActionPath:
+      ActionVariableName: OnClientSitting
+      SerializedType:
+        m_Name: Action`1
+        m_AssemblyQualifiedName: System.Action`1[[Clients.Client, Assembly-CSharp,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0,
+          Culture=neutral, PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: CurrentSeat
+        SerializedType:
+          m_Name: ClientSeat
+          m_AssemblyQualifiedName: Features.ClientSeat, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3091706671942166073}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
+  - ActionPath:
+      ActionVariableName: OnClientLeaving
+      SerializedType:
+        m_Name: Action`1
+        m_AssemblyQualifiedName: System.Action`1[[Clients.Client, Assembly-CSharp,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0,
+          Culture=neutral, PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: CurrentSeat
+        SerializedType:
+          m_Name: ClientSeat
+          m_AssemblyQualifiedName: Features.ClientSeat, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3091706671942166073}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &6395151163703096339
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,9 +19,11 @@ namespace Clients
         #region Properties
         public FeatureCollection  Collection       { get; set; } = new();
         public Action<Order>      OnNewOrder       { get; set; }
+        public Action<Order>      OnOrderAccepted  { get; set; }
         public Action<ClientSeat> OnSeatRegister   { get; set; }
         public Action<ClientSeat> OnSeatUnregister { get; set; }
         public ClientBehaviour    Behaviour        { get; set; }
+        public ClientCooked       Cooked           { get; private set; }
 
         public Order CurrentOrder
         {
@@ -58,7 +60,8 @@ namespace Clients
         private Order      _currentOrder;
         private ClientSeat _currentSeat;
         private ClientLook _clientLook;
-        
+
+        private float _cookingDelay = 3f;
        #endregion
 
        #region Unity Lifecycle
@@ -83,10 +86,18 @@ namespace Clients
 
        #endregion
 
-       public void InitLook(ClientMovement movement)
+       public void InitFeatures(ClientMovement movement)
        {
            _clientLook = new ClientLook(this, transform, movement);
+           Cooked      = new ClientCooked(this, _cookingDelay);
            Collection.Add(_clientLook);
+           Collection.Add(Cooked);
+       }
+
+       [ContextMenu("Cook Client")]
+       public void CoolClient()
+       {
+           Cooked.Trigger();
        }
 
        #region Seat
@@ -116,7 +127,7 @@ namespace Clients
            if (CurrentOrder != null) return;
            CurrentOrder = order;
            CurrentSeat.TryUnregister(this);
-          // Behaviour.GoToServingCounter();
+           OnOrderAccepted?.Invoke(order);
        }
 
        private void TryAcceptServing(Servable serving)

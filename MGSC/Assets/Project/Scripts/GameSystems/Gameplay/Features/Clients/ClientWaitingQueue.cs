@@ -41,6 +41,19 @@ namespace Features
             _queue.Enqueue(client);
             return GetWaitTime(_queue.Count - 1);
         }
+        
+        public bool Remove(Client client)
+        {
+            if (!_queue.Contains(client)) return false;
+
+            var list = new List<Client>(_queue);
+            list.Remove(client);
+            _queue = new Queue<Client>(list);
+
+            RefreshPositions();
+            Reference.GetManager<AdaptiveClientSpawner>()?.OnQueueSlotFreed();
+            return true;
+        }
 
         public void OnSeatFreed(ClientSeat freedSeat)
         {
