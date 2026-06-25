@@ -120,8 +120,9 @@ namespace Features
         // Refacto / to do : fix angles when looking up or down (the player can get stuck looking up or down)
         private void ApplyLookDirection(Vector3 direction)
         {
-            var yawDirection = new Vector3(direction.x, 0, direction.z).normalized;
-            yawDirection = yawDirection == Vector3.zero ? Vector3.forward : yawDirection;
+            // Parfois, yawDirection est un vecteur nul, ce qui casse tout. Il devrait toujours être un vecteur à plat (x, 0, z)
+            var yawDirection = new Vector3(direction.x, 0, direction.z).normalized; 
+
             ControlledTransform.rotation = Quaternion.LookRotation(yawDirection, Vector3.up);
 
 

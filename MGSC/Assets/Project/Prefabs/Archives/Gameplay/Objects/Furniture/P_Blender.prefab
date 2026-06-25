@@ -321,7 +321,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9135075936195756493}
-  - component: {fileID: 3535018309370202103}
   m_Layer: 0
   m_Name: Graphics
   m_TagString: Untagged
@@ -348,24 +347,6 @@ Transform:
   - {fileID: 5129213770106091787}
   m_Father: {fileID: 6297676914444232173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3535018309370202103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4192228843495606743}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Features.ModelController
-  _propagateChangesToChildren: 1
-  _disableShadowsIfSmallerThan: 0.5
-  _outline:
-    Color: {r: 1, g: 1, b: 1, a: 1}
-    Thickness: 0.01
-    Mode: 0
 --- !u!1 &4884113824285338034
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,6 +760,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Features.ModelController
   _propagateChangesToChildren: 1
   _disableShadowsIfSmallerThan: 0.5
+  _allowCustomOutlineValues: 0
   _outline:
     Color: {r: 1, g: 1, b: 1, a: 1}
     Thickness: 0.01
@@ -961,6 +943,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Features.ModelController
   _propagateChangesToChildren: 1
   _disableShadowsIfSmallerThan: 0.5
+  _allowCustomOutlineValues: 0
   _outline:
     Color: {r: 1, g: 0.8705675, b: 0.3254717, a: 1}
     Thickness: 0.01

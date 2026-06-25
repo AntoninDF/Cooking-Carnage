@@ -29,14 +29,7 @@ namespace Features
         /// OnTransformation is invoked immediately every time the transformable is transformed
         /// </summary>
         public Action OnTransformation { get; set; }
-        /// <summary>
-        /// OnBeginTransformation is invoked when a transformation isn't instantaneous and is started.
-        /// </summary>
-        public Action OnBeginTransformation { get; set; }
-        /// <summary>
-        /// OnEndTransformation is invoked right after OnTransformation every time the transformable is transformed
-        /// </summary>
-        public Action OnEndTransformation { get; set; }
+        
 
         #endregion
 
@@ -56,14 +49,6 @@ namespace Features
             Conditions = new(this);
         }
 
-        public void BeginTransformation()
-        {
-            OnBeginTransformation?.Invoke();
-        }
-        public void EndTransformation()
-        {
-            OnEndTransformation?.Invoke();
-        }
         public bool RequestTransformation()
         {
             if (!CanBeTransformed_Method())
@@ -82,7 +67,6 @@ namespace Features
         protected virtual void Transform()
         {
             Transformed = true;
-            EndTransformation();
         }
         public override void Reset()
         {

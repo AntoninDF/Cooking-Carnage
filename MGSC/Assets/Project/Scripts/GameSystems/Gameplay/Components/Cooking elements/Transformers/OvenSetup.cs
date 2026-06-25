@@ -14,10 +14,8 @@ namespace Cooking
 
         #region Fields
         [Header("OvenSetup references")]
-        [Tooltip("The oven prefab that will get instantiated for each oven unlocked")]
-        [SerializeField] private GameObject _ovenPrefab;
-        [Tooltip("List of all the slots where new ovens can go")]
-        [SerializeField] private List<SlotContainer> _slots;
+        [Tooltip("List of all the ovens that can get activated")]
+        [SerializeField] private List<Oven> _ovens;
 
         #endregion
 
@@ -32,10 +30,8 @@ namespace Cooking
 
         private void EnforceReferences()
         {
-            if (_ovenPrefab == null)
-                Debug.LogError("[OvenSetup] : Please reference an oven prefab in the inspector");
-            if (_slots == null)
-                Debug.LogError("[OvenSetup] : Please reference at least a few slots for the ovens to go in the inspector");
+            if (_ovens == null || _ovens.Count == 0)
+                Debug.LogError("[OvenSetup] : Please reference at least a few slots for the ovens to go in the inspector (" + name + ")");
         }
 
         public void Setup(int maxOvenCount)
