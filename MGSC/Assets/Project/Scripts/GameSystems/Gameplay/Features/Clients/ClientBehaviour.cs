@@ -61,11 +61,8 @@ namespace Features
             ClientMovement.SwitchToSpline(0f);
             
             client.InitFeatures(ClientMovement);
-            
-            var select = new SelectSeat(this);
-            select.OnSeatFound    += seat => Perform(BuildMoveToSeat(seat));
-            select.OnSeatNotFound += EnqueueAndWait;
-            Perform(select);
+
+            Perform(BuildSelectSeat());
         }
         
         private void EnqueueAndWait()
@@ -86,11 +83,12 @@ namespace Features
 
             var queue = Reference.GetManager<ClientManager>().WaitingQueue;
             queue.OnSeatAvailable -= OnQueueSeatAvailable;
+            
+            Perform(BuildSelectSeat());
     
             _waitAction?.StopWaiting();
             _waitAction = null;
 
-            Perform(BuildMoveToSeat(seat));
         }
         
         private void Perform(BaseClientAction action)
@@ -102,6 +100,14 @@ namespace Features
         #endregion
 
         #region BaseClientAction Builds
+
+        private SelectSeat BuildSelectSeat()
+        {
+            var select = new SelectSeat(this);
+            select.OnSeatFound    += seat => Perform(BuildMoveToSeat(seat));
+            select.OnSeatNotFound += EnqueueAndWait;
+            return select;
+        }
 
         private MoveToSeat BuildMoveToSeat(ClientSeat seat)
         {

@@ -24,8 +24,6 @@ namespace Features
             set
             {
                 if (_registeredClient == value) return;
-                if (_registeredClient != null)
-                    OnClientUnregister?.Invoke(_registeredClient);
                 if (value != null)
                     OnClientRegister?.Invoke(value);
                 _registeredClient = value;
@@ -67,22 +65,32 @@ namespace Features
 
         public bool TryRegister(Client client)
         {
-            if (client == null) return false;
-            if (RegisteredClient != null) return false;
-
+            if (client == null)
+            {
+                Debug.Log("No client found");
+                return false;
+            }
+            if (RegisteredClient != null)
+            {
+                Debug.Log($"A client is already  registered : {RegisteredClient.name}");
+                return false;
+            }
+            
+            Debug.Log($"Registering client : {client.name}");
             client.CurrentSeat = this;
             RegisteredClient = client;
             return true;
         }
         public bool TryUnregister(Client client)
         {
-            //Debug.Log("Trying to unregister...");
+            Debug.Log("Trying to unregister...");
             if (client == null) return false;
             if (RegisteredClient != client) return false;
 
             RegisteredClient = null;
             SittingClient = null;
-            //Debug.Log("Unregistered !");
+            Debug.Log($"Unregistered : {client.name}!");
+            OnClientUnregister?.Invoke(_registeredClient);
             return true;
         }
         public bool TrySit(Client client)

@@ -17,10 +17,12 @@ namespace Features
 		public override void Perform()
 		{
 			base.Perform();
+			
 			var seats = ClientManager.GetClientSeats(mustBeAvailable: true);
 			if (seats.Count == 0)
 			{
 				OnSeatNotFound?.Invoke();
+				Debug.LogWarning("No seats found");
 				return;
 			}
 
@@ -29,6 +31,7 @@ namespace Features
 
 			foreach (var seat in seats)
 			{
+				Debug.Log($"Trying to seat : {seat}");
 				float dist = Vector3.Distance(seat.transform.position, ClientOwner.Agent.transform.position);
 				if (dist < minDist)
 				{

@@ -26,7 +26,7 @@ namespace GameSystem
         
         // Private Properties
         float GetRandomizedDelay => Mathf.Max(5, delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
-        bool  CanSpawnClient     => canSpawnClient && spline != null && SeatsOrQueueAvailable()&& SpawnPointIsClear();        
+        bool  CanSpawnClient     => canSpawnClient && spline != null && SeatsOrQueueAvailable() && SpawnPointIsClear();        
         #endregion
 
         #region Fields
@@ -48,7 +48,6 @@ namespace GameSystem
         
         private Queue<SO_Client> nextClients = new();
         
-        private int   maxQueueSize    = 1;
         private float _spawnSafeZoneT = 0.1f;
         
         #endregion
@@ -89,40 +88,58 @@ namespace GameSystem
             Reference.GetManager(out _clientManager);
     
             _timerManager.StartTimer("AdaptiveClientSpawner Init", 1, () => Launch(), true);
-
+            
+            
             if (models.Count <= 0 || !spline)
                 this.Log(LogType.Warning, " Initialization is incomplete");
             else
                 this.Log(" has been initialized");
+
+            
         }
-        
-       
+
+        public void PostInit()
+        {
+            _clientManager.WaitingQueue.OnWaitLineFull += StopTryingSpawn;
+        }
+
 
         bool ShiftOngoing()
         {
             return !_timerManager.IsTimerRunning("shiftEndDelay");
         }
-        
 
+
+        void StopTryingSpawn()
+        {
+            Debug.Log("Stop Trying Spawn");
+            if(_timerManager.IsTimerRunning(timerName))
+            {
+                _timerManager.StopTimer(timerName);
+                _timerManager.RemoveTimer(timerName);
+            }
+        }
         
         /// <summary>
-        /// Launch spawn timer with a delay (or not)
+        /// Start spawn timer with a delay (or not)
         /// </summary>
         void Launch(float delay = 2)
         {
             _timerManager.StartTimer(timerName, delay, () => TrySpawnClient());
         }
 
-        bool TrySpawnClient(SO_Client clientSO = null)
+        bool TrySpawnClient()
         {
-            if (CanSpawnClient || clientSO != null)
+            if (CanSpawnClient)
             {
-                SpawnClient(clientSO);
+                Debug.LogError("SPAWN CLIENT");
+                SpawnClient();
                 return true;
             }
             else
             {
-                this.Log(LogType.Log," Client couldn't be spawned so it will try again in "+ retryDelay +" seconds");
+                //Debug.Log($"{SeatsOrQueueAvailable()} && {SpawnPointIsClear()} && {spline == null}");
+                //Debug.Log(" Client couldn't be spawned so it will try again in "+ retryDelay +" seconds");
                 Launch(retryDelay);
                 return false;
             }
@@ -131,17 +148,14 @@ namespace GameSystem
         /// <summary>
         /// Spawn a new Client if it is possible
         /// </summary>
-        void SpawnClient(SO_Client clientSO = null)
+        void SpawnClient()
         {
-            if (clientSO == null)
+            if (nextClients.Count == 0)
             {
-                if (nextClients.Count == 0)
-                {
-                    EnqueueClient(NewClient());
-                    this.Log(LogType.Log, " No client in queue so, a new one has been generated");
-                }
-                clientSO = nextClients.Dequeue();
+                EnqueueClient(NewClient());
+                this.Log(LogType.Log, " No client in queue so, a new one has been generated");
             }
+            SO_Client clientSO = nextClients.Dequeue();
 
             Vector3 spawnPosition = spline.Spline.Evaluate(0, out var pos, out _, out _)
                 ? (Vector3)pos + spline.transform.position
@@ -243,23 +257,16 @@ namespace GameSystem
             
             return EClientType.None;
         }
-
-        public void OnQueueSlotFreed()
-        {
-            TrySpawnClient();
-        }
         
         bool SeatsOrQueueAvailable()
         {
-            var cm = Reference.GetManager<ClientManager>();
-            bool seatFree  = cm.GetClientSeats(mustBeAvailable: true).Count > 0;
-            bool queueFree = cm.WaitingQueue?.Count < maxQueueSize;
-            return seatFree || queueFree;
+            bool seatFree  = _clientManager.GetClientSeats(mustBeAvailable: true).Count > 0;
+            return seatFree || !_clientManager.WaitingQueue.IsQueueFull();
         }
         
         bool SpawnPointIsClear()
         {
-            var clients = Reference.GetManager<ClientManager>().CurrentClients;
+            var clients = _clientManager.CurrentClients;
             foreach (var client in clients)
             {
                 if (client.Behaviour.ClientMovement == null) continue;

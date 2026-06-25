@@ -23,11 +23,13 @@ namespace Features
         /// </summary>
         public float QueueStartT { get;                          set; } = 0.3f;
         public Action<Client, ClientSeat> OnSeatAvailable { get; set; }
-
+        public Action OnWaitLineFull { get; set; }
 
         private Queue<Client>   _queue = new();
         private SplineContainer _spline;
         private float           _anchorTime = -1f; 
+        private int   _maxQueueSize    = 1;
+
 
         public int Count => _queue.Count;
 
@@ -39,6 +41,7 @@ namespace Features
         public float Enqueue(Client client)
         {
             _queue.Enqueue(client);
+            if(IsQueueFull()) OnWaitLineFull?.Invoke();
             return GetWaitTime(_queue.Count - 1);
         }
         
@@ -51,7 +54,7 @@ namespace Features
             _queue = new Queue<Client>(list);
 
             RefreshPositions();
-            Reference.GetManager<AdaptiveClientSpawner>()?.OnQueueSlotFreed();
+            //Reference.GetManager<AdaptiveClientSpawner>()?.OnQueueSlotFreed();
             return true;
         }
 
@@ -60,12 +63,13 @@ namespace Features
             if (_queue.Count == 0) return;
 
             Client first = _queue.Dequeue();
-            freedSeat.TryRegister(first);
+            //first.Behaviour.WaitInQueue.StopWaiting();
+            //freedSeat.TryRegister(first);
 
             RefreshPositions();
             OnSeatAvailable?.Invoke(first, freedSeat);
-
-            Reference.GetManager<AdaptiveClientSpawner>()?.OnQueueSlotFreed();
+            
+            //Reference.GetManager<AdaptiveClientSpawner>()?.OnQueueSlotFreed();
         }
 
         private void RefreshPositions()
@@ -88,59 +92,12 @@ namespace Features
         {
             return Mathf.Clamp(QueueStartT - (index + 1) * SpacingTime, 0f, 1f);
         }
-
-        /// <summary>
-        /// Find the closest point to the nearest seat of the begining of the curve (t = 0 point)
-        /// </summary>
-        /// <returns></returns>
-        private float ComputeAnchorTime()
+        
+        public bool IsQueueFull()
         {
-            var seats = Reference.GetManager<ClientManager>().GetClientSeats(_ => true, mustBeAvailable: false);
-
-            float closestT = 1f;
-
-            foreach (var seat in seats)
-            {
-                if (seat?.transform == null) continue;
-                float t = FindNearestTime(seat.transform.position);
-                if (t < closestT)
-                    closestT = t;
-            }
-
-            return closestT;
+            return _queue.Count == _maxQueueSize;
         }
-
-        /// <summary>
-        /// Give the closest point of the curve to a world position
-        /// </summary>
-        /// <param name="worldPosition"></param>
-        /// <returns></returns>
-        private float FindNearestTime(Vector3 worldPosition)
-        {
-            if (_spline == null) return 0f;
-            var spline = _spline.Spline;
-            float bestT = 0f;
-            float bestDist = float.MaxValue;
-            int steps = 40;
-
-            for (int i = 0; i <= steps; i++)
-            {
-                float t = (float)i / steps;
-                spline.Evaluate(t, out var pos, out _, out _);
-                float dist = Vector3.Distance((Vector3)pos + _spline.transform.position, worldPosition);
-                if (dist < bestDist)
-                {
-                    bestDist = dist;
-                    bestT = t;
-                }
-            }
-            return bestT;
-        }
-
-        public Vector3 GetStartPosition()
-        {
-            _spline.Spline.Evaluate(QueueStartT, out var pos, out _, out _);
-            return pos;
-        }
+        
+        
     }
 }

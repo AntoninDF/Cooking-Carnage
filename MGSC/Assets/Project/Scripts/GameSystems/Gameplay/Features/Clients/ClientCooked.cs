@@ -43,16 +43,13 @@ namespace Features
 
 			if (Reference.TryGetManager(out ClientManager cm))
 			{
-				cm.WaitingQueue?.Remove(_client);
-
 				_client.CurrentSeat?.TryUnregister(_client);
-
 				cm.AddClientData(_client, isDone: true, killed: true);
+				cm.WaitingQueue?.Remove(_client);
 			}
 
 			var queue = cm?.WaitingQueue;
-			if (queue != null)
-				queue.OnSeatAvailable -= _client.Behaviour.OnQueueSeatAvailablePublic;
+			if (queue != null) queue.OnSeatAvailable -= _client.Behaviour.OnQueueSeatAvailablePublic;
 
 			GameObject.Destroy(_client.gameObject);
 		}
