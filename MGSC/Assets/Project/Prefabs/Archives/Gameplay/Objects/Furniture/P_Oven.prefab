@@ -2399,8 +2399,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1508417771706654838}
-  - component: {fileID: 3798608221227583234}
   - component: {fileID: 5700694133266696112}
+  - component: {fileID: 956552415083610325}
   m_Layer: 0
   m_Name: P_Oven
   m_TagString: Untagged
@@ -2427,33 +2427,6 @@ Transform:
   - {fileID: 7337475462127455157}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3798608221227583234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8542838040648014806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de06c7504b89fa44fb5bce40ddcf14e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Furnace
-  _itemSlot: {fileID: 4820131973737151873}
-  _button: {fileID: 7929391311183339527}
-  ProgressFeedbacks:
-    MaterialProperty:
-      Name: _Fade
-      Material: {fileID: 2100000, guid: 1000b4e4c8d67e34c9c2a013b1ef7fa6, type: 2}
-    AnimatedTransform:
-      Transform: {fileID: 2126724887176806307}
-      StartRotation: {x: 0, y: 0, z: 0.6427876, w: 0.76604444}
-      EndRotation: {x: 0, y: 0, z: -0.6427876, w: 0.76604444}
-    PercentageText: {fileID: 3919562422496712881}
-    IngredientInfoScreens:
-    - {fileID: 885096864005664793}
-    - {fileID: 3901059833229521834}
-    - {fileID: 3627208796412773535}
 --- !u!95 &5700694133266696112
 Animator:
   serializedVersion: 7
@@ -2476,6 +2449,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &956552415083610325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8542838040648014806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4294b0179dfa37f4b8d1316bf1c3f7c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Oven
+  _itemSlot: {fileID: 4820131973737151873}
+  _button: {fileID: 7929391311183339527}
+  ProgressFeedbacks:
+    MaterialProperty:
+      Name: _Fade
+      Material: {fileID: 2100000, guid: 1000b4e4c8d67e34c9c2a013b1ef7fa6, type: 2}
+    AnimatedTransform:
+      Transform: {fileID: 2126724887176806307}
+      StartRotation: {x: 0, y: 0, z: 0.6427876, w: 0.76604444}
+      EndRotation: {x: 0, y: 0, z: 0.64278764, w: -0.76604444}
+    PercentageText: {fileID: 3919562422496712881}
+    IngredientInfoScreens:
+    - {fileID: 885096864005664793}
+    - {fileID: 3901059833229521834}
+    - {fileID: 3627208796412773535}
 --- !u!1 &8583690246992831523
 GameObject:
   m_ObjectHideFlags: 0

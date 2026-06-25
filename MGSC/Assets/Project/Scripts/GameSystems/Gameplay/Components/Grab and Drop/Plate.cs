@@ -41,8 +41,11 @@ public class Plate : Item
     {
         if (ContainerComponent == null) ContainerComponent = GetComponent<MultiSlotContainer>();
         Cookable = new(this);
+        Globals.Bind(value => Cookable.TransformationDuration = value, Globals.Gameplay.CookingDuration);
         OverCookable = new(this);
         OverCookable.Enabled = false;
+        Globals.Bind(value => OverCookable.TransformationDuration = value, Globals.Gameplay.OvercookingDuration);
+        
         base.Awake();
     }
     protected override void BindEvents()
