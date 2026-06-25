@@ -45,7 +45,18 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         client.TryAcceptOrder(NextOrder);
     }
 
-
+    public void KillClient()
+    {
+        Client client = ClientSeat.RegisteredClient;
+        if (client != null && ClientSeat.SittingClient != null)
+        {
+            client.Cooked.Trigger();
+        }
+        else
+        {
+            Debug.Log("No Customer on this counter");
+        }
+    }
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;

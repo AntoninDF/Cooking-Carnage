@@ -263,6 +263,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1344083561932607000}
+  - component: {fileID: 9010698450651919534}
   m_Layer: 0
   m_Name: P_SittingCounter
   m_TagString: Untagged
@@ -291,6 +292,19 @@ Transform:
   - {fileID: 2051259000225441491}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9010698450651919534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3313232724240203138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b98f5b01dd6b0194ba0a628d6a3d082d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OrderingArea
+  SeatTransform: {fileID: 5361733293880336800}
 --- !u!1 &4233302793106191903
 GameObject:
   m_ObjectHideFlags: 0
@@ -2955,8 +2969,81 @@ PrefabInstance:
     - {fileID: 4261600017383402473, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4733034349733220245, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3602768324645416900}
+    - targetCorrespondingSourceObject: {fileID: 4733034349733220245, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3292589433501947321}
   m_SourcePrefab: {fileID: 100100000, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
+--- !u!1 &3665709076259549917 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4733034349733220245, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
+  m_PrefabInstance: {fileID: 8318196141765311816}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3602768324645416900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3665709076259549917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73d2525679cf86409b974e13c3960d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionButton
+  Model: {fileID: 0}
+--- !u!114 &3292589433501947321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3665709076259549917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
+  Events:
+  - ActionPath:
+      ActionVariableName: OnInteraction
+      SerializedType:
+        m_Name: Action`1
+        m_AssemblyQualifiedName: System.Action`1[[Features.InteractionContext, Assembly-CSharp,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0,
+          Culture=neutral, PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Interactable
+        SerializedType:
+          m_Name: F_Interactable
+          m_AssemblyQualifiedName: Features.F_Interactable, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3602768324645416900}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9010698450651919534}
+          m_TargetAssemblyTypeName: OrderingArea, Assembly-CSharp
+          m_MethodName: KillClient
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &8544692818739799040 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 424732036597750088, guid: 2fecc9453cdc4e94b9fa80bc0c4204db, type: 3}
