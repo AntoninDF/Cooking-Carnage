@@ -4,6 +4,7 @@ using Clients;
 using UnityEngine;
 using System.Linq;
 using Features;
+using Unity.AI.Navigation;
 
 namespace GameSystem
 {
@@ -15,10 +16,12 @@ namespace GameSystem
         #region Properties
         
         // Public Properties
-        public List<Client> CurrentClients => currentClients;
-        public int ClientsServedThisShift {  get; private set; }
-        public int ClientsKilledThisShift {  get; private set; }
-        public Dictionary<EClientType, float> ClientTypeAmount => UpdateClientTypeData();
+        
+        public List<Client>                   CurrentClients         => currentClients;
+        public ClientWaitingQueue             WaitingQueue           { get;  private set; }
+        public int                            ClientsServedThisShift {  get; private set; }
+        public int                            ClientsKilledThisShift {  get; private set; }
+        public Dictionary<EClientType, float> ClientTypeAmount       => UpdateClientTypeData();
 
         public FeatureCollection Collection { get; set; } = new();
         public ClientSeatCollection ClientSeats { get; set; }
@@ -31,7 +34,6 @@ namespace GameSystem
         List<ClientData> clientHistory =  new List<ClientData>(); // script copy
         
         Dictionary<EClientType, float> clientTypePart = new Dictionary<EClientType, float>();
-
         #endregion
         
         #region Methods
@@ -55,15 +57,23 @@ namespace GameSystem
         }
         public void Init()
         {
-
             foreach (var client in Reference.AssetReferences.clientList)
             {
                 clientTypePart[client.clientType] = 0f;
             }
+            
         }
 
         public void PostInit()
         {
+            var spline = Reference.GetManager<PathManager>()?.SplineComponent;
+            WaitingQueue = new(this, spline);
+
+            foreach (var seat in ClientSeats.Seats)
+            {
+                seat.OnClientUnregister += _ => WaitingQueue.OnSeatFreed(seat);
+                seat.OnClientUnregister += _ => Debug.Log("OnClientUnregistered");
+            }
         }
 
         private void Reset()
@@ -75,10 +85,8 @@ namespace GameSystem
         }
 
         public void Register(ClientSeat seat) => ClientSeats.Register(seat);
-        public List<ClientSeat> GetClientSeats(bool mustBeAvailable = true)
-            => ClientSeats.GetClientSeats(_ => true, mustBeAvailable);
-        public List<ClientSeat> GetClientSeats(Func<ClientSeat, bool> filter, bool mustBeAvailable = true)
-            => ClientSeats.GetClientSeats(filter, true);
+        public List<ClientSeat> GetClientSeats(bool mustBeAvailable = true) => ClientSeats.GetClientSeats(_ => true, mustBeAvailable);
+        public List<ClientSeat> GetClientSeats(Func<ClientSeat, bool> filter, bool mustBeAvailable = true) => ClientSeats.GetClientSeats(filter, mustBeAvailable); 
 
 
         /// <summary>

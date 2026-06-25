@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cooking;
 using System.Collections.Generic;
+using Features;
 using UnityEngine.Splines;
 using Upgrades;
 using GameSystem;
@@ -13,7 +14,32 @@ namespace Clients
     /// </summary>
     public partial class Client : MonoBehaviour
     {
-        /*
+
+        #region Properties
+
+        //public ClientMovement Movement => _movement;
+        public EClientType Type { get; private set; }
+        public SO_Client Model { get; private set; }
+        public SO_Ingredient IngredientToDrop { get; private set; }
+        public Vector2 DropRate { get; private set; }
+
+        public SplineContainer SplineComp => _splineComp;
+        public float           Speed      => _speed;
+        
+        #endregion
+        
+        
+        #region Fields
+
+        private bool _useUpgrades   = true;
+        private float _speed         = 1f;
+        private float _reachDistance = 1f;
+        private SplineContainer _splineComp;
+        //private ClientMovement _movement;
+
+        #endregion
+        
+        
         #region Client creation
         /// <summary>
         /// This is the advised way to spawn a new client
@@ -95,7 +121,7 @@ namespace Clients
 
         public Client SetOrder(SO_Recipe recipe)
         {
-            RequestedRecipe = recipe;
+            //RequestedRecipe = recipe;
             return this;
         }
 
@@ -111,28 +137,28 @@ namespace Clients
             Model = model;
             return this;
         }
-
-        public Client SetSplinePath(SplineContainer splineObject)
-        {
-            _splineComp = splineObject;
-            if (_movement != null) _movement.SplineComponent = splineObject;
-            return this;
-        }
-
-        public Client SetSpeed(float speed)
-        {
-            _speed = speed;
-            return this;
-        }
+        
 
         public Client SetReachDistance(float distance)
         {
             _reachDistance = distance;
             return this;
         }
+        
+        public Client SetSpeed(float speed)
+        {
+            _speed = speed;
+            return this;
+        }
+        
+        public Client SetSplinePath(SplineContainer splineObject)
+        {
+            _splineComp = splineObject;
+            return this;
+        }
         #endregion
 
-        */
+        
     }
 
 }

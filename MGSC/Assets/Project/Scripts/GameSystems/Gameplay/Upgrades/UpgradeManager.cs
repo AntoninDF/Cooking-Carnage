@@ -16,7 +16,7 @@ namespace Upgrades
         
         public List<Upgrade> Upgrades => _upgrades;
         
-        public UnityEvent OnUpgradeFail = new UnityEvent();
+        public UnityEvent OnUpgradeFail    = new UnityEvent();
         public UnityEvent OnUpgradeSuccess = new UnityEvent();
         
         #endregion
@@ -48,7 +48,6 @@ namespace Upgrades
                 throw new InvalidOperationException("[UpgradeManager] SetConfig() must be called before Init().");
 
             _upgrades = new List<Upgrade>();
-
             //Get all the inherited upgrades 
             var allUpgrade = Assembly.GetExecutingAssembly().GetTypes()
                 .Where(t => t.IsSubclassOf(typeof(Upgrade)) && !t.IsAbstract);

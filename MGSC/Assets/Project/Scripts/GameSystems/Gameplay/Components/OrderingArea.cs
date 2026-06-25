@@ -1,12 +1,12 @@
 using Features;
 using System;
+using Clients;
 using UnityEngine;
 
 public class OrderingArea : MonoBehaviour, IFeatureCollection
 {
     #region Properties
     public FeatureCollection Collection { get; set; } = new();
-
     public ClientSeat ClientSeat { get; set; }
     public OrderingCounter OrderingCounter { get; set; }
     public Order NextOrder { get; set; }
@@ -37,6 +37,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
 
         NextOrder = OrderingCounter.GetNewOrder();
     }
+    
     public void AssignOrder(Client client)
     {
         if (client == null) return;
@@ -45,7 +46,20 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         client.TryAcceptOrder(NextOrder);
     }
 
-
+    public void KillClient()
+    {
+        Client client = ClientSeat.RegisteredClient;
+        if (client != null && ClientSeat.SittingClient != null)
+        {
+            
+            client.Cooked.Trigger();
+        }
+        else
+        {
+            Debug.Log("No Customer on this counter");
+        }
+    }
+    
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;
