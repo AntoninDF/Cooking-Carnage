@@ -72,8 +72,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1326502045071129202}
-  - component: {fileID: 3267722598786423968}
-  - component: {fileID: 2514504613165688347}
+  - component: {fileID: 7834570185675730907}
   m_Layer: 0
   m_Name: P_Meal
   m_TagString: Untagged
@@ -102,7 +101,7 @@ Transform:
   - {fileID: 4514204225538883941}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3267722598786423968
+--- !u!114 &7834570185675730907
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,87 +110,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5305888510544776918}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d06730ddae6de14e82e0df465859a2e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cooking.Meal
-  _itemID: Meal
-  _recipe: {fileID: 11400000, guid: 3b043d5ba27faa14f8bb9a6cf6ed3c49, type: 2}
-  _onCook:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1329692044202427814}
-        m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _onOvercooked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5293340776275520596}
-        m_TargetAssemblyTypeName: UI.Tooltip, Assembly-CSharp
-        m_MethodName: SetText
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Meal (overcooked)
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 3046867325131507124}
-        m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4858538744198679317}
-        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  eaten: 0
---- !u!65 &2514504613165688347
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5305888510544776918}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.2, z: 0.5}
-  m_Center: {x: 0, y: 0.1, z: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::ModelController
+  _propagateChangesToChildren: 1
+  _disableShadowsIfSmallerThan: 0.5
+  _allowCustomOutlineValues: 0
+  _outline:
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Thickness: 0.01
+    Mode: 1
 --- !u!1 &6315011612341050359
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,6 +271,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6889586594504063100
 GameObject:
@@ -511,6 +440,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -719,6 +649,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1001 &567684837402289980
 PrefabInstance:
@@ -909,11 +840,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f3fe3e68524eef4f85bb524497fd195, type: 3}
---- !u!198 &3046867325131507124 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 8109375707497354752, guid: 3f3fe3e68524eef4f85bb524497fd195, type: 3}
-  m_PrefabInstance: {fileID: 6540053001719681972}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5189556859341663228 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1353311872077199432, guid: 3f3fe3e68524eef4f85bb524497fd195, type: 3}
@@ -1038,11 +964,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1157df2d6747004491963e724977694, type: 3}
---- !u!198 &1329692044202427814 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 7700555812582011907, guid: d1157df2d6747004491963e724977694, type: 3}
-  m_PrefabInstance: {fileID: 8694723997941395877}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1628418814763775101 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7940007909018224088, guid: d1157df2d6747004491963e724977694, type: 3}
@@ -1128,17 +1049,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5922500452467487023, guid: a327db39c1b60544fb9488aeb51ef930, type: 3}
   m_PrefabInstance: {fileID: 9096619851111592883}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5293340776275520596 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3983459069095305191, guid: a327db39c1b60544fb9488aeb51ef930, type: 3}
-  m_PrefabInstance: {fileID: 9096619851111592883}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8282a0477ed6190469e94da767e2f0f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI.Tooltip
 --- !u!224 &5411750553040766779 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3830252090345731208, guid: a327db39c1b60544fb9488aeb51ef930, type: 3}

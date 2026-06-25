@@ -2,6 +2,7 @@ using UI;
 using UnityEngine;
 using Cooking;
 using Features;
+using System.Runtime.InteropServices.WindowsRuntime;
 /// <summary>
 /// Implements the base behaviour for every ingredient
 /// </summary>
@@ -41,7 +42,22 @@ public class Ingredient : Item
         //throw new MissingReferenceException("Please assign an ingredient data in the inspector : " + name);
     }
 
-    
+    protected override void TryInteract(InteractionContext context)
+    {
+        if (TryGetGrabbed(context)) return;
+
+        if (!context.TryGetFeature(out F_Container playerContainer)) return;
+        if (playerContainer.HeldItem == null) return;
+        // Let the ingredient get grabbed by the item held by the player if it's a container
+        if (playerContainer.HeldItem.TryGetSibling(out F_Container containerObject))
+        {
+            containerObject.RequestGrab(Grabbable);
+        }
+        else if (playerContainer.HeldItem.TryGetSibling(out F_Ingredient otherIngredient))
+        {
+            SwapWith(playerContainer.HeldItem);
+        }
+    }
 
     #endregion
 

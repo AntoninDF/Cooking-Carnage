@@ -99,5 +99,7 @@ namespace GameSystem
         public float rawMealPrice;
         [Tooltip("How much money does a meal give if it's not the one ordered")]
         public float wrongMealPrice;
+        [Tooltip("How much an empty meal (plain jelly) give")]
+        public float emptyMealPrice;
     }
 }

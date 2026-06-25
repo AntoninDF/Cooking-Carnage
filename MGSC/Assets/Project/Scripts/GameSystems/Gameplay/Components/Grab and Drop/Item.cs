@@ -68,18 +68,26 @@ public class Item : MonoBehaviour, IFeatureCollection
 
     protected void TriggerAnim()
     {
-        Transform containerTransform = Grabbable.Container.transform;
+        if (Grabbable.Container == null)
+        {
+            // Go to world origin
+            Anim.GoTo(Vector3.down * Bounds.FindLocalLowestPoint());
+            return;
+        }
 
-        if (containerTransform == null) Grabbable.Container.GetParentTransform();
-        if (Grabbable.Container == null || containerTransform == null)
+        // Find target transform
+        Transform containerTransform = Grabbable.Container.transform;
+        if (containerTransform == null) containerTransform = Grabbable.Container.GetParentTransform();
+
+        if (containerTransform == null)
         {
             // Go to world origin
             Anim.GoTo(Vector3.down * Bounds.FindLocalLowestPoint());
         }
-        if (Grabbable.Container.TryGetSibling(out F_LookAtTarget lookTarget) && Grabbable.Container.AllowItemPlacedOnSurfaceRatherThanTransform)
+        else if (Grabbable.Container.TryGetSibling(out F_LookAtTarget lookTarget) && Grabbable.Container.AllowItemPlacedOnSurfaceRatherThanTransform)
         {
             // Go to the new container at the spot pointed at (for surface containers)
-            Anim.GoTo(containerTransform, lookTarget.LookPosition + Vector3.down * Bounds.FindLocalLowestPoint());
+            Anim.GoTo(containerTransform, lookTarget.LookPosition ); // + Vector3.down * Bounds.FindLocalLowestPoint()
         }
         else
         {
@@ -92,14 +100,38 @@ public class Item : MonoBehaviour, IFeatureCollection
     {
         TryGetGrabbed(context);
     }
-    protected virtual void TryGetGrabbed(InteractionContext context)
+    protected virtual bool TryGetGrabbed(InteractionContext context)
     {
-        if (context.TryGetFeature(out F_Container container))
-        {
-            container.RequestGrab(Grabbable);
-        }
+        if (!context.TryGetFeature(out F_Container container)) return false;
+
+        return container.RequestGrab(Grabbable);
     }
 
+    public void SwapWith(F_Grabbable other)
+    {
+        if (other == null) return;
+        var otherContainer = other.Container;
+        var currentContainer = Grabbable.Container;
+        var targetPos = transform.position;
+        var parent = transform.parent;
+
+        otherContainer?.RequestDrop(other);
+        otherContainer?.RequestGrab(Grabbable);
+
+        currentContainer?.RequestGrab(other);
+        if (other.TryGetSibling(out F_GoToAnimation anim))
+        {
+            if (currentContainer != null)
+            {
+                anim.GoTo(currentContainer.transform, targetPos);
+            }
+            else if (parent != null)
+            {
+                anim.GoTo(parent, targetPos);
+            }
+        }
+
+    }
     public void SetActiveModel(ModelController model)
     {
         if (activeModel != null)
@@ -114,14 +146,10 @@ public class Item : MonoBehaviour, IFeatureCollection
         if (activeModel == null)
             return;
 
-        Debug.Log("Setting active...");
         activeModel.gameObject.SetActive(true);
         activeModel.SetActive(true);
-        Debug.Log("Has set active");
 
-        Debug.Log("MeshControllers : " + activeModel.MeshController.Controllers.Length);
         Mesh colliderMesh = activeModel.MeshController.GetCombinedMeshes(transform, true);
-        Debug.Log("Collider mesh set");
         Collider.sharedMesh = colliderMesh;
 
         LookAtTarget.OnStartLookAt += activeModel.Outline.EnableOutline;

@@ -32,6 +32,7 @@ namespace Features
 
             OnAnimationStart?.Invoke();
 
+            ControlledTransform.localRotation = Quaternion.identity;
             startPos = ControlledTransform.position;
             this.endPos = endPos;
 
@@ -40,7 +41,7 @@ namespace Features
             if (duration == 0f)
                 SetPos(1);
             else
-                timerManager.StartTimer("GoToAnimation", duration, null, false, (elapsed) => SetPos(elapsed / duration));
+                timerManager.StartTimer("GoToAnimation " + endPos + Time.time.ToString(), duration, null, false, (elapsed) => SetPos(elapsed / duration));
         }
         public void GoTo(Transform dest, Vector3 worldPos, float duration=0.1f, bool setAsParent=true)
         {
@@ -64,9 +65,11 @@ namespace Features
                 var a = defaultScale;
                 var b = dest.lossyScale;
                 ControlledTransform.localScale = new Vector3(a.x/(b.x==0?1:b.x), a.y / (b.y == 0 ? 1 : b.y), a.z / (b.z == 0 ? 1 : b.z));
-                ControlledTransform.rotation = defaultRotation;
+                // Default Rotation is not used because when it's not 0, if the parent transform has non uniform scale, the controlled transform can get skewed or sheared
+                ControlledTransform.localRotation = Quaternion.identity; 
                 startPos = ControlledTransform.localPosition;
                 endPos = worldPos - dest.position;
+                // Compensate the local offset by the local scale so that 1m is 1m regardless of the parent's scale.
                 endPos = new Vector3(endPos.x / (b.x == 0 ? 1 : b.x), endPos.y / (b.y == 0 ? 1 : b.y), endPos.z / (b.z == 0 ? 1 : b.z));
             }
             else
@@ -77,10 +80,10 @@ namespace Features
 
             targetTransform = dest;
             if (duration == 0f)
-                SetPos(1);
+                SetPos(1f);
             else
             {
-                timerManager.StartTimer("GoToAnimation", duration, EndAnimation, false, (elapsed) => SetPos(elapsed / duration));
+                timerManager.StartTimer("GoToAnimation " + dest.name + Time.time.ToString(), duration, EndAnimation, false, (elapsed) => SetPos(elapsed / duration));
             }
         }
         public void GoTo(Transform dest, float duration=0.1f, bool setAsParent=true)

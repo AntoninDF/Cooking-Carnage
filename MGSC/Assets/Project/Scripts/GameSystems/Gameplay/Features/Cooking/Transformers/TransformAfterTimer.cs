@@ -7,7 +7,7 @@ namespace Features
     {
         public float SpeedMultiplier { get; set; } = 1f;
         /// <summary>
-        /// The float parameter tells how far across the cooking is, in percentage (100% is fully cooked).
+        /// The float parameter tells how far across the cooking is, in percentage betwen 0 and 1 (1 is fully cooked).
         /// </summary>
         public Action<float> OnTransformationProgress { get; set; }
         public Action<TransformableAfterTimer> OnTransformationOver { get; set; }
@@ -52,7 +52,8 @@ namespace Features
 
         protected virtual void Progress(float progress, float duration)
         {
-            UnityEngine.Debug.Log("Transformation " + progress);
+            // Debug once every ten frame (approximatively)
+            if ((progress * 100) % 10 < 1) UnityEngine.Debug.Log("Transformation " + (UnityEngine.Mathf.Round(progress * 10f)/10f).ToString());
             if (duration == 0) duration = 1f;
             OnTransformationProgress?.Invoke(progress / duration);
         }

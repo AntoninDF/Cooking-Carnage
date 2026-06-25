@@ -24,12 +24,14 @@ namespace Upgrades
 
         public override void Apply()
         {
+            /*
             _targetBlenders = Reference.GetAll<Blender>();
 
             foreach (Blender b in _targetBlenders)
             {
                 //b.CutDuration = b.DefaultCutDuration / (_level + 1);
             }
+            */
         }
         
         #endregion

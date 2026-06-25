@@ -40,7 +40,7 @@ namespace GameSystem
         private float clientSpeed = 1;
         private List<SO_Client> models;
         private SplineContainer spline;
-        private List<object> counters;
+        private List<OrderingArea> counters;
         
         // Reference Fields
         private TimerManager _timerManager;
@@ -82,8 +82,7 @@ namespace GameSystem
             // WIP : should also setup floats according to a Settings Data
 
             models = Reference.AssetReferences.clientList;
-            //spline = Reference.GetManager<PathManager>()?.SplineComponent;
-            counters = Reference.GetAll<object>();
+            counters = GameObject.FindObjectsByType<OrderingArea>(FindObjectsSortMode.None).ToList();
 
             Reference.GetManager(out _timerManager);
             Reference.GetManager(out _clientManager);
