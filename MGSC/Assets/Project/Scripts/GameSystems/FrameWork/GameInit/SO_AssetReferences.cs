@@ -23,7 +23,8 @@ public class SO_AssetReferences : ScriptableObject
     [Tooltip("The input action asset for the player")]
     [SerializeField] private InputActionAsset _inputActions;
 
-    public SO_RecipeBook defaultRecipeBook;
+    public SO_RecipeBook DefaultRecipeBook;
+    public Material OutlineMaterial;
 
     public SO_RecipeBook CurrentRecipeBook => OrderPicker.FindCurrentRecipeBook();
 

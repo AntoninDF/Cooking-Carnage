@@ -13,25 +13,23 @@ namespace Orders
         public SO_Recipe TargetRecipe { get; private set; }
         public SO_Recipe ActualRecipe { get; private set; }
         public bool IsCorrectRecipe => TargetRecipe == ActualRecipe && ActualRecipe != null;
-        public float Rating { get; private set; }
+        
+        public int Stars { get; private set; }  
         public float MoneyGained { get; private set; }
-        public float ReputationGained { get; private set; }
 
         public OrderRating
             (
             Order ratedOrder,
             SO_Recipe servedRecipe,
-            float rating=0f,
-            float moneyGained=0f,
-            float reputationGained=0f
+            int stars,
+            float moneyGained=0f
             )
         {
             RatedOrder = ratedOrder;
             TargetRecipe = ratedOrder.Recipe;
             ActualRecipe = servedRecipe;
-            Rating = rating;
+            Stars = stars;
             MoneyGained = moneyGained;
-            ReputationGained = reputationGained;
         }
 
         public static bool operator ==( OrderRating left, OrderRating right ) { return left.Equals( right ); }
@@ -44,14 +42,13 @@ namespace Orders
                    EqualityComparer<SO_Recipe>.Default.Equals(TargetRecipe, rating.TargetRecipe) &&
                    EqualityComparer<SO_Recipe>.Default.Equals(ActualRecipe, rating.ActualRecipe) &&
                    IsCorrectRecipe == rating.IsCorrectRecipe &&
-                   Rating == rating.Rating &&
-                   MoneyGained == rating.MoneyGained &&
-                   ReputationGained == rating.ReputationGained;
+                   Stars == rating.Stars &&
+                   MoneyGained == rating.MoneyGained;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(RatedOrder, TargetRecipe, ActualRecipe, IsCorrectRecipe, Rating, MoneyGained, ReputationGained);
+            return HashCode.Combine(RatedOrder, TargetRecipe, ActualRecipe, Stars , IsCorrectRecipe, MoneyGained);
         }
     }
 }

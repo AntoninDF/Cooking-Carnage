@@ -40,6 +40,9 @@ namespace Cooking
 
         public void Setup(int maxOvenCount)
         {
+            // A refacto, To Do
+
+            /*
             int ovenCount = Mathf.Min(maxOvenCount, _slots.Count);
             var ovens = Reference.GetAll<Oven>();
             for (int i = ovens.Count; i < ovenCount; i++)
@@ -50,6 +53,7 @@ namespace Cooking
                 _slots[i].Container.RequestGrab(null); // Replace null by oven
                 Reference.TryAdd(oven);
             }
+            */
         }
 
         private void SetupSlots()

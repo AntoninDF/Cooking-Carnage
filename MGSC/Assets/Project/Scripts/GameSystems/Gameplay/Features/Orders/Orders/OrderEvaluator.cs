@@ -1,23 +1,71 @@
 ﻿using Cooking;
-using GameSystem;
-using Unity.VisualScripting;
+using UnityEngine;
+
 namespace Orders
 {
     public static class OrderEvaluator
     {
+        public  static float WrongMealPrice { get; set; }
+        public  static float OvercookedMealPrice { get; set; }
+        public static float PlainJellyPrice { get; set; }
+
+        private const float TipMultiplier1Star = 0.2f; // 1 star => + 20% 
+        private const float TipMultiplier2Star = 0.5f; // 2 star => + 50%
+        
+        private const float Threshold1Star = 0.5f;  // 1 star => served in the first 50% of the time
+        private const float Threshold2Star = 0.66f; // 2 star => served in the first 33% of the time
         public static OrderRating Evaluate(Order order)
         {
             if (order.ServingInfo == default(ServingInfo))
             {
                 throw new System.Exception("The member 'ServingInfo' of Order was not set to a specific value.");
             }
-            float rating=0f;
-            float moneyGained=MoneyEvaluator.Evaluate(order);
-            float reputationGained=0f;
+            
+            float basePrice = CalculateBasePrice(order);
+            int stars = CalculateStars(order);
+            float tip = CalculateTip(basePrice, stars);
+            float totalGained = basePrice + tip;
 
-            OrderRating orderRating = new OrderRating(order, order.ServingInfo.Recipe, rating, moneyGained, reputationGained);
+            OrderRating orderRating = new OrderRating(order, order.ServingInfo.Recipe, stars , totalGained);
 
             return orderRating;
         }
+
+        private static float CalculateBasePrice(Order order)
+        {
+            Meal meal = order.ServingInfo.Meal;
+            
+            if(meal == null || meal.Recipe == null)
+                return PlainJellyPrice;
+            
+            if(meal.CookStatus == "Overcooked")
+                return OvercookedMealPrice;
+            
+            if(order.Recipe != order.ServingInfo.Recipe)
+                return WrongMealPrice;
+            
+            return order.Recipe.Price;
+        }
+
+        private static int CalculateStars(Order order)
+        {
+            if (order.ServingInfo.Equals(default(ServingInfo)))
+                return 0;
+            
+            // Currently this function always act like the client always has 60 sec time waiting 
+            float elapsedSeconds = order.ServingInfo.Timestamp - order.Timestamp;
+            float patience = Mathf.Clamp01(1f - elapsedSeconds / 60f);
+
+            if (patience >= Threshold2Star) return 2; 
+            if (patience >= Threshold1Star) return 1;
+            return 0;
+        }
+
+        private static float CalculateTip(float basePrice, int stars) => stars switch
+        {
+            2 => TipMultiplier2Star * basePrice,
+            1 => TipMultiplier1Star * basePrice,
+            _ => 0f
+        };
     }
 }

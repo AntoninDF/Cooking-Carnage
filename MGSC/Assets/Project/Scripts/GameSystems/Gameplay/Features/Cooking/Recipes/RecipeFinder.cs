@@ -8,7 +8,7 @@ public static class RecipeFinder
     {
         get
         {
-            var result = Reference.AssetReferences.defaultRecipeBook;
+            var result = Reference.AssetReferences.DefaultRecipeBook;
             if (result == null)
                 UnityEngine.Debug.Log("RecipeFinder : No recipe book found (AllRecipes)");
             return result;

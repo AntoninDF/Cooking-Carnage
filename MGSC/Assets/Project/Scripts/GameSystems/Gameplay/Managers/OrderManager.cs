@@ -57,7 +57,7 @@ namespace GameSystem
                                   (order.OrderRating.IsCorrectRecipe ? "successfully": "poorly") 
                                   + " completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 
                                   + "s for client " + order.Owner.name + ". Money gained : " 
-                                  + MoneyEvaluator.Evaluate(order) + ". Expected '" + order.Recipe.Name 
+                                  + rating.MoneyGained + ". Expected '" + order.Recipe.Name 
                                   + "', received '" + info.Meal?.Recipe.Name + "'.");
             
             

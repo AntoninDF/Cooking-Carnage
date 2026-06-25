@@ -43,12 +43,11 @@ public class CameraManager : IManager
 
     public void Init()
     {
-        //Reference.GetManager(out _uiManager);
         Reference.GetManager(out _timerManager);
 
-        if (Reference.TryGet(out Player player))
+        if (PlayerSetup.Player != null)
         {
-            foreach (var cam in player.GetComponentsInChildren<CinemachineVirtualCameraBase>())
+            foreach (var cam in PlayerSetup.Player.GetComponentsInChildren<CinemachineVirtualCameraBase>())
             {
                 if (cam.Name == "FP Camera")
                 {

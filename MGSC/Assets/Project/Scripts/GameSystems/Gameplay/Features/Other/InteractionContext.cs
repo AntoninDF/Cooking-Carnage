@@ -1,5 +1,8 @@
 namespace Features
 {
+    /// <summary>
+    /// Gives information on the object that triggered the interaction, such as the object itself <see cref="Interactor"/>, or it's contained features (see <see cref="TryGetFeature{T}(out T)"/>)
+    /// </summary>
     public class InteractionContext
     {
         public object Interactor { get; set; }

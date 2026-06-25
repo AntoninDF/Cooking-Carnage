@@ -54,25 +54,17 @@ public class ItemManager : IManager
 
     public void PostInit()
     {
+        DetectSpawnItems();
     }
     
     private void DetectSpawnItems()
     {
-        foreach (var item in Reference.GetAll<Item>())
+        foreach (var item in GameObject.FindObjectsByType<Item>(FindObjectsSortMode.None))
         {
             spawnItems.Add(item);
             spawnPositions.Add(item.transform.position);
         }
         spawnParent = spawnItems.Count > 0 ? spawnItems[0].transform.parent : null;
-
-        /*
-        for (var index = spawnItems.Count - 1; index >= 0; index--)
-        {
-            var initialItem = spawnItems[index];
-
-            UpdateActiveList(initialItem);
-        }
-        */
     }
 
 
@@ -137,6 +129,11 @@ public class ItemManager : IManager
         UpdateActiveList(itemToDespawn);
         
         this.Log(LogType.Log, "Despawned " + itemToDespawn.name );
+
+        if (itemToDespawn.Grabbable.Container != null)
+        {
+            itemToDespawn.Grabbable.Container.RequestDrop(itemToDespawn.Grabbable);
+        }
         
         GameObject.Destroy(itemToDespawn.gameObject);
         

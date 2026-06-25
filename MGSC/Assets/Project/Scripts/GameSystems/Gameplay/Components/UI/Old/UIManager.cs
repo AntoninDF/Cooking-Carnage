@@ -1,4 +1,5 @@
 ﻿using Clients;
+using Controller;
 using GameSystem;
 using NaughtyAttributes;
 using System;
@@ -91,7 +92,7 @@ namespace UI
             _inputActionAsset = Reference.AssetReferences.InputActions;
             _playerInputs = _inputActionAsset.FindActionMap("Player");
             _UIInputs = _inputActionAsset.FindActionMap("UI");
-            Reference.Get(out _player);
+            _player = PlayerSetup.Player;
 
             if (_gameLoop == null)
                 this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No gameloop found");
@@ -261,14 +262,8 @@ namespace UI
         }
         public void SkipTutorial()
         {
-            //_playButton.GetComponent<Button>().onClick = _skipTutoButton.GetComponent<Button>().onClick;
-            //_skipTutoButton?.gameObject.SetActive(false);
             _shiftManager.SkipTutorialShift(); 
-            foreach (var b in Reference.GetAll<ServingCounter>())
-            {
-                //b.GetComponentInChildren<EventLinker>().UnBindAll();
-                //b.OnSkipTutorial?.Invoke();
-            }
+
             _onTutorialSkip?.Invoke();
         }
         public void TutorialEndTransition()
@@ -316,7 +311,6 @@ namespace UI
         private void TogglePause()
         {
             if (_currentMenu.name == _mainMenuName) return;
-            //Debug.Log("[UIManager] : Current menu is : " + _currentMenu.name);
             this.Log(LogType.Log, $"Toggleing pause");
             if (_currentMenu.name == _pauseMenuName)
                 EnableMenu(_gameMenuName);
@@ -329,14 +323,15 @@ namespace UI
             _timerManager.StartTimer("reloadscene", 1,
                 () => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex), true);
         }      
+        public void Register()
+        {
+            Reference.SetManager(this);
+        }
+        /*
         public void ResetEverything()
         {
             _dataManager.ResetSave();
             ReloadScene();
-        }
-        public void Register()
-        {
-            Reference.SetManager(this);
         }
         public void RequestCameraSwitch(Transform target)
         {
@@ -353,6 +348,7 @@ namespace UI
         }
         public void HideAllUI() => _canvas?.SetActive(false);
         public void ShowAllUI() => _canvas?.SetActive(true);
+        */
         public void ToggleAllUI() => _canvas?.SetActive(!_canvas.activeSelf);
         
         private void PlayOnUpgradeSuccess() => OnUpgradeSuccess?.Invoke();
