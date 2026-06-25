@@ -61,6 +61,11 @@ public abstract class PlayableGraphicsController : GraphicsController
         AnimationMode = EAnimationMode.PlayOnce;
         Play(skipDelay);
     }
+    public virtual void PlayReverse(bool skipDelay = false)
+    {
+        AnimationMode = EAnimationMode.PlayReverse;
+        Play(skipDelay);
+    }
     public virtual void PlayOnLoop(bool skipDelay = false)
     {
         AnimationMode = EAnimationMode.Loop;
@@ -90,6 +95,15 @@ public abstract class PlayableGraphicsController : GraphicsController
         switch (AnimationMode)
         {
             case EAnimationMode.PlayOnce:
+                TimeElapsed += Dt;
+                if (TimeElapsed >= Duration)
+                {
+                    IsPlaying = false;
+                    TimeElapsed = Duration;
+                }
+                break;
+            case EAnimationMode.PlayReverse:
+                IsReversed = true;
                 TimeElapsed += Dt;
                 if (TimeElapsed >= Duration)
                 {
@@ -128,6 +142,7 @@ public abstract class PlayableGraphicsController : GraphicsController
     public enum EAnimationMode
     {
         PlayOnce,
+        PlayReverse,
         Loop,
         PingPongOnce,
         PingPongLoop
