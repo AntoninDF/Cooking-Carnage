@@ -51,6 +51,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
                 );
             Container.OnGrab += _ => ShowRecipeSprites();
             Container.OnDrop += _ => ResetDisplayedSprites();
+            Container.OnDrop += _ => OnStopCooking();
         }
         if (_button != null)
         {
@@ -66,6 +67,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
         Interactable.OnInteraction += TryInteract;
         Cooker.OnTransformationStart += OnStartCooking;
         Cooker.OnTransformationOver += OnStopCooking;
+        Cooker.OnTransformationOver += _ => TryStartOverCooking();
         Cooker.OnTransformationProgress += OnCookingProgress;
     }
 
@@ -83,18 +85,33 @@ public class Oven : MonoBehaviour, IFeatureCollection
     private void TryStartCooking(InteractionContext context)
     {
         if (Container.HeldItem == null) return;
-        if (!Container.HeldItem.TryGetSibling(out F_Cookable cookable, true) || !cookable.CanBeTransformed) return;
+        if (Container.HeldItem.TryGetSibling(out F_Cookable cookable, true) && cookable.CanBeTransformed)
+        {
+            Cooker.RequestStartTransformation(cookable);
+        }
+        else
+        {
+            TryStartOverCooking(context);
+        }
 
-        Cooker.RequestStartTransformation(cookable);
+    }
+    private void TryStartOverCooking(InteractionContext context=null)
+    {
+        if (Container.HeldItem == null) return;
+        if (!Container.HeldItem.TryGetSibling(out F_OverCookable cookable, true) || !cookable.CanBeTransformed) return;
+
+        bool success = Cooker.RequestStartTransformation(cookable);
     }
     private void OnStartCooking(TransformableAfterTimer target)
     {
-        Container.IsLocked = true;
+        if (target is F_Cookable)
+            Container.IsLocked = true;
     }
-    private void OnStopCooking(TransformableAfterTimer target)
+    private void OnStopCooking(TransformableAfterTimer target=null)
     {
         Container.IsLocked = false;
         OnCookingProgress(0f);
+        Cooker.RequestStopTransformation();
     }
 
     private void OnCookingProgress(float progression01)
