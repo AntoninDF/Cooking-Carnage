@@ -50,7 +50,6 @@ public abstract class PlayableGraphicsController : GraphicsController
 
     public virtual void Play(bool skipDelay=false)
     {
-        IsReversed = false;
         IsPlaying = true;
         DelayTimeElapsed = 0;
         if (skipDelay)
