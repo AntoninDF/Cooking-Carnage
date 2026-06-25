@@ -144,23 +144,7 @@ namespace GameSystem
             this.Log("Reset everything for the next shift");
 
             Reference.GetManager<ItemManager>()?.DestroyAllActive();
-
-            foreach (var blender in Reference.GetAll<Cooking.Blender>())
-            {
-                //blender.Reset();
-            }
-
-            foreach (var oven in Reference.GetAll<Oven>())
-            {
-                //oven.Reset();
-            }
-            var player = Reference.Get<Player>();
-            var playerStart = Reference.Get<PlayerStart>();
-            if (player != null && playerStart != null)
-            {
-                player.transform.position = playerStart.transform.position;
-                player.transform.rotation = playerStart.transform.rotation;
-            }
+            PlayerSetup.TryResetPlayer();
         }
 
         public void NextShift()

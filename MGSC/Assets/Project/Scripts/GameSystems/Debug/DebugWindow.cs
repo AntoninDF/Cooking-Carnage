@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using GameSystem;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using Upgrades;
 
@@ -28,18 +29,23 @@ public class DebugWindow : MonoBehaviour
 
     private bool _previousMouseVisibility;
     private CursorLockMode _previousMouseLockMode;
-    
+
     #region Methods
+    private void OnEnable()
+    {
+        Reference.AssetReferences.InputActions.FindAction("ShowDebugWindow").performed += ToggleWindow;
+    }
+    private void OnDisable()
+    {
+        Reference.AssetReferences.InputActions.FindAction("ShowDebugWindow").performed -= ToggleWindow;
+    }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F12))
-        {
-            ToggleWindow();
-        }
 
         _deltaTime += (Time.unscaledDeltaTime - _deltaTime) * 0.1f;
     }
 
+    void ToggleWindow(InputAction.CallbackContext ctx) => ToggleWindow();
     private void ToggleWindow()
     {
         if (!_visible)
