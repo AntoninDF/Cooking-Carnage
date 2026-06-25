@@ -1798,8 +1798,41 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
       insertIndex: 0
       addedObject: {fileID: 10349495089161933}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3156349400350268277, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7263218699784425065}
   m_SourcePrefab: {fileID: 100100000, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+--- !u!1 &1946853535442928423 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3156349400350268277, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+  m_PrefabInstance: {fileID: 3515349744718125138}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7263218699784425065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946853535442928423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fc8040690e33ea41a368db0e5322895, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ServingArea
+  SeatTransform: {fileID: 5361733293880336800}
+  MealSlot: {fileID: 4905184774438577477}
+--- !u!114 &4905184774438577477 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8420517888976223511, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
+  m_PrefabInstance: {fileID: 3515349744718125138}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946853535442928423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63a59fd62de223d418de0c80dab5994c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Cooking.ContainerSlot
 --- !u!4 &6960019933410597076 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5791614514885329030, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}

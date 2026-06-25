@@ -37,6 +37,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
 
         NextOrder = OrderingCounter.GetNewOrder();
     }
+    
     public void AssignOrder(Client client)
     {
         if (client == null) return;
@@ -50,6 +51,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         Client client = ClientSeat.RegisteredClient;
         if (client != null && ClientSeat.SittingClient != null)
         {
+            
             client.Cooked.Trigger();
         }
         else
@@ -57,6 +59,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
             Debug.Log("No Customer on this counter");
         }
     }
+    
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;
