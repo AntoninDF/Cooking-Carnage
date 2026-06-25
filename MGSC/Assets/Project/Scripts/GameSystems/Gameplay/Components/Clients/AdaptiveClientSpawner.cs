@@ -20,12 +20,13 @@ namespace GameSystem
         // Public Properties
         public int NextClientsCount => nextClients.Count;
         public SO_Client GetNextClient() => nextClients.Count > 0 ? nextClients.Peek() : null;
-        public Action<Client> OnNewClient;
+        
+        [GlobalEvent("On New Client Spawned")]
+        public static Action OnNewClient;
         
         // Private Properties
-        float GetRandomizedDelay => (delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
-        bool CanSpawnClient => OrderingCounterAvailable() && canSpawnClient && spline!=null;
-        
+        float GetRandomizedDelay => Mathf.Max(5, delayLength + Random.Range(-randomDelayRange/2, randomDelayRange/2));
+        bool  CanSpawnClient     => canSpawnClient && spline != null && SeatsOrQueueAvailable() && SpawnPointIsClear();        
         #endregion
 
         #region Fields
@@ -37,16 +38,17 @@ namespace GameSystem
         private float randomDelayRange = 10;
         private float retryDelay = 2;
         private string timerName = "clientSpawn";
-        private float clientSpeed = 1;
+        private float clientSpeed = 0.5f;
         private List<SO_Client> models;
         private SplineContainer spline;
-        private List<OrderingArea> counters;
         
         // Reference Fields
         private TimerManager _timerManager;
         private ClientManager _clientManager;
         
         private Queue<SO_Client> nextClients = new();
+        
+        private float _spawnSafeZoneT = 0.1f;
         
         #endregion
 
@@ -79,85 +81,65 @@ namespace GameSystem
         /// </summary>
         public void Init()
         {
-            // WIP : should also setup floats according to a Settings Data
-
             models = Reference.AssetReferences.clientList;
-            counters = GameObject.FindObjectsByType<OrderingArea>(FindObjectsSortMode.None).ToList();
+            spline = Reference.GetManager<PathManager>()?.SplineComponent;
 
             Reference.GetManager(out _timerManager);
             Reference.GetManager(out _clientManager);
-            _timerManager.StartTimer( "AdaptiveClientSpawner Init", 1, () => Launch(),true);
-
-            if (models.Count <= 0 || !spline || counters.Count <= 0)
-            {
-                this.Log(LogType.Warning," Initialization is incomplete");
-            }
-            else
-            {
-                this.Log(" has been initialized");
-            }
-        }
-        
-        
-        /// <summary>
-        /// Check if a counter is free to order
-        /// </summary>
-        bool OrderingCounterAvailable() 
-        {
-            if (!ShiftOngoing())
-            {
-                return false;
-            }
+    
+            _timerManager.StartTimer("AdaptiveClientSpawner Init", 1, () => Launch(), true);
             
-            if (counters.Count == 0)
-            {
-                this.Log(LogType.Error," No ordering counter has been detected");
-                return false;
-            }
+            
+            if (models.Count <= 0 || !spline)
+                this.Log(LogType.Warning, " Initialization is incomplete");
+            else
+                this.Log(" has been initialized");
 
-            return false;
+            
         }
+
+        public void PostInit()
+        {
+            _clientManager.WaitingQueue.OnWaitLineFull += StopTryingSpawn;
+        }
+
 
         bool ShiftOngoing()
         {
             return !_timerManager.IsTimerRunning("shiftEndDelay");
         }
-        
-        /// <summary>
-        /// Assign a Client to the ordering counter when it spawns
-        /// </summary>
-        void AssignClientOrderingCounter(Client client)
-        {
-            /*
-            foreach (var counter in counters)
-            {
-                if (!counter.IsFree) continue;
-                //client.ReserveCounter(counter);
-                return;
-            }
-            */
-            this.Log(LogType.Warning," No counter has been found to assign a client to");
-        }
 
+
+        void StopTryingSpawn()
+        {
+            Debug.Log("Stop Trying Spawn");
+            if(_timerManager.IsTimerRunning(timerName))
+            {
+                _timerManager.StopTimer(timerName);
+                _timerManager.RemoveTimer(timerName);
+            }
+        }
         
         /// <summary>
-        /// Launch spawn timer with a delay (or not)
+        /// Start spawn timer with a delay (or not)
         /// </summary>
         void Launch(float delay = 2)
         {
             _timerManager.StartTimer(timerName, delay, () => TrySpawnClient());
         }
 
-        bool TrySpawnClient(SO_Client clientSO = null)
+        bool TrySpawnClient()
         {
-            if (CanSpawnClient || clientSO != null)
+            if (CanSpawnClient)
             {
-                SpawnClient(clientSO);
+                Debug.LogError("SPAWN CLIENT");
+                SpawnClient();
                 return true;
             }
             else
             {
-                this.Log(LogType.Log," Client couldn't be spawned so it will try again in "+retryDelay+" seconds");
+                //Debug.Log($"{SeatsOrQueueAvailable()} && {SpawnPointIsClear()} && {spline == null}");
+                //Debug.Log(" Client couldn't be spawned so it will try again in "+ retryDelay +" seconds");
                 Launch(retryDelay);
                 return false;
             }
@@ -166,34 +148,30 @@ namespace GameSystem
         /// <summary>
         /// Spawn a new Client if it is possible
         /// </summary>
-        void SpawnClient(SO_Client clientSO = null)
-        {     
-            if (clientSO == null)
+        void SpawnClient()
+        {
+            if (nextClients.Count == 0)
             {
-                // If the queue is empty enqueues a new client then it dequeues the first one
-                if (nextClients.Count == 0)
-                {
-                    EnqueueClient(NewClient());
-                    
-                    this.Log(LogType.Log," No client in queue so, a new one has been generated");
-                }
-                clientSO = nextClients.Dequeue();
+                EnqueueClient(NewClient());
+                this.Log(LogType.Log, " No client in queue so, a new one has been generated");
             }
-                    
-            // Spawns the client in the scene via ClientGenerator method Client.New()
-            
-            //Client client = Client.New(clientSO, Vector3.zero,clientSpeed);
-            //client.SetSplinePath(spline);
-            
-            this.Log(LogType.Log,clientSO.name +" has been spawned into scene");
-            
-            //AssignClientOrderingCounter(client);
+            SO_Client clientSO = nextClients.Dequeue();
 
-            //_clientManager.AddClientData(client,false);
-            //Reference.Get<Entrance>().OnClientEnter.Invoke();
-                    
+            Vector3 spawnPosition = spline.Spline.Evaluate(0, out var pos, out _, out _)
+                ? (Vector3)pos + spline.transform.position
+                : Vector3.zero;
+
+            Client client = Client.New(clientSO, spawnPosition, clientSpeed)
+                                  .SetSplinePath(spline)
+                                  .SetSpeed(clientSpeed);
+
+            client.Begin();
+
+            this.Log(LogType.Log, clientSO.name + " has been spawned into scene");
+
+            _clientManager.AddClientData(client, false);
             Launch(GetRandomizedDelay);
-            //OnNewClient?.Invoke(client);
+            OnNewClient?.Invoke();
         }
 
         /// <summary>
@@ -279,12 +257,25 @@ namespace GameSystem
             
             return EClientType.None;
         }
-
-        public void SetClientSpeed(float speed)
+        
+        bool SeatsOrQueueAvailable()
         {
-            clientSpeed = speed;
+            bool seatFree  = _clientManager.GetClientSeats(mustBeAvailable: true).Count > 0;
+            return seatFree || !_clientManager.WaitingQueue.IsQueueFull();
         }
-
+        
+        bool SpawnPointIsClear()
+        {
+            var clients = _clientManager.CurrentClients;
+            foreach (var client in clients)
+            {
+                if (client.Behaviour.ClientMovement == null) continue;
+                if (client.Behaviour.ClientMovement.SplineComponent == null) continue; 
+                if (client.Behaviour.ClientMovement.SplinePosition < _spawnSafeZoneT)
+                    return false;
+            }
+            return true;
+        }
         
         /// <summary>
         /// Add a client to the queue

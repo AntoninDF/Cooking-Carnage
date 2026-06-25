@@ -121,6 +121,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5263764493356598943
 GameObject:
@@ -164,6 +165,8 @@ GameObject:
   - component: {fileID: 1871850696656953273}
   - component: {fileID: 3091706671942166073}
   - component: {fileID: 7884375622220360648}
+  - component: {fileID: 1025367866159278415}
+  - component: {fileID: 6459460630727871890}
   m_Layer: 0
   m_Name: P_Client
   m_TagString: Untagged
@@ -201,121 +204,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61d23b3a8a3d6804180130f7178c64f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Client.Client
-  _timeToEat: 2
-  _timeBeforeDisappearingAfterLeaving: 8
-  _timeBeforeDisappearingAfterDying: 3
-  deathTrapHeight: -1
-  _onLookAt:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4882551223820293310}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  _onStopLookAt:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4882551223820293310}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _onStartEating:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3979074209239008973}
-        m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _onEndEating:
-    m_PersistentCalls:
-      m_Calls: []
-  _onStartWalking:
-    m_PersistentCalls:
-      m_Calls: []
-  _onEndWalking:
-    m_PersistentCalls:
-      m_Calls: []
-  _onCounterRegister:
-    m_PersistentCalls:
-      m_Calls: []
-  _onCounterArrival:
-    m_PersistentCalls:
-      m_Calls: []
-  _onCounterDeparture:
-    m_PersistentCalls:
-      m_Calls: []
-  _onKilled:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 147338581323641250}
-        m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _onSatisfactoryOrder:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7570816651107318885}
-        m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _onWrongOrder:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 147338581323641250}
-        m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _onStart:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!136 &7884375622220360648
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -339,6 +227,86 @@ CapsuleCollider:
   m_Height: 1.61
   m_Direction: 1
   m_Center: {x: 0, y: 0.8, z: 0}
+--- !u!195 &1025367866159278415
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5687090777271108394}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &6459460630727871890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5687090777271108394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
+  Events:
+  - ActionPath:
+      ActionVariableName: OnClientSitting
+      SerializedType:
+        m_Name: Action`1
+        m_AssemblyQualifiedName: System.Action`1[[Clients.Client, Assembly-CSharp,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0,
+          Culture=neutral, PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: CurrentSeat
+        SerializedType:
+          m_Name: ClientSeat
+          m_AssemblyQualifiedName: Features.ClientSeat, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3091706671942166073}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
+  - ActionPath:
+      ActionVariableName: OnClientLeaving
+      SerializedType:
+        m_Name: Action`1
+        m_AssemblyQualifiedName: System.Action`1[[Clients.Client, Assembly-CSharp,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0,
+          Culture=neutral, PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: CurrentSeat
+        SerializedType:
+          m_Name: ClientSeat
+          m_AssemblyQualifiedName: Features.ClientSeat, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3091706671942166073}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &6395151163703096339
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,7 +351,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7195671070476118596}
-  - component: {fileID: 2773036627873868442}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -406,49 +373,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8969917244427364308}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2773036627873868442
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6422632090488701025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f27084da2984b747b74f29c54cd9c85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LookAtSphere
-  _radius: 0.27
-  _onLookAt:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4882551223820293310}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  _onStopLookAt:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4882551223820293310}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1001 &2679468517736519408
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -511,11 +435,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 665496375679562330, guid: 64df93bf38f7e594688f7e240962a756, type: 3}
   m_PrefabInstance: {fileID: 2679468517736519408}
   m_PrefabAsset: {fileID: 0}
---- !u!198 &7570816651107318885 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 5494272568327809685, guid: 64df93bf38f7e594688f7e240962a756, type: 3}
-  m_PrefabInstance: {fileID: 2679468517736519408}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3803908213089238950
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -573,11 +492,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 380c11a29b628ba41a6f95a4375083af, type: 3}
---- !u!198 &147338581323641250 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 3945507269593959940, guid: 380c11a29b628ba41a6f95a4375083af, type: 3}
-  m_PrefabInstance: {fileID: 3803908213089238950}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1805010922934794758 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3298496964578346400, guid: 380c11a29b628ba41a6f95a4375083af, type: 3}
@@ -766,10 +680,5 @@ PrefabInstance:
 --- !u!4 &1098017637512189031 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8539137316563734570, guid: 3b27e941002449649985998de440fe69, type: 3}
-  m_PrefabInstance: {fileID: 8772428357512414285}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &3979074209239008973 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 5658051607796597376, guid: 3b27e941002449649985998de440fe69, type: 3}
   m_PrefabInstance: {fileID: 8772428357512414285}
   m_PrefabAsset: {fileID: 0}
