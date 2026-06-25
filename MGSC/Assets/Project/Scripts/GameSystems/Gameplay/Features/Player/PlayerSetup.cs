@@ -6,19 +6,17 @@ namespace Controller
 
     public static class PlayerSetup
     {
-
+        public static Player Player;
         /// <summary>
         /// Creates a player if none exists, then resets it's position, and adds it to the reference manager
         /// </summary>
         /// <returns></returns>
         public static Player TrySetupPlayer()
         {
-            Player player = null;
-            TrySpawnPlayer(out player);
-            TryResetPlayer(player);
-            //Reference.TryAdd(player);
+            TrySpawnPlayer(out Player);
+            TryResetPlayer();
 
-            return player;
+            return Player;
         }
 
 
@@ -53,9 +51,9 @@ namespace Controller
             return playerGo.GetComponent<Player>();
         }
 
-        public static bool TryResetPlayer(Player player)
+        public static bool TryResetPlayer()
         {
-            PlayerStart playerStart = Reference.Get<PlayerStart>();
+            PlayerStart playerStart = PlayerStart.Instance;
             Vector3 pos;
             Quaternion rot;
             if (playerStart == null)
@@ -68,11 +66,11 @@ namespace Controller
                 pos = playerStart.transform.position;
                 rot = playerStart.transform.rotation;
             }
-            if (!EnforceReference(player,
+            if (!EnforceReference(Player,
                 "[Player Setup] : The player to be reset was null"))
                 return false;
 
-            ResetPlayer(player, pos, rot);
+            ResetPlayer(Player, pos, rot);
             return true;
         }
 

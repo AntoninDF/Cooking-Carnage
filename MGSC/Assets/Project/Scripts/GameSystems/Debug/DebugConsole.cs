@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DebugConsole : MonoBehaviour
 {
@@ -17,19 +18,17 @@ public class DebugConsole : MonoBehaviour
     private void OnEnable()
     {
         Debugger.OnLogAdded += HandleNewLog;
+        Reference.AssetReferences.InputActions.FindAction("ShowConsole").performed += ToggleVisibility;
     }
 
     private void OnDisable()
     {
         Debugger.OnLogAdded -= HandleNewLog;
+        Reference.AssetReferences.InputActions.FindAction("ShowConsole").performed -= ToggleVisibility;
     }
-    
+    void ToggleVisibility(InputAction.CallbackContext ctx) => _visible = !_visible;
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F11))
-        {
-            _visible = !_visible;
-        }
 
         if (logLifetime <= 0)
             return;

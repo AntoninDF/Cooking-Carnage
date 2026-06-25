@@ -22,12 +22,14 @@ namespace Upgrades
 
         public override void Apply()
         {
+            /*
             _targetOvens = Reference.GetAll<Oven>();
 
             foreach (Oven o in _targetOvens)
             {
                 //o.SetStrength(_level * 2f);
             }
+            */
         }
 
         #endregion

@@ -48,8 +48,15 @@ public class Ingredient : Item
 
         if (!context.TryGetFeature(out F_Container playerContainer)) return;
         if (playerContainer.HeldItem == null) return;
-        if (!playerContainer.HeldItem.TryGetSibling(out F_Container containerObject)) return;
-        bool success = containerObject.RequestGrab(Grabbable);
+        // Let the ingredient get grabbed by the item held by the player if it's a container
+        if (playerContainer.HeldItem.TryGetSibling(out F_Container containerObject))
+        {
+            containerObject.RequestGrab(Grabbable);
+        }
+        else if (playerContainer.HeldItem.TryGetSibling(out F_Ingredient otherIngredient))
+        {
+            SwapWith(playerContainer.HeldItem);
+        }
     }
 
     #endregion

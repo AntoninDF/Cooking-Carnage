@@ -55,8 +55,8 @@ public class Plate : Item
     {
         base.Start();
         BindExternalEvents();
-        cookedVariant.SetActive(false);
-        cookedVariant.gameObject.SetActive(false);
+        cookedVariant?.SetActive(false);
+        cookedVariant?.gameObject.SetActive(false);
         SetActiveModel(defaultModel);
     }
 
@@ -100,17 +100,7 @@ public class Plate : Item
                 // Try to swap the plates
                 if (playerContainer.HeldItem != null && playerContainer.HeldItem.Owner is Plate playerPlate)
                 {
-                    var otherItem = playerContainer.HeldItem;
-                    var currentContainer = Grabbable.Container;
-                    var targetPos = transform.position;
-                    playerContainer.RequestDrop(otherItem);
-                    playerContainer.RequestGrab(Grabbable);
-                    if (currentContainer != null)
-                    {
-                        currentContainer.RequestGrab(otherItem);
-                        var otherPlate = otherItem.Owner as Plate;
-                        otherPlate.Anim.GoTo(currentContainer.transform, targetPos);
-                    }
+                    SwapWith(playerContainer.HeldItem);
                 }
                 // Or just take this one
                 else
@@ -121,6 +111,8 @@ public class Plate : Item
         }
 
     }
+
+    
 
     private void OnCook()
     {

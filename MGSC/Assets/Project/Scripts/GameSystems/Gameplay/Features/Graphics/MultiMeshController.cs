@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -43,24 +44,27 @@ namespace Features
         {
             if (Controllers.Length == 0) return new();
 
-            CombineInstance[] instances = new CombineInstance[Controllers.Length];
+            List<CombineInstance> instances = new ();
 
             for (int i = 0; i < Controllers.Length; i++)
             {
                 var Controller = Controllers[i];
                 if (!Controller.Renderer.enabled && !combineInactiveMeshes) continue;
+                Mesh mesh = Controller.GetMesh();
+                if (mesh == null) continue;
 
                 Matrix4x4 child = Controller.Renderer.transform.localToWorldMatrix;
                 Matrix4x4 parent = Matrix4x4.identity;
                 if (relativeTo != null)
                     parent = relativeTo.worldToLocalMatrix;
-                instances[i] = new CombineInstance
+                var newInstance = new CombineInstance
                 {
-                    mesh = Controller.GetMesh(),
+                    mesh = mesh,
                     transform = parent * child
                 };
+                instances.Add(newInstance);
 
-                if (!instances[i].mesh.isReadable)
+                if (!newInstance.mesh.isReadable)
                 {
                     Debug.LogWarning("Tried to combine mesh '" + Controller.GetMesh().name + "', but it is not marked as read/write. Please check the import settings.");
                 }
@@ -68,7 +72,7 @@ namespace Features
 
             Mesh result = new();
             result.name = "Combined mesh";
-            result.CombineMeshes(instances);
+            result.CombineMeshes(instances.ToArray());
             return result;
         }
         #region ForwardedMethods
