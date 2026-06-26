@@ -1,5 +1,6 @@
 using Features;
 using System;
+using Cooking;
 using UnityEngine;
 
 public class ServingArea : MonoBehaviour, IFeatureCollection
@@ -8,7 +9,6 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     
     public FeatureCollection Collection     { get; set; } = new();
     public ClientSeat        ClientSeat     { get; set; }
-    public ServingCounter    ServingCounter { get; set; }
     
     #endregion
 
@@ -27,7 +27,6 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     
     private void Start()
     {
-        ServingCounter = new(this);
 
         if (MealSlot == null)
         {
@@ -35,8 +34,8 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
             return;
         }
 
-        MealSlot.Container.Filter += (obj) => obj is F_Grabbable grab && grab.TryGetSibling(out Servable temp, true);
-        
+        MealSlot.Container.Filter += (obj) => obj is F_Grabbable grab;
+        // && grab.TryGetSibling(out Servable temp, true)
     }
 
     public void Initialize(ClientSeat clientSeat)
@@ -44,8 +43,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         ClientSeat = clientSeat;
         ClientSeat.OnClientRegister += _ => StartWatchingSlot();
         ClientSeat.OnClientUnregister += _ => StopWatchingSlot();
-        
-        
+
     }
 
     public void Update()
@@ -55,16 +53,13 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         if (current != null && current != _lastHeldItem)
         {
             _lastHeldItem = current;
-            ClientSeat.OnMealReady?.Invoke();
+            //if(current.)
+            ClientSeat.OnMealReceive?.Invoke();
         }
         if (current == null)
             _lastHeldItem = null;
     }
-
-    void ReceiveMeal(Servable serving)
-    {
-       ClientSeat.SittingClient.TryAcceptServing(serving);
-    }
+    
 
     private void OnDrawGizmos()
     {

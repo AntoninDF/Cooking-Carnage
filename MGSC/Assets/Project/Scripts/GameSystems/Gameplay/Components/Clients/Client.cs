@@ -1,6 +1,7 @@
 using Features;
 using System;
 using System.Collections;
+using Cooking;
 using GameSystem;
 using UnityEditor;
 using UnityEngine;
@@ -127,7 +128,7 @@ namespace Clients
        {
            transform.SetParent(seatTransform);
            Behaviour.ClientMovement.Sit();
-           StartCoroutine(SmoothRotationReset());
+           StartCoroutine(SmoothTransformReset());
            Behaviour.OnSitting?.Invoke();
        }
 
@@ -138,18 +139,22 @@ namespace Clients
            ClientLook.SetClientLeaving(this);
        }
        
-       IEnumerator SmoothRotationReset()
+       IEnumerator SmoothTransformReset()
        {
            float      elapsed  = 0;
            float      duration = 0.5f;
            Quaternion startRot = transform.localRotation;
+           Vector3 startPos = transform.localPosition;
            while (elapsed < duration)
            {
                elapsed += Time.deltaTime;
                transform.localRotation = Quaternion.Lerp(startRot, Quaternion.Euler(0, 0, 0), elapsed/duration);
+               transform.localPosition = Vector3.Lerp(startPos, Vector3.zero, elapsed/duration);
+
                yield return null;
            }
            transform.localRotation = Quaternion.Euler(0, 0, 0);
+           transform.localPosition = Vector3.zero;
        }
 
        #endregion
@@ -161,16 +166,15 @@ namespace Clients
            if (order == null) return;
            if (CurrentOrder != null) return;
            CurrentOrder = order;
-           CurrentSeat.TryUnregister(this);
+           //CurrentSeat.TryUnregister(this);
            OnOrderAccepted?.Invoke(order);
        }
-
        
-       public void TryAcceptServing(Servable serving)
+       public void TryAcceptServing(Meal meal)
        {
-           if (serving == null || !serving.Enabled) return;
-           CurrentOrder.Resolve(serving);
-           CurrentSeat?.TryUnregister(this);
+           if (meal == null) return;
+           CurrentOrder.Resolve(meal);
+           CurrentSeat?.TryLeave(this);
            OnMealServed?.Invoke();
        }
 

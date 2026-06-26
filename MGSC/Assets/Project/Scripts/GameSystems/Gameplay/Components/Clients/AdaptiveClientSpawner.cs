@@ -112,7 +112,6 @@ namespace GameSystem
 
         void StopTryingSpawn()
         {
-            Debug.Log("Stop Trying Spawn");
             if(_timerManager.IsTimerRunning(timerName))
             {
                 _timerManager.StopTimer(timerName);
@@ -132,14 +131,11 @@ namespace GameSystem
         {
             if (CanSpawnClient)
             {
-                Debug.LogError("SPAWN CLIENT");
                 SpawnClient();
                 return true;
             }
             else
             {
-                //Debug.Log($"{SeatsOrQueueAvailable()} && {SpawnPointIsClear()} && {spline == null}");
-                //Debug.Log(" Client couldn't be spawned so it will try again in "+ retryDelay +" seconds");
                 Launch(retryDelay);
                 return false;
             }

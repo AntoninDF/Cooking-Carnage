@@ -257,8 +257,7 @@ namespace Features
 
         public void Sit()
         {
-            _navmeshAgent.enabled             = false;
-            ControlledTransform.localPosition = Vector3.zero;
+            _navmeshAgent.enabled             = false; 
         }
         
         public void GetUp()

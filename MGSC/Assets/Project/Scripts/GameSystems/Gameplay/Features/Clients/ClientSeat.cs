@@ -1,6 +1,7 @@
 using GameSystem;
 using System;
 using Clients;
+using Cooking;
 using UnityEngine;
 
 namespace Features
@@ -16,7 +17,7 @@ namespace Features
         public Action<Client> OnClientSitting {get; set; }
         public Action<Client> OnClientLeaving {get; set; }
         
-        public Action OnMealReady { get; set; }
+        public Action OnMealReceive { get; set; }
         
         public Client RegisteredClient
         {
@@ -96,12 +97,14 @@ namespace Features
             
             return true;
         }
+        
         public bool TryLeave(Client client)
         {
             if (client == null) return false;
             if (SittingClient != client) return false;
 
             SittingClient = null;
+            TryUnregister(client);
             client.QuitSeat();
             return true;
         }
