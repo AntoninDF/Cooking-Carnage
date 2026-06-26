@@ -17,7 +17,6 @@ namespace Features
         public bool IsValid()
         {
             bool result = true;
-
             foreach(var condition in _conditions0)
             {
                 if (!condition())
@@ -28,7 +27,7 @@ namespace Features
             return result;
         }
         public bool IsValid(object comparedObject, bool checkDefaultConditions=true)
-        {
+        { 
             if (checkDefaultConditions && !IsValid())
                 return false;
             bool result = true;

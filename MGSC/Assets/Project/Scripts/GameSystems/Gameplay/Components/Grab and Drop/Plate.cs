@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// The plate class manages the contained items, can cook, then transform in a completed recipe
+/// The plate class manages the contained items, can cook, then transform in a completed recipeComponent
 /// </summary>
 [RequireComponent(typeof(MultiSlotContainer))]
 [RequireComponent(typeof(Collider))]
@@ -15,7 +15,7 @@ public class Plate : Item
 {
     #region Properties
     public F_Cookable Cookable;
-    public F_Cookable OverCookable;
+    public F_OverCookable OverCookable;
     public F_MultiSlotContainer Container;
     #endregion
 
@@ -41,7 +41,6 @@ public class Plate : Item
     {
         if (ContainerComponent == null) ContainerComponent = GetComponent<MultiSlotContainer>();
         Cookable = new(this);
-        Globals.Bind(value => Cookable.TransformationDuration = value, Globals.Gameplay.CookingDuration);
         OverCookable = new(this);
         OverCookable.Enabled = false;
         Globals.Bind(value => OverCookable.TransformationDuration = value, Globals.Gameplay.OvercookingDuration);
@@ -52,8 +51,11 @@ public class Plate : Item
     {
         base.BindEvents();
         Cookable.OnTransformation += OnCook;
+        OverCookable.OnTransformation += OnOverCook;
         
     }
+
+
     protected override void Start()
     {
         base.Start();
@@ -117,13 +119,23 @@ public class Plate : Item
 
     
 
+    private void OnOverCook()
+    {
+        var recipe = Reference.AssetReferences.DefaultRecipeBook.FailedRecipe;
+        EnableRecipeModel(recipe);
+        // Assign the failed recipe, otherwise it might detect an empty recipe instead
+        if (TryGetComponent<Recipe>(out var recipeComponent))
+        {
+            var feature = recipeComponent.RecipeFeature;
+            feature.Recipe = recipe;
+        }
+    }
     private void OnCook()
     {
         Cookable.Enabled = false;
         OverCookable.Enabled = true;
         DetectRecipe(out var recipe);
         EnableRecipeModel(recipe);
-        SetActiveModel(cookedVariant);
         DeleteContent();
     }
 

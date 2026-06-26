@@ -12,7 +12,7 @@ public class CafeteriaExit : MonoBehaviour, IFeatureCollection
 
     private void Awake()
     {
-        Seat = new(this, SeatTransform);
+        //Seat = new(this, SeatTransform);
         Exit = new(this);
     }
 

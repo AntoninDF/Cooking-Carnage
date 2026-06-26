@@ -5,47 +5,65 @@ using UnityEngine;
 public class ServingArea : MonoBehaviour, IFeatureCollection
 {
     #region Properties
-    public FeatureCollection Collection { get; set; } = new();
-
-    public ClientSeat ClientSeat { get; set; }
-    public ServingCounter ServingCounter { get; set; }
+    
+    public FeatureCollection Collection     { get; set; } = new();
+    public ClientSeat        ClientSeat     { get; set; }
+    public ServingCounter    ServingCounter { get; set; }
+    
     #endregion
 
     #region Fields
-
-    public Transform SeatTransform;
+    
     public SlotContainer MealSlot;
-
+    
+    private bool _watching = false;
+    private void StartWatchingSlot() => _watching = true;
+    private void StopWatchingSlot()  => _watching = false;
+    private F_Grabbable _lastHeldItem = null;
+    
     #endregion
-
+    
+    
+    
     private void Start()
     {
-        ClientSeat = new(this, SeatTransform);
         ServingCounter = new(this);
-        if (MealSlot == null) Debug.LogWarning("Please assign a meal slot on the serving area component of " + name);
-        else
+
+        if (MealSlot == null)
         {
-            MealSlot.Container.OnGrab += _ => TryServe();
-            MealSlot.Container.Filter += (obj) => obj is F_Grabbable grab && grab.TryGetSibling(out Servable temp, true);
+            Debug.LogWarning("Please assign a meal slot on the serving area component of " + name);
+            return;
         }
-        BindEvents();
+
+        MealSlot.Container.Filter += (obj) => obj is F_Grabbable grab && grab.TryGetSibling(out Servable temp, true);
+        
     }
 
-    private void BindEvents()
+    public void Initialize(ClientSeat clientSeat)
     {
-        // WIP ?
+        ClientSeat = clientSeat;
+        ClientSeat.OnClientRegister += _ => StartWatchingSlot();
+        ClientSeat.OnClientUnregister += _ => StopWatchingSlot();
+        
+        
     }
 
-    public bool TryServe()
+    public void Update()
     {
-        Debug.Log("1");
-        if (MealSlot.Container.HeldItem == null) return false;
-        if (ClientSeat.SittingClient == null ) return false;
+        if (!_watching) return;
+        var current = MealSlot?.Container?.HeldItem;
+        if (current != null && current != _lastHeldItem)
+        {
+            _lastHeldItem = current;
+            ClientSeat.OnMealReady?.Invoke();
+        }
+        if (current == null)
+            _lastHeldItem = null;
+    }
 
-        Debug.Log("2");
-        ServingCounter.TryServe(MealSlot.Container.HeldItem.GetSibling<Servable>(), ClientSeat.SittingClient);
-
-        return true;
+    void ReceiveMeal(Servable serving)
+    {
+       ClientSeat.SittingClient.TryAcceptServing(serving);
     }
 
     private void OnDrawGizmos()

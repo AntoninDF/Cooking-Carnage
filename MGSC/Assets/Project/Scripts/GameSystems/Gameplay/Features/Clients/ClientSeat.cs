@@ -1,5 +1,6 @@
 using GameSystem;
 using System;
+using Clients;
 using UnityEngine;
 
 namespace Features
@@ -11,16 +12,18 @@ namespace Features
         // Usually, a client unregisters at the same time they leave
         public Action<Client> OnClientRegister {  get; set; }
         public Action<Client> OnClientUnregister {get; set; }
+        
         public Action<Client> OnClientSitting {get; set; }
         public Action<Client> OnClientLeaving {get; set; }
+        
+        public Action OnMealReady { get; set; }
+        
         public Client RegisteredClient
         {
             get => _registeredClient;
             set
             {
                 if (_registeredClient == value) return;
-                if (_registeredClient != null)
-                    OnClientUnregister?.Invoke(_registeredClient);
                 if (value != null)
                     OnClientRegister?.Invoke(value);
                 _registeredClient = value;
@@ -43,41 +46,43 @@ namespace Features
         }
 
         public Transform transform;
+        public Transform parentTransform;
 
-        private Client _registeredClient;
-        private Client _sittingClient;
+        private Client  _registeredClient;
+        private Client  _sittingClient;
+        private Vector3 _defaultPosition;
+        private ClientSeatHeightConfig _servingAreaConfig;
         
 
         public ClientManager ClientManager => Reference.GetManager<ClientManager>();
-        public ClientSeat(IFeatureCollection owner, Transform seatTransform) : base(owner)
+        public ClientSeat(IFeatureCollection owner, Transform seatTransform, Transform seatParent, ClientSeatHeightConfig servingAreaConfig) : base(owner)
         {
-            /*
-            if (seatTransform == null)
-                Debug.LogWarning("ClientSeat transform is null");
-            */
-            transform = seatTransform;
-
+            transform        = seatTransform;
+            parentTransform = seatParent;
+            _defaultPosition = parentTransform.localPosition;
             ClientManager.Register(this);
+            _servingAreaConfig = servingAreaConfig;
+            Debug.Log("Client Seat Created");
         }
 
         public bool TryRegister(Client client)
         {
-            if (client == null) return false;
-            if (RegisteredClient != null) return false;
-
+            if (client == null)return false;
+            if (RegisteredClient != null)return false;
+            
             client.CurrentSeat = this;
             RegisteredClient = client;
+            ActualizeSeatPos(client);
             return true;
         }
         public bool TryUnregister(Client client)
         {
-            //Debug.Log("Trying to unregister...");
             if (client == null) return false;
             if (RegisteredClient != client) return false;
 
             RegisteredClient = null;
             SittingClient = null;
-            //Debug.Log("Unregistered !");
+            OnClientUnregister?.Invoke(_registeredClient);
             return true;
         }
         public bool TrySit(Client client)
@@ -86,6 +91,9 @@ namespace Features
             if (RegisteredClient != client) return false;
 
             SittingClient = client;
+            
+            client.SittingClient(transform);
+            
             return true;
         }
         public bool TryLeave(Client client)
@@ -94,7 +102,32 @@ namespace Features
             if (SittingClient != client) return false;
 
             SittingClient = null;
+            client.QuitSeat();
             return true;
+        }
+
+        private void ActualizeSeatPos(Client client)
+        {
+            parentTransform.localPosition = ClientSeatPosition(client);
+        }
+
+        public Vector3 ClientSeatPosition(Client client)
+        {
+            float y = 0;
+            foreach (var heightByType in _servingAreaConfig.ClientHeightByTypeList)
+            {
+                if (heightByType.ClientType == client.Type)
+                {
+                    y = heightByType.SeatHeight;
+                    Debug.LogFormat($"New seat height : {y}");
+                }
+                else
+                {
+                    Debug.Log("Client Type not founded");
+                }
+            }
+            
+            return new Vector3(_defaultPosition.x, _defaultPosition.y + y, _defaultPosition.z);
         }
     }
 }

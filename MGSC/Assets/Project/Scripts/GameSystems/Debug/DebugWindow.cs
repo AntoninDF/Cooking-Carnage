@@ -138,7 +138,7 @@ public class DebugWindow : MonoBehaviour
         GUILayout.Space(10);
         if (data != null)
         {
-            GUILayout.Label($"Current Shift: {data.shiftCount}");
+            GUILayout.Label($"Current Shift: {data.shiftNumber}");
             GUILayout.Label($"Current Money: {data.money:F1}€");
         }
         else
@@ -185,7 +185,7 @@ public class DebugWindow : MonoBehaviour
             if(dm != null)
             {
                 DataManager.GameData data = new DataManager.GameData();
-                data.shiftCount = newShift;
+                data.shiftNumber = newShift;
                 data.money = newMoney;
                 data.upgrades = dm.Data.upgrades;
                 dm.SaveGameData(data);

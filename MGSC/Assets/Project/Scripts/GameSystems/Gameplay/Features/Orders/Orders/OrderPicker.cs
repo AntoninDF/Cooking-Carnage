@@ -40,7 +40,7 @@ namespace Orders
 
             if (sm != null)
                 foreach (var elm in ar.recipeBookByShiftCount)
-                    if (sm.ShiftCount >= elm.shift) book = elm.recipeBook;
+                    if (sm.ShiftNumber >= elm.shift) book = elm.recipeBook;
 
             OrderManager om = Reference.GetManager<OrderManager>();
             if (om != null) om.Log("The current recipe book is '" + book.name + "'");
