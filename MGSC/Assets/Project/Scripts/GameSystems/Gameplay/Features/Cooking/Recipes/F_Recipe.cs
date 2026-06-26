@@ -6,8 +6,17 @@ namespace Features
     public class F_Recipe : Feature
     {
         #region Properties
-        public SO_Recipe Recipe => RecipeFinder.GetMatchingRecipe(IngredientModels);
-        public List<F_Ingredient> Ingredients { get; set; }
+        public SO_Recipe Recipe {get; set; }
+        public List<F_Ingredient> Ingredients
+        {
+            get => _ingredients;
+            set
+            {
+                _ingredients = value;
+                Recipe = RecipeFinder.GetMatchingRecipe(GetIngredientModels());
+            }
+        }
+        private List<F_Ingredient> _ingredients;
         public List<SO_Ingredient> IngredientModels => GetIngredientModels();
 
         #endregion

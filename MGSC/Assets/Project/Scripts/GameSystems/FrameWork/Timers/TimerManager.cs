@@ -233,6 +233,7 @@ namespace GameSystem
             if (paused || IsComplete)
                 return;
 
+            onUpdate?.Invoke(Elapsed);
             if (!FrameBased)
             {
 
@@ -253,7 +254,6 @@ namespace GameSystem
                     onComplete?.Invoke();
                 }
             }
-            onUpdate?.Invoke(Elapsed);
         }
         
         public void End()

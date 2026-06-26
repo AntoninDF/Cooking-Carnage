@@ -4,7 +4,7 @@ namespace Features
     {
         public F_Cookable(IFeatureCollection owner) : base(owner)
         {
-            TransformationDuration = Globals.Gameplay.CookingDuration;
+            Globals.Bind(value => TransformationDuration = value, Globals.Gameplay.CookingDuration);
         }
     }
 }

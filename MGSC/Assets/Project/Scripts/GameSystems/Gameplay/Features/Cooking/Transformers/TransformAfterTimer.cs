@@ -13,6 +13,7 @@ namespace Features
         public Action<TransformableAfterTimer> OnTransformationOver { get; set; }
         public Action<TransformableAfterTimer> OnTransformationStart { get; set; }
         protected TimerManager TimerManager => Reference.GetManager<TimerManager>();
+        protected Timer currentProcess;
 
 
         #region Methods
@@ -26,6 +27,14 @@ namespace Features
             StartTransformation(target);
             return true;
         }
+        public bool RequestStopTransformation(TransformableAfterTimer target=null)
+        {
+            if (currentProcess == null)
+                return false;
+            currentProcess.Pause();
+            currentProcess = null;
+            return true;
+        }
 
         protected override void Transform(Transformable cookable)
         {
@@ -37,7 +46,7 @@ namespace Features
         {
             string timerName = "Transforming (" + UnityEngine.Time.frameCount.ToString("X") + ")";
             var duration = GetTransformationDuration(target);
-            TimerManager.StartTimer(timerName, duration, () => RequestTransformation(target), false, (elapsed) => Progress(elapsed, duration));
+            currentProcess = TimerManager.StartTimer(timerName, duration, () => RequestTransformation(target), false, (elapsed) => Progress(elapsed, duration));
             OnTransformationStart?.Invoke(target);
             target.BeginTransformation();
         }

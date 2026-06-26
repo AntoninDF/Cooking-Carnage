@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: _onOvercooked.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 5305888510544776918, guid: 399816f08687d0040b0fd19cfbf7078e, type: 3}
+      propertyPath: m_Name
+      value: P_Failed Meal
+      objectReference: {fileID: 0}
     - target: {fileID: 8299873131903545996, guid: 399816f08687d0040b0fd19cfbf7078e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -95,5 +99,66 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5305888510544776918, guid: 399816f08687d0040b0fd19cfbf7078e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5133049109007668076}
   m_SourcePrefab: {fileID: 100100000, guid: 399816f08687d0040b0fd19cfbf7078e, type: 3}
+--- !u!198 &3713786869837736734 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 3046867325131507124, guid: 399816f08687d0040b0fd19cfbf7078e, type: 3}
+  m_PrefabInstance: {fileID: 1856222791175859882}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5791890487490928764 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5305888510544776918, guid: 399816f08687d0040b0fd19cfbf7078e, type: 3}
+  m_PrefabInstance: {fileID: 1856222791175859882}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5133049109007668076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5791890487490928764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
+  Events:
+  - ActionPath:
+      ActionVariableName: Start
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: BaseEvents
+        SerializedType:
+          m_Name: BaseEvents
+          m_AssemblyQualifiedName: Features.BaseEvents, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 5133049109007668076}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3713786869837736734}
+          m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
