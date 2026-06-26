@@ -55,6 +55,7 @@ namespace GameSystem
         public void PostInit()
         {
             SetupNavigationMesh();
+            TrySubscribeToShiftManagerEvents();
         }
 
         public void OnEnable()
@@ -87,6 +88,21 @@ namespace GameSystem
             }
         }
 
+        bool TrySubscribeToShiftManagerEvents()
+        {
+            Reference.GetManager(out ShiftManager shiftManager);
+            if (shiftManager == null) return false;
+
+            shiftManager.OnShiftBegin += () => ShiftBegin.Invoke();
+            shiftManager.OnShiftNoon += () => ShiftNoon.Invoke();
+            shiftManager.OnShiftEnded += () => ShiftEnd.Invoke();
+            shiftManager.OnShiftFailed += () => RentGameOver.Invoke();
+
+            shiftManager.OnShiftEnded += () => StopRunning();
+
+            return true;
+        }
+
         private void SetupNavigationMesh()
         {
             _navmesh           = gameObject.AddComponent<NavMeshSurface>();
@@ -113,10 +129,13 @@ namespace GameSystem
         {
             IsRunning = false;
             OnPause?.Invoke();
+            /*
+            // Je sais pas pourquoi y a la possibilité de resume quand on demande de faire pause, ça n'a pas de sens
             if (!pauseMenu)
             {
                 OnResume?.Invoke();
             }
+            */
             this.Log("is not running anymore");
         }
         

@@ -381,14 +381,14 @@ public class ItemManager : IManager
         }
     }
 
-    public void SpawnInitialItems(int shiftCount)
+    public void SpawnInitialItems(int shiftNumber)
     {
         this.Log("Spawning initial items");
         int i = 0;
         foreach (var item in spawnItems)
         {
-            if (_maxSpawnItemsPerShift.ContainsKey(shiftCount))
-                if (_maxSpawnItemsPerShift[shiftCount] <= i)
+            if (_maxSpawnItemsPerShift.ContainsKey(shiftNumber))
+                if (_maxSpawnItemsPerShift[shiftNumber] <= i)
                     break;
             this.Log(item.transform.position);
             int index = spawnItems.IndexOf(item);

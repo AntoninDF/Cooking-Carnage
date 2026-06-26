@@ -142,7 +142,7 @@ namespace GameSystem
             if (Reference.TryGetManager(out ShiftManager sm))
                 shiftCount = sm.ShiftCount;
 
-            //ClientData clientData = new ClientData(client.GetEntityId(), client.Type, killed, -1, Time.time, client.Order, shiftCount);
+            //ClientData clientData = new ClientData(client.GetEntityId(), client.Type, killed, -1, Time.time, client.Order, shiftNumber);
             
             //clientHistory.Add(clientData);
             if (killed)

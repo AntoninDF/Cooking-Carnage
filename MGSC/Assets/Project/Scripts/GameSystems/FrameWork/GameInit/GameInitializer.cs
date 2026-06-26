@@ -81,7 +81,7 @@ namespace GameSystem
 
             if (_gameProfile.AddUI) AddUI();
 
-            Reference.GetManager<ShiftManager>().Setup(_gameProfile.ShiftDuration, _gameProfile.ShiftNoonDuration, _gameProfile.RentPrice);
+            GameSettings.Instance?.Apply();
 
             if (_gameProfile.AddPlayer) PlayerSetup.TrySetupPlayer();
 

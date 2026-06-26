@@ -72,7 +72,7 @@ namespace GameSystem
             {
                 money = gameData?.money ?? MoneyInfo,
                 upgrades = gameData?.upgrades ?? ConvertUpgradeData(),
-                shiftCount = gameData?.shiftCount ?? ShiftCount
+                shiftNumber = gameData?.shiftNumber ?? ShiftCount
             };
             
             string json = JsonUtility.ToJson(currentGameData, true);
@@ -116,9 +116,9 @@ namespace GameSystem
             
             LoadUpgradeData();
             
-            _shiftManager.SetShiftCount(currentGameData.shiftCount);
+            _shiftManager.SetShiftNumber(currentGameData.shiftNumber);
             
-            this.Log(LogType.Log, $"Save loaded successfully, shift : {currentGameData.shiftCount},  money : {currentGameData.money}");
+            this.Log(LogType.Log, $"Save loaded successfully, shift : {currentGameData.shiftNumber},  money : {currentGameData.money}");
         }
 
         public void ResetSave()
@@ -180,7 +180,7 @@ namespace GameSystem
             {
                 money = 0,
                 upgrades = new List<UpgradeData> { },
-                shiftCount = 0
+                shiftNumber = 0
             };
 
             #endregion
@@ -252,7 +252,7 @@ namespace GameSystem
             public float money;
             public List<UpgradeData> upgrades;
 
-            public int shiftCount = -1;
+            public int shiftNumber = -1;
             // REFACTO : Player Settings
         }
         

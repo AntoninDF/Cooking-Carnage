@@ -19,7 +19,7 @@ namespace Upgrades
         public BlenderSpeedUpgrade() : base()
         {
             //Can Get his config 
-            _config = UpgradeManagerConfig.instance.BlenderSpeed;
+            _config = UpgradeManagerConfig.Instance.BlenderSpeed;
         }
 
         public override void Apply()

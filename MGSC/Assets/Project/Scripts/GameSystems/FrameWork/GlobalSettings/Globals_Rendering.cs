@@ -13,7 +13,7 @@ public static partial class Globals
             public static Param<OutlineOptions> Options => new OutlineOptions(Color, Thickness, Mode);
 
             /// <summary>
-            /// Creates a new instance of an outline material setup with the global parameters
+            /// Creates a new Instance of an outline material setup with the global parameters
             /// </summary>
             /// <returns></returns>
             public static Material GetDefaultMaterial()

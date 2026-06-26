@@ -18,7 +18,7 @@ namespace Upgrades
 
         public OvenCountUpgrade() : base()
         {
-            _config = UpgradeManagerConfig.instance.OvenCount;
+            _config = UpgradeManagerConfig.Instance.OvenCount;
             // _targetOvenSetup = Reference.Get<OvenSetup>();
         }
 
