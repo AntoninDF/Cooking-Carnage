@@ -24,7 +24,10 @@ namespace Clients
         public Action<ClientSeat> OnSeatUnregister { get; set; }
         public ClientBehaviour    Behaviour        { get; set; }
         public ClientCooked       Cooked           { get; private set; }
-
+        public ClientLook         ClientLook       => _clientLook;
+        
+        public bool               IsCooked         { get; set; }
+        
         public Order CurrentOrder
         {
             get => _currentOrder;

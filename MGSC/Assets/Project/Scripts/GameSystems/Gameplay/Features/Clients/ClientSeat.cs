@@ -1,6 +1,7 @@
 using GameSystem;
 using System;
 using Clients;
+using Project.Scripts.GameSystems.Gameplay.Components.Clients;
 using UnityEngine;
 
 namespace Features
@@ -47,8 +48,9 @@ namespace Features
 
         public Transform transform;
 
-        private Client _registeredClient;
-        private Client _sittingClient;
+        private Client  _registeredClient;
+        private Client  _sittingClient;
+        private Vector3 _defaultPosition;
         
 
         public ClientManager ClientManager => Reference.GetManager<ClientManager>();
@@ -58,8 +60,8 @@ namespace Features
             if (seatTransform == null)
                 Debug.LogWarning("ClientSeat transform is null");
             */
-            transform = seatTransform;
-
+            transform        = seatTransform;
+            _defaultPosition = seatTransform.position;
             ClientManager.Register(this);
         }
 
@@ -67,38 +69,53 @@ namespace Features
         {
             if (client == null)
             {
-                Debug.Log("No client found");
+                //Debug.Log("No client found");
                 return false;
             }
             if (RegisteredClient != null)
             {
-                Debug.Log($"A client is already  registered : {RegisteredClient.name}");
+                //Debug.Log($"A client is already  registered : {RegisteredClient.name}");
                 return false;
             }
             
-            Debug.Log($"Registering client : {client.name}");
+            //Debug.Log($"Registering client : {client.name}");
             client.CurrentSeat = this;
             RegisteredClient = client;
+            ActualizeSeatPos(client);
             return true;
         }
         public bool TryUnregister(Client client)
         {
-            Debug.Log("Trying to unregister...");
+            //Debug.Log("Trying to unregister...");
             if (client == null) return false;
             if (RegisteredClient != client) return false;
 
             RegisteredClient = null;
             SittingClient = null;
-            Debug.Log($"Unregistered : {client.name}!");
+            //Debug.Log($"Unregistered : {client.name}!");
             OnClientUnregister?.Invoke(_registeredClient);
             return true;
         }
         public bool TrySit(Client client)
         {
-            if (client == null) return false;
-            if (RegisteredClient != client) return false;
+            if (client == null)
+            {
+                Debug.Log("Client null");
+                return false;
+            }
+
+            if (RegisteredClient != client)
+            {
+                Debug.Log("Registered Client is not the sitting one");
+                return false;
+            }
 
             SittingClient = client;
+            client.transform.SetParent(transform);
+            client.Behaviour.ClientMovement.Sit();
+            client.ClientLook.Sit();
+            Debug.Log($"Seit : {client.name}");
+            client.Behaviour.OnSitting?.Invoke();
             return true;
         }
         public bool TryLeave(Client client)
@@ -107,7 +124,25 @@ namespace Features
             if (SittingClient != client) return false;
 
             SittingClient = null;
+            client.transform.SetParent(null);
+            client.Behaviour.ClientMovement.GetUp();
             return true;
+        }
+
+        private void ActualizeSeatPos(Client client)
+        {
+            transform.position = ClientSeatPosition(client);
+        }
+
+        public Vector3 ClientSeatPosition(Client client)
+        {
+            float y = 0;
+            foreach (var heightByType in SO_ClientSeatHeight.instance.ClientHeightByTypes)
+            {
+                if (heightByType.ClientType == client.Type) y = heightByType.SeatHeight;
+            }
+
+            return new Vector3(_defaultPosition.x, _defaultPosition.y + y, _defaultPosition.z);
         }
     }
 }

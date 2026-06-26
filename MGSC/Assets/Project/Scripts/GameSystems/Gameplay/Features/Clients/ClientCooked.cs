@@ -23,8 +23,9 @@ namespace Features
 		public void Trigger()
 		{
 			if (_isRunning) return;
-			_isRunning = true;
-			_timer     = 0f;
+			_isRunning       = true;
+			_timer           = 0f;
+			_client.IsCooked = true;
 			OnCustomerCooked?.Invoke();
 		}
 

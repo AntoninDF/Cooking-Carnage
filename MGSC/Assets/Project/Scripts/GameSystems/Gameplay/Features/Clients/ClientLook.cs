@@ -1,3 +1,4 @@
+using System.Collections;
 using Clients;
 using UnityEngine;
 
@@ -31,7 +32,11 @@ namespace Features
 
         public override void Update()
         {
-            if (_isSitting) return;
+           
+            if (_isSitting)
+            {
+                return;
+            }
 
             Vector3 targetDirection = GetMovementDirection();
             if (targetDirection == Vector3.zero) return;
@@ -68,8 +73,26 @@ namespace Features
         {
             _isSitting = false;
         }
-        
-        
+
+        public void Sit()
+        {
+            _isSitting            = true;
+            (Owner as Client)?.StartCoroutine(SmoothRotationReset());
+        }
+
+        IEnumerator SmoothRotationReset()
+        {
+            float      elapsed  = 0;
+            float      duration = 0.5f;
+            Quaternion startRot = _client.localRotation;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                _client.localRotation = Quaternion.Lerp(startRot, Quaternion.Euler(0, 0, 0), elapsed/duration);
+                yield return null;
+            }
+            _client.localRotation = Quaternion.Euler(0, 0, 0);
+        }
     }
     
 }
