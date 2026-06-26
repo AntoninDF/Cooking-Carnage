@@ -2,7 +2,7 @@ using System;
 using Clients;
 using UnityEngine;
 
-namespace Project.Scripts.GameSystems.Gameplay.Components.Clients
+namespace Clients
 {
 	[Serializable]
 	public class ClientHeightByType

@@ -1,7 +1,13 @@
-namespace Project.Scripts.GameSystems.Gameplay.Components.Clients
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+namespace Clients
 {
-    public class ClientSeatConfig
+    [CreateAssetMenu(menuName = "Scriptable Objects/Client Seat Config")]
+
+    public class ClientSeatConfig : ScriptableSingleton<ClientSeatConfig>
     {
-        
+        public List<ClientHeightByType> ClientHeightByTypeList;
     }
 }

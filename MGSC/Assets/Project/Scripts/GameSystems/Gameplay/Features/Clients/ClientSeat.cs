@@ -1,7 +1,6 @@
 using GameSystem;
 using System;
 using Clients;
-using Project.Scripts.GameSystems.Gameplay.Components.Clients;
 using UnityEngine;
 
 namespace Features
@@ -47,18 +46,23 @@ namespace Features
         }
 
         public Transform transform;
+        public Transform parentTransform;
 
         private Client  _registeredClient;
         private Client  _sittingClient;
         private Vector3 _defaultPosition;
+        private ClientSeatConfig  _clientSeatHeightConfig;
         
 
         public ClientManager ClientManager => Reference.GetManager<ClientManager>();
-        public ClientSeat(IFeatureCollection owner, Transform seatTransform) : base(owner)
+        public ClientSeat(IFeatureCollection owner, Transform seatTransform, Transform seatParent) : base(owner)
         {
             transform        = seatTransform;
-            _defaultPosition = seatTransform.position;
+            parentTransform = seatParent;
+            _defaultPosition = parentTransform.localPosition;
             ClientManager.Register(this);
+            _clientSeatHeightConfig = ClientSeatConfig.instance;
+            Debug.Log("Client Seat Created");
         }
 
         public bool TryRegister(Client client)
@@ -104,17 +108,25 @@ namespace Features
 
         private void ActualizeSeatPos(Client client)
         {
-            transform.position = ClientSeatPosition(client);
+            parentTransform.localPosition = ClientSeatPosition(client);
         }
 
         public Vector3 ClientSeatPosition(Client client)
         {
             float y = 0;
-            foreach (var heightByType in SO_ClientSeatHeight.instance.ClientHeightByTypes)
+            foreach (var heightByType in _clientSeatHeightConfig.ClientHeightByTypeList)
             {
-                if (heightByType.ClientType == client.Type) y = heightByType.SeatHeight;
+                if (heightByType.ClientType == client.Type)
+                {
+                    y = heightByType.SeatHeight;
+                    Debug.LogFormat($"New seat height : {y}");
+                }
+                else
+                {
+                    Debug.Log("Client Type not founded");
+                }
             }
-
+            
             return new Vector3(_defaultPosition.x, _defaultPosition.y + y, _defaultPosition.z);
         }
     }
