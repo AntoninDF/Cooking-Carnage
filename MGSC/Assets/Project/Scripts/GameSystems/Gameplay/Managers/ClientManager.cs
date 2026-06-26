@@ -66,8 +66,7 @@ namespace GameSystem
 
         public void PostInit()
         {
-            var spline = Reference.GetManager<PathManager>()?.SplineComponent;
-            WaitingQueue = new(this, spline);
+            WaitingQueue = new(this);
 
             foreach (var seat in ClientSeats.Seats)
             {

@@ -56,10 +56,6 @@ namespace Features
         public ClientManager ClientManager => Reference.GetManager<ClientManager>();
         public ClientSeat(IFeatureCollection owner, Transform seatTransform) : base(owner)
         {
-            /*
-            if (seatTransform == null)
-                Debug.LogWarning("ClientSeat transform is null");
-            */
             transform        = seatTransform;
             _defaultPosition = seatTransform.position;
             ClientManager.Register(this);
@@ -67,18 +63,9 @@ namespace Features
 
         public bool TryRegister(Client client)
         {
-            if (client == null)
-            {
-                //Debug.Log("No client found");
-                return false;
-            }
-            if (RegisteredClient != null)
-            {
-                //Debug.Log($"A client is already  registered : {RegisteredClient.name}");
-                return false;
-            }
+            if (client == null)return false;
+            if (RegisteredClient != null)return false;
             
-            //Debug.Log($"Registering client : {client.name}");
             client.CurrentSeat = this;
             RegisteredClient = client;
             ActualizeSeatPos(client);
@@ -86,36 +73,23 @@ namespace Features
         }
         public bool TryUnregister(Client client)
         {
-            //Debug.Log("Trying to unregister...");
             if (client == null) return false;
             if (RegisteredClient != client) return false;
 
             RegisteredClient = null;
             SittingClient = null;
-            //Debug.Log($"Unregistered : {client.name}!");
             OnClientUnregister?.Invoke(_registeredClient);
             return true;
         }
         public bool TrySit(Client client)
         {
-            if (client == null)
-            {
-                Debug.Log("Client null");
-                return false;
-            }
-
-            if (RegisteredClient != client)
-            {
-                Debug.Log("Registered Client is not the sitting one");
-                return false;
-            }
+            if (client == null) return false;
+            if (RegisteredClient != client) return false;
 
             SittingClient = client;
-            client.transform.SetParent(transform);
-            client.Behaviour.ClientMovement.Sit();
-            client.ClientLook.Sit();
-            Debug.Log($"Seit : {client.name}");
-            client.Behaviour.OnSitting?.Invoke();
+            
+            client.SittingClient(transform);
+            
             return true;
         }
         public bool TryLeave(Client client)
@@ -124,8 +98,7 @@ namespace Features
             if (SittingClient != client) return false;
 
             SittingClient = null;
-            client.transform.SetParent(null);
-            client.Behaviour.ClientMovement.GetUp();
+            client.QuitSeat();
             return true;
         }
 

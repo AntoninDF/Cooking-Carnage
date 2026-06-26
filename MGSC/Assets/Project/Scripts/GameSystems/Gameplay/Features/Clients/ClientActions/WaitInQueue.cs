@@ -22,10 +22,9 @@ namespace Features
 			var client = ClientOwner.Owner as Clients.Client;
 			var queue  = Reference.GetManager<GameSystem.ClientManager>().WaitingQueue;
 			_targetT            =  queue.Enqueue(client);
-			OnQueuePointReached += ReachWaitPoint;
 			_displayed = false;
+			
 			OnEnterQueue?.Invoke();
-			Debug.Log("Enter Wait Line");
 			ClientOwner.OnSplineUpdate += TickSpline;
 		}
 		
@@ -37,6 +36,7 @@ namespace Features
 			}else if (!_displayed)
 			{
 				OnQueuePointReached?.Invoke();
+				_displayed = true;
 			}
 		}
 
@@ -50,11 +50,7 @@ namespace Features
 			OnExitQueue?.Invoke();
 			ClientOwner.OnSplineUpdate -= TickSpline;
 		}
-
-		public void ReachWaitPoint()
-		{
-			_displayed = true;
-		}
+		
     
 	}
 }

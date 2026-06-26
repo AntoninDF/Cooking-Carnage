@@ -67,18 +67,15 @@ namespace Features
         {
             _isSitting      = true;
             _smoothVelocity = Vector3.zero;
+            (Owner as Client)?.StartCoroutine(SmoothRotationReset());
+
         }
 
         public void SetClientLeaving(Client client)
         {
             _isSitting = false;
         }
-
-        public void Sit()
-        {
-            _isSitting            = true;
-            (Owner as Client)?.StartCoroutine(SmoothRotationReset());
-        }
+        
 
         IEnumerator SmoothRotationReset()
         {

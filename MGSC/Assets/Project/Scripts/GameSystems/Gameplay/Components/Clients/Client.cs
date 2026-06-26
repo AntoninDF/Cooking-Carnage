@@ -18,6 +18,7 @@ namespace Clients
     {
         #region Properties
         public FeatureCollection  Collection       { get; set; } = new();
+        public Action             OnMealServed     { get; set; }
         public Action<Order>      OnNewOrder       { get; set; }
         public Action<Order>      OnOrderAccepted  { get; set; }
         public Action<ClientSeat> OnSeatRegister   { get; set; }
@@ -97,8 +98,8 @@ namespace Clients
            Collection.Add(Cooked);
        }
 
-       [ContextMenu("Cook Client")]
-       public void CoolClient()
+ 
+       public void CookClient()
        {
            Cooked.Trigger();
        }
@@ -120,6 +121,20 @@ namespace Clients
            
        }
 
+       public void SittingClient(Transform seatTransform)
+       {
+           transform.SetParent(seatTransform);
+           Behaviour.ClientMovement.Sit();
+           Behaviour.OnSitting?.Invoke();
+       }
+
+       public void QuitSeat()
+       {
+           transform.SetParent(null);
+           Behaviour.ClientMovement.GetUp();
+           ClientLook.SetClientLeaving(this);
+       }
+
        #endregion
 
        #region Order
@@ -133,11 +148,13 @@ namespace Clients
            OnOrderAccepted?.Invoke(order);
        }
 
-       private void TryAcceptServing(Servable serving)
+       
+       public void TryAcceptServing(Servable serving)
        {
            if (serving == null || !serving.Enabled) return;
            CurrentOrder.Resolve(serving);
            CurrentSeat?.TryUnregister(this);
+           OnMealServed?.Invoke();
        }
 
        #endregion

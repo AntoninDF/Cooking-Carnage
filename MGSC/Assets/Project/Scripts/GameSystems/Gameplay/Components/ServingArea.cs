@@ -14,14 +14,19 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
 
     #region Fields
     
-    public Transform     SeatTransform;
     public SlotContainer MealSlot;
     
+    private bool _watching = false;
+    private void StartWatchingSlot() => _watching = true;
+    private void StopWatchingSlot()  => _watching = false;
+    private F_Grabbable _lastHeldItem = null;
+    
     #endregion
-
+    
+    
+    
     private void Start()
     {
-        ClientSeat     = new(this, SeatTransform);
         ServingCounter = new(this);
 
         if (MealSlot == null)
@@ -32,20 +37,18 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
 
         MealSlot.Container.Filter += (obj) => obj is F_Grabbable grab && grab.TryGetSibling(out Servable temp, true);
         
-        
+    }
+
+    public void Initialize(ClientSeat clientSeat)
+    {
+        ClientSeat = clientSeat;
         ClientSeat.OnClientRegister += _ => StartWatchingSlot();
         ClientSeat.OnClientUnregister += _ => StopWatchingSlot();
         
+        
     }
-    
-    private bool _watching = false;
 
-    private void StartWatchingSlot() => _watching = true;
-    private void StopWatchingSlot()  => _watching = false;
-
-    private F_Grabbable _lastHeldItem = null;
-
-    private void Update()
+    public void Update()
     {
         if (!_watching) return;
         var current = MealSlot?.Container?.HeldItem;
@@ -56,6 +59,11 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         }
         if (current == null)
             _lastHeldItem = null;
+    }
+
+    void ReceiveMeal(Servable serving)
+    {
+       ClientSeat.SittingClient.TryAcceptServing(serving);
     }
 
     private void OnDrawGizmos()

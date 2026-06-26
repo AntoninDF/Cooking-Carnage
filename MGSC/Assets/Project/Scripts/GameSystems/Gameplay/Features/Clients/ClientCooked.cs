@@ -26,6 +26,7 @@ namespace Features
 			_isRunning       = true;
 			_timer           = 0f;
 			_client.IsCooked = true;
+			_client.CurrentOrder.Cancel();
 			OnCustomerCooked?.Invoke();
 		}
 
