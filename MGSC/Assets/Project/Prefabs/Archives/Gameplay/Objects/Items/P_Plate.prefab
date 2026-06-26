@@ -258,7 +258,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
-  Events: []
+  Events:
+  - ActionPath:
+      ActionVariableName: OnGrab
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Grabbable
+        SerializedType:
+          m_Name: F_Grabbable
+          m_AssemblyQualifiedName: Features.F_Grabbable, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 1857627047578693840}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8859683979251061410}
+          m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   references:
     version: 2
     RefIds: []
@@ -1616,6 +1648,11 @@ PrefabInstance:
 --- !u!4 &4103158681304447889 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7444137511959524800, guid: 0c64f7771e8d9cc4dbc534df6e638cca, type: 3}
+  m_PrefabInstance: {fileID: 6899438438890065489}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &8859683979251061410 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2687612240731659507, guid: 0c64f7771e8d9cc4dbc534df6e638cca, type: 3}
   m_PrefabInstance: {fileID: 6899438438890065489}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7059369963900686846

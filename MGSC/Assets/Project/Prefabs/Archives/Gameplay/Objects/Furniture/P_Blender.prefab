@@ -147,6 +147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6297676914444232173}
   - component: {fileID: 4313592241207650177}
+  - component: {fileID: 3818867472976276312}
   m_Layer: 0
   m_Name: P_Blender
   m_TagString: Untagged
@@ -186,6 +187,88 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cooking.Blender
   _slotContainer: {fileID: 635096726968732557}
   _cuttingTrigger: {fileID: 28525936163411751}
+--- !u!114 &3818867472976276312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3619669982291560318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
+  Events:
+  - ActionPath:
+      ActionVariableName: OnTransformationStart
+      SerializedType:
+        m_Name: Action`1
+        m_AssemblyQualifiedName: System.Action`1[[Features.TransformableAfterTimer,
+          Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]],
+          mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Cutter
+        SerializedType:
+          m_Name: Cutter
+          m_AssemblyQualifiedName: Features.Cutter, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 4313592241207650177}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1355812122224931382}
+          m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnTransformationOver
+      SerializedType:
+        m_Name: Action`1
+        m_AssemblyQualifiedName: System.Action`1[[Features.TransformableAfterTimer,
+          Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]],
+          mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Cutter
+        SerializedType:
+          m_Name: Cutter
+          m_AssemblyQualifiedName: Features.Cutter, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 4313592241207650177}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1355812122224931382}
+          m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+          m_MethodName: Stop
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &3661872365076765699
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,6 +1088,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09bc7bc51d5e6b54cb1036da729b2f6a, type: 3}
+--- !u!198 &1355812122224931382 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7435592343286599978, guid: 09bc7bc51d5e6b54cb1036da729b2f6a, type: 3}
+  m_PrefabInstance: {fileID: 8493868225993696028}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1810152178844537201 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7853921468675617389, guid: 09bc7bc51d5e6b54cb1036da729b2f6a, type: 3}
