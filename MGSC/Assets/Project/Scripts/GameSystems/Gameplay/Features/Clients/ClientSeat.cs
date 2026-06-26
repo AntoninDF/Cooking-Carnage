@@ -51,17 +51,17 @@ namespace Features
         private Client  _registeredClient;
         private Client  _sittingClient;
         private Vector3 _defaultPosition;
-        private ClientSeatConfig  _clientSeatHeightConfig;
+        private ClientSeatHeightConfig _servingAreaConfig;
         
 
         public ClientManager ClientManager => Reference.GetManager<ClientManager>();
-        public ClientSeat(IFeatureCollection owner, Transform seatTransform, Transform seatParent) : base(owner)
+        public ClientSeat(IFeatureCollection owner, Transform seatTransform, Transform seatParent, ClientSeatHeightConfig servingAreaConfig) : base(owner)
         {
             transform        = seatTransform;
             parentTransform = seatParent;
             _defaultPosition = parentTransform.localPosition;
             ClientManager.Register(this);
-            _clientSeatHeightConfig = ClientSeatConfig.instance;
+            _servingAreaConfig = servingAreaConfig;
             Debug.Log("Client Seat Created");
         }
 
@@ -114,7 +114,7 @@ namespace Features
         public Vector3 ClientSeatPosition(Client client)
         {
             float y = 0;
-            foreach (var heightByType in _clientSeatHeightConfig.ClientHeightByTypeList)
+            foreach (var heightByType in _servingAreaConfig.ClientHeightByTypeList)
             {
                 if (heightByType.ClientType == client.Type)
                 {

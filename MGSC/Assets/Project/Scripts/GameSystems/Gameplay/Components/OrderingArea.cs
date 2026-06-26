@@ -18,6 +18,8 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     public Transform SeatParent;
     public ServingArea ServingArea;
     
+    public ClientSeatHeightConfig ServingAreaConfig;
+    
 
     #endregion
 
@@ -27,7 +29,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         {
             Debug.LogError($"a field is missing, initialization failed");
         }
-        ClientSeat = new(this, SeatTransform, SeatParent);
+        ClientSeat = new(this, SeatTransform, SeatParent, ServingAreaConfig);
         OrderingCounter = new(this);
         ServingArea.Initialize(ClientSeat);
         BindEvents();
