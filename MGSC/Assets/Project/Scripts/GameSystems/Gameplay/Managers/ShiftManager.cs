@@ -181,15 +181,15 @@ namespace GameSystem
             _dataManager.LoadGlobalData();
             //LaunchShift(_shiftDuration); // Removed because it doesn't call everything the right way
             ResetAll();
-            SetupShift(_shiftNumber);
+            SetupShift(ShiftNumber);
             
         }
 
         public void SkipTutorialShift()
         {
-            if (_shiftNumber == 0)
+            if (ShiftNumber == 0)
             {
-                _shiftNumber = 1;
+                ShiftNumber = 1;
                 _dataManager.SaveGameData();
             }
         }
