@@ -67,8 +67,6 @@ namespace Features
         {
             _isSitting      = true;
             _smoothVelocity = Vector3.zero;
-            (Owner as Client)?.StartCoroutine(SmoothRotationReset());
-
         }
 
         public void SetClientLeaving(Client client)
@@ -77,19 +75,7 @@ namespace Features
         }
         
 
-        IEnumerator SmoothRotationReset()
-        {
-            float      elapsed  = 0;
-            float      duration = 0.5f;
-            Quaternion startRot = _client.localRotation;
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                _client.localRotation = Quaternion.Lerp(startRot, Quaternion.Euler(0, 0, 0), elapsed/duration);
-                yield return null;
-            }
-            _client.localRotation = Quaternion.Euler(0, 0, 0);
-        }
+        
     }
     
 }

@@ -1,5 +1,6 @@
 using Features;
 using System;
+using System.Collections;
 using GameSystem;
 using UnityEditor;
 using UnityEngine;
@@ -52,6 +53,7 @@ namespace Clients
                 {
                     OnSeatRegister?.Invoke(value);
                     value.OnClientSitting += _clientLook.SetClientSitting;
+                    Debug.Log("SITTING");
                 }
                 _currentSeat = value;
             }
@@ -125,6 +127,7 @@ namespace Clients
        {
            transform.SetParent(seatTransform);
            Behaviour.ClientMovement.Sit();
+           StartCoroutine(SmoothRotationReset());
            Behaviour.OnSitting?.Invoke();
        }
 
@@ -133,6 +136,20 @@ namespace Clients
            transform.SetParent(null);
            Behaviour.ClientMovement.GetUp();
            ClientLook.SetClientLeaving(this);
+       }
+       
+       IEnumerator SmoothRotationReset()
+       {
+           float      elapsed  = 0;
+           float      duration = 0.5f;
+           Quaternion startRot = transform.localRotation;
+           while (elapsed < duration)
+           {
+               elapsed += Time.deltaTime;
+               transform.localRotation = Quaternion.Lerp(startRot, Quaternion.Euler(0, 0, 0), elapsed/duration);
+               yield return null;
+           }
+           transform.localRotation = Quaternion.Euler(0, 0, 0);
        }
 
        #endregion
