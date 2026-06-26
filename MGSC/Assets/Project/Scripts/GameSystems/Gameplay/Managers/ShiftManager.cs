@@ -17,7 +17,7 @@ namespace GameSystem
         public Action OnShiftNoon { get; set; }
         public Action OnShiftEnded { get; set; }
         public Action OnNextShift { get; set; }
-        public int ShiftCount => _shiftNumber;
+        public int ShiftNumber { get => Globals.Gameplay.ShiftNumber; set => Globals.Gameplay.ShiftNumber = value; }
         public float ShiftDuration => _shiftDuration;
         public MoneyInfo CurrentRentPrice => new MoneyInfo(_currentRentPrice);
     
@@ -32,8 +32,7 @@ namespace GameSystem
         private UIManager _uiManager;
         private ItemManager _itemManager;
 
-    
-        private int _shiftNumber = -1;
+   
         private float _currentRentPrice = 0 ;
         private AnimationCurve _rentPriceCurve;
         private float _shiftDuration = 120;
@@ -57,10 +56,7 @@ namespace GameSystem
             Globals.Bind(value => _noonDuration = value, Globals.Gameplay.ShiftFinalWarningDuration);
             Globals.Bind(value => _rentPriceCurve = value, Globals.Gameplay.ShiftRentPriceCurve);
         }
-
-        public void SetShiftNumber(int number) => _shiftNumber = number;
-        public void SetRentPrice(float price) => _currentRentPrice = price;
-        public float GetCurrentRentPrice() => GetRentPrice(_shiftNumber);
+        public float GetCurrentRentPrice() => GetRentPrice(ShiftNumber);
         public float GetRentPrice(int shiftCount) => _rentPriceCurve.Evaluate(shiftCount);
 
         public void LaunchShift()=> LaunchShift(_shiftDuration - _noonDuration);
@@ -109,13 +105,12 @@ namespace GameSystem
         }
 
 
-        private bool TryPayRent() => TryPayRent(_shiftNumber);
-        private bool TryPayRent(int shiftNumber)
+        private bool TryPayRent()
         {
             Reference.GetManager(out MoneyManager moneyManager);
             if (moneyManager == null) return false;
 
-            var rentPrice = GetRentPrice(shiftNumber);
+            var rentPrice = GetRentPrice(ShiftNumber);
             if (moneyManager.MoneyInfo < rentPrice)
             {
                 this.Log(LogType.Log,
@@ -137,11 +132,11 @@ namespace GameSystem
 
         public void NextShift()
         {
-            _shiftNumber++;
+            ShiftNumber++;
 
-            SetupShift(_shiftNumber);
+            SetupShift(ShiftNumber);
 
-            this.Log(LogType.Log, $"Shift {_shiftNumber - 1} is over, launching shift {_shiftNumber}");
+            this.Log(LogType.Log, $"Shift {ShiftNumber - 1} is over, launching shift {ShiftNumber}");
 
             if (_uiManager) _uiManager.ResumeGame();
 

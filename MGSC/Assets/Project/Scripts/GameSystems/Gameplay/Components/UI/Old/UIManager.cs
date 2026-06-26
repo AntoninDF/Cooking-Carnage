@@ -227,7 +227,7 @@ namespace UI
         public void StartGame()
         {
             if (_shiftManager == null) return;
-            _shiftManager.SetupShift(_shiftManager.ShiftCount);
+            _shiftManager.SetupShift(_shiftManager.ShiftNumber);
             _shiftManager.LaunchShift();
         }
         public void ResumeGame(bool skiptutorial=false)
@@ -255,7 +255,7 @@ namespace UI
         public void TryPlayTutorialSubtitles()
         {
             if (_shiftManager == null) return;
-            if (_shiftManager.ShiftCount == 0)
+            if (_shiftManager.ShiftNumber == 0)
             {
                 PlaySubtitles("Start");
             }

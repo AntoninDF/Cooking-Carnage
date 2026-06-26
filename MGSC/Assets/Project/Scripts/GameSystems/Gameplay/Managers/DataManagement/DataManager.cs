@@ -16,7 +16,7 @@ namespace GameSystem
 
         public MoneyInfo MoneyInfo { get { EnforceReferences(); return _moneyManager.MoneyInfo; } }
         
-        public int ShiftCount => _shiftManager.ShiftCount;
+        public int ShiftCount => _shiftManager.ShiftNumber;
 
         public GameData Data => currentGameData;
 
@@ -116,7 +116,7 @@ namespace GameSystem
             
             LoadUpgradeData();
             
-            _shiftManager.SetShiftNumber(currentGameData.shiftNumber);
+            _shiftManager.ShiftNumber = currentGameData.shiftNumber;
             
             this.Log(LogType.Log, $"Save loaded successfully, shift : {currentGameData.shiftNumber},  money : {currentGameData.money}");
         }
@@ -214,7 +214,7 @@ namespace GameSystem
                 case EDataInfo.TimeElapsedSinceStartup:     return (Time.time).ToString();
                 case EDataInfo.ShiftDuration:               return _shiftManager.ShiftDuration.ToString();
                 case EDataInfo.RentPayedThisShift:          return _shiftManager.CurrentRentPrice.ToString();
-                case EDataInfo.ShiftCount:                  return _shiftManager.ShiftCount.ToString();
+                case EDataInfo.ShiftCount:                  return _shiftManager.ShiftNumber.ToString();
                 case EDataInfo.CorrectOrdersThisShift:      return GetCorrectOrdersCount().ToString();
                 case EDataInfo.WrongOrdersThisShift:        return GetWrongOrdersCount().ToString();
                 case EDataInfo.ClientsKilledThisShift:      return _clientManager.ClientsKilledThisShift.ToString();

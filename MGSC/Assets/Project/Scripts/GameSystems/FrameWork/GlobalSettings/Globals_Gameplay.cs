@@ -19,6 +19,7 @@ public static partial class Globals
         public static Param<float> OvercookingDuration { get; set; } = 5f;
 
         // SHIFT
+        public static Param<int> ShiftNumber { get; set; } = 0;
         public static Param<float> ShiftDuration { get; set; } = 300f; // In seconds
         public static Param<float> ShiftFinalWarningDuration { get; set; } = 10f; // Must be less than ShiftDuration
         public static Param<AnimationCurve> ShiftRentPriceCurve { get; set; } = AnimationCurve.Linear(0,0,1,1);
