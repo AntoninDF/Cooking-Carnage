@@ -8,6 +8,8 @@ public static partial class Globals
 {
     // Empty because the content is mostly define in other partial scripts (rendering, gameplay etc..)
 
+
+
     /// <summary>
     /// Utility method that takes in a setter, applies the parameter value to it, and binds it so that further parameter changes are reflected on the setter.
     /// </summary>

@@ -19,7 +19,7 @@ namespace Upgrades
 
         public IngredientDropUpgrade() : base()
         {
-            _config = UpgradeManagerConfig.instance.IngredientDrop;
+            _config = UpgradeManagerConfig.Instance.IngredientDrop;
         }
 
         public override void Apply()

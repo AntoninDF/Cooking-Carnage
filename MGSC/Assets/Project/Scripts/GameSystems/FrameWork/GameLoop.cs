@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -29,6 +30,8 @@ namespace GameSystem
         public UnityEvent ShiftNoon = new();
         public UnityEvent RentGameOver = new();
 
+        private NavMeshSurface _navmesh;
+
         #endregion
 
         #region Methods
@@ -44,7 +47,16 @@ namespace GameSystem
         {
             Reference.RemoveManager(this);
         }
-        public void Init() { }
+
+        public void Init()
+        {
+        }
+
+        public void PostInit()
+        {
+            SetupNavigationMesh();
+            TrySubscribeToShiftManagerEvents();
+        }
 
         public void OnEnable()
         {
@@ -76,6 +88,28 @@ namespace GameSystem
             }
         }
 
+        bool TrySubscribeToShiftManagerEvents()
+        {
+            Reference.GetManager(out ShiftManager shiftManager);
+            if (shiftManager == null) return false;
+
+            shiftManager.OnShiftBegin += () => ShiftBegin.Invoke();
+            shiftManager.OnShiftNoon += () => ShiftNoon.Invoke();
+            shiftManager.OnShiftEnded += () => ShiftEnd.Invoke();
+            shiftManager.OnShiftFailed += () => RentGameOver.Invoke();
+
+            shiftManager.OnShiftEnded += () => StopRunning();
+
+            return true;
+        }
+
+        private void SetupNavigationMesh()
+        {
+            _navmesh           = gameObject.AddComponent<NavMeshSurface>();
+            _navmesh.layerMask = 1 << 8;
+            _navmesh.BuildNavMesh();
+        }
+
         /// <summary>
         /// Resume the game loop
         /// </summary>
@@ -95,10 +129,13 @@ namespace GameSystem
         {
             IsRunning = false;
             OnPause?.Invoke();
+            /*
+            // Je sais pas pourquoi y a la possibilité de resume quand on demande de faire pause, ça n'a pas de sens
             if (!pauseMenu)
             {
                 OnResume?.Invoke();
             }
+            */
             this.Log("is not running anymore");
         }
         

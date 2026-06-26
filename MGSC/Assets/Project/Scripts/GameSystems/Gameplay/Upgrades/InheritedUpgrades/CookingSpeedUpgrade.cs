@@ -17,7 +17,7 @@ namespace Upgrades
 
         public CookingSpeedUpgrade() : base()
         {
-            _config = UpgradeManagerConfig.instance.CookingSpeed;
+            _config = UpgradeManagerConfig.Instance.CookingSpeed;
         }
 
         public override void Apply()

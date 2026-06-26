@@ -218,7 +218,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fc8040690e33ea41a368db0e5322895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServingArea
-  SeatTransform: {fileID: 797869440}
   MealSlot: {fileID: 191860451}
 --- !u!65 &132936729
 BoxCollider:
@@ -746,6 +745,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OrderingArea
   SeatTransform: {fileID: 827436068}
+  SeatParent: {fileID: 0}
+  ServingArea: {fileID: 0}
+  ServingAreaConfig: {fileID: 0}
 --- !u!65 &500040130
 BoxCollider:
   m_ObjectHideFlags: 0

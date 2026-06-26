@@ -16,7 +16,7 @@ namespace GameSystem
 
         public MoneyInfo MoneyInfo { get { EnforceReferences(); return _moneyManager.MoneyInfo; } }
         
-        public int ShiftCount => _shiftManager.ShiftCount;
+        public int ShiftCount => _shiftManager.ShiftNumber;
 
         public GameData Data => currentGameData;
 
@@ -72,7 +72,7 @@ namespace GameSystem
             {
                 money = gameData?.money ?? MoneyInfo,
                 upgrades = gameData?.upgrades ?? ConvertUpgradeData(),
-                shiftCount = gameData?.shiftCount ?? ShiftCount
+                shiftNumber = gameData?.shiftNumber ?? ShiftCount
             };
             
             string json = JsonUtility.ToJson(currentGameData, true);
@@ -116,9 +116,9 @@ namespace GameSystem
             
             LoadUpgradeData();
             
-            _shiftManager.SetShiftCount(currentGameData.shiftCount);
+            _shiftManager.ShiftNumber = currentGameData.shiftNumber;
             
-            this.Log(LogType.Log, $"Save loaded successfully, shift : {currentGameData.shiftCount},  money : {currentGameData.money}");
+            this.Log(LogType.Log, $"Save loaded successfully, shift : {currentGameData.shiftNumber},  money : {currentGameData.money}");
         }
 
         public void ResetSave()
@@ -180,7 +180,7 @@ namespace GameSystem
             {
                 money = 0,
                 upgrades = new List<UpgradeData> { },
-                shiftCount = 0
+                shiftNumber = 0
             };
 
             #endregion
@@ -214,7 +214,7 @@ namespace GameSystem
                 case EDataInfo.TimeElapsedSinceStartup:     return (Time.time).ToString();
                 case EDataInfo.ShiftDuration:               return _shiftManager.ShiftDuration.ToString();
                 case EDataInfo.RentPayedThisShift:          return _shiftManager.CurrentRentPrice.ToString();
-                case EDataInfo.ShiftCount:                  return _shiftManager.ShiftCount.ToString();
+                case EDataInfo.ShiftCount:                  return _shiftManager.ShiftNumber.ToString();
                 case EDataInfo.CorrectOrdersThisShift:      return GetCorrectOrdersCount().ToString();
                 case EDataInfo.WrongOrdersThisShift:        return GetWrongOrdersCount().ToString();
                 case EDataInfo.ClientsKilledThisShift:      return _clientManager.ClientsKilledThisShift.ToString();
@@ -252,7 +252,7 @@ namespace GameSystem
             public float money;
             public List<UpgradeData> upgrades;
 
-            public int shiftCount = -1;
+            public int shiftNumber = -1;
             // REFACTO : Player Settings
         }
         

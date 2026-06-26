@@ -81,6 +81,7 @@ namespace Features
             if (Owner == null) return false;
             return Owner.TryGet(out feature, mustBeEnabled, scanOnlyDirectFeatures);
         }
+        
         public bool HasSibling(Type featureType, bool mustBeEnabled=false, bool scanOnlyDirectFeatures = false)
         { 
             if (Owner == null) return false;
