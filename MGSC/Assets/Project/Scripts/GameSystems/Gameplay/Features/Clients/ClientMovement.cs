@@ -252,8 +252,21 @@ namespace Features
         }
 
         #endregion
-        
 
+        #region Public Methods
+
+        public void Sit()
+        {
+            _navmeshAgent.enabled             = false;
+            ControlledTransform.localPosition = Vector3.zero;
+        }
+        
+        public void GetUp()
+        {
+            _navmeshAgent.enabled             = true;
+        }
+
+        #endregion
         
         
         

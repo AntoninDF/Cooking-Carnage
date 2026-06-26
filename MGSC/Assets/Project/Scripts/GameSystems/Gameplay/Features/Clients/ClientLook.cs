@@ -1,3 +1,4 @@
+using System.Collections;
 using Clients;
 using UnityEngine;
 
@@ -31,7 +32,11 @@ namespace Features
 
         public override void Update()
         {
-            if (_isSitting) return;
+           
+            if (_isSitting)
+            {
+                return;
+            }
 
             Vector3 targetDirection = GetMovementDirection();
             if (targetDirection == Vector3.zero) return;
@@ -69,6 +74,7 @@ namespace Features
             _isSitting = false;
         }
         
+
         
     }
     

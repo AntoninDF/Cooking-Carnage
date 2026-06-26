@@ -1,5 +1,6 @@
 using Features;
 using System;
+using System.Collections;
 using GameSystem;
 using UnityEditor;
 using UnityEngine;
@@ -18,13 +19,17 @@ namespace Clients
     {
         #region Properties
         public FeatureCollection  Collection       { get; set; } = new();
+        public Action             OnMealServed     { get; set; }
         public Action<Order>      OnNewOrder       { get; set; }
         public Action<Order>      OnOrderAccepted  { get; set; }
         public Action<ClientSeat> OnSeatRegister   { get; set; }
         public Action<ClientSeat> OnSeatUnregister { get; set; }
         public ClientBehaviour    Behaviour        { get; set; }
         public ClientCooked       Cooked           { get; private set; }
-
+        public ClientLook         ClientLook       => _clientLook;
+        
+        public bool               IsCooked         { get; set; }
+        
         public Order CurrentOrder
         {
             get => _currentOrder;
@@ -48,6 +53,7 @@ namespace Clients
                 {
                     OnSeatRegister?.Invoke(value);
                     value.OnClientSitting += _clientLook.SetClientSitting;
+                    Debug.Log("SITTING");
                 }
                 _currentSeat = value;
             }
@@ -94,8 +100,8 @@ namespace Clients
            Collection.Add(Cooked);
        }
 
-       [ContextMenu("Cook Client")]
-       public void CoolClient()
+ 
+       public void CookClient()
        {
            Cooked.Trigger();
        }
@@ -117,6 +123,35 @@ namespace Clients
            
        }
 
+       public void SittingClient(Transform seatTransform)
+       {
+           transform.SetParent(seatTransform);
+           Behaviour.ClientMovement.Sit();
+           StartCoroutine(SmoothRotationReset());
+           Behaviour.OnSitting?.Invoke();
+       }
+
+       public void QuitSeat()
+       {
+           transform.SetParent(null);
+           Behaviour.ClientMovement.GetUp();
+           ClientLook.SetClientLeaving(this);
+       }
+       
+       IEnumerator SmoothRotationReset()
+       {
+           float      elapsed  = 0;
+           float      duration = 0.5f;
+           Quaternion startRot = transform.localRotation;
+           while (elapsed < duration)
+           {
+               elapsed += Time.deltaTime;
+               transform.localRotation = Quaternion.Lerp(startRot, Quaternion.Euler(0, 0, 0), elapsed/duration);
+               yield return null;
+           }
+           transform.localRotation = Quaternion.Euler(0, 0, 0);
+       }
+
        #endregion
 
        #region Order
@@ -130,11 +165,13 @@ namespace Clients
            OnOrderAccepted?.Invoke(order);
        }
 
-       private void TryAcceptServing(Servable serving)
+       
+       public void TryAcceptServing(Servable serving)
        {
            if (serving == null || !serving.Enabled) return;
            CurrentOrder.Resolve(serving);
            CurrentSeat?.TryUnregister(this);
+           OnMealServed?.Invoke();
        }
 
        #endregion

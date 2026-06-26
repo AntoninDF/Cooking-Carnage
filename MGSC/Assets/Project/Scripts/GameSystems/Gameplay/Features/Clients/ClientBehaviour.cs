@@ -19,8 +19,10 @@ namespace Features
 
         public BaseClientAction CurrentAction { get; private set; }
 
+        public Action             OnSitting        { get; set; }
         public Action      OnSplineUpdate { get; set; }
         public WaitInQueue WaitInQueue    { get; private set; }
+        
 
         #endregion
 
@@ -119,8 +121,13 @@ namespace Features
         private SitAndWaitForServing BuildSitAndWait(ClientSeat seat)
         {
             var sit        = new SitAndWaitForServing(this, seat);
-            sit.OnServed   += () => Perform(BuildLeave());
+            sit.OnServed   += () => CanLeave();
             return sit;
+        }
+
+        private void CanLeave()
+        {
+            if ((_owner as Client)?.IsCooked == false) Perform(BuildLeave());
         }
 
         private Leave BuildLeave()

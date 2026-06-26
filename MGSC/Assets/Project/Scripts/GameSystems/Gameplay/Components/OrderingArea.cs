@@ -15,13 +15,23 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     #region Fields
 
     public Transform SeatTransform;
+    public Transform SeatParent;
+    public ServingArea ServingArea;
+    
+    public ClientSeatHeightConfig ServingAreaConfig;
+    
 
     #endregion
 
     private void Awake()
     {
-        ClientSeat = new(this, SeatTransform);
+        if (ServingArea == null || SeatTransform == null)
+        {
+            Debug.LogError($"a field is missing, initialization failed");
+        }
+        ClientSeat = new(this, SeatTransform, SeatParent, ServingAreaConfig);
         OrderingCounter = new(this);
+        ServingArea.Initialize(ClientSeat);
         BindEvents();
     }
 
@@ -50,14 +60,8 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     {
         Client client = ClientSeat.RegisteredClient;
         if (client != null && ClientSeat.SittingClient != null)
-        {
-            
             client.Cooked.Trigger();
-        }
-        else
-        {
-            Debug.Log("No Customer on this counter");
-        }
+        
     }
     
     private void OnDrawGizmos()

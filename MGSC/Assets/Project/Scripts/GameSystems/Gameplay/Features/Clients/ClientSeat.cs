@@ -46,50 +46,42 @@ namespace Features
         }
 
         public Transform transform;
+        public Transform parentTransform;
 
-        private Client _registeredClient;
-        private Client _sittingClient;
+        private Client  _registeredClient;
+        private Client  _sittingClient;
+        private Vector3 _defaultPosition;
+        private ClientSeatHeightConfig _servingAreaConfig;
         
 
         public ClientManager ClientManager => Reference.GetManager<ClientManager>();
-        public ClientSeat(IFeatureCollection owner, Transform seatTransform) : base(owner)
+        public ClientSeat(IFeatureCollection owner, Transform seatTransform, Transform seatParent, ClientSeatHeightConfig servingAreaConfig) : base(owner)
         {
-            /*
-            if (seatTransform == null)
-                Debug.LogWarning("ClientSeat transform is null");
-            */
-            transform = seatTransform;
-
+            transform        = seatTransform;
+            parentTransform = seatParent;
+            _defaultPosition = parentTransform.localPosition;
             ClientManager.Register(this);
+            _servingAreaConfig = servingAreaConfig;
+            Debug.Log("Client Seat Created");
         }
 
         public bool TryRegister(Client client)
         {
-            if (client == null)
-            {
-                Debug.Log("No client found");
-                return false;
-            }
-            if (RegisteredClient != null)
-            {
-                Debug.Log($"A client is already  registered : {RegisteredClient.name}");
-                return false;
-            }
+            if (client == null)return false;
+            if (RegisteredClient != null)return false;
             
-            Debug.Log($"Registering client : {client.name}");
             client.CurrentSeat = this;
             RegisteredClient = client;
+            ActualizeSeatPos(client);
             return true;
         }
         public bool TryUnregister(Client client)
         {
-            Debug.Log("Trying to unregister...");
             if (client == null) return false;
             if (RegisteredClient != client) return false;
 
             RegisteredClient = null;
             SittingClient = null;
-            Debug.Log($"Unregistered : {client.name}!");
             OnClientUnregister?.Invoke(_registeredClient);
             return true;
         }
@@ -99,6 +91,9 @@ namespace Features
             if (RegisteredClient != client) return false;
 
             SittingClient = client;
+            
+            client.SittingClient(transform);
+            
             return true;
         }
         public bool TryLeave(Client client)
@@ -107,7 +102,32 @@ namespace Features
             if (SittingClient != client) return false;
 
             SittingClient = null;
+            client.QuitSeat();
             return true;
+        }
+
+        private void ActualizeSeatPos(Client client)
+        {
+            parentTransform.localPosition = ClientSeatPosition(client);
+        }
+
+        public Vector3 ClientSeatPosition(Client client)
+        {
+            float y = 0;
+            foreach (var heightByType in _servingAreaConfig.ClientHeightByTypeList)
+            {
+                if (heightByType.ClientType == client.Type)
+                {
+                    y = heightByType.SeatHeight;
+                    Debug.LogFormat($"New seat height : {y}");
+                }
+                else
+                {
+                    Debug.Log("Client Type not founded");
+                }
+            }
+            
+            return new Vector3(_defaultPosition.x, _defaultPosition.y + y, _defaultPosition.z);
         }
     }
 }

@@ -13,30 +13,27 @@ namespace Features
     /// </summary>
 	public class ClientWaitingQueue : Feature
 	{
-        /// <summary>
-        /// The ecart betwen two customers in the waiting Line (in time)
-        /// </summary>
+        #region Properties
+
+        public int Count => _queue.Count;
         public float SpacingTime { get; set; } = 0.075f;
-        
-        /// <summary>
-        /// the starting point of the waiting line in the spline (in time)
-        /// </summary>
-        public float QueueStartT { get;                          set; } = 0.3f;
+        public float QueueStartT { get; set; } = 0.3f;
         public Action<Client, ClientSeat> OnSeatAvailable { get; set; }
         public Action OnWaitLineFull { get; set; }
 
+        #endregion
+
+        #region Fields
+
         private Queue<Client>   _queue = new();
-        private SplineContainer _spline;
-        private float           _anchorTime = -1f; 
         private int   _maxQueueSize    = 1;
 
+        #endregion
 
-        public int Count => _queue.Count;
+        
 
-        public ClientWaitingQueue(IFeatureCollection owner, SplineContainer spline) : base(owner)
-        {
-            _spline = spline;
-        }
+        public ClientWaitingQueue(IFeatureCollection owner) : base(owner)
+        { }
 
         public float Enqueue(Client client)
         {
@@ -54,7 +51,6 @@ namespace Features
             _queue = new Queue<Client>(list);
 
             RefreshPositions();
-            //Reference.GetManager<AdaptiveClientSpawner>()?.OnQueueSlotFreed();
             return true;
         }
 
@@ -68,10 +64,11 @@ namespace Features
 
             RefreshPositions();
             OnSeatAvailable?.Invoke(first, freedSeat);
-            
-            //Reference.GetManager<AdaptiveClientSpawner>()?.OnQueueSlotFreed();
         }
 
+        /// <summary>
+        /// Actualize the positions of waiting clients when list is updated
+        /// </summary>
         private void RefreshPositions()
         {
             int index = 0;
@@ -93,6 +90,10 @@ namespace Features
             return Mathf.Clamp(QueueStartT - (index + 1) * SpacingTime, 0f, 1f);
         }
         
+        /// <summary>
+        /// To kown if the wait line is full
+        /// </summary>
+        /// <returns></returns>
         public bool IsQueueFull()
         {
             return _queue.Count == _maxQueueSize;

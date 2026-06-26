@@ -6,6 +6,7 @@ namespace Features
 	public class SitAndWaitForServing : BaseClientAction
 	{
 		public Action OnServed { get; set; }
+		public Action OnMealGrabbed { get; set; }
 
 		private ClientSeat _seat;
 		private Client     _client;
@@ -26,11 +27,12 @@ namespace Features
 		
 		private void TryGrabMeal()
 		{
-			if (_seat.Owner is not ServingArea servingArea) return;
-			var heldItem = servingArea.MealSlot?.Container?.HeldItem;
+			if (_seat.Owner is not OrderingArea orderingArea) return;
+			var heldItem = orderingArea.ServingArea.MealSlot?.Container?.HeldItem;
 			if (heldItem == null) return;
 			
-			servingArea.MealSlot.Container.RequestDrop(heldItem);
+			orderingArea.ServingArea.MealSlot.Container.RequestDrop(heldItem);
+			OnMealGrabbed?.Invoke();
 		}
 
 		private void HandleUnregister(Client client)

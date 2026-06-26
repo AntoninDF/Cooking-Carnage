@@ -264,6 +264,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1344083561932607000}
   - component: {fileID: 9010698450651919534}
+  - component: {fileID: 8259305389291430800}
   m_Layer: 0
   m_Name: P_SittingCounter
   m_TagString: Untagged
@@ -304,7 +305,104 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b98f5b01dd6b0194ba0a628d6a3d082d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OrderingArea
-  SeatTransform: {fileID: 5361733293880336800}
+  SeatTransform: {fileID: 6077997524233108106}
+  SeatParent: {fileID: 5361733293880336800}
+  ServingArea: {fileID: 7263218699784425065}
+  ServingAreaConfig: {fileID: 11400000, guid: 9bccb6a8c9a667d47bb7d98240219e68, type: 2}
+--- !u!114 &8259305389291430800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3313232724240203138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
+  Events:
+  - ActionPath:
+      ActionVariableName: OnClientSitting
+      SerializedType:
+        m_Name: Action`1
+        m_AssemblyQualifiedName: System.Action`1[[Clients.Client, Assembly-CSharp,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0,
+          Culture=neutral, PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: ClientSeat
+        SerializedType:
+          m_Name: ClientSeat
+          m_AssemblyQualifiedName: Features.ClientSeat, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 9010698450651919534}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5670825509469044708}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Chara Standing In
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 5670825509469044708}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: ResetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Chara Standing Out
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnClientLeaving
+      SerializedType:
+        m_Name: Action`1
+        m_AssemblyQualifiedName: System.Action`1[[Clients.Client, Assembly-CSharp,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0,
+          Culture=neutral, PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: ClientSeat
+        SerializedType:
+          m_Name: ClientSeat
+          m_AssemblyQualifiedName: Features.ClientSeat, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 9010698450651919534}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5670825509469044708}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Chara Standing Out
+            m_BoolArgument: 0
+          m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &4233302793106191903
 GameObject:
   m_ObjectHideFlags: 0
@@ -1355,6 +1453,16 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6881823592585604235, guid: 0c759610b9dc1304e9172001e4c2e4fb, type: 3}
   m_PrefabInstance: {fileID: 1578953799650299179}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &5670825509469044708 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6582929892835914447, guid: 0c759610b9dc1304e9172001e4c2e4fb, type: 3}
+  m_PrefabInstance: {fileID: 1578953799650299179}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6077997524233108106 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4733547738782168993, guid: 0c759610b9dc1304e9172001e4c2e4fb, type: 3}
+  m_PrefabInstance: {fileID: 1578953799650299179}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1769134758523047572
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1820,7 +1928,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fc8040690e33ea41a368db0e5322895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServingArea
-  SeatTransform: {fileID: 5361733293880336800}
   MealSlot: {fileID: 4905184774438577477}
 --- !u!114 &4905184774438577477 stripped
 MonoBehaviour:
@@ -2321,6 +2428,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 185c917ff1284f8418374be7e1ab99c9, type: 3}
+--- !u!198 &546657072793081989 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5515997667696455800, guid: 185c917ff1284f8418374be7e1ab99c9, type: 3}
+  m_PrefabInstance: {fileID: 5411883167439612157}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1881703309994571631 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5838908265039159186, guid: 185c917ff1284f8418374be7e1ab99c9, type: 3}
@@ -3065,6 +3177,30 @@ MonoBehaviour:
         - m_Target: {fileID: 9010698450651919534}
           m_TargetAssemblyTypeName: OrderingArea, Assembly-CSharp
           m_MethodName: KillClient
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 5670825509469044708}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Die
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 546657072793081989}
+          m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+          m_MethodName: Play
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
