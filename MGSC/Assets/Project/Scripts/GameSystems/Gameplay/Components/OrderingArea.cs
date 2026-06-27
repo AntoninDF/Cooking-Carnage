@@ -27,7 +27,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     {
         if (ServingArea == null || SeatTransform == null)
         {
-            Debug.LogError($"a field is missing, initialization failed");
+            Debug.LogError($"[OrderingArea] A field is missing on {name}, initialization failed");
         }
         ClientSeat = new(this, SeatTransform, SeatParent, ServingAreaConfig);
         OrderingCounter = new(this);

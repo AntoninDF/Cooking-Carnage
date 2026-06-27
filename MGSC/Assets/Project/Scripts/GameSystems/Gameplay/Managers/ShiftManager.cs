@@ -28,7 +28,6 @@ namespace GameSystem
         // Refacto : Ensure all these dependencies are necessary, and won't break the shiftManager if missing
         // Refacto : Ensure that features that depend on other Managers (or even ones that don't) are optional and can be toggled
         private DataManager _dataManager;
-        private TimerManager _timerManager;
         private UIManager _uiManager;
         private ItemManager _itemManager;
 
@@ -64,16 +63,16 @@ namespace GameSystem
         {
             this.Log(LogType.Log, $"Launching new shift for {duration+_noonDuration}s");
             OnShiftBegin?.Invoke();
-            _timerManager.StartTimer("shiftDuration", duration, () => LaunchShiftNoon(), false);
-            _timerManager.StartTimer("shiftNoonDuration",_noonDuration,() => EndShift(), false);
-            _timerManager.StopTimer("shiftNoonDuration");
+            TimerManager.StartTimer("shiftDuration", duration, () => LaunchShiftNoon(), false);
+            TimerManager.StartTimer("shiftNoonDuration",_noonDuration,() => EndShift(), false);
+            TimerManager.StopTimer("shiftNoonDuration");
         }
 
         void LaunchShiftNoon()
         {
             OnShiftNoon?.Invoke();
             this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
-            _timerManager.ResumeTimer("shiftNoonDuration");
+            TimerManager.ResumeTimer("shiftNoonDuration");
         }
 
         void EndShift()
@@ -169,7 +168,6 @@ namespace GameSystem
         public void Init()
         {
             Reference.GetManager(out _dataManager);
-            Reference.GetManager(out _timerManager);
             Reference.GetManager(out _itemManager);
         }
 

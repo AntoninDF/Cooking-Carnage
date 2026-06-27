@@ -11,8 +11,7 @@ namespace Features
         /// </summary>
         public Action<float> OnTransformationProgress { get; set; }
         public Action<TransformableAfterTimer> OnTransformationOver { get; set; }
-        public Action<TransformableAfterTimer> OnTransformationStart { get; set; }
-        protected TimerManager TimerManager => Reference.GetManager<TimerManager>();
+        public Action<TransformableAfterTimer> OnTransformationStart { get; set; } 
         protected Timer currentProcess;
 
 

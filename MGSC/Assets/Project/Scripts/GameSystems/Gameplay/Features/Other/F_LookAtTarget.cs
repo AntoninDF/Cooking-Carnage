@@ -41,7 +41,6 @@ namespace Features
 
         #region Fields
         private bool _isLookedAt;
-        private TimerManager _timerManager => Reference.GetManager<TimerManager>();
         private int _lastCheckedFrame;
         #endregion
 
@@ -79,10 +78,7 @@ namespace Features
 
         public virtual void RequestResetOnNextFrame()
         {
-            if (_timerManager != null)
-            {
-                _timerManager.StartTimer("Reset lookat (" + Time.time + ")", 3, TryReset, true);
-            }
+            TimerManager.StartTimer("Reset lookat (" + Time.time + ")", 3, TryReset, true);
         }
 
         protected virtual void TryReset()

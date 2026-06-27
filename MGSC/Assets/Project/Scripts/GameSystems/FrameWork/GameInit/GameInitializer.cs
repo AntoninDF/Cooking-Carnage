@@ -134,9 +134,10 @@ namespace GameSystem
 
         private static void MakeGameLoop()
         {
+            return;
             GameObject go = new();
-            var gameLoop = go.AddComponent<GameLoop>();
-            gameLoop.StartRunning();
+            //var gameLoop = go.AddComponent<GameLoop>();
+            //gameLoop.StartRunning();
         }
         
 
