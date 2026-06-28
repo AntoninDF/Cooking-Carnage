@@ -30,19 +30,15 @@ namespace GameSystem
         /// <summary>
         /// Insert the static update method in the player loop right between the PreUpdate and Update
         /// </summary>
-        [RuntimeInitializeOnLoadMethod]
-        private static void AddToPlayerLoop()
-        {
-            //PlayerLoopUtility.LogCurrentPlayerLoop();
+        [RuntimeInitializeOnLoadMethod] static void AddToPlayerLoop() => 
             PlayerLoopUtility.InsertMethodCallInPlayerLoopAfter<PreUpdate, TimerManager>(Update);
-            //PlayerLoopUtility.LogCurrentPlayerLoop();
-        }
         
         /// <summary>
         /// Updates all active timers
         /// </summary>
         private static void Update()
         {
+            if (!Globals.Gameplay.AllowTimerUpdate) return;
             var keys = new List<string>(timers.Keys);
             for (int i = 0; i < keys.Count; i++)
             {

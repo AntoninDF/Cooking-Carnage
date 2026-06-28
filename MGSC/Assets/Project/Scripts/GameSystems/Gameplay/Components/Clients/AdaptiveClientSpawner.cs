@@ -59,6 +59,7 @@ namespace GameSystem
         /// </summary>
         public AdaptiveClientSpawner()
         {
+            Debug.Log("AdptiveClientSpawner from the constructor says hi !");
             Register();
         }
         
@@ -86,7 +87,8 @@ namespace GameSystem
 
             Reference.GetManager(out _clientManager);
 
-            TimerManager.StartTimer("AdaptiveClientSpawner Init", 1, () => Launch(), true);
+            Debug.Log("Init");
+            TimerManager.StartTimer("AdaptiveClientSpawner Init", 0.1f, () => Launch(), false);
             
             
             if (models.Count <= 0 || !spline)
@@ -124,6 +126,7 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
+            Debug.Log("Launch");
             TimerManager.StartTimer(timerName, delay, () => TrySpawnClient());
         }
 
