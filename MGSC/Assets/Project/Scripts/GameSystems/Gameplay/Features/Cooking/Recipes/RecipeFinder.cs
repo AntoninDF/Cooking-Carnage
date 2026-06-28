@@ -17,7 +17,6 @@ public static class RecipeFinder
 
     public static SO_Recipe GetMatchingRecipe(IEnumerable<SO_Ingredient> ingredients)
     {
-        if (ingredients.Count() == 0) return AllRecipes.EmptyRecipe; // If empty recipe
         foreach (var r in AllRecipes.Recipes)
         {
             if (SO_Recipe.Compare(ingredients, r))
