@@ -1,4 +1,5 @@
-using UnityEditor;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Upgrades
@@ -16,7 +17,7 @@ namespace Upgrades
             {
                 if (_instance == null)
                 {
-                    _instance = Resources.Load<UpgradeManagerConfig>("UpgradeManagerConfig");
+                    _instance = Resources.Load<UpgradeManagerConfig>("Upgrades/UpgradeManagerConfig");
                 }
                 return _instance;
             }

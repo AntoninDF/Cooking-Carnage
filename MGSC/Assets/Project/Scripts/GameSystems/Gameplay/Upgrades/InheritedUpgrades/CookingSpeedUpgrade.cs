@@ -17,7 +17,7 @@ namespace Upgrades
 
         public CookingSpeedUpgrade() : base()
         {
-            _config = UpgradeManagerConfig.Instance.CookingSpeed;
+            config = UpgradeManagerConfig.Instance.CookingSpeed;
         }
 
         public override void Apply()
@@ -27,7 +27,7 @@ namespace Upgrades
 
             foreach (Oven o in _targetOvens)
             {
-                //o.SetStrength(_level * 2f);
+                //o.SetStrength(level * 2f);
             }
             */
         }
