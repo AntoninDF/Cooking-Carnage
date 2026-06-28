@@ -88,7 +88,7 @@ namespace GameSystem
         }
         private void SetupScene()
         {
-            CursorUtility.RequestCursor(this);
+            CursorUtility.Update();
             // Reset the save file
             if (_gameProfile.ResetSaveFile) Reference.GetManager<DataManager>()?.ResetSave();
 
