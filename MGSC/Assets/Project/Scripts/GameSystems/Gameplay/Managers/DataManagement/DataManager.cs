@@ -214,7 +214,7 @@ namespace GameSystem
             {
                 case EDataInfo.TimeElapsedSinceStartup:     return (Time.time).ToString();
                 case EDataInfo.ShiftDuration:               return _shiftManager.ShiftDuration.ToString();
-                case EDataInfo.RentPayedThisShift:          return _shiftManager.CurrentRentPrice.ToString();
+                case EDataInfo.RentPayedThisShift:          return _shiftManager.GetCurrentRentPrice().ToString();
                 case EDataInfo.ShiftCount:                  return _shiftManager.ShiftNumber.ToString();
                 case EDataInfo.CorrectOrdersThisShift:      return GetCorrectOrdersCount().ToString();
                 case EDataInfo.WrongOrdersThisShift:        return GetWrongOrdersCount().ToString();
