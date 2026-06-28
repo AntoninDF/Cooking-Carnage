@@ -1,8 +1,6 @@
 using Controller;
 using System;
-using UI;
 using UnityEngine;
-using UnityEngine.AdaptivePerformance;
 
 namespace GameSystem
 {
@@ -31,7 +29,6 @@ namespace GameSystem
     
         // Refacto : Ensure all these dependencies are necessary, and won't break the shiftManager if missing
         // Refacto : Ensure that features that depend on other Managers (or even ones that don't) are optional and can be toggled
-        private SaveManager _dataManager;
 
         private AnimationCurve _rentPriceCurve;
         private float _shiftDuration = 120;
@@ -92,6 +89,8 @@ namespace GameSystem
                 OnShiftSucceeded?.Invoke();
             else
                 OnShiftFailed?.Invoke();
+
+            SaveManager.SaveGameData();
         }
 
         /// <summary>
@@ -143,7 +142,7 @@ namespace GameSystem
         /// </summary>
         public void SetupShift(int shiftCount)
         {
-            _dataManager.SaveGameData();
+            SaveManager.SaveGameData();
             
             ResetAll();
 
@@ -160,16 +159,12 @@ namespace GameSystem
             Reference.RemoveManager(this);
         }
 
-        public void Init()
-        {
-            Reference.GetManager(out _dataManager);
-        }
 
         public void PostInit()
         {
             this.Log(LogType.Log, $"PostInit running (shift duration set to {_shiftDuration}s)");
-            
-            _dataManager.LoadGlobalData();
+
+            SaveManager.LoadGlobalData();
 
             SetupShift(ShiftNumber);
         }
@@ -179,9 +174,11 @@ namespace GameSystem
             if (ShiftNumber == 0)
             {
                 ShiftNumber = 1;
-                _dataManager.SaveGameData();
+                SaveManager.SaveGameData();
             }
         }
+
+        public void Init() { }
         #endregion
     }
 

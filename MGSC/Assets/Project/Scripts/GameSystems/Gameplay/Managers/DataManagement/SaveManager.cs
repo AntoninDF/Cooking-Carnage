@@ -10,83 +10,58 @@ namespace GameSystem
     /// <summary>
     /// The SaveManager is responsible for saving the game and loading saves.
     /// </summary>
-    public class SaveManager : IManager
+    public static class SaveManager
     {
-        #region Properties
-
-        public static SaveManager Instance { get { if (_instance == null) _instance = new SaveManager(); return _instance; } }
-
-        public float MoneyInfo { get { EnforceReferences(); return _moneyManager.MoneyInfo; } }
-        
-        public int ShiftCount => _shiftManager.ShiftNumber;
-
-        public GameData Data => currentGameData;
-
-        #endregion
-
         #region Fields
-
-        MoneyManager _moneyManager;
-        UpgradeManager _upgradeManager;
-        ClientManager _clientManager;
-        ShiftManager _shiftManager;
-
-        private GameData currentGameData;
-        private string filePath ;
-        
-        private static SaveManager _instance;
-
+        public static GameData Data;
+        public static string filePath = Path.Combine(Application.persistentDataPath, "gameData.json");
+        [GlobalEvent("Saves/OnGameSaved")]
+        public static Action OnSuccessfulSave;
+        [GlobalEvent("Saves/OnGameLoaded")]
+        public static Action OnSaveLoaded;
         #endregion
+        
+
 
         #region Methods
-
-        public SaveManager()
+        private static GameData MakeGameData()
         {
-            Register();
+            var result = new GameData()
+            {
+                money =  Reference.GetManager<MoneyManager>()?.MoneyInfo ?? 0f,
+                upgrades = ConvertUpgradeData(),
+                shiftNumber = Globals.Gameplay.ShiftNumber
+            };
+            return result;
         }
-
-        public void Register()
-        {
-            Reference.SetManager(this);
-        }
-        public void Unregister()
-        {
-            Reference.RemoveManager(this);
-        }
-        public void Init()
-        {
-            filePath = Path.Combine(Application.persistentDataPath, "gameData.json");
-        }
-        
         /// <summary>
         /// Save multiple data (money, upgrades, daycount) into a file
         /// </summary>
-        public void SaveGameData(GameData gameData = null)
+        public static void SaveGameData() => SaveGameData(MakeGameData());
+        /// <summary>
+        /// Save multiple data (money, upgrades, daycount) into a file
+        /// </summary>
+        public static void SaveGameData(GameData gameData)
         {
-            this.Log(LogType.Log, "Saving game data");
-            if (_moneyManager == null || _upgradeManager == null || _clientManager == null || _shiftManager == null)
+            if (gameData == null)
             {
-                EnforceReferences();
+                Debug.LogWarning("[SaveManager] GameData was null, and could not be saved.");
+                return;
             }
-            
-            currentGameData = new GameData()
-            {
-                money = gameData?.money ?? MoneyInfo,
-                upgrades = gameData?.upgrades ?? ConvertUpgradeData(),
-                shiftNumber = gameData?.shiftNumber ?? ShiftCount
-            };
-            
-            string json = JsonUtility.ToJson(currentGameData, true);
-            
+
             if (filePath == null)
             {
-                this.Log(LogType.Warning, "The specified file path for the save file is null. Make sure the manager was initialized properly");
+                Debug.LogWarning("The specified file path for the save file is null. Make sure the manager was initialized properly");
+                return;
             }
+            
+            string json = JsonUtility.ToJson(gameData, true);
+            
             File.WriteAllText(filePath, json);
-            this.Log(LogType.Log, "Saved successfully");
+            OnSuccessfulSave?.Invoke();
         }
     
-        bool SaveFileExists()
+        public static bool SaveFileExists()
         {
             return File.Exists(filePath);
         }
@@ -94,49 +69,50 @@ namespace GameSystem
         /// <summary>
         /// Load multiple data (money, upgrades, daycount) and reload the game
         /// </summary>
-        public void LoadGlobalData()
+        /// <returns>Wether or not a save file could be loaded</returns>
+        public static bool LoadGlobalData()
         {
-            this.Log(LogType.Log, "Loading global data");
-            
-            if (_moneyManager == null || _upgradeManager == null || _clientManager == null || _shiftManager == null)
-            {
-                EnforceReferences();
-            }
+            Debug.Log("Loading global data");
             
             if (!SaveFileExists())
             {
-                this.Log(LogType.Warning, "No save file found");
+                Debug.Log("No save file found");
                 
                 ResetSave();
-                return;
+                return false;
             }
             string json = File.ReadAllText(filePath);
-            currentGameData = JsonUtility.FromJson<GameData>(json);
+            Data = JsonUtility.FromJson<GameData>(json);
             
-            _moneyManager.MoneyInfo = currentGameData.money;
+            if (Reference.TryGetManager(out MoneyManager moneyMgr))
+                moneyMgr.MoneyInfo = Data.money;
             
+            if (Reference.TryGetManager(out ShiftManager shiftMgr))
+                shiftMgr.ShiftNumber = Data.shiftNumber;
+
             LoadUpgradeData();
-            
-            _shiftManager.ShiftNumber = currentGameData.shiftNumber;
-            
-            this.Log(LogType.Log, $"Save loaded successfully, shift : {currentGameData.shiftNumber},  money : {currentGameData.money}");
+
+            Debug.Log($"Save loaded successfully, shift : {Data.shiftNumber},  money : {Data.money}");
+            OnSaveLoaded?.Invoke();
+            return true;
         }
 
-        public void ResetSave()
+        public static void ResetSave()
         {
-            currentGameData = DefaultData();
-            SaveGameData(currentGameData);
-            //LoadGlobalData();
+            Data = DefaultData();
+            SaveGameData(Data);
         }
 
-        List<UpgradeData> ConvertUpgradeData()
+        static List<UpgradeData> ConvertUpgradeData()
         {
+            if (!Reference.TryGetManager(out UpgradeManager upgradeManager)) return new();
+
             List<UpgradeData> result = new List<UpgradeData>();
 
-            for (var index = 0; index < _upgradeManager.Upgrades.Count; index++)
+            for (var index = 0; index < upgradeManager.Upgrades.Count; index++)
             {
-                var upgrade = _upgradeManager.Upgrades[index];
-                this.Log(LogType.Warning, upgrade.GetType().Name + "found, lvl : " + upgrade.Level);
+                var upgrade = upgradeManager.Upgrades[index];
+                Debug.LogWarning(upgrade.GetType().Name + "found, lvl : " + upgrade.Level);
                 result.Add(new UpgradeData());
                 result[index].level = upgrade.Level;
                 result[index].name = upgrade.GetType().Name;
@@ -145,19 +121,19 @@ namespace GameSystem
             return result;
         }
 
-        void LoadUpgradeData()
+        static void LoadUpgradeData()
         {
-            if (currentGameData.upgrades == null)
+            if (!Reference.TryGetManager(out UpgradeManager upgradeManager)) return;
+
+            if (Data.upgrades == null)
             {
-                this.Log(LogType.Warning, "No Upgrade data found");
+                Debug.LogWarning("No Upgrade data found");
                 return;
             }
-            foreach (var upgradeData in currentGameData.upgrades)
+            foreach (var upgradeData in Data.upgrades)
             {
-                this.Log(LogType.Log, "Upgrade loaded");
-                
                 Type type = Type.GetType("Upgrades."+upgradeData.name);
-                Upgrade upgrade = _upgradeManager.GetUpgradeByType(type);
+                Upgrade upgrade = upgradeManager.GetUpgradeByType(type);
                 
                 for (int i = 0; i < upgradeData.level; i++)
                 {
@@ -166,15 +142,7 @@ namespace GameSystem
             }
         }
 
-        private void EnforceReferences()
-        {
-            Reference.GetManager(out _moneyManager);
-            Reference.GetManager(out _upgradeManager);
-            Reference.GetManager(out _clientManager);
-            Reference.GetManager(out _shiftManager); 
-        }
-
-        GameData DefaultData()
+        static GameData DefaultData()
         {
             return new GameData
             {
@@ -185,25 +153,6 @@ namespace GameSystem
 
             #endregion
         }
-
-        public int GetCorrectOrdersCount()
-        {
-            if (_clientManager.GetClientsHistory() == null) return 0;
-            return _clientManager.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe == c.order.Recipe).Count();
-        }
-
-        public int GetWrongOrdersCount()
-        {
-            if (_clientManager.GetClientsHistory() == null) return 0;
-            return _clientManager.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe != c.order.Recipe).Count();
-        }
-
-        public int GetTotalOrdersCount()
-        {
-            if (_clientManager.GetClientsHistory() == null) return 0;
-            return _clientManager.GetClientsHistory().Where((c) => !c.killed).Count();
-        }
-
 
         
 

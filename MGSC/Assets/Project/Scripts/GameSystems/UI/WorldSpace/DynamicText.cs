@@ -5,6 +5,7 @@ using GameSystem;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using Upgrades;
@@ -26,8 +27,6 @@ namespace UI
         [SerializeField] private GameObject _dataSource;
         [Tooltip("Each element specifies which markup to replace with which value")]
         [SerializeField] private List<UIDataReplacement> _dataReplacement = new();
-
-        private SaveManager _dataManager;
         #endregion
 
         #region Methods
@@ -53,7 +52,7 @@ namespace UI
                 if (textInfo.info.GetHashCode() > 49)
                     data = GetDataFromGameObject(textInfo.info);
                 else 
-                    data = Reference.GetManager<SaveManager>()?.GetDataAsString(textInfo.info) ?? data;
+                    data = GetDataAsString(textInfo.info) ?? data;
                 result = result.Replace(textInfo.markup, data);
             }
             _textObject.text = result;
@@ -91,8 +90,8 @@ namespace UI
                 case EDataInfo.ShiftDuration:                   return Reference.GetManager<ShiftManager>()?.ShiftDuration.ToString();
                 case EDataInfo.RentPayedThisShift:              return Reference.GetManager<ShiftManager>()?.GetCurrentRentPrice().ToString();
                 case EDataInfo.ShiftCount:                      return Reference.GetManager<ShiftManager>()?.ShiftNumber.ToString();
-                case EDataInfo.CorrectOrdersThisShift:          return Reference.GetManager<SaveManager>()?.GetCorrectOrdersCount().ToString();
-                case EDataInfo.WrongOrdersThisShift:            return Reference.GetManager<SaveManager>()?.ToString();
+                case EDataInfo.CorrectOrdersThisShift:          return GetCorrectOrdersCount().ToString();
+                case EDataInfo.WrongOrdersThisShift:            return GetWrongOrdersCount().ToString();
                 case EDataInfo.ClientsKilledThisShift:          return Reference.GetManager<ClientManager>()?.ClientsKilledThisShift.ToString();
                 case EDataInfo.MoneyGainedThisShift:            return Reference.GetManager<MoneyManager>()?.GetMoneyGainedThisShift().ToString();
                 case EDataInfo.MoneyAmount:                     return Reference.GetManager<MoneyManager>()?.MoneyInfo.ToString();
@@ -117,6 +116,19 @@ namespace UI
                 return TimeSpan.FromSeconds(timeLeft).ToString(@"mm\:ss");
             else
                 return "OVER";
+        }
+        public int GetCorrectOrdersCount()
+        {
+            if (!Reference.TryGetManager(out ClientManager clientMgr)) return 0;
+            if (clientMgr.GetClientsHistory() == null) return 0;
+            return clientMgr.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe == c.order.Recipe).Count();
+        }
+
+        public int GetWrongOrdersCount()
+        {
+            if (!Reference.TryGetManager(out ClientManager clientMgr)) return 0;
+            if (clientMgr.GetClientsHistory() == null) return 0;
+            return clientMgr.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe != c.order.Recipe).Count();
         }
         private string ToString<T>(IEnumerable<T> items)
         {

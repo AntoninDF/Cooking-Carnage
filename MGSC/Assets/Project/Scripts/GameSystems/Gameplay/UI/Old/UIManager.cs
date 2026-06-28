@@ -56,7 +56,6 @@ namespace UI
 
         private TimerManager _timerManager;
         private ShiftManager _shiftManager;
-        private SaveManager _dataManager;
         private CameraManager _cameraManager;
 
         private InputActionAsset _inputActionAsset;
@@ -84,7 +83,6 @@ namespace UI
         public void Init()
         {
             Reference.GetManager(out _shiftManager);
-            Reference.GetManager(out _dataManager);
 
             _inputActionAsset = Reference.AssetReferences.InputActions;
             _playerInputs = _inputActionAsset.FindActionMap("Player");
@@ -120,7 +118,7 @@ namespace UI
         
         public void PostInit()
         {
-            if (_dataManager.ShiftCount >= 1)
+            if (Globals.Gameplay.ShiftNumber >= 1)
             {
                 SkipTutorial();
             }
@@ -327,7 +325,7 @@ namespace UI
         /*
         public void ResetEverything()
         {
-            _dataManager.ResetSave();
+            _moneyManager.ResetSave();
             ReloadScene();
         }
         public void RequestCameraSwitch(Transform target)

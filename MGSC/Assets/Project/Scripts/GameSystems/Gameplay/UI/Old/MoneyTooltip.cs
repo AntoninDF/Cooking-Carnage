@@ -8,16 +8,16 @@ namespace UI
     {
         [SerializeField] private Tooltip _tooltip;
 
-        private SaveManager _dataManager;
+        private MoneyManager _moneyManager;
 
         private void Start()
         {
-            Reference.GetManager(out _dataManager);
+            Reference.GetManager(out _moneyManager);
         }
 
         private void Update()
         {
-            _tooltip.SetText("Current balance : " + _dataManager.MoneyInfo);
+            _tooltip.SetText("Current balance : " + _moneyManager.MoneyInfo);
         }
     }
 }

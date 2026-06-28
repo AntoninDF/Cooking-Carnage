@@ -16,9 +16,9 @@ namespace GameSystem
         #endregion
 
         #region Fields
-        private SaveManager _dataManager;
         private OrderManager _orderManager;
         private Dictionary<int, float> _moneyGainedPerShift = new();
+        private int shiftNumber => Globals.Gameplay.ShiftNumber;
         #endregion
 
         #region Methods
@@ -45,7 +45,6 @@ namespace GameSystem
 
         private void EnforceReferences()
         {
-            Reference.GetManager(out _dataManager);
             Reference.GetManager(out _orderManager);
         }
 
@@ -67,15 +66,15 @@ namespace GameSystem
         }
 
         public float GetMoneyGainedOnShift(int shiftCount) => _moneyGainedPerShift.ContainsKey(shiftCount) ? _moneyGainedPerShift[shiftCount] : 0f;
-        public float GetMoneyGainedThisShift() => GetMoneyGainedOnShift(_dataManager.ShiftCount);
+        public float GetMoneyGainedThisShift() => GetMoneyGainedOnShift(shiftNumber);
 
         public void AddMoney(float amount)
         {
             MoneyInfo += amount;
-            if (!_moneyGainedPerShift.ContainsKey(_dataManager.ShiftCount))
-                _moneyGainedPerShift[_dataManager.ShiftCount] = 0f;
+            if (!_moneyGainedPerShift.ContainsKey(shiftNumber))
+                _moneyGainedPerShift[shiftNumber] = 0f;
             
-            if(amount>=0) _moneyGainedPerShift[_dataManager.ShiftCount] += amount;
+            if(amount>=0) _moneyGainedPerShift[shiftNumber] += amount;
             
             OnMoneyChange?.Invoke(amount);
             
