@@ -25,9 +25,9 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
 
     private void Awake()
     {
-        if (ServingArea == null || SeatTransform == null)
+        if (ServingArea == null || SeatTransform == null || SeatParent == null)
         {
-            Debug.LogError($"[OrderingArea] A field is missing on {name}, initialization failed");
+            Debug.LogWarning($"[OrderingArea] A field is missing on {name}, initialization failed");
         }
         ClientSeat = new(this, SeatTransform, SeatParent, ServingAreaConfig);
         OrderingCounter = new(this);
@@ -67,6 +67,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;
+        if (ClientSeat == null) return;
         if (ClientSeat.SittingClient != null)
         {
             Gizmos.color = Color.green;

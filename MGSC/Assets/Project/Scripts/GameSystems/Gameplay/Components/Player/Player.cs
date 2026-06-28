@@ -81,12 +81,4 @@ public class Player : MonoBehaviour, IFeatureCollection
     {
         return Camera.main.transform;
     }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(Camera.main.transform.position, PlayerActor.LookPosition);
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(Camera.main.transform.position, Camera.main.ScreenToWorldPoint(new Vector3(1920/2, 1080/2, 0.5f)));
-    }
 }

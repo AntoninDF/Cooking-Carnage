@@ -223,7 +223,7 @@ namespace UI
         {
             if (_shiftManager == null) return;
             _shiftManager.SetupShift(_shiftManager.ShiftNumber);
-            _shiftManager.LaunchShift();
+            _shiftManager.LaunchShiftTimer();
         }
         public void ResumeGame(bool skiptutorial=false)
         {
@@ -264,8 +264,10 @@ namespace UI
         public void TutorialEndTransition()
         {
             _onFade?.Invoke();
+            /*
             if (_shiftManager != null && _timerManager != null)
-                TimerManager.StartTimer("Tutorial ended. Moving to the next shift", 1.5f, () => _shiftManager.TryEndShift(true));
+                TimerManager.StartTimer("Tutorial ended. Moving to the next shift", 1.5f, () => _shiftManager.EndShift(true));
+            */
         }
         public void SwitchPlayerInputs(bool enabled)
         {
