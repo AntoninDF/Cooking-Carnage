@@ -54,7 +54,6 @@ namespace UI
         [SerializeField] private UnityEvent _onPause;
         [SerializeField] private UnityEvent _onResume;
 
-        private GameLoop _gameLoop;
         private TimerManager _timerManager;
         private ShiftManager _shiftManager;
         private DataManager _dataManager;
@@ -84,18 +83,14 @@ namespace UI
         }
         public void Init()
         {
-            Reference.GetManager(out _gameLoop);
             Reference.GetManager(out _shiftManager);
             Reference.GetManager(out _dataManager);
-            Reference.GetManager(out _timerManager);
 
             _inputActionAsset = Reference.AssetReferences.InputActions;
             _playerInputs = _inputActionAsset.FindActionMap("Player");
             _UIInputs = _inputActionAsset.FindActionMap("UI");
             _player = PlayerSetup.Player;
 
-            if (_gameLoop == null)
-                this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No gameloop found");
             if (_inputActionAsset == null)
                 this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No input action asset found");
             if (_playerInputs == null)
@@ -107,7 +102,7 @@ namespace UI
             if (_shiftManager == null)
                 this.Log(LogType.Warning,"An error occured during the initialization of the UIManager : No shift manager found");
 
-            if (_gameLoop == null || _inputActionAsset == null || _playerInputs == null || _UIInputs == null || _player == null)
+            if (_inputActionAsset == null || _playerInputs == null || _UIInputs == null || _player == null)
                 this.Log(LogType.Error,"UIManager cannot run because it has not been initialized correctly");
 
             SetupMenuDictionary();
@@ -213,7 +208,7 @@ namespace UI
         {
             bool isPauseMenu = _currentMenu.name == _pauseMenuName;
             
-            _gameLoop.StopRunning(isPauseMenu);
+            //_gameLoop.StopRunning(isPauseMenu);
             _playerInputs.Disable();
             _UIInputs.Enable();
             
@@ -228,7 +223,7 @@ namespace UI
         {
             if (_shiftManager == null) return;
             _shiftManager.SetupShift(_shiftManager.ShiftNumber);
-            _shiftManager.LaunchShift();
+            _shiftManager.LaunchShiftTimer();
         }
         public void ResumeGame(bool skiptutorial=false)
         {
@@ -238,7 +233,7 @@ namespace UI
             }
             
             
-            _gameLoop.StartRunning();
+            //_gameLoop.StartRunning();
             _playerInputs.Enable();
             _UIInputs.Enable();
             _onResume?.Invoke();
@@ -269,8 +264,10 @@ namespace UI
         public void TutorialEndTransition()
         {
             _onFade?.Invoke();
+            /*
             if (_shiftManager != null && _timerManager != null)
-                _timerManager.StartTimer("Tutorial ended. Moving to the next shift", 1.5f, () => _shiftManager.TryEndShift(true));
+                TimerManager.StartTimer("Tutorial ended. Moving to the next shift", 1.5f, () => _shiftManager.EndShift(true));
+            */
         }
         public void SwitchPlayerInputs(bool enabled)
         {
@@ -319,8 +316,8 @@ namespace UI
         }
         public void ReloadScene()
         {
-            _gameLoop.StartRunning();
-            _timerManager.StartTimer("reloadscene", 1,
+            //_gameLoop.StartRunning();
+            TimerManager.StartTimer("reloadscene", 1,
                 () => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex), true);
         }      
         public void Register()

@@ -9,7 +9,7 @@ public class InteractionButton : MonoBehaviour, IFeatureCollection
     public FeatureCollection Collection { get; set; } = new();
     public F_Interactable Interactable;
     public F_LookAtTarget LookAtTarget;
-    public Action<InteractionContext> OnInteraction => Interactable.OnInteraction;
+    public Action<InteractionContext> OnInteraction { get => Interactable.OnInteraction; set => Interactable.OnInteraction = value; }
     public ModelController Model;
 
     void Awake()

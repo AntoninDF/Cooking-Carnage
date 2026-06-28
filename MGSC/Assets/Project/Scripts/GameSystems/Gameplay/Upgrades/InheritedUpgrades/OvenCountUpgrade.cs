@@ -18,14 +18,14 @@ namespace Upgrades
 
         public OvenCountUpgrade() : base()
         {
-            _config = UpgradeManagerConfig.Instance.OvenCount;
+            config = UpgradeManagerConfig.Instance.OvenCount;
             // _targetOvenSetup = Reference.Get<OvenSetup>();
         }
 
         public override void Apply()
         {
             if (_targetOvenSetup == null) return;
-            _targetOvenSetup.Setup(_level +1);
+            _targetOvenSetup.Setup(level +1);
         }
         
         #endregion

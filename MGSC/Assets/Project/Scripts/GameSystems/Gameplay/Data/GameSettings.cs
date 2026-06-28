@@ -7,15 +7,18 @@ public class GameSettings : ScriptableObject
 {
     static GameSettings _instance;
     public static GameSettings Instance
+        { get {
+            _instance = _instance ?? Resources.Load<GameSettings>("GameSettings");
+            return _instance; } }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    public static void Apply()
     {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = Resources.Load<GameSettings>("GameSettings");
-            }
-            return _instance;
-        }
+        Globals.Gameplay.ShiftDuration.Value = Instance.ShiftSettings.ShiftDuration;
+        Globals.Gameplay.ShiftFinalWarningDuration.Value = Instance.ShiftSettings.ShiftFinalWarningDuration;
+
+        Globals.Gameplay.ShiftRentPriceCurve.Value = Instance.PriceSettings.ShiftRentPrice;
+        Globals.Gameplay.WrongMealPrice.Value = Instance.PriceSettings.WrongMealPrice;
     }
 
     public S_ShiftSettings ShiftSettings;
@@ -37,12 +40,4 @@ public class GameSettings : ScriptableObject
         public float WrongMealPrice;
     }
 
-    public void Apply()
-    {
-        Globals.Gameplay.ShiftDuration = ShiftSettings.ShiftDuration;
-        Globals.Gameplay.ShiftFinalWarningDuration = ShiftSettings.ShiftFinalWarningDuration;
-
-        Globals.Gameplay.ShiftRentPriceCurve = PriceSettings.ShiftRentPrice;
-        Globals.Gameplay.WrongMealPrice = PriceSettings.WrongMealPrice;
-    }
 }

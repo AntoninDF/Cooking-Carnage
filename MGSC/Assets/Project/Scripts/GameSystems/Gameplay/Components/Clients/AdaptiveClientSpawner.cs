@@ -59,6 +59,7 @@ namespace GameSystem
         /// </summary>
         public AdaptiveClientSpawner()
         {
+            Debug.Log("AdptiveClientSpawner from the constructor says hi !");
             Register();
         }
         
@@ -84,10 +85,10 @@ namespace GameSystem
             models = Reference.AssetReferences.clientList;
             spline = Reference.GetManager<PathManager>()?.SplineComponent;
 
-            Reference.GetManager(out _timerManager);
             Reference.GetManager(out _clientManager);
-    
-            _timerManager.StartTimer("AdaptiveClientSpawner Init", 1, () => Launch(), true);
+
+            Debug.Log("Init");
+            TimerManager.StartTimer("AdaptiveClientSpawner Init", 0.1f, () => Launch(), false);
             
             
             if (models.Count <= 0 || !spline)
@@ -106,17 +107,17 @@ namespace GameSystem
 
         bool ShiftOngoing()
         {
-            return !_timerManager.IsTimerRunning("shiftEndDelay");
+            return !TimerManager.IsTimerRunning("shiftEndDelay");
         }
 
 
         void StopTryingSpawn()
         {
             Debug.Log("Stop Trying Spawn");
-            if(_timerManager.IsTimerRunning(timerName))
+            if(TimerManager.IsTimerRunning(timerName))
             {
-                _timerManager.StopTimer(timerName);
-                _timerManager.RemoveTimer(timerName);
+                TimerManager.StopTimer(timerName);
+                TimerManager.RemoveTimer(timerName);
             }
         }
         
@@ -125,7 +126,8 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
-            _timerManager.StartTimer(timerName, delay, () => TrySpawnClient());
+            Debug.Log("Launch");
+            TimerManager.StartTimer(timerName, delay, () => TrySpawnClient());
         }
 
         bool TrySpawnClient()

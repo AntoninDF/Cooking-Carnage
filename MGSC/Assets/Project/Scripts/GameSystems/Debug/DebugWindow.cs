@@ -212,20 +212,13 @@ public class DebugWindow : MonoBehaviour
     {
         GUILayout.Label("Active Timers", GUI.skin.box);
 
-        var timerManager = Reference.GetManager<TimerManager>();
-        if (timerManager == null)
-        {
-            GUILayout.Label("(No TimerManager found)");
-            return;
-        }
-
-        if (timerManager.Timers.Count == 0)
+        if (TimerManager.Timers.Count == 0)
         {
             GUILayout.Label("No timers currently running.");
             return;
         }
 
-        foreach (var t in timerManager.Timers)
+        foreach (var t in TimerManager.Timers)
         {
             float remaining = t.Value.Duration - t.Value.Elapsed;
             bool isOver = remaining <= 0.01f;

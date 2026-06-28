@@ -36,8 +36,6 @@ namespace UI
         // Hidden fields
         private Dictionary<string, SubtitleParam> _subtitlesDict;
         private SubtitleParam _currentSubtitle;
-        private TimerManager _timerManager;
-        private GameLoop _gameLoop;
         #endregion
 
         #region Methods
@@ -48,8 +46,6 @@ namespace UI
 
             InitSubtitleDict();
             LocalizedText.EnforceDatabaseSetup(_textDatabase);
-            _timerManager = Reference.GetManager<TimerManager>();
-            _gameLoop = Reference.GetManager<GameLoop>();
         }
 
         public void Play(string subtitleName)
@@ -69,10 +65,10 @@ namespace UI
                 if (sp.VoiceLine != null)
                     sp.VoiceLine.Play();
                 _currentSubtitle.OnStart?.Invoke();
-                _gameLoop.OnPause.AddListener(PauseVoiceLine);
-                _gameLoop.OnResume.AddListener(ResumeVoiceLine);
+                //_gameLoop.OnPause.AddListener(PauseVoiceLine);
+                //_gameLoop.OnResume.AddListener(ResumeVoiceLine);
                 //Debug.Log("Playing subtitle " + _currentSubtitle.name);
-                _timerManager.StartTimer("Subtitle", sp.Duration, Stop);
+                TimerManager.StartTimer("Subtitle", sp.Duration, Stop);
             }
         }
 
@@ -92,8 +88,8 @@ namespace UI
         {
             _subtitleContainer.SetActive(false);
             _currentSubtitle.VoiceLine?.Stop();
-            _gameLoop.OnPause.RemoveListener(PauseVoiceLine);
-            _gameLoop.OnResume.RemoveListener(ResumeVoiceLine);
+            //_gameLoop.OnPause.RemoveListener(PauseVoiceLine);
+            //_gameLoop.OnResume.RemoveListener(ResumeVoiceLine);
             _currentSubtitle.OnEnd?.Invoke();
         }
         private void EnforceSubtitleDict()

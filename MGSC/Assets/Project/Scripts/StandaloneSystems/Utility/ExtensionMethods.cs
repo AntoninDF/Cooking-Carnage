@@ -1,4 +1,6 @@
 using Features;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -29,6 +31,54 @@ public static class ExtensionMethods
         bool valid = gameObject.GetComponent<T>() != null;
         if (valid) comp = temp;
         return valid;
+    }
+
+    public static string ToString_Detailed<T1, T2>(this Dictionary<T1, T2> dict)
+    {
+        if (dict == null) return "null";
+        string result = "Dictionary<" + typeof(T1).Name + ", " + typeof(T2).Name + "> (Count : " + dict.Count + ")";
+
+        foreach (var kvp in dict)
+        {
+            result += "\n\t";
+
+            if (kvp.Key is IFormattable key)
+                result += key.ToString();
+            if (kvp.Key is object obj1)
+                result += obj1.ToString();
+            else
+                result += typeof(T1).Name;
+
+            result += " : ";
+
+            if (kvp.Value is IFormattable value)
+                result += value.ToString();
+            if (kvp.Value is object obj2)
+                result += obj2.ToString();
+            else
+                result += typeof(T2).Name;
+        }
+
+        return result;
+    }
+    public static string ToString_Detailed<T>(this List<T> list)
+    {
+        if (list == null) return "null";
+        string result = "List<" + typeof(T).Name + "> (Count : " + list.Count + ")";
+
+        foreach (var elm in list)
+        {
+            result += "\n\t";
+
+            if (elm is IFormattable formattable)
+                result += formattable.ToString();
+            if (elm is object obj)
+                result += obj.ToString();
+            else
+                result += typeof(T).Name;
+        }
+
+        return result;
     }
 
     public static T GetFeature<T>(this object obj) where T : Features.Feature

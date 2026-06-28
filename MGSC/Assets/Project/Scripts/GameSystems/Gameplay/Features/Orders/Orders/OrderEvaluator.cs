@@ -5,7 +5,6 @@ namespace Orders
 {
     public static class OrderEvaluator
     {
-        public  static float WrongMealPrice { get; set; }
         public  static float OvercookedMealPrice { get; set; }
         public static float PlainJellyPrice { get; set; }
 
@@ -39,10 +38,10 @@ namespace Orders
                 return PlainJellyPrice;
             
             if(meal.CookStatus == "Overcooked")
-                return OvercookedMealPrice;
+                return RecipeFinder.AllRecipes.FailedRecipe.Price;
             
             if(order.Recipe != order.ServingInfo.Recipe)
-                return WrongMealPrice;
+                return Globals.Gameplay.WrongMealPrice;
             
             return order.Recipe.Price;
         }

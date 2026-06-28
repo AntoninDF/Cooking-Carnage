@@ -7,7 +7,9 @@ using Upgrades;
 
 namespace GameSystem
 {
-
+    /// <summary>
+    /// The DataManager is responsible for saving the game and loading saves.
+    /// </summary>
     public class DataManager : IManager
     {
         #region Properties
@@ -170,8 +172,7 @@ namespace GameSystem
             Reference.GetManager(out _moneyManager);
             Reference.GetManager(out _upgradeManager);
             Reference.GetManager(out _clientManager);
-            Reference.GetManager(out _shiftManager);
-            Reference.GetManager(out _timerManager);
+            Reference.GetManager(out _shiftManager); 
         }
 
         GameData DefaultData()
@@ -213,7 +214,7 @@ namespace GameSystem
             {
                 case EDataInfo.TimeElapsedSinceStartup:     return (Time.time).ToString();
                 case EDataInfo.ShiftDuration:               return _shiftManager.ShiftDuration.ToString();
-                case EDataInfo.RentPayedThisShift:          return _shiftManager.CurrentRentPrice.ToString();
+                case EDataInfo.RentPayedThisShift:          return _shiftManager.GetCurrentRentPrice().ToString();
                 case EDataInfo.ShiftCount:                  return _shiftManager.ShiftNumber.ToString();
                 case EDataInfo.CorrectOrdersThisShift:      return GetCorrectOrdersCount().ToString();
                 case EDataInfo.WrongOrdersThisShift:        return GetWrongOrdersCount().ToString();
@@ -238,7 +239,7 @@ namespace GameSystem
             {
                 return "";
             }
-            float timeLeft = _timerManager.TimeLeft("shiftDuration") + _timerManager.TimeLeft("shiftNoonDuration");
+            float timeLeft = TimerManager.TimeLeft("shiftDuration") + TimerManager.TimeLeft("shiftNoonDuration");
 
             if (timeLeft > 0)
                 return TimeSpan.FromSeconds(timeLeft).ToString(@"mm\:ss");

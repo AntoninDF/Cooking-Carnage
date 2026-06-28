@@ -13,7 +13,6 @@ public class CameraManager : IManager
     #region Fields
 
     private UIManager _uiManager;
-    private TimerManager _timerManager;
 
 
     private CinemachineVirtualCameraBase camFPV;
@@ -43,8 +42,6 @@ public class CameraManager : IManager
 
     public void Init()
     {
-        Reference.GetManager(out _timerManager);
-
         if (PlayerSetup.Player != null)
         {
             foreach (var cam in PlayerSetup.Player.GetComponentsInChildren<CinemachineVirtualCameraBase>())
@@ -87,7 +84,7 @@ public class CameraManager : IManager
 
         if (duration > 0)
         {
-            _timerManager.StartTimer("camFocus", duration, () => EnableFirstPersonView(), false);
+            TimerManager.StartTimer("camFocus", duration, () => EnableFirstPersonView(), false);
             _uiManager.SwitchPlayerInputs(false);
             this.Log(LogType.Log, $"Camera will focus on {target.name} for {duration}s");
         }
@@ -112,7 +109,7 @@ public class CameraManager : IManager
     {
         if (motion == null)
             motion = AnimationCurve.EaseInOut(0, 0, 1, 1);
-        _timerManager.StartTimer("Animate camera", duration, () => { }, onUpdate:(elapsed) => Set(LerpedTransform(focusPivot.transform, lookAtTarget, elapsed/duration), lookAtTarget));
+        TimerManager.StartTimer("Animate camera", duration, () => { }, onUpdate:(elapsed) => Set(LerpedTransform(focusPivot.transform, lookAtTarget, elapsed/duration), lookAtTarget));
     }
 
     public Transform LerpedTransform(Transform start, Transform end, float t)

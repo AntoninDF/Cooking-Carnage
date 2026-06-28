@@ -62,7 +62,6 @@ namespace Features
             _defaultPosition = parentTransform.localPosition;
             ClientManager.Register(this);
             _servingAreaConfig = servingAreaConfig;
-            Debug.Log("Client Seat Created");
         }
 
         public bool TryRegister(Client client)
