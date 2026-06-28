@@ -8,15 +8,15 @@ using Upgrades;
 namespace GameSystem
 {
     /// <summary>
-    /// The DataManager is responsible for saving the game and loading saves.
+    /// The SaveManager is responsible for saving the game and loading saves.
     /// </summary>
-    public class DataManager : IManager
+    public class SaveManager : IManager
     {
         #region Properties
 
-        public static DataManager Instance { get { if (_instance == null) _instance = new DataManager(); return _instance; } }
+        public static SaveManager Instance { get { if (_instance == null) _instance = new SaveManager(); return _instance; } }
 
-        public MoneyInfo MoneyInfo { get { EnforceReferences(); return _moneyManager.MoneyInfo; } }
+        public float MoneyInfo { get { EnforceReferences(); return _moneyManager.MoneyInfo; } }
         
         public int ShiftCount => _shiftManager.ShiftNumber;
 
@@ -30,18 +30,17 @@ namespace GameSystem
         UpgradeManager _upgradeManager;
         ClientManager _clientManager;
         ShiftManager _shiftManager;
-        TimerManager _timerManager;
 
         private GameData currentGameData;
         private string filePath ;
         
-        private static DataManager _instance;
+        private static SaveManager _instance;
 
         #endregion
 
         #region Methods
 
-        public DataManager()
+        public SaveManager()
         {
             Register();
         }
@@ -114,7 +113,7 @@ namespace GameSystem
             string json = File.ReadAllText(filePath);
             currentGameData = JsonUtility.FromJson<GameData>(json);
             
-            _moneyManager.MoneyInfo = new MoneyInfo(currentGameData.money);
+            _moneyManager.MoneyInfo = currentGameData.money;
             
             LoadUpgradeData();
             

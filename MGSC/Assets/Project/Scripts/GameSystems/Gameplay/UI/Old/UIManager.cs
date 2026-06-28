@@ -56,7 +56,7 @@ namespace UI
 
         private TimerManager _timerManager;
         private ShiftManager _shiftManager;
-        private DataManager _dataManager;
+        private SaveManager _dataManager;
         private CameraManager _cameraManager;
 
         private InputActionAsset _inputActionAsset;

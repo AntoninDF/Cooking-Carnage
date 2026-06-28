@@ -27,7 +27,7 @@ namespace UI
         [Tooltip("Each element specifies which markup to replace with which value")]
         [SerializeField] private List<UIDataReplacement> _dataReplacement = new();
 
-        private DataManager _dataManager;
+        private SaveManager _dataManager;
         #endregion
 
         #region Methods
@@ -53,7 +53,7 @@ namespace UI
                 if (textInfo.info.GetHashCode() > 49)
                     data = GetDataFromGameObject(textInfo.info);
                 else 
-                    data = Reference.GetManager<DataManager>()?.GetDataAsString(textInfo.info) ?? data;
+                    data = Reference.GetManager<SaveManager>()?.GetDataAsString(textInfo.info) ?? data;
                 result = result.Replace(textInfo.markup, data);
             }
             _textObject.text = result;
@@ -91,8 +91,8 @@ namespace UI
                 case EDataInfo.ShiftDuration:                   return Reference.GetManager<ShiftManager>()?.ShiftDuration.ToString();
                 case EDataInfo.RentPayedThisShift:              return Reference.GetManager<ShiftManager>()?.GetCurrentRentPrice().ToString();
                 case EDataInfo.ShiftCount:                      return Reference.GetManager<ShiftManager>()?.ShiftNumber.ToString();
-                case EDataInfo.CorrectOrdersThisShift:          return Reference.GetManager<DataManager>()?.GetCorrectOrdersCount().ToString();
-                case EDataInfo.WrongOrdersThisShift:            return Reference.GetManager<DataManager>()?.ToString();
+                case EDataInfo.CorrectOrdersThisShift:          return Reference.GetManager<SaveManager>()?.GetCorrectOrdersCount().ToString();
+                case EDataInfo.WrongOrdersThisShift:            return Reference.GetManager<SaveManager>()?.ToString();
                 case EDataInfo.ClientsKilledThisShift:          return Reference.GetManager<ClientManager>()?.ClientsKilledThisShift.ToString();
                 case EDataInfo.MoneyGainedThisShift:            return Reference.GetManager<MoneyManager>()?.GetMoneyGainedThisShift().ToString();
                 case EDataInfo.MoneyAmount:                     return Reference.GetManager<MoneyManager>()?.MoneyInfo.ToString();

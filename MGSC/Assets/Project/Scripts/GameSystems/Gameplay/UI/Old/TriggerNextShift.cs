@@ -10,7 +10,7 @@ public class TriggerNextShift : MonoBehaviour
     public void Reset()
     {
         
-        Reference.GetManager<DataManager>().ResetSave();
+        Reference.GetManager<SaveManager>().ResetSave();
         Reference.GetManager<ShiftManager>().NextShift();
     }
 }

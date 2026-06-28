@@ -133,7 +133,7 @@ public class DebugWindow : MonoBehaviour
         float fps = 1.0f / _deltaTime;
         GUILayout.Label($"FPS: {fps:F1}");
 
-        DataManager.GameData data = Reference.GetManager<DataManager>().Data;
+        SaveManager.GameData data = Reference.GetManager<SaveManager>().Data;
 
         GUILayout.Space(10);
         if (data != null)
@@ -181,10 +181,10 @@ public class DebugWindow : MonoBehaviour
 
         if (GUILayout.Button("Save and Reload"))
         {
-            var dm = Reference.GetManager<DataManager>();
+            var dm = Reference.GetManager<SaveManager>();
             if(dm != null)
             {
-                DataManager.GameData data = new DataManager.GameData();
+                SaveManager.GameData data = new SaveManager.GameData();
                 data.shiftNumber = newShift;
                 data.money = newMoney;
                 data.upgrades = dm.Data.upgrades;
@@ -202,7 +202,7 @@ public class DebugWindow : MonoBehaviour
         GUI.backgroundColor = Color.red;
         if (GUILayout.Button("Reset Save (Hard Reset)"))
         {
-            Reference.GetManager<DataManager>().ResetSave();
+            Reference.GetManager<SaveManager>().ResetSave();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         GUI.backgroundColor = Color.white;

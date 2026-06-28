@@ -31,7 +31,7 @@ namespace GameSystem
     
         // Refacto : Ensure all these dependencies are necessary, and won't break the shiftManager if missing
         // Refacto : Ensure that features that depend on other Managers (or even ones that don't) are optional and can be toggled
-        private DataManager _dataManager;
+        private SaveManager _dataManager;
 
         private AnimationCurve _rentPriceCurve;
         private float _shiftDuration = 120;

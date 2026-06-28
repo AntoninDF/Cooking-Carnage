@@ -11,14 +11,14 @@ namespace GameSystem
     public class MoneyManager : IManager
     {
         #region Properties
-        public MoneyInfo MoneyInfo { get; set; }
+        public float MoneyInfo { get; set; }
         public Action<float> OnMoneyChange { get; set; }
         #endregion
 
         #region Fields
-        private DataManager _dataManager;
+        private SaveManager _dataManager;
         private OrderManager _orderManager;
-        private Dictionary<int, MoneyInfo> _moneyGainedPerShift = new();
+        private Dictionary<int, float> _moneyGainedPerShift = new();
         #endregion
 
         #region Methods
@@ -66,13 +66,14 @@ namespace GameSystem
             AddMoney(order.OrderRating.MoneyGained);
         }
 
-        public MoneyInfo GetMoneyGainedOnShift(int shiftCount) => _moneyGainedPerShift.ContainsKey(shiftCount) ? _moneyGainedPerShift[shiftCount] : new MoneyInfo();
-        public MoneyInfo GetMoneyGainedThisShift() => GetMoneyGainedOnShift(_dataManager.ShiftCount);
+        public float GetMoneyGainedOnShift(int shiftCount) => _moneyGainedPerShift.ContainsKey(shiftCount) ? _moneyGainedPerShift[shiftCount] : 0f;
+        public float GetMoneyGainedThisShift() => GetMoneyGainedOnShift(_dataManager.ShiftCount);
 
         public void AddMoney(float amount)
         {
             MoneyInfo += amount;
-            if (!_moneyGainedPerShift.ContainsKey(_dataManager.ShiftCount)) _moneyGainedPerShift[_dataManager.ShiftCount] = new MoneyInfo();
+            if (!_moneyGainedPerShift.ContainsKey(_dataManager.ShiftCount))
+                _moneyGainedPerShift[_dataManager.ShiftCount] = 0f;
             
             if(amount>=0) _moneyGainedPerShift[_dataManager.ShiftCount] += amount;
             

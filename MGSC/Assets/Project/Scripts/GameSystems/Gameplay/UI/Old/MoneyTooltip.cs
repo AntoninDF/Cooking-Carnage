@@ -8,7 +8,7 @@ namespace UI
     {
         [SerializeField] private Tooltip _tooltip;
 
-        private DataManager _dataManager;
+        private SaveManager _dataManager;
 
         private void Start()
         {

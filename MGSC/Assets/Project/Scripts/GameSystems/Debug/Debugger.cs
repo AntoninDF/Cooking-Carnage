@@ -111,7 +111,7 @@ public static class Debugger
             Client c                     => $"{c.name} ",
             ClientData cd  => $"Client{cd.id} ",
             SO_RecipeBook rb             => $"{Decrypt(rb.Recipes)} ",
-            MoneyInfo mi                 => $"{mi} $ ",
+            //MoneyInfo mi                 => $"{mi} $ ",
             Upgrade up                   => $"Upgrade {up.GetType().Name} - lvl {up.Level} ",
             _                            => toDecrypt.ToString() + " something "
         };

@@ -19,7 +19,7 @@ namespace UI
         [Tooltip("")]
         [SerializeField] private List<UITextElement> _textObjects = new();
 
-        private DataManager _dataManager;
+        private SaveManager _dataManager;
         #endregion
 
         #region Methods
@@ -35,7 +35,7 @@ namespace UI
             /*
             Reference.GetManager(out _dataManager);
             if (_dataManager == null)
-                Debug.LogError("[ShiftRecap] : Couldn't update the UI, no DataManager found");
+                Debug.LogError("[ShiftRecap] : Couldn't update the UI, no SaveManager found");
             foreach (var textInfo in _textObjects)
             {
                 if (textInfo.textObject == null) continue;
@@ -53,7 +53,7 @@ namespace UI
         {
             public TMP_Text textObject;
             public string text;
-            public EDataInfo info;
+            // public EDataInfo info;
         }
 
     }
