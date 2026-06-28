@@ -31,6 +31,8 @@ namespace UI
 
         public void UpdateUI()
         {
+            // Commenté pour éviter les erreurs de compilo, vu qu'on va certainement ce débarrasser de ce script.
+            /*
             Reference.GetManager(out _dataManager);
             if (_dataManager == null)
                 Debug.LogError("[ShiftRecap] : Couldn't update the UI, no DataManager found");
@@ -40,6 +42,7 @@ namespace UI
                 if (textInfo.text == "") continue;
                 textInfo.textObject.text = textInfo.text.Replace( "{0}", _dataManager.GetDataAsString(textInfo.info));
             }
+            */
         }
 
         #endregion

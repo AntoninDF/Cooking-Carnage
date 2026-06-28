@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
+using Upgrades;
 
 
 namespace UI
@@ -80,7 +81,43 @@ namespace UI
 
             return result;
         }
+        public string GetDataAsString(EDataInfo info)
+        {
+            string result = "";
 
+            switch (info)
+            {
+                case EDataInfo.TimeElapsedSinceStartup:         return Time.time.ToString();
+                case EDataInfo.ShiftDuration:                   return Reference.GetManager<ShiftManager>()?.ShiftDuration.ToString();
+                case EDataInfo.RentPayedThisShift:              return Reference.GetManager<ShiftManager>()?.GetCurrentRentPrice().ToString();
+                case EDataInfo.ShiftCount:                      return Reference.GetManager<ShiftManager>()?.ShiftNumber.ToString();
+                case EDataInfo.CorrectOrdersThisShift:          return Reference.GetManager<DataManager>()?.GetCorrectOrdersCount().ToString();
+                case EDataInfo.WrongOrdersThisShift:            return Reference.GetManager<DataManager>()?.ToString();
+                case EDataInfo.ClientsKilledThisShift:          return Reference.GetManager<ClientManager>()?.ClientsKilledThisShift.ToString();
+                case EDataInfo.MoneyGainedThisShift:            return Reference.GetManager<MoneyManager>()?.GetMoneyGainedThisShift().ToString();
+                case EDataInfo.MoneyAmount:                     return Reference.GetManager<MoneyManager>()?.MoneyInfo.ToString();
+                case EDataInfo.CookingSpeedUpgradeLevel:        return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<CookingSpeedUpgrade>()?.Level + 1).ToString();
+                case EDataInfo.IngredientDropUpgradeLevel:      return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<IngredientDropUpgrade>()?.Level + 1).ToString();
+                case EDataInfo.OvenCountUpgradeLevel:           return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<OvenCountUpgrade>()?.Level + 1).ToString();
+                case EDataInfo.CuttingSpeedUpgradeLevel:        return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<BlenderSpeedUpgrade>()?.Level + 1).ToString();
+                case EDataInfo.TimeLeft:                        return ProcessTimeLeft();
+
+            }
+            return result;
+        }
+        string ProcessTimeLeft()
+        {
+            if (!TimerManager.Timers.ContainsKey("shiftDuration"))
+            {
+                return "";
+            }
+            float timeLeft = TimerManager.TimeLeft("shiftDuration");
+
+            if (timeLeft > 0)
+                return TimeSpan.FromSeconds(timeLeft).ToString(@"mm\:ss");
+            else
+                return "OVER";
+        }
         private string ToString<T>(IEnumerable<T> items)
         {
             string result = "";

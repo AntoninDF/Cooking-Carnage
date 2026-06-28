@@ -205,47 +205,8 @@ namespace GameSystem
             return _clientManager.GetClientsHistory().Where((c) => !c.killed).Count();
         }
 
-        public string GetDataAsString(EDataInfo info)
-        {
-            EnforceReferences();
-            string result = "";
 
-            switch (info)
-            {
-                case EDataInfo.TimeElapsedSinceStartup:     return (Time.time).ToString();
-                case EDataInfo.ShiftDuration:               return _shiftManager.ShiftDuration.ToString();
-                case EDataInfo.RentPayedThisShift:          return _shiftManager.GetCurrentRentPrice().ToString();
-                case EDataInfo.ShiftCount:                  return _shiftManager.ShiftNumber.ToString();
-                case EDataInfo.CorrectOrdersThisShift:      return GetCorrectOrdersCount().ToString();
-                case EDataInfo.WrongOrdersThisShift:        return GetWrongOrdersCount().ToString();
-                case EDataInfo.ClientsKilledThisShift:      return _clientManager.ClientsKilledThisShift.ToString();
-                case EDataInfo.MoneyGainedThisShift:        return _moneyManager.GetMoneyGainedThisShift().ToString();
-                case EDataInfo.MoneyAmount:                 return _moneyManager.MoneyInfo.ToString();
-                case EDataInfo.CookingSpeedUpgradeLevel:    return (_upgradeManager.GetUpgradeByType<CookingSpeedUpgrade>()?.Level+1).ToString();
-                case EDataInfo.IngredientDropUpgradeLevel:  return (_upgradeManager.GetUpgradeByType<IngredientDropUpgrade>()?.Level+1).ToString();
-                case EDataInfo.OvenCountUpgradeLevel:       return (_upgradeManager.GetUpgradeByType<OvenCountUpgrade>()?.Level+1).ToString();
-                case EDataInfo.CuttingSpeedUpgradeLevel:    return (_upgradeManager.GetUpgradeByType<BlenderSpeedUpgrade>()?.Level + 1).ToString();
-                case EDataInfo.TimeLeft:                    return ProcessTimeLeft();
-                    
-            }
-            // REFACTO : To be implemented
-
-            return result;
-        }
-
-        string ProcessTimeLeft()
-        {
-            if (!TimerManager.Timers.ContainsKey("shiftDuration"))
-            {
-                return "";
-            }
-            float timeLeft = TimerManager.TimeLeft("shiftDuration");
-
-            if (timeLeft > 0)
-                return TimeSpan.FromSeconds(timeLeft).ToString(@"mm\:ss");
-            else
-                return "OVER";
-        }
+        
 
         [System.Serializable]
         public class GameData
