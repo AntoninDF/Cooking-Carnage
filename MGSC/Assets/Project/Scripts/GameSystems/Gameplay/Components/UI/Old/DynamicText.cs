@@ -14,10 +14,6 @@ namespace UI
 
     public class DynamicText : MonoBehaviour
     {
-        #region Properties
-
-        #endregion
-
         #region Fields
 
         [Header("References")]
@@ -34,13 +30,10 @@ namespace UI
         #endregion
 
         #region Methods
-        private void Awake()
-        {
-            if (!Reference.TryGetManager(out _dataManager)) Debug.LogWarning("[Dynamic text] Start : No datamanager found");
-        }
         private void Start()
         {
             if (_textObject == null) _textObject = GetComponent<TMP_Text>();
+            if (_textObject == null) Debug.LogWarning("[DynamicText] No text component has been referenced on " + name);
         }
         private void Update()
         {
@@ -51,11 +44,6 @@ namespace UI
         {
             if (!isActiveAndEnabled) return;
             if (_textObject == null) return;
-            if (_dataManager == null)
-            {
-                Debug.LogWarning("[DynamicText] : Couldn't update the UI, no DataManager found");
-                return;
-            }
             string result = string.Copy(_baseText);
             foreach (var textInfo in _dataReplacement)
             {
@@ -64,11 +52,10 @@ namespace UI
                 if (textInfo.info.GetHashCode() > 49)
                     data = GetDataFromGameObject(textInfo.info);
                 else 
-                    data = _dataManager.GetDataAsString(textInfo.info);
+                    data = Reference.GetManager<DataManager>()?.GetDataAsString(textInfo.info) ?? data;
                 result = result.Replace(textInfo.markup, data);
             }
             _textObject.text = result;
-            //dataManager.Log( "Data replacement is ", _dataReplacement);
         }
 
         private string GetDataFromGameObject(EDataInfo info)

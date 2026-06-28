@@ -59,7 +59,6 @@ namespace GameSystem
         /// </summary>
         public AdaptiveClientSpawner()
         {
-            Debug.Log("AdptiveClientSpawner from the constructor says hi !");
             Register();
         }
         
@@ -87,7 +86,6 @@ namespace GameSystem
 
             Reference.GetManager(out _clientManager);
 
-            Debug.Log("Init");
             TimerManager.StartTimer("AdaptiveClientSpawner Init", 0.1f, () => Launch(), false);
             
             
@@ -113,7 +111,6 @@ namespace GameSystem
 
         void StopTryingSpawn()
         {
-            Debug.Log("Stop Trying Spawn");
             if(TimerManager.IsTimerRunning(timerName))
             {
                 TimerManager.StopTimer(timerName);
@@ -126,12 +123,12 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
-            Debug.Log("Launch");
             TimerManager.StartTimer(timerName, delay, () => TrySpawnClient());
         }
 
         bool TrySpawnClient()
         {
+            Debug.Log("Spawn client");
             if (CanSpawnClient)
             {
                 Debug.LogError("SPAWN CLIENT");

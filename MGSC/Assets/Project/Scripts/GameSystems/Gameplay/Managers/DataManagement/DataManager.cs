@@ -235,11 +235,11 @@ namespace GameSystem
 
         string ProcessTimeLeft()
         {
-            if (ShiftCount < 1)
+            if (!TimerManager.Timers.ContainsKey("shiftDuration"))
             {
                 return "";
             }
-            float timeLeft = TimerManager.TimeLeft("shiftDuration") + TimerManager.TimeLeft("shiftNoonDuration");
+            float timeLeft = TimerManager.TimeLeft("shiftDuration");
 
             if (timeLeft > 0)
                 return TimeSpan.FromSeconds(timeLeft).ToString(@"mm\:ss");
