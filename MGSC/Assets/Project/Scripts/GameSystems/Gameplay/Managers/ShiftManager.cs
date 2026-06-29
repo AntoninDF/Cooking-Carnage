@@ -22,6 +22,7 @@ namespace GameSystem
 
         public int ShiftNumber { get => Globals.Gameplay.ShiftNumber; set => Globals.Gameplay.ShiftNumber.Value = value; }
         public float ShiftDuration => _shiftDuration;
+        public bool IsShiftActive { get; set; }
     
         #endregion
 
@@ -62,6 +63,7 @@ namespace GameSystem
         void LaunchShiftTimer(float duration)
         {
             this.Log(LogType.Log, $"Launching new shift for {duration}s");
+            IsShiftActive = true;
             OnShiftBegin?.Invoke();
             TimerManager.StartTimer("shiftDuration", duration, EndShift, false);
             TimerManager.StartTimer("shiftDurationWithoutNoon", duration - _noonDuration, LaunchShiftNoon, false);
@@ -81,6 +83,7 @@ namespace GameSystem
         void EndShift()
         {
             this.Log(LogType.Log, $"End of the Shift triggered.");
+            IsShiftActive = false;
             OnShiftEnded?.Invoke();
 
             bool validRent = TryPayRent();

@@ -5,6 +5,7 @@ public class ShiftRequester : MonoBehaviour
 {
 
     [SerializeField] private InteractionButton _button;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -19,6 +20,7 @@ public class ShiftRequester : MonoBehaviour
         Debug.Log("TryRequestShiftLaunch");
         if (Reference.TryGetManager(out ShiftManager shiftMgr))
         {
+            if (shiftMgr.IsShiftActive) return;
             Debug.Log("RequestShiftLaunch");
             shiftMgr.LaunchShiftTimer();
         }
