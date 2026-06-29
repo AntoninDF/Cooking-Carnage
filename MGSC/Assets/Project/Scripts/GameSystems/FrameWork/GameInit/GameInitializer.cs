@@ -58,7 +58,6 @@ namespace GameSystem
         }
         void Start()
         {
-            Debug.Log("Start");
             SetupScene();
         }
         /// <summary>
