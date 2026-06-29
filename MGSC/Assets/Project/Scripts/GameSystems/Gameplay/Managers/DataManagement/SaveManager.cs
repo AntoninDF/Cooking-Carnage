@@ -72,11 +72,11 @@ namespace GameSystem
         /// <returns>Wether or not a save file could be loaded</returns>
         public static bool LoadGlobalData()
         {
-            Debug.Log("Loading global data");
+            //Debug.Log("Loading global data");
             
             if (!SaveFileExists())
             {
-                Debug.Log("No save file found");
+                //Debug.Log("No save file found");
                 
                 ResetSave();
                 return false;
@@ -92,7 +92,7 @@ namespace GameSystem
 
             LoadUpgradeData();
 
-            Debug.Log($"Save loaded successfully, shift : {Data.shiftNumber},  money : {Data.money}");
+            //Debug.Log($"Save loaded successfully, shift : {Data.shiftNumber},  money : {Data.money}");
             OnSaveLoaded?.Invoke();
             return true;
         }
@@ -112,7 +112,7 @@ namespace GameSystem
             for (var index = 0; index < upgradeManager.Upgrades.Count; index++)
             {
                 var upgrade = upgradeManager.Upgrades[index];
-                Debug.LogWarning(upgrade.GetType().Name + "found, lvl : " + upgrade.Level);
+                //Debug.Log(upgrade.GetType().Name + "found, lvl : " + upgrade.Level);
                 result.Add(new UpgradeData());
                 result[index].level = upgrade.Level;
                 result[index].name = upgrade.GetType().Name;

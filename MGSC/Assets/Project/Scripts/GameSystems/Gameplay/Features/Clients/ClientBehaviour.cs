@@ -136,7 +136,7 @@ namespace Features
             var eat = new Eat(this, _eatingTime);
             eat.StopEating += () =>
             {
-
+                (Owner as Client)?.QuitSeat();
                 Perform(BuildLeave());
             };
             return eat ;
