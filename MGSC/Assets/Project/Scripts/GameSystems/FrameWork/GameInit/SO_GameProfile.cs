@@ -32,6 +32,7 @@ namespace GameSystem
         public bool ResetRefManager => _resetRefManager;
 
 
+        /*
         [Space]
         [Header("Game settings")]
         [Tooltip("How long should a shift last ?")]
@@ -51,6 +52,7 @@ namespace GameSystem
         [Tooltip("Failed recipe prices")]
         [SerializeField] private DefaultRecipePrices _defaultRecipePrices;
         public DefaultRecipePrices DefaultRecipePrices => _defaultRecipePrices;
+        */
 
         [Space]
         [Header("Managers & customization")]

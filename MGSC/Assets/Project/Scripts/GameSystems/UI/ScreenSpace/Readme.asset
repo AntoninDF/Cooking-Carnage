@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: Readme
+  m_EditorClassIdentifier: Assembly-CSharp::Readme
+  icon: {fileID: 0}
+  title: UI folder layout
+  sections:
+  - heading: HUD and Menus
+    text: HUD and menus should mostly be UXML files. HUD is specifically for UI that
+      displays on top of the player view, when the player can move. Menus are the
+      rest, with buttons and such
+    linkText: 
+    url: 
+  - heading: Framework
+    text: Should be mostly C# files. They control the flow and logic of the visual
+      UI elements. The UI framework should only control the UI, and plug itself into
+      the events of other systems. For the UI to impact other systems, calls and
+      dependencies should be wisely managed and contained, and not overflowing with
+      dependencies to everything, everywhere.
+    linkText: 
+    url: 
+  - heading: StyleSheets
+    text: Should be mostly USS files. They control the appearance of the UI
+    linkText: 
+    url: 
+  loadedLayout: 1

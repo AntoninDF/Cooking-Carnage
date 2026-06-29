@@ -43,7 +43,6 @@ public class Plate : Item
         Cookable = new(this);
         OverCookable = new(this);
         OverCookable.Enabled = false;
-        Globals.Bind(value => OverCookable.TransformationDuration = value, Globals.Gameplay.OvercookingDuration);
         
         base.Awake();
     }

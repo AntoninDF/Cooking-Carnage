@@ -4,6 +4,7 @@ namespace Features
     {
         public F_Cuttable(IFeatureCollection owner) : base(owner)
         {
+            Globals.Bind(value => TransformationDuration = value, Globals.Gameplay.CuttingDuration);
         }
     }
 }

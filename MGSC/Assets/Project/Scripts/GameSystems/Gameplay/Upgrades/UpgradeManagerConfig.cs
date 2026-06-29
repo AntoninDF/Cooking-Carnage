@@ -1,4 +1,5 @@
-using UnityEditor;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Upgrades
@@ -7,9 +8,21 @@ namespace Upgrades
 	/// ScriptableObject that centralizes the configurations for all upgrades.
 	/// </summary>
 	[CreateAssetMenu(menuName = "Scriptable Objects/Upgrades/Manager Config")]
-	public class UpgradeManagerConfig : ScriptableSingleton<UpgradeManagerConfig>
+	public class UpgradeManagerConfig : ScriptableObject
 	{
-		[Tooltip("Place the scriptableObject corresponding to the oven upgrade")]
+        static UpgradeManagerConfig _instance;
+        public static UpgradeManagerConfig Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = Resources.Load<UpgradeManagerConfig>("Upgrades/UpgradeManagerConfig");
+                }
+                return _instance;
+            }
+        }
+        [Tooltip("Place the scriptableObject corresponding to the oven upgrade")]
 		public UpgradeConfig OvenCount;
 		[Tooltip("Place the scriptableObject corresponding to the cooking speed upgrade")]
 		public UpgradeConfig CookingSpeed;

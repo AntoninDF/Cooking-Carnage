@@ -133,12 +133,12 @@ public class DebugWindow : MonoBehaviour
         float fps = 1.0f / _deltaTime;
         GUILayout.Label($"FPS: {fps:F1}");
 
-        DataManager.GameData data = Reference.GetManager<DataManager>().Data;
+        var data = SaveManager.Data;
 
         GUILayout.Space(10);
         if (data != null)
         {
-            GUILayout.Label($"Current Shift: {data.shiftCount}");
+            GUILayout.Label($"Current Shift: {data.shiftNumber}");
             GUILayout.Label($"Current Money: {data.money:F1}€");
         }
         else
@@ -181,20 +181,16 @@ public class DebugWindow : MonoBehaviour
 
         if (GUILayout.Button("Save and Reload"))
         {
-            var dm = Reference.GetManager<DataManager>();
-            if(dm != null)
-            {
-                DataManager.GameData data = new DataManager.GameData();
-                data.shiftCount = newShift;
-                data.money = newMoney;
-                data.upgrades = dm.Data.upgrades;
-                dm.SaveGameData(data);
+            SaveManager.GameData data = new SaveManager.GameData();
+            data.shiftNumber = newShift;
+            data.money = newMoney;
+            data.upgrades = SaveManager.Data.upgrades;
+            SaveManager.SaveGameData(data);
                 
-                // Assurez-vous que cette classe existe bien dans votre projet
-                // StudioEventEmitterExtension.StopAll_Static(); 
+            // Assurez-vous que cette classe existe bien dans votre projet
+            // StudioEventEmitterExtension.StopAll_Static(); 
                 
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         
         GUILayout.Space(5);
@@ -202,7 +198,7 @@ public class DebugWindow : MonoBehaviour
         GUI.backgroundColor = Color.red;
         if (GUILayout.Button("Reset Save (Hard Reset)"))
         {
-            Reference.GetManager<DataManager>().ResetSave();
+            SaveManager.ResetSave();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         GUI.backgroundColor = Color.white;
@@ -212,20 +208,13 @@ public class DebugWindow : MonoBehaviour
     {
         GUILayout.Label("Active Timers", GUI.skin.box);
 
-        var timerManager = Reference.GetManager<TimerManager>();
-        if (timerManager == null)
-        {
-            GUILayout.Label("(No TimerManager found)");
-            return;
-        }
-
-        if (timerManager.Timers.Count == 0)
+        if (TimerManager.Timers.Count == 0)
         {
             GUILayout.Label("No timers currently running.");
             return;
         }
 
-        foreach (var t in timerManager.Timers)
+        foreach (var t in TimerManager.Timers)
         {
             float remaining = t.Value.Duration - t.Value.Elapsed;
             bool isOver = remaining <= 0.01f;

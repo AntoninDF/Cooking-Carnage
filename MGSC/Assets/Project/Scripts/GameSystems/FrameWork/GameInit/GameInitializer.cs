@@ -38,16 +38,13 @@ namespace GameSystem
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
         {
-            MakeGameLoop();
-
             // Create all the pure managers
             new OrderManager();
             new ClientManager();
             new TimerManager();
-            new ShiftManager(); // (_gameProfile.ShiftDuration, _gameProfile.ShiftNoonDuration, _gameProfile.RentPrice);
+            new ShiftManager(); 
             new MoneyManager();
             new UpgradeManager();
-            new DataManager();
             new CameraManager();
             new ItemManager();
             new FeatureManager();
@@ -61,6 +58,7 @@ namespace GameSystem
         }
         void Start()
         {
+            Debug.Log("Start");
             SetupScene();
         }
         /// <summary>
@@ -73,15 +71,12 @@ namespace GameSystem
 
             if (_gameProfile.DestroyEveryOtherObject) DestroyEverything();
 
-            //Debug.Log("Asset references set");
             Reference.AssetReferences = _gameProfile.AssetReferences;
 
             // Instantiate the scene and create all the MonoBehaviour managers
             if (_gameProfile.ApplyScenePreset) ApplyScenePreset();
 
             if (_gameProfile.AddUI) AddUI();
-
-            Reference.GetManager<ShiftManager>().Setup(_gameProfile.ShiftDuration, _gameProfile.ShiftNoonDuration, _gameProfile.RentPrice);
 
             if (_gameProfile.AddPlayer) PlayerSetup.TrySetupPlayer();
 
@@ -92,19 +87,16 @@ namespace GameSystem
         }
         private void SetupScene()
         {
+            CursorUtility.Update();
             // Reset the save file
-            if (_gameProfile.ResetSaveFile) Reference.GetManager<DataManager>().ResetSave();
+            if (_gameProfile.ResetSaveFile) SaveManager.ResetSave();
 
             // Apply the base logic to ensure all managers are setup to work correctly
             PostInitManagers();
 
 
-            SetupMealPrices();
-
             // Remove the GameInitializer
             if (_gameProfile.DestroyAfterInitialization) Destroy(this.gameObject);
-
-            CursorUtility.Update();
         }
 
         private void InitManagers()
@@ -132,13 +124,6 @@ namespace GameSystem
                 Instantiate(go);
         }
 
-        private static void MakeGameLoop()
-        {
-            GameObject go = new();
-            var gameLoop = go.AddComponent<GameLoop>();
-            gameLoop.StartRunning();
-        }
-        
 
         private void AddUI()
         {
@@ -148,14 +133,6 @@ namespace GameSystem
             {
                 Instantiate(Reference.AssetReferences.UI);
             }
-        }
-
-        private void SetupMealPrices()
-        {
-            //OrderEvaluator.WrongMealPrice = _gameProfile.DefaultRecipePrices.rawMealPrice;
-            OrderEvaluator.WrongMealPrice = _gameProfile.DefaultRecipePrices.wrongMealPrice;
-            OrderEvaluator.OvercookedMealPrice = _gameProfile.DefaultRecipePrices.overcookedMealPrice;
-            OrderEvaluator.PlainJellyPrice = _gameProfile.DefaultRecipePrices.emptyMealPrice;
         }
 
         private void SetupDebug()

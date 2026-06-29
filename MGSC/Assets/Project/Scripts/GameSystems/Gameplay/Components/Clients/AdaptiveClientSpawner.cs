@@ -1,6 +1,5 @@
 
 using Clients;
-using Cooking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,10 +83,7 @@ namespace GameSystem
             models = Reference.AssetReferences.clientList;
             spline = Reference.GetManager<PathManager>()?.SplineComponent;
 
-            Reference.GetManager(out _timerManager);
             Reference.GetManager(out _clientManager);
-    
-            _timerManager.StartTimer("AdaptiveClientSpawner Init", 1, () => Launch(), true);
             
             
             if (models.Count <= 0 || !spline)
@@ -95,7 +91,8 @@ namespace GameSystem
             else
                 this.Log(" has been initialized");
 
-            
+            // Start spawning clients when the shift begins
+            ShiftManager.OnShiftBegin += () => Launch(2);
         }
 
         public void PostInit()
@@ -103,19 +100,12 @@ namespace GameSystem
             _clientManager.WaitingQueue.OnWaitLineFull += StopTryingSpawn;
         }
 
-
-        bool ShiftOngoing()
-        {
-            return !_timerManager.IsTimerRunning("shiftEndDelay");
-        }
-
-
         void StopTryingSpawn()
         {
-            if(_timerManager.IsTimerRunning(timerName))
+            if(TimerManager.IsTimerRunning(timerName))
             {
-                _timerManager.StopTimer(timerName);
-                _timerManager.RemoveTimer(timerName);
+                TimerManager.StopTimer(timerName);
+                TimerManager.RemoveTimer(timerName);
             }
         }
         
@@ -124,18 +114,22 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
-            _timerManager.StartTimer(timerName, delay, () => TrySpawnClient());
+            TimerManager.StartTimer(timerName, delay, () => TrySpawnClient());
         }
 
         bool TrySpawnClient()
         {
+            Debug.Log("Spawn client");
             if (CanSpawnClient)
             {
+                Debug.LogError("SPAWN CLIENT");
                 SpawnClient();
                 return true;
             }
             else
             {
+                //Debug.Log($"{SeatsOrQueueAvailable()} && {SpawnPointIsClear()} && {spline == null}");
+                //Debug.Log(" Client couldn't be spawned so it will try again in "+ retryDelay +" seconds");
                 Launch(retryDelay);
                 return false;
             }

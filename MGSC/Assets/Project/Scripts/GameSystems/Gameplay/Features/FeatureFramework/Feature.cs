@@ -146,6 +146,8 @@ namespace Features
             Owner = owner;
             Owner.Collection.Add(this);
         }
+
+
         #endregion
 
         

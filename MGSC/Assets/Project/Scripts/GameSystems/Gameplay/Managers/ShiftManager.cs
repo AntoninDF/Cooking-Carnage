@@ -1,7 +1,5 @@
-using System;
 using Controller;
-using UI;
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
 
 namespace GameSystem
@@ -9,17 +7,21 @@ namespace GameSystem
     public class ShiftManager : IManager
     {
         #region Properties
-        public Action OnShiftFailed { get; set; }
-        public Action OnShiftSucceeded { get; set; }
-        
-        
-        public Action OnShiftBegin { get; set; }
-        public Action OnShiftNoon { get; set; }
-        public Action OnNextShift { get; set; }
-        public Action OnShiftEnded { get; set; }
-        public int ShiftCount => _shiftCount;
+        [GlobalEvent("Shift/OnFail")]
+        public static Action OnShiftFailed { get; set; }
+        [GlobalEvent("Shift/OnSuccess")]
+        public static Action OnShiftSucceeded { get; set; }
+        [GlobalEvent("Shift/OnBegin")]
+        public static Action OnShiftBegin { get; set; }
+        [GlobalEvent("Shift/OnFinalWarning")]
+        public static Action OnShiftNoon { get; set; }
+        [GlobalEvent("Shift/OnEnd")]
+        public static Action OnShiftEnded { get; set; }
+        [GlobalEvent("Shift/OnNextShiftTriggered")]
+        public static Action OnNextShift { get; set; }
+
+        public int ShiftNumber { get => Globals.Gameplay.ShiftNumber; set => Globals.Gameplay.ShiftNumber.Value = value; }
         public float ShiftDuration => _shiftDuration;
-        public MoneyInfo CurrentRentPrice => new MoneyInfo(_currentRentPrice);
     
         #endregion
 
@@ -27,17 +29,7 @@ namespace GameSystem
     
         // Refacto : Ensure all these dependencies are necessary, and won't break the shiftManager if missing
         // Refacto : Ensure that features that depend on other Managers (or even ones that don't) are optional and can be toggled
-        private DataManager _dataManager;
-        private TimerManager _timerManager;
-        private GameLoop _gameLoop;
-        private ClientManager _clientManager;
-        private UIManager _uiManager;
-        private MoneyManager _moneyManager;
-        private ItemManager _itemManager;
 
-    
-        private int _shiftCount = -1;
-        private float _currentRentPrice = 0 ;
         private AnimationCurve _rentPriceCurve;
         private float _shiftDuration = 120;
         private float _noonDuration = 30;
@@ -51,94 +43,80 @@ namespace GameSystem
         public ShiftManager()
         {
             Register();
+            Setup();
         }
-        public void Setup(float shiftDuration, float shiftNoonDuration, AnimationCurve rentPriceCurve)
+        // Bind sur globals
+        public void Setup()
         {
-            SetShiftDuration(shiftDuration);
-            SetShiftNoonDuration(shiftNoonDuration);
-            SetRentPriceCurve(rentPriceCurve);
+            Globals.Bind(value => _shiftDuration = value, Globals.Gameplay.ShiftDuration);
+            Globals.Bind(value => _noonDuration = value, Globals.Gameplay.ShiftFinalWarningDuration);
+            Globals.Bind(value => _rentPriceCurve = value, Globals.Gameplay.ShiftRentPriceCurve);
         }
-
-        public void SetShiftCount(int count) => _shiftCount = count;
-        public void SetShiftDuration(float duration) => _shiftDuration = duration;
-        public void SetShiftNoonDuration(float duration) => _noonDuration = duration;
-        public void SetRentPriceCurve(AnimationCurve rentPriceCurve) => _rentPriceCurve = rentPriceCurve;
-        public void SetRentPrice(float price) => _currentRentPrice = price;
-        public float GetCurrentRentPrice() => GetRentPrice(_shiftCount);
+        public float GetCurrentRentPrice() => GetRentPrice(ShiftNumber);
         public float GetRentPrice(int shiftCount) => _rentPriceCurve.Evaluate(shiftCount);
-        public void UpdateRentPrice() { SetRentPrice(GetCurrentRentPrice()); }
 
-        public void LaunchShift()=> LaunchShift(_shiftDuration - _noonDuration);
-        void LaunchShift(float duration)
+        /// <summary>
+        /// Simply invokes <see cref="OnShiftBegin"/>, and starts the timers for the end of shift.
+        /// </summary>
+        public void LaunchShiftTimer() => LaunchShiftTimer(_shiftDuration);
+        void LaunchShiftTimer(float duration)
         {
-            this.Log(LogType.Log, $"Launching new shift for {duration+_noonDuration}s");
+            this.Log(LogType.Log, $"Launching new shift for {duration}s");
             OnShiftBegin?.Invoke();
-            _timerManager.StartTimer("shiftDuration", duration, () => LaunchShiftNoon(), false);
-            _timerManager.StartTimer("shiftNoonDuration",_noonDuration,() => EndShift(), false);
-            _timerManager.StopTimer("shiftNoonDuration");
+            TimerManager.StartTimer("shiftDuration", duration, EndShift, false);
+            TimerManager.StartTimer("shiftDurationWithoutNoon", duration - _noonDuration, LaunchShiftNoon, false);
         }
 
         void LaunchShiftNoon()
         {
             OnShiftNoon?.Invoke();
             this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
-            _timerManager.ResumeTimer("shiftNoonDuration");
         }
 
-        void DelayEndShift(bool tutorialEnd = false)
-        {
-            _timerManager.StartTimer("shiftEndDelay", 2, () => TryEndShift(tutorialEnd), false);
-        }
-
+        /// <summary>
+        /// Invokes <see cref="OnShiftEnded"/>,
+        /// tries to pay the rent and invokes <see cref="OnShiftSucceeded"/> or 
+        /// <see cref="OnShiftFailed"/> based on wether the rent could be payed or not.
+        /// </summary>
         void EndShift()
         {
+            this.Log(LogType.Log, $"End of the Shift triggered.");
             OnShiftEnded?.Invoke();
-            TryEndShift();
-        }
 
-        public void TryEndShift(bool tutorialEnd = false)
-        {
-            int activeClients = _clientManager.CurrentClients.Count;
-            
-            this.Log(LogType.Log, $"End of the Shift triggered. Active clients: {activeClients}");
+            bool validRent = TryPayRent();
 
-            if ((activeClients != 0 || _timerManager.IsTimerRunning("Disable client") || _timerManager.IsTimerRunning("Eating") || _timerManager.IsTimerRunning("Dying",false)) && !tutorialEnd)
-            {
-                DelayEndShift();
-            }
+            if (validRent)
+                OnShiftSucceeded?.Invoke();
             else
-            {
-                if (!tutorialEnd)
-                {
-                    if (_uiManager) _uiManager.PauseGame();
-                    ResetAll();
+                OnShiftFailed?.Invoke();
 
-                    // Pay rent
-                    UpdateRentPrice();
-                    if (_moneyManager.MoneyInfo < _currentRentPrice)
-                    {
-                        this.Log(LogType.Log,
-                            $"Not enough money ({_moneyManager.MoneyInfo}) to pay the rent ({_currentRentPrice}€)");
-                        _moneyManager.AddMoney(-_currentRentPrice);
-                        OnShiftFailed?.Invoke();
-                        return;
-                    }
-                    _moneyManager.AddMoney(-_currentRentPrice);
-
-                    OnShiftSucceeded?.Invoke();
-                }
-                else
-                {
-                    this.Log("Tutorial has ended, skipping to the next shift...");
-                    ResetAll();
-                    UpdateRentPrice();
-                    NextShift();
-                
-                }
-
-            }
+            SaveManager.SaveGameData();
         }
 
+        /// <summary>
+        /// Tries to pay the rent due for the current shift (<see cref="ShiftNumber"/>)
+        /// </summary>
+        /// <returns>Wether or not the rent could be payed. False can either mean there was no money manager, or the money owned wasn't sufficient. True means the money has been payed</returns>
+        private bool TryPayRent()
+        {
+            Reference.GetManager(out MoneyManager moneyManager);
+            if (moneyManager == null) return false;
+
+            var rentPrice = GetRentPrice(ShiftNumber);
+            if (moneyManager.MoneyInfo < rentPrice)
+            {
+                this.Log(LogType.Log,
+                    $"Not enough money ({moneyManager.MoneyInfo}) to pay the rent ({rentPrice}€)");
+                moneyManager.AddMoney(-rentPrice);
+                return false;
+            }
+            moneyManager.AddMoney(-rentPrice);
+            return true;
+        }
+
+        /// <summary>
+        /// Resets all the items and the player
+        /// </summary>
         private void ResetAll()
         {
             this.Log("Reset everything for the next shift");
@@ -149,36 +127,26 @@ namespace GameSystem
 
         public void NextShift()
         {
-            _shiftCount++;
+            ShiftNumber++;
 
-            SetupShift(_shiftCount);
+            SetupShift(ShiftNumber);
 
-            this.Log(LogType.Log, $"Shift {_shiftCount - 1} is over, launching shift {_shiftCount}");
+            this.Log(LogType.Log, $"Shift {ShiftNumber - 1} is over, launching shift {ShiftNumber}");
 
-            if (_uiManager) _uiManager.ResumeGame();
+            // if (_uiManager) _uiManager.ResumeGame();
 
             OnNextShift?.Invoke();
-
-            LaunchShift(_shiftDuration - _noonDuration);
         }
         /// <summary>
         /// Resets the specified shift without moving to the next one. 
         /// </summary>
         public void SetupShift(int shiftCount)
         {
-            _currentRentPrice = _rentPriceCurve.Evaluate(shiftCount);
-
-            if (shiftCount >= 1) // si ce n'est pas le tuto
-            {
-                // J'ai commenté la ligne ci-dessous parce que c'est bizarre que notre argent soit reset à chaque shift
-                //ReferenceManager.Instance.GetManager<MoneyManager>().MoneyInfo = new MoneyInfo(0);
-            }
-
-            _dataManager.SaveGameData();
+            SaveManager.SaveGameData();
             
-            _itemManager.DestroyAllActive();
-            
-            _itemManager.SpawnInitialItems(shiftCount);
+            ResetAll();
+
+            Reference.GetManager<ItemManager>()?.SpawnInitialItems(shiftCount);
 
         }
 
@@ -191,44 +159,26 @@ namespace GameSystem
             Reference.RemoveManager(this);
         }
 
-        public void Init()
-        {
-            Reference.GetManager(out _dataManager);
-            Reference.GetManager(out _timerManager);
-            Reference.GetManager(out _gameLoop);
-            Reference.GetManager(out _clientManager);
-            //Reference.GetManager(out _uiManager);
-            Reference.GetManager(out _moneyManager);
-            Reference.GetManager(out _itemManager);
-        }
 
         public void PostInit()
         {
-            //Debug.Log("[ShiftManager] : PostInit running (shift duration set to " + shiftDuration + "s)."); 
             this.Log(LogType.Log, $"PostInit running (shift duration set to {_shiftDuration}s)");
-            
-            _dataManager.LoadGlobalData();
-            //LaunchShift(_shiftDuration); // Removed because it doesn't call everything the right way
-            ResetAll();
-            SetupShift(_shiftCount);
-            
-            if (_gameLoop)
-            {
-                OnShiftBegin += () => _gameLoop.ShiftBegin?.Invoke();
-                OnShiftNoon += () => _gameLoop.ShiftNoon?.Invoke();
-                OnShiftEnded += () => _gameLoop.ShiftEnd?.Invoke();
-                OnShiftFailed += () => _gameLoop.RentGameOver?.Invoke();
-            }
+
+            SaveManager.LoadGlobalData();
+
+            SetupShift(ShiftNumber);
         }
 
         public void SkipTutorialShift()
         {
-            if (_shiftCount == 0)
+            if (ShiftNumber == 0)
             {
-                _shiftCount = 1;
-                _dataManager.SaveGameData();
+                ShiftNumber = 1;
+                SaveManager.SaveGameData();
             }
         }
+
+        public void Init() { }
         #endregion
     }
 

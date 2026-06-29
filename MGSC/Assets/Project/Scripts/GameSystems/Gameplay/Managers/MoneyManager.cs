@@ -1,0 +1,85 @@
+
+using Orders;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine;
+
+namespace GameSystem
+{
+
+    public class MoneyManager : IManager
+    {
+        #region Properties
+        public float MoneyInfo { get; set; }
+        public Action<float> OnMoneyChange { get; set; }
+        #endregion
+
+        #region Fields
+        private OrderManager _orderManager;
+        private Dictionary<int, float> _moneyGainedPerShift = new();
+        private int shiftNumber => Globals.Gameplay.ShiftNumber;
+        #endregion
+
+        #region Methods
+
+        public MoneyManager()
+        {
+            Register();
+        }
+
+        public void Register()
+        {
+            Reference.SetManager(this);
+        }
+        public void Unregister()
+        {
+            Reference.RemoveManager(this);
+        }
+
+        public void Init()
+        {
+            EnforceReferences();
+            SetSubscriptionToAll(true);
+        }
+
+        private void EnforceReferences()
+        {
+            Reference.GetManager(out _orderManager);
+        }
+
+        private void SetSubscriptionToAll(bool subscribe)
+        {
+            SetSubscriptionToServings(subscribe);
+        }
+
+        private void SetSubscriptionToServings(bool subscribe)
+        {
+            if (subscribe) _orderManager.OnOrderResolved += OnOrderResolved;
+            else _orderManager.OnOrderResolved -= OnOrderResolved;
+        }
+
+        private void OnOrderResolved(Order order)
+        {
+            EnforceReferences();
+            AddMoney(order.OrderRating.MoneyGained);
+        }
+
+        public float GetMoneyGainedOnShift(int shiftCount) => _moneyGainedPerShift.ContainsKey(shiftCount) ? _moneyGainedPerShift[shiftCount] : 0f;
+        public float GetMoneyGainedThisShift() => GetMoneyGainedOnShift(shiftNumber);
+
+        public void AddMoney(float amount)
+        {
+            MoneyInfo += amount;
+            if (!_moneyGainedPerShift.ContainsKey(shiftNumber))
+                _moneyGainedPerShift[shiftNumber] = 0f;
+            
+            if(amount>=0) _moneyGainedPerShift[shiftNumber] += amount;
+            
+            OnMoneyChange?.Invoke(amount);
+            
+            this.Log(LogType.Log, $"{amount}€ update");
+        }
+        #endregion
+    }
+}

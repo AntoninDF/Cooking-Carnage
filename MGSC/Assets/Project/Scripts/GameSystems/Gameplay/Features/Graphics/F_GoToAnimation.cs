@@ -16,8 +16,7 @@ namespace Features
         private Quaternion defaultRotation;
         private Vector3 startPos;
         private Vector3 endPos;
-        private Transform targetTransform;
-        private TimerManager timerManager  => Reference.GetManager<TimerManager>();
+        private Transform targetTransform; 
 
         public F_GoToAnimation(IFeatureCollection owner, Transform controlledTransform) : base(owner)
         {
@@ -41,7 +40,7 @@ namespace Features
             if (duration == 0f)
                 SetPos(1);
             else
-                timerManager.StartTimer("GoToAnimation " + endPos + Time.time.ToString(), duration, null, false, (elapsed) => SetPos(elapsed / duration));
+                TimerManager.StartTimer("GoToAnimation " + endPos + Time.time.ToString(), duration, null, false, (elapsed) => SetPos(elapsed / duration));
         }
         public void GoTo(Transform dest, Vector3 worldPos, float duration=0.1f, bool setAsParent=true)
         {
@@ -84,7 +83,7 @@ namespace Features
                 SetPos(1f);
             else
             {
-                timerManager.StartTimer("GoToAnimation " + dest.name + Time.time.ToString(), duration, EndAnimation, false, (elapsed) => SetPos(elapsed / duration));
+                TimerManager.StartTimer("GoToAnimation " + dest.name + Time.time.ToString(), duration, EndAnimation, false, (elapsed) => SetPos(elapsed / duration));
             }
         }
         public void GoTo(Transform dest, float duration=0.1f, bool setAsParent=true)

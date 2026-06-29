@@ -36,10 +36,6 @@ namespace Features
         {
         }
 
-        public override void LateSetup()
-        {
-        }
-
         public override void Update()
         {
             Collection.Update();
@@ -78,6 +74,8 @@ namespace Features
 
         private bool TryPlayerAction(Feature feature)
         {
+            if (!Globals.Gameplay.Player.AllowPlayerInteractions) return false;
+
             bool primaryActionPerformed = false;
             if (_playerActions.TryGetValue(PlayerActionType.Primary, out var primaryActionsByType)) {
                 if (primaryActionsByType.TryGetValue(feature.GetType(), out var actions)) {
@@ -149,6 +147,8 @@ namespace Features
 
         private void UpdateConstantActions()
         {
+            if (!Globals.Gameplay.Player.AllowPlayerInteractions) return;
+
             if (AvailableFeatures == null || AvailableFeatures.Count == 0) return;
 
             foreach (Feature feature in AvailableFeatures)

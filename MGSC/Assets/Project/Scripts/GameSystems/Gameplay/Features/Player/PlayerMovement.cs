@@ -50,6 +50,7 @@ namespace Features
 
         public override void Update()
         {
+            if (!Globals.Gameplay.Player.AllowControllerMovement) return;
             if (!Mathf.Approximately(CharacterController.height, CharacterSize)) /*REFACTO : Cest uniquement pour du parametrage, a jarter assez vite*/
             {
                 CharacterController.height = CharacterSize;
@@ -66,17 +67,6 @@ namespace Features
             return worldDirection.normalized;
         }
 
-        private void HandleJumping()
-        {
-            if (CharacterController.isGrounded)
-            {
-                _currentMovement.y = -0.5f;
-            }
-            else
-            {
-                _currentMovement.y += Physics.gravity.y * Time.deltaTime;
-            }
-        }
 
         private void HandleMovement()
         {
@@ -85,7 +75,6 @@ namespace Features
             _currentMovement.x = worldDirection.x * WalkSpeed;
             _currentMovement.z = worldDirection.z * WalkSpeed;
 
-            HandleJumping();
             CharacterController.Move(_currentMovement * Time.deltaTime);
 
             if (!isMoving)
@@ -106,6 +95,7 @@ namespace Features
             }
         }
 
+        /*
         private void ApplyHorizontalRotation(float rotationAmount)
         {
             ControlledTransform.Rotate(0, rotationAmount, 0);
@@ -117,6 +107,7 @@ namespace Features
             if (HeadTransform != null)
                 HeadTransform.localRotation = Quaternion.Euler(_verticalRotation, 0, 0);
         }
+        */
         private void ApplyLookDirection(Vector3 direction)
         {
             var yawDirection = new Vector3(direction.x, 0, direction.z); 
@@ -130,11 +121,13 @@ namespace Features
 
         private void UpdateLookDirectionFromOffset(Vector2 offset)
         {
+            if (!Globals.Gameplay.Player.AllowControllerMovement) return;
             LookDirection = Quaternion.Euler(0, offset.x * LookSpeed, 0) * LookDirection;
             _verticalRotation = Mathf.Clamp(_verticalRotation - offset.y *LookSpeed, -VerticalLookRange, VerticalLookRange);
         }
         private void HandleRotation()
         {
+            if (!Globals.Gameplay.Player.AllowControllerMovement) return;
             ApplyLookDirection(LookDirection);
         }
     }

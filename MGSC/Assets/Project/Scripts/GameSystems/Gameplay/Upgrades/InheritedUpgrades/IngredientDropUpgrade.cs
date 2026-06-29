@@ -19,7 +19,7 @@ namespace Upgrades
 
         public IngredientDropUpgrade() : base()
         {
-            _config = UpgradeManagerConfig.instance.IngredientDrop;
+            config = UpgradeManagerConfig.Instance.IngredientDrop;
         }
 
         public override void Apply()
@@ -37,7 +37,7 @@ namespace Upgrades
         public void Apply(Clients.Client client)
         {
             if (client == null) return;
-            //Vector2 newRate = client.Model.dropRate + Vector2.one * dropRateIncrement * _level;
+            //Vector2 newRate = client.Model.dropRate + Vector2.one * dropRateIncrement * level;
             //client.SetLoot(client.Model.loot, newRate);
         }
         

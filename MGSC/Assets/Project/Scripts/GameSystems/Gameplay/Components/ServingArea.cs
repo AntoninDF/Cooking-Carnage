@@ -68,6 +68,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;
+        if (ClientSeat == null) return;
         if (ClientSeat.SittingClient != null)
         {
             Gizmos.color = Color.green;

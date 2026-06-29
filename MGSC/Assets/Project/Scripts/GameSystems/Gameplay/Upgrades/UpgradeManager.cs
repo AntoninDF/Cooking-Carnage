@@ -42,10 +42,11 @@ namespace Upgrades
         /// </summary>
         public void Init()
         {
-            _config = UpgradeManagerConfig.instance;
+            _config = UpgradeManagerConfig.Instance;
             
-            if (_config == null)
-                throw new InvalidOperationException("[UpgradeManager] SetConfig() must be called before Init().");
+            // It's not necessary to throw errors for a variable that isn't even used
+            // if (_config == null)
+                // throw new InvalidOperationException("[UpgradeManager] SetConfig() must be called before Init().");
 
             _upgrades = new List<Upgrade>();
             //Get all the inherited upgrades 

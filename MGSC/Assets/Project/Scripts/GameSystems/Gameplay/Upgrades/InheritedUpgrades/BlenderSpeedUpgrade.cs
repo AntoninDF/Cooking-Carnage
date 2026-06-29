@@ -19,7 +19,7 @@ namespace Upgrades
         public BlenderSpeedUpgrade() : base()
         {
             //Can Get his config 
-            _config = UpgradeManagerConfig.instance.BlenderSpeed;
+            config = UpgradeManagerConfig.Instance.BlenderSpeed;
         }
 
         public override void Apply()
@@ -29,7 +29,7 @@ namespace Upgrades
 
             foreach (Blender b in _targetBlenders)
             {
-                //b.CutDuration = b.DefaultCutDuration / (_level + 1);
+                //b.CutDuration = b.DefaultCutDuration / (level + 1);
             }
             */
         }
