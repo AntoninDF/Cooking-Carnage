@@ -46,9 +46,10 @@ namespace Features
         }
         protected virtual void Drop(F_Grabbable item = null)
         {
-            OnDrop?.Invoke(HeldItem);
+            var temp = HeldItem;
             HeldItem.Container = null;
             HeldItem = null;
+            OnDrop?.Invoke(temp);
         }
         public override bool CanGrab(F_Grabbable item)
         {
