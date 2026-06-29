@@ -1,15 +1,19 @@
 using System;
 using Clients;
+using Cooking;
+using GameSystem;
+using UnityEngine;
 
 namespace Features
 {
 	public class SitAndWaitForServing : BaseClientAction
 	{
 		public Action OnServed { get; set; }
-		public Action OnMealGrabbed { get; set; }
+		public Action<F_Grabbable> OnMealGrabbed { get; set; }
 
 		private ClientSeat _seat;
 		private Client     _client;
+		private F_Grabbable _grabbedObject;
 		
 		public SitAndWaitForServing(ClientBehaviour owner, ClientSeat clientSeat) : base(owner)
 		{
@@ -20,24 +24,50 @@ namespace Features
 		public override void Perform()
 		{
 			base.Perform();
-			_seat.TrySit(_client);
+			bool sat = _seat.TrySit(_client);
 			_seat.OnMealReady        += TryGrabMeal;
 			_seat.OnClientUnregister += HandleUnregister;
+
 		}
 		
 		private void TryGrabMeal()
 		{
-			if (_seat.Owner is not OrderingArea orderingArea) return;
+			_seat.OnMealReady -= TryGrabMeal;
+    
+			if (_seat.Owner is not OrderingArea orderingArea)
+			{
+				return;
+			}
 			var heldItem = orderingArea.ServingArea.MealSlot?.Container?.HeldItem;
-			if (heldItem == null) return;
-			
+			if (heldItem == null)
+			{
+				return;
+			}
+			if (!heldItem.TryGetSibling(out Servable servable, true))
+			{
+				return;
+			}
+
 			orderingArea.ServingArea.MealSlot.Container.RequestDrop(heldItem);
-			OnMealGrabbed?.Invoke();
+			_client.TryAcceptServing(servable);
+			
+			if (heldItem.Owner is Component plateComp)
+			{
+				if (heldItem.TryGetSibling(out F_GoToAnimation anim))
+					anim.Enabled = false;
+
+				UnityEngine.Object.Destroy(plateComp.gameObject);
+			}
+			
 		}
+		
 
 		private void HandleUnregister(Client client)
 		{
+			_seat.OnMealReady        -= TryGrabMeal; 
+			Debug.Log($"[SitAndWait] HandleUnregister called for {client.name}, expected {_client.name}");
 			if (client != _client) return;
+			Debug.Log($"[SitAndWait] {_client.name} unregistered, invoking OnServed");
 			_seat.OnClientUnregister -= HandleUnregister;
 			OnServed?.Invoke();
 		}

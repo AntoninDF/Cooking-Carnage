@@ -1,4 +1,5 @@
 using System;
+using Clients;
 
 namespace Features
 {
@@ -11,11 +12,17 @@ namespace Features
         {
         }
 
-        public Order GetNewOrder()
+        public Order GetNewOrder(Client client)
         {
-            var result = OrderBuilder
-                .New()
-                .Build();
+            var allRecipes = RecipeFinder.AllRecipes?.Recipes;
+    
+            var builder = OrderBuilder.New().SetOwner(client);
+    
+            if (allRecipes != null)
+                foreach (var recipe in allRecipes)
+                    builder.SetRecipe(recipe);
+
+            var result = builder.Build();
             OnNewOrder?.Invoke(result);
             return result;
         }

@@ -64,10 +64,10 @@ namespace Features
             SplineComponent     = splineComponent;
             Speed               = speed;
             _navmeshAgent.speed        = speed;
+            _navmeshAgent.stoppingDistance = 0.2f;
             _validSetup         = controlledTransform != null && splineComponent != null;
             
-            if(!_validSetup) 
-                Debug.LogWarning($"[ClientMovement] Invalid Setup - transform is null : {controlledTransform == null} or spline is null : {splineComponent == null}");
+           
         }
 
         #endregion
@@ -90,7 +90,6 @@ namespace Features
         {
             if (!_validSetup)
             {
-                Debug.Log("[ClientMovement] Setup is not valid, cannot move along spline");
                 return;
             }
             float lenght = Spline.GetLength();
@@ -105,7 +104,6 @@ namespace Features
         {
             if (!_validSetup)
             {
-                Debug.Log($"[ClientMovement] Setup is not valid, cannot set the customer position at {t} on the spline");
                 return;
             }
             SplinePosition               = t;
@@ -121,7 +119,6 @@ namespace Features
         {
             if (!_validSetup)
             {
-                Debug.Log($"[ClientMovement] Setup is not valid, cannot get the position of {time} on the spline");
                 return Vector3.zero;
             }
 
@@ -138,7 +135,6 @@ namespace Features
         {
             if (!_validSetup)
             {
-                Debug.Log($"[ClientMovement] Setup is not valid, cannot get the time value of {worldPosition} on the spline");
                 return 0f;
             }
 
@@ -161,9 +157,11 @@ namespace Features
         /// <param name="worldPosition"></param>
         public void SwitchToNavMesh(Vector3 worldPosition)
         {
-            IsOnSpline     = false;
+            IsOnSpline            = false;
             _navmeshAgent.enabled = true;
-            _navmeshAgent.Warp(ControlledTransform.position);
+    
+            bool warped = _navmeshAgent.Warp(ControlledTransform.position);
+    
             SetNavDestination(worldPosition);
         }
 
@@ -182,11 +180,14 @@ namespace Features
         /// Setup the target of the NavMesh agent
         /// </summary>
         /// <param name="worldPosition"></param>
+        private bool _destinationSetThisFrame = false;
+
         public void SetNavDestination(Vector3 worldPosition)
         {
             if (!_navmeshAgent.enabled) return;
             _navmeshAgent.SetDestination(worldPosition);
-            IsMoving = true;
+            IsMoving                 = true;
+            _destinationSetThisFrame = true;
         }
 
         /// <summary>
@@ -195,14 +196,22 @@ namespace Features
         private void CheckNavDestination()
         {
             if (!_navmeshAgent.enabled || !IsMoving) return;
+    
+            if (_destinationSetThisFrame)
+            {
+                _destinationSetThisFrame = false;
+                return; 
+            }
+    
             if (_navmeshAgent.pathPending) return;
 
             if (_navmeshAgent.remainingDistance <= _navmeshAgent.stoppingDistance &&
                 (!_navmeshAgent.hasPath || _navmeshAgent.velocity.sqrMagnitude == 0f))
             {
                 IsMoving = false;
-                OnDestinationReached?.Invoke();
+                var callback = OnDestinationReached;
                 OnDestinationReached = null;
+                callback?.Invoke();
             }
         }
         #endregion
@@ -257,8 +266,7 @@ namespace Features
 
         public void Sit()
         {
-            _navmeshAgent.enabled             = false;
-            ControlledTransform.localPosition = Vector3.zero;
+            _navmeshAgent.enabled             = false; 
         }
         
         public void GetUp()

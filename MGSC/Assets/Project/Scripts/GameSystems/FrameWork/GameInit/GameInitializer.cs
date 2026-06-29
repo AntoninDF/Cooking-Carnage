@@ -45,7 +45,6 @@ namespace GameSystem
             new ShiftManager(); 
             new MoneyManager();
             new UpgradeManager();
-            new DataManager();
             new CameraManager();
             new ItemManager();
             new FeatureManager();
@@ -90,7 +89,7 @@ namespace GameSystem
         {
             CursorUtility.Update();
             // Reset the save file
-            if (_gameProfile.ResetSaveFile) Reference.GetManager<DataManager>()?.ResetSave();
+            if (_gameProfile.ResetSaveFile) SaveManager.ResetSave();
 
             // Apply the base logic to ensure all managers are setup to work correctly
             PostInitManagers();

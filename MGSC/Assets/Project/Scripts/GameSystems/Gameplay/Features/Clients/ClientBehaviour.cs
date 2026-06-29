@@ -32,8 +32,8 @@ namespace Features
         private Transform          _clientTransform;
         private SplineContainer    _splineComponent;
         private float              _speed;
-
-        private WaitInQueue _waitAction;
+        private float              _eatingTime = 3;
+        private WaitInQueue        _waitAction;
         
         #endregion
 
@@ -127,16 +127,30 @@ namespace Features
 
         private void CanLeave()
         {
-            if ((_owner as Client)?.IsCooked == false) Perform(BuildLeave());
+            if ((_owner as Client)?.IsCooked == false) Perform(BuildEat());
+        }
+
+        private Eat BuildEat()
+        {
+
+            var eat = new Eat(this, _eatingTime);
+            eat.StopEating += () =>
+            {
+
+                Perform(BuildLeave());
+            };
+            return eat ;
         }
 
         private Leave BuildLeave()
         {
-            var leave      = new Leave(this);
-            leave.OnExited += () => UnityEngine.Object.Destroy((Owner as Client)?.gameObject);
+            var leave = new Leave(this);
+            leave.OnExited += () =>
+                              {
+                                  UnityEngine.Object.Destroy((Owner as Client)?.gameObject);
+                              };
             return leave;
         }
-
         #endregion
         
         public void SetWaitPosition(float t)

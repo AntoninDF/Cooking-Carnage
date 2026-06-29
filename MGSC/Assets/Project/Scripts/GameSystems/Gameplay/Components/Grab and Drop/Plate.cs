@@ -159,6 +159,9 @@ public class Plate : Item
 
         recipeFeature.Ingredients = GetContainedIngredients();
         recipe = recipeFeature.Recipe;
+        
+        Collection.Add(recipeComponent.Servable);
+
     }
 
     void EnableRecipeModel(SO_Recipe recipe)

@@ -1,5 +1,6 @@
 using Features;
 using System;
+using Cooking;
 using UnityEngine;
 
 public class ServingArea : MonoBehaviour, IFeatureCollection
@@ -8,7 +9,6 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     
     public FeatureCollection Collection     { get; set; } = new();
     public ClientSeat        ClientSeat     { get; set; }
-    public ServingCounter    ServingCounter { get; set; }
     
     #endregion
 
@@ -18,7 +18,12 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     
     private bool _watching = false;
     private void StartWatchingSlot() => _watching = true;
-    private void StopWatchingSlot()  => _watching = false;
+    private void StopWatchingSlot()
+    {
+        _lastHeldItem = null; 
+        _watching     = false;
+    }
+
     private F_Grabbable _lastHeldItem = null;
     
     #endregion
@@ -27,7 +32,6 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     
     private void Start()
     {
-        ServingCounter = new(this);
 
         if (MealSlot == null)
         {
@@ -36,7 +40,6 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         }
 
         MealSlot.Container.Filter += (obj) => obj is F_Grabbable grab && grab.TryGetSibling(out Servable temp, true);
-        
     }
 
     public void Initialize(ClientSeat clientSeat)
@@ -44,8 +47,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         ClientSeat = clientSeat;
         ClientSeat.OnClientRegister += _ => StartWatchingSlot();
         ClientSeat.OnClientUnregister += _ => StopWatchingSlot();
-        
-        
+
     }
 
     public void Update()
@@ -55,16 +57,13 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         if (current != null && current != _lastHeldItem)
         {
             _lastHeldItem = current;
+            Debug.Log("[ServingArea] New item detected in slot, invoking OnMealReady");
             ClientSeat.OnMealReady?.Invoke();
         }
         if (current == null)
             _lastHeldItem = null;
     }
-
-    void ReceiveMeal(Servable serving)
-    {
-       ClientSeat.SittingClient.TryAcceptServing(serving);
-    }
+    
 
     private void OnDrawGizmos()
     {

@@ -58,7 +58,7 @@ namespace GameSystem
                                   + " completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 
                                   + "s for client " + order.Owner.name + ". Money gained : " 
                                   + rating.MoneyGained + ". Expected '" + order.Recipe.Name 
-                                  + "', received '" + info.Meal?.Recipe.Name + "'.");
+                                  + "', received '" + info.Recipe?.Name + "'.");
             
             
             OnOrderResolved?.Invoke(order);

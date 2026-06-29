@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace Features
 {
-	
+	/// <summary>
+	/// the behavior of the customer in the wait line
+	/// </summary>
 	public class WaitInQueue : BaseClientAction
 	{
 		public Action OnEnterQueue { get; set; }

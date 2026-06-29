@@ -1,6 +1,5 @@
 
 using Clients;
-using Cooking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +58,6 @@ namespace GameSystem
         /// </summary>
         public AdaptiveClientSpawner()
         {
-            Debug.Log("AdptiveClientSpawner from the constructor says hi !");
             Register();
         }
         
@@ -86,9 +84,6 @@ namespace GameSystem
             spline = Reference.GetManager<PathManager>()?.SplineComponent;
 
             Reference.GetManager(out _clientManager);
-
-            Debug.Log("Init");
-            TimerManager.StartTimer("AdaptiveClientSpawner Init", 0.1f, () => Launch(), false);
             
             
             if (models.Count <= 0 || !spline)
@@ -96,7 +91,8 @@ namespace GameSystem
             else
                 this.Log(" has been initialized");
 
-            
+            // Start spawning clients when the shift begins
+            ShiftManager.OnShiftBegin += () => Launch(2);
         }
 
         public void PostInit()
@@ -104,16 +100,8 @@ namespace GameSystem
             _clientManager.WaitingQueue.OnWaitLineFull += StopTryingSpawn;
         }
 
-
-        bool ShiftOngoing()
-        {
-            return !TimerManager.IsTimerRunning("shiftEndDelay");
-        }
-
-
         void StopTryingSpawn()
         {
-            Debug.Log("Stop Trying Spawn");
             if(TimerManager.IsTimerRunning(timerName))
             {
                 TimerManager.StopTimer(timerName);
@@ -134,14 +122,11 @@ namespace GameSystem
         {
             if (CanSpawnClient)
             {
-                Debug.LogError("SPAWN CLIENT");
                 SpawnClient();
                 return true;
             }
             else
             {
-                //Debug.Log($"{SeatsOrQueueAvailable()} && {SpawnPointIsClear()} && {spline == null}");
-                //Debug.Log(" Client couldn't be spawned so it will try again in "+ retryDelay +" seconds");
                 Launch(retryDelay);
                 return false;
             }
@@ -163,9 +148,7 @@ namespace GameSystem
                 ? (Vector3)pos + spline.transform.position
                 : Vector3.zero;
 
-            Client client = Client.New(clientSO, spawnPosition, clientSpeed)
-                                  .SetSplinePath(spline)
-                                  .SetSpeed(clientSpeed);
+            Client client = Client.New(clientSO, spawnPosition, clientSpeed).SetSplinePath(spline).SetSpeed(clientSpeed);
 
             client.Begin();
 

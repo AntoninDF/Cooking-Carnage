@@ -10,16 +10,21 @@ namespace Orders
     /// </summary>
     public struct ServingInfo
     {
-        public Meal Meal { get; private set; }
-        public SO_Recipe Recipe => Meal?.Recipe;
+        public Meal      Meal   { get; private set; }
+        public SO_Recipe Recipe { get; private set; } 
         public float Timestamp { get; private set; }
 
-        public ServingInfo
-            (
-            Meal servedMeal
-            )
+        public ServingInfo(Meal servedMeal)
         {
-            Meal = servedMeal;
+            Meal      = servedMeal;
+            Recipe    = servedMeal?.Recipe;
+            Timestamp = Time.time;
+        }
+        
+        public ServingInfo(SO_Recipe recipe)
+        {
+            Meal      = null;
+            Recipe    = recipe;
             Timestamp = Time.time;
         }
 

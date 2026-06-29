@@ -1,6 +1,7 @@
 using GameSystem;
 using System;
 using Clients;
+using Cooking;
 using UnityEngine;
 
 namespace Features
@@ -27,7 +28,6 @@ namespace Features
                 if (value != null)
                     OnClientRegister?.Invoke(value);
                 _registeredClient = value;
-                //Debug.Log("Registered client is " + value);
             }
         }
         public Client SittingClient
@@ -41,7 +41,6 @@ namespace Features
                 if (value != null)
                     OnClientSitting?.Invoke(value);
                 _sittingClient = value;
-                //Debug.Log("Sitting client is " + value);
             }
         }
 
@@ -74,16 +73,27 @@ namespace Features
             ActualizeSeatPos(client);
             return true;
         }
+        
         public bool TryUnregister(Client client)
         {
             if (client == null) return false;
             if (RegisteredClient != client) return false;
 
+            TryLeave(client);
+    
+            parentTransform.localPosition = _defaultPosition;
+
+            // Nettoyer le côté client
+            client.CurrentSeat  = null;
+            client.CurrentOrder = null;
+
+            var unregistered = _registeredClient;
             RegisteredClient = null;
-            SittingClient = null;
-            OnClientUnregister?.Invoke(_registeredClient);
+            SittingClient    = null;
+            OnClientUnregister?.Invoke(unregistered);
             return true;
         }
+        
         public bool TrySit(Client client)
         {
             if (client == null) return false;
@@ -95,13 +105,17 @@ namespace Features
             
             return true;
         }
+        
         public bool TryLeave(Client client)
         {
             if (client == null) return false;
-            if (SittingClient != client) return false;
-
+            if (SittingClient != client)
+            {
+                return false;
+            }
             SittingClient = null;
-            client.QuitSeat();
+            client.transform.SetParent(null);
+            client.Behaviour.ClientMovement.GetUp();
             return true;
         }
 
@@ -118,11 +132,6 @@ namespace Features
                 if (heightByType.ClientType == client.Type)
                 {
                     y = heightByType.SeatHeight;
-                    Debug.LogFormat($"New seat height : {y}");
-                }
-                else
-                {
-                    Debug.Log("Client Type not founded");
                 }
             }
             

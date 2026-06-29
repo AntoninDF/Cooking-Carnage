@@ -2,6 +2,11 @@ using System;
 
 namespace Features
 {
+	
+	/// <summary>
+	/// this action is performed to make the client move along the spline until the closest point possible of his seat
+	/// when the point is reached, the customer switch to navMesh
+	/// </summary>
 	public class MoveToSeat : BaseClientAction
 	{
 		public Action<ClientSeat> OnSeatReached { get; set; }
