@@ -10,7 +10,7 @@ public static class MeshPileUtility
     {
         get
         {
-            if (Application.isPlaying) return 0.01f;
+            if (Application.isPlaying) return 0.05f;
             return 0.3f;
         }
     }
