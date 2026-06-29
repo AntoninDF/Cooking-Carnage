@@ -28,10 +28,12 @@ namespace Features
                 _isLookedAt = value;
                 if (_isLookedAt)
                 {
+                    Debug.Log("Look at " + (Owner is Component comp ? comp.name : ""));
                     OnStartLookAt?.Invoke();
                 }
                 else
                 {
+                    Debug.Log("Stop look at " + (Owner is Component comp ? comp.name : ""));
                     OnStopLookAt?.Invoke();
                 }
             }
