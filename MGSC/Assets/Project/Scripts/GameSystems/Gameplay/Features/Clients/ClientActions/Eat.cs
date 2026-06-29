@@ -16,7 +16,7 @@ namespace Features
         {
             StartEating = () =>
             {
-                Reference.GetManager<TimerManager>().StartTimer("Customer Eating Timer", launchDuration, ()=>StopEating?.Invoke(), false);
+                TimerManager.StartTimer("Customer Eating Timer", launchDuration, ()=>StopEating?.Invoke(), false);
             };
         }
 

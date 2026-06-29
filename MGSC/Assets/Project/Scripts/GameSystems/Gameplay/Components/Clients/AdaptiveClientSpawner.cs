@@ -114,22 +114,19 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
+            Debug.Log("Launch");
             TimerManager.StartTimer(timerName, delay, () => TrySpawnClient());
         }
 
         bool TrySpawnClient()
         {
-            Debug.Log("Spawn client");
             if (CanSpawnClient)
             {
-                Debug.LogError("SPAWN CLIENT");
                 SpawnClient();
                 return true;
             }
             else
             {
-                //Debug.Log($"{SeatsOrQueueAvailable()} && {SpawnPointIsClear()} && {spline == null}");
-                //Debug.Log(" Client couldn't be spawned so it will try again in "+ retryDelay +" seconds");
                 Launch(retryDelay);
                 return false;
             }
