@@ -78,12 +78,11 @@ namespace Features
         {
             if (client == null) return false;
             if (RegisteredClient != client) return false;
-
+            
             TryLeave(client);
     
             parentTransform.localPosition = _defaultPosition;
 
-            // Nettoyer le côté client
             client.CurrentSeat  = null;
             client.CurrentOrder = null;
 
@@ -114,8 +113,6 @@ namespace Features
                 return false;
             }
             SittingClient = null;
-            client.transform.SetParent(null);
-            client.Behaviour.ClientMovement.GetUp();
             return true;
         }
 
