@@ -161,9 +161,12 @@ namespace Features
         /// <param name="worldPosition"></param>
         public void SwitchToNavMesh(Vector3 worldPosition)
         {
-            IsOnSpline     = false;
+            IsOnSpline            = false;
             _navmeshAgent.enabled = true;
-            _navmeshAgent.Warp(ControlledTransform.position);
+    
+            bool warped = _navmeshAgent.Warp(ControlledTransform.position);
+            Debug.Log($"[ClientMovement] SwitchToNavMesh — Warp success: {warped}, agentPos: {_navmeshAgent.transform.position}, destination: {worldPosition}");
+    
             SetNavDestination(worldPosition);
         }
 
@@ -182,11 +185,14 @@ namespace Features
         /// Setup the target of the NavMesh agent
         /// </summary>
         /// <param name="worldPosition"></param>
+        private bool _destinationSetThisFrame = false;
+
         public void SetNavDestination(Vector3 worldPosition)
         {
             if (!_navmeshAgent.enabled) return;
             _navmeshAgent.SetDestination(worldPosition);
-            IsMoving = true;
+            IsMoving                 = true;
+            _destinationSetThisFrame = true;
         }
 
         /// <summary>
@@ -195,6 +201,13 @@ namespace Features
         private void CheckNavDestination()
         {
             if (!_navmeshAgent.enabled || !IsMoving) return;
+    
+            if (_destinationSetThisFrame)
+            {
+                _destinationSetThisFrame = false;
+                return; // skip ce frame, laisse le temps au pathfinding
+            }
+    
             if (_navmeshAgent.pathPending) return;
 
             if (_navmeshAgent.remainingDistance <= _navmeshAgent.stoppingDistance &&
@@ -202,7 +215,7 @@ namespace Features
             {
                 IsMoving = false;
                 var callback = OnDestinationReached;
-                OnDestinationReached = null; 
+                OnDestinationReached = null;
                 callback?.Invoke();
             }
         }

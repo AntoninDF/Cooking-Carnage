@@ -76,19 +76,27 @@ namespace Features
             ActualizeSeatPos(client);
             return true;
         }
+        
         public bool TryUnregister(Client client)
         {
             if (client == null) return false;
             if (RegisteredClient != client) return false;
 
-            TryLeave(client); 
+            TryLeave(client);
     
+            parentTransform.localPosition = _defaultPosition;
+
+            // Nettoyer le côté client
+            client.CurrentSeat  = null;
+            client.CurrentOrder = null;
+
             var unregistered = _registeredClient;
             RegisteredClient = null;
             SittingClient    = null;
             OnClientUnregister?.Invoke(unregistered);
             return true;
         }
+        
         public bool TrySit(Client client)
         {
             if (client == null) return false;
@@ -111,6 +119,7 @@ namespace Features
                 return false;
             }
             SittingClient = null;
+            // SetParent null avant GetUp pour que la position world soit correcte
             client.transform.SetParent(null);
             client.Behaviour.ClientMovement.GetUp();
             Debug.Log($"[ClientSeat] {client.name} left seat successfully");
