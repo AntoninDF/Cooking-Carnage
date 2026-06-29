@@ -1,6 +1,5 @@
 
 using Clients;
-using Cooking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,8 +84,6 @@ namespace GameSystem
             spline = Reference.GetManager<PathManager>()?.SplineComponent;
 
             Reference.GetManager(out _clientManager);
-
-            TimerManager.StartTimer("AdaptiveClientSpawner Init", 0.1f, () => Launch(), false);
             
             
             if (models.Count <= 0 || !spline)
@@ -94,20 +91,14 @@ namespace GameSystem
             else
                 this.Log(" has been initialized");
 
-            
+            // Start spawning clients when the shift begins
+            ShiftManager.OnShiftBegin += () => Launch(2);
         }
 
         public void PostInit()
         {
             _clientManager.WaitingQueue.OnWaitLineFull += StopTryingSpawn;
         }
-
-
-        bool ShiftOngoing()
-        {
-            return !TimerManager.IsTimerRunning("shiftEndDelay");
-        }
-
 
         void StopTryingSpawn()
         {

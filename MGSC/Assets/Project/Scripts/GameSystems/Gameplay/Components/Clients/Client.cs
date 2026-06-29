@@ -1,11 +1,8 @@
 using Features;
 using System;
 using System.Collections;
-using GameSystem;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Splines;
 
 namespace Clients
 {
