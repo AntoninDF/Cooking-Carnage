@@ -47,8 +47,7 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
         return true;
     }
 
-    private void SkippedEventWarning(UnityEventWrapper e) => 
-        Debug.LogWarning("The UnityEvent " + e.ActionPath.FullName + " couldn't be bound");
+    private void SkippedEventWarning(UnityEventWrapper e) => Debug.LogWarning("The UnityEvent " + e.ActionPath.FullName + " couldn't be bound");
     private void BindEvents()
     {
         bindEventProfilerMarker.Begin();

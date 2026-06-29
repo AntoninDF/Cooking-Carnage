@@ -45,14 +45,14 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     {
         if (client == null) return;
 
-        NextOrder = OrderingCounter.GetNewOrder();
+        NextOrder = OrderingCounter.GetNewOrder(client);
     }
     
     public void AssignOrder(Client client)
     {
         if (client == null) return;
         if (NextOrder == null)
-            NextOrder = OrderingCounter.GetNewOrder();
+            NextOrder = OrderingCounter.GetNewOrder(client);
         client.TryAcceptOrder(NextOrder);
     }
 

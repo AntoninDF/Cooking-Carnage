@@ -17,7 +17,7 @@ namespace Features
         public Action<Client> OnClientSitting {get; set; }
         public Action<Client> OnClientLeaving {get; set; }
         
-        public Action OnMealReceive { get; set; }
+        public Action OnMealReady { get; set; }
         
         public Client RegisteredClient
         {
@@ -81,9 +81,12 @@ namespace Features
             if (client == null) return false;
             if (RegisteredClient != client) return false;
 
+            TryLeave(client); 
+    
+            var unregistered = _registeredClient;
             RegisteredClient = null;
-            SittingClient = null;
-            OnClientUnregister?.Invoke(_registeredClient);
+            SittingClient    = null;
+            OnClientUnregister?.Invoke(unregistered);
             return true;
         }
         public bool TrySit(Client client)
@@ -100,12 +103,17 @@ namespace Features
         
         public bool TryLeave(Client client)
         {
+            Debug.Log($"[ClientSeat] TryLeave called for {client?.name}");
             if (client == null) return false;
-            if (SittingClient != client) return false;
-
+            if (SittingClient != client)
+            {
+                Debug.LogWarning($"[ClientSeat] SittingClient is {SittingClient?.name}, not {client?.name}");
+                return false;
+            }
             SittingClient = null;
-            TryUnregister(client);
-            client.QuitSeat();
+            client.transform.SetParent(null);
+            client.Behaviour.ClientMovement.GetUp();
+            Debug.Log($"[ClientSeat] {client.name} left seat successfully");
             return true;
         }
 

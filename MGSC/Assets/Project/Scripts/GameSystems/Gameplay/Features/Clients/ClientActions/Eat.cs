@@ -1,5 +1,6 @@
 using System;
 using GameSystem;
+using UnityEngine;
 
 namespace Features
 {
@@ -10,10 +11,13 @@ namespace Features
 
         public Eat(ClientBehaviour owner, float launchDuration) : base(owner)
         {
+            Debug.Log($"[Eat] Created with duration : {launchDuration}");
+
             StartEating = () =>
             {
-                Reference.GetManager<TimerManager>()
-                    .StartTimer("Customer Eating Timer", launchDuration, ()=>StopEating?.Invoke(), true);
+                Debug.Log($"[Eat] StartEating, launching timer for {launchDuration}s");
+
+                Reference.GetManager<TimerManager>().StartTimer("Customer Eating Timer", launchDuration, ()=>StopEating?.Invoke(), false);
                 
             };
         }
@@ -21,6 +25,7 @@ namespace Features
         public override void Perform()
         {
             base.Perform();
+            Debug.Log("[Eat] Perform called");
             StartEating?.Invoke();
         }
     }

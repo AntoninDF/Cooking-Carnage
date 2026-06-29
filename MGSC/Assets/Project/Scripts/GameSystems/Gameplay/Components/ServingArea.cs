@@ -18,7 +18,12 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     
     private bool _watching = false;
     private void StartWatchingSlot() => _watching = true;
-    private void StopWatchingSlot()  => _watching = false;
+    private void StopWatchingSlot()
+    {
+        _lastHeldItem = null; 
+        _watching     = false;
+    }
+
     private F_Grabbable _lastHeldItem = null;
     
     #endregion
@@ -34,8 +39,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
             return;
         }
 
-        MealSlot.Container.Filter += (obj) => obj is F_Grabbable grab;
-        // && grab.TryGetSibling(out Servable temp, true)
+        MealSlot.Container.Filter += (obj) => obj is F_Grabbable grab && grab.TryGetSibling(out Servable temp, true);
     }
 
     public void Initialize(ClientSeat clientSeat)
@@ -53,8 +57,8 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         if (current != null && current != _lastHeldItem)
         {
             _lastHeldItem = current;
-            //if(current.)
-            ClientSeat.OnMealReceive?.Invoke();
+            Debug.Log("[ServingArea] New item detected in slot, invoking OnMealReady");
+            ClientSeat.OnMealReady?.Invoke();
         }
         if (current == null)
             _lastHeldItem = null;

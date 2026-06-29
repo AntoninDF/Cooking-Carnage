@@ -24,40 +24,57 @@ namespace Features
 		public override void Perform()
 		{
 			base.Perform();
-			_seat.TrySit(_client);
-			_seat.OnMealReceive        += TryGrabMeal;
+			bool sat = _seat.TrySit(_client);
+			Debug.Log($"[SitAndWait] TrySit result : {sat} for {_client.name}");
+			_seat.OnMealReady        += TryGrabMeal;
 			_seat.OnClientUnregister += HandleUnregister;
+			Debug.Log($"[SitAndWait] {_client.name} is now sitting and waiting for meal");
+
 		}
 		
 		private void TryGrabMeal()
 		{
-			if (_seat.Owner is not OrderingArea orderingArea) return;
-			var heldItem = orderingArea.ServingArea.MealSlot?.Container?.HeldItem;
-			if (heldItem == null) return;
-			
-			if(orderingArea.ServingArea.MealSlot.Container.RequestDrop(heldItem)) 
-				OnMealGrabbed?.Invoke(heldItem);
-			if (heldItem.TryGetSibling<F_Recipe>(out var _recipe))
+			_seat.OnMealReady -= TryGrabMeal;
+    
+			if (_seat.Owner is not OrderingArea orderingArea)
 			{
-				Debug.LogError("GET THE RECIPE");
+				Debug.LogWarning("[SitAndWait] Seat owner is not ServingArea");
+				return;
 			}
-			//Reference.GetManager<OrderManager>().ResolveOrder();
-			
-		}
+			var heldItem = orderingArea.ServingArea.MealSlot?.Container?.HeldItem;
+			if (heldItem == null)
+			{
+				Debug.LogWarning("[SitAndWait] No item in MealSlot");
+				return;
+			}
+			if (!heldItem.TryGetSibling(out Servable servable, true))
+			{
+				Debug.LogWarning("[SitAndWait] HeldItem has no Servable sibling — Servable pas dans la collection du Plate");
+				return;
+			}
 
-		/// <summary>
-		/// On check si l'item est un plate
-		/// si oui : on check l'order/recipe?
-		/// le client peu l'evaluer
-		/// </summary>
-		private void AnalyseHeldItem(F_Grabbable  item)
-		{
+			Debug.Log("[SitAndWait] Servable found, dropping and serving");
+			orderingArea.ServingArea.MealSlot.Container.RequestDrop(heldItem);
+			_client.TryAcceptServing(servable);
+			
+			if (heldItem.Owner is Component plateComp)
+			{
+				if (heldItem.TryGetSibling(out F_GoToAnimation anim))
+					anim.Enabled = false;
+
+				Debug.Log($"[SitAndWait] Destroying served plate : {plateComp.gameObject.name}");
+				UnityEngine.Object.Destroy(plateComp.gameObject);
+			}
 			
 		}
+		
 
 		private void HandleUnregister(Client client)
 		{
+			_seat.OnMealReady        -= TryGrabMeal; 
+			Debug.Log($"[SitAndWait] HandleUnregister called for {client.name}, expected {_client.name}");
 			if (client != _client) return;
+			Debug.Log($"[SitAndWait] {_client.name} unregistered, invoking OnServed");
 			_seat.OnClientUnregister -= HandleUnregister;
 			OnServed?.Invoke();
 		}

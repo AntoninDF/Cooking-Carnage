@@ -201,8 +201,9 @@ namespace Features
                 (!_navmeshAgent.hasPath || _navmeshAgent.velocity.sqrMagnitude == 0f))
             {
                 IsMoving = false;
-                OnDestinationReached?.Invoke();
-                OnDestinationReached = null;
+                var callback = OnDestinationReached;
+                OnDestinationReached = null; 
+                callback?.Invoke();
             }
         }
         #endregion

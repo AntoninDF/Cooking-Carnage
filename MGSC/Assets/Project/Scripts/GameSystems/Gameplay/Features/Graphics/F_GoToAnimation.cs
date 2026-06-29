@@ -101,6 +101,9 @@ namespace Features
 
         private void SetPos(float percentage)
         {
+            if (!Enabled) return;                          // ← guard
+            if (ControlledTransform == null) return;   
+            
             percentage = Mathf.Clamp01(percentage);
             AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
             if (ControlledTransform.parent == targetTransform)

@@ -170,12 +170,41 @@ namespace Clients
            OnOrderAccepted?.Invoke(order);
        }
        
-       public void TryAcceptServing(Meal meal)
+       public void TryAcceptServing(Servable serving)
        {
-           if (meal == null) return;
-           CurrentOrder.Resolve(meal);
-           CurrentSeat?.TryLeave(this);
-           OnMealServed?.Invoke();
+           Debug.Log($"[Client] {name} TryAcceptServing called");
+           if (serving == null || !serving.Enabled)
+           {
+               Debug.LogWarning("[Client] Servable is null");
+               return;
+           }
+           if (CurrentOrder == null)
+           {
+               Debug.LogWarning($"[Client] {name} has no current order");
+               return;
+           }
+
+           var recipeComponent = serving.Owner as Recipe;
+           if (recipeComponent == null)
+           {
+               Debug.LogWarning("[Client] Servable owner is not a Recipe component");
+               return;
+           }
+
+           SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
+           if (soRecipe == null)
+           {
+               Debug.LogWarning("[Client] F_Recipe returned null SO_Recipe");
+               return;
+           }
+
+           var info = new Orders.ServingInfo(soRecipe);
+
+           var orderManager = Reference.GetManager<GameSystem.OrderManager>();
+           orderManager.ResolveOrder(CurrentOrder, info);
+
+           Debug.Log($"[Client] Order resolved, unregistering seat");
+           CurrentSeat?.TryUnregister(this);
        }
 
        #endregion

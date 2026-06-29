@@ -55,7 +55,7 @@ public class Order
         IsResolved = true;
         //_owner.ResolveOrder(info, rating);
     }
-    public void Resolve(Meal meal)
+    public void Resolve(Servable meal)
     {
         OrderRating = OrderEvaluator.Evaluate(this);
         _onResolve?.Invoke();
