@@ -200,7 +200,7 @@ namespace Features
             if (_destinationSetThisFrame)
             {
                 _destinationSetThisFrame = false;
-                return; // skip ce frame, laisse le temps au pathfinding
+                return; 
             }
     
             if (_navmeshAgent.pathPending) return;

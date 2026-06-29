@@ -148,9 +148,7 @@ namespace GameSystem
                 ? (Vector3)pos + spline.transform.position
                 : Vector3.zero;
 
-            Client client = Client.New(clientSO, spawnPosition, clientSpeed)
-                                  .SetSplinePath(spline)
-                                  .SetSpeed(clientSpeed);
+            Client client = Client.New(clientSO, spawnPosition, clientSpeed).SetSplinePath(spline).SetSpeed(clientSpeed);
 
             client.Begin();
 

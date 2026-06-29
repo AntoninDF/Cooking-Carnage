@@ -2,6 +2,7 @@ using Features;
 using System;
 using Clients;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class OrderingArea : MonoBehaviour, IFeatureCollection
 {
@@ -10,16 +11,19 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     public ClientSeat ClientSeat { get; set; }
     public OrderingCounter OrderingCounter { get; set; }
     public Order NextOrder { get; set; }
+
     #endregion
 
     #region Fields
 
+    
     public Transform SeatTransform;
     public Transform SeatParent;
     public ServingArea ServingArea;
     
     public ClientSeatHeightConfig ServingAreaConfig;
     
+    public UnityEvent OnCustomerKilled;
 
     #endregion
 
@@ -60,7 +64,10 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     {
         Client client = ClientSeat.RegisteredClient;
         if (client != null && ClientSeat.SittingClient != null)
+        {
             client.Cooked.Trigger();
+            OnCustomerKilled?.Invoke();
+        }
         
     }
     
