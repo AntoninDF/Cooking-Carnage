@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace Features
 {
+	/// <summary>
+	/// Make the customer select a seat
+	/// if no seat free, the customer wait in the waitline
+	/// </summary>
 	public class SelectSeat : BaseClientAction
 	{
 		public Action<ClientSeat> OnSeatFound    { get; set; }
@@ -22,7 +26,6 @@ namespace Features
 			if (seats.Count == 0)
 			{
 				OnSeatNotFound?.Invoke();
-				Debug.LogWarning("No seats found");
 				return;
 			}
 
@@ -31,7 +34,6 @@ namespace Features
 
 			foreach (var seat in seats)
 			{
-				Debug.Log($"Trying to seat : {seat}");
 				float dist = Vector3.Distance(seat.transform.position, ClientOwner.Agent.transform.position);
 				if (dist < minDist)
 				{
@@ -44,11 +46,7 @@ namespace Features
 			{
 				nearestSeat.TryRegister(ClientOwner.Owner as Client);
 			}
-			else
-			{
-				Debug.LogWarning("No nearest Seat");
-			}
-			 
+			
 			OnSeatFound?.Invoke(nearestSeat);
 		}
 	}

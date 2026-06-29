@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Features
 {
+    /// <summary>
+    /// Action performed to make the client eat and use a timer for the animation Time
+    /// </summary>
     public class Eat : BaseClientAction
     {
         public Action StartEating;
@@ -11,21 +14,15 @@ namespace Features
 
         public Eat(ClientBehaviour owner, float launchDuration) : base(owner)
         {
-            Debug.Log($"[Eat] Created with duration : {launchDuration}");
-
             StartEating = () =>
             {
-                Debug.Log($"[Eat] StartEating, launching timer for {launchDuration}s");
-
                 Reference.GetManager<TimerManager>().StartTimer("Customer Eating Timer", launchDuration, ()=>StopEating?.Invoke(), false);
-                
             };
         }
 
         public override void Perform()
         {
             base.Perform();
-            Debug.Log("[Eat] Perform called");
             StartEating?.Invoke();
         }
     }

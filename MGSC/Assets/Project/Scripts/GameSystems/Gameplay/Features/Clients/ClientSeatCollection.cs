@@ -24,13 +24,11 @@ namespace Features
         public List<ClientSeat> GetClientSeats(Func<ClientSeat, bool> filter, bool mustBeAvailable = true)
         {
             List<ClientSeat> result = new();
-            Debug.Log($"[ClientManager] GetClientSeats(mustBeAvailable:{mustBeAvailable}) → {result.Count} seats found");
             foreach (var seat in Seats)
             {
                 if (seat == null) continue;
                 if (!filter(seat)) continue;
                 if (mustBeAvailable && (seat.Enabled == false || seat.RegisteredClient != null)) continue; 
-                Debug.Log($"  seat '{(seat.Owner as UnityEngine.Object)?.name}' — registered: {seat.RegisteredClient?.name ?? "null"}");
 
                 result.Add(seat);
             }

@@ -28,7 +28,6 @@ namespace Features
                 if (value != null)
                     OnClientRegister?.Invoke(value);
                 _registeredClient = value;
-                //Debug.Log("Registered client is " + value);
             }
         }
         public Client SittingClient
@@ -42,7 +41,6 @@ namespace Features
                 if (value != null)
                     OnClientSitting?.Invoke(value);
                 _sittingClient = value;
-                //Debug.Log("Sitting client is " + value);
             }
         }
 
@@ -63,7 +61,6 @@ namespace Features
             _defaultPosition = parentTransform.localPosition;
             ClientManager.Register(this);
             _servingAreaConfig = servingAreaConfig;
-            Debug.Log("Client Seat Created");
         }
 
         public bool TryRegister(Client client)
@@ -111,18 +108,14 @@ namespace Features
         
         public bool TryLeave(Client client)
         {
-            Debug.Log($"[ClientSeat] TryLeave called for {client?.name}");
             if (client == null) return false;
             if (SittingClient != client)
             {
-                Debug.LogWarning($"[ClientSeat] SittingClient is {SittingClient?.name}, not {client?.name}");
                 return false;
             }
             SittingClient = null;
-            // SetParent null avant GetUp pour que la position world soit correcte
             client.transform.SetParent(null);
             client.Behaviour.ClientMovement.GetUp();
-            Debug.Log($"[ClientSeat] {client.name} left seat successfully");
             return true;
         }
 
@@ -139,11 +132,6 @@ namespace Features
                 if (heightByType.ClientType == client.Type)
                 {
                     y = heightByType.SeatHeight;
-                    Debug.LogFormat($"New seat height : {y}");
-                }
-                else
-                {
-                    Debug.Log("Client Type not founded");
                 }
             }
             

@@ -127,19 +127,15 @@ namespace Features
 
         private void CanLeave()
         {
-            Debug.Log($"[ClientBehaviour] CanLeave called, IsCooked : {(_owner as Client)?.IsCooked}");
-
             if ((_owner as Client)?.IsCooked == false) Perform(BuildEat());
         }
 
         private Eat BuildEat()
         {
-            Debug.Log($"[ClientBehaviour] BuildEat called, _eatingTime : {_eatingTime}");
 
             var eat = new Eat(this, _eatingTime);
             eat.StopEating += () =>
             {
-                Debug.Log("[ClientBehaviour] StopEating fired, building Leave");
 
                 Perform(BuildLeave());
             };
@@ -148,11 +144,9 @@ namespace Features
 
         private Leave BuildLeave()
         {
-            Debug.Log("[ClientBehaviour] BuildLeave called");
             var leave = new Leave(this);
             leave.OnExited += () =>
                               {
-                                  Debug.Log("[ClientBehaviour] OnExited fired, destroying client");
                                   UnityEngine.Object.Destroy((Owner as Client)?.gameObject);
                               };
             return leave;

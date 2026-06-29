@@ -64,10 +64,10 @@ namespace Features
             SplineComponent     = splineComponent;
             Speed               = speed;
             _navmeshAgent.speed        = speed;
+            _navmeshAgent.stoppingDistance = 0.2f;
             _validSetup         = controlledTransform != null && splineComponent != null;
             
-            if(!_validSetup) 
-                Debug.LogWarning($"[ClientMovement] Invalid Setup - transform is null : {controlledTransform == null} or spline is null : {splineComponent == null}");
+           
         }
 
         #endregion
@@ -90,7 +90,6 @@ namespace Features
         {
             if (!_validSetup)
             {
-                Debug.Log("[ClientMovement] Setup is not valid, cannot move along spline");
                 return;
             }
             float lenght = Spline.GetLength();
@@ -105,7 +104,6 @@ namespace Features
         {
             if (!_validSetup)
             {
-                Debug.Log($"[ClientMovement] Setup is not valid, cannot set the customer position at {t} on the spline");
                 return;
             }
             SplinePosition               = t;
@@ -121,7 +119,6 @@ namespace Features
         {
             if (!_validSetup)
             {
-                Debug.Log($"[ClientMovement] Setup is not valid, cannot get the position of {time} on the spline");
                 return Vector3.zero;
             }
 
@@ -138,7 +135,6 @@ namespace Features
         {
             if (!_validSetup)
             {
-                Debug.Log($"[ClientMovement] Setup is not valid, cannot get the time value of {worldPosition} on the spline");
                 return 0f;
             }
 
@@ -165,7 +161,6 @@ namespace Features
             _navmeshAgent.enabled = true;
     
             bool warped = _navmeshAgent.Warp(ControlledTransform.position);
-            Debug.Log($"[ClientMovement] SwitchToNavMesh — Warp success: {warped}, agentPos: {_navmeshAgent.transform.position}, destination: {worldPosition}");
     
             SetNavDestination(worldPosition);
         }

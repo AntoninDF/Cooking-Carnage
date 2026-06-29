@@ -108,7 +108,12 @@ namespace Clients
        }
 
        #region Seat
-
+       
+       /// <summary>
+       /// Executed when a new Seat is registered (in general ta the spawn)
+       /// Or when the wait line have a nex seat free
+       /// </summary>
+       /// <param name="seat"></param>
        public void OnNewSeatRegister(ClientSeat seat)
        {
            if (seat == null) return;
@@ -124,6 +129,10 @@ namespace Clients
            
        }
 
+       /// <summary>
+       /// Move the customer to his place on the seat and parenting hil to the seat
+       /// </summary>
+       /// <param name="seatTransform"></param>
        public void SittingClient(Transform seatTransform)
        {
            transform.SetParent(seatTransform);
@@ -132,6 +141,9 @@ namespace Clients
            Behaviour.OnSitting?.Invoke();
        }
 
+       /// <summary>
+       /// Unparenting the customer and set his moves and look for quitting
+       /// </summary>
        public void QuitSeat()
        {
            transform.SetParent(null);
@@ -139,6 +151,10 @@ namespace Clients
            ClientLook.SetClientLeaving(this);
        }
        
+       /// <summary>
+       /// Smooth Lerping to the seat place when the navmesh reach the seat 
+       /// </summary>
+       /// <returns></returns>
        IEnumerator SmoothTransformReset()
        {
            float      elapsed  = 0;
@@ -161,49 +177,39 @@ namespace Clients
 
        #region Order
 
+       /// <summary>
+       /// Assign an order to the custommer
+       /// </summary>
+       /// <param name="order"></param>
        public void TryAcceptOrder(Order order)
        {
            if (order == null) return;
            if (CurrentOrder != null) return;
            CurrentOrder = order;
-           //CurrentSeat.TryUnregister(this);
            OnOrderAccepted?.Invoke(order);
        }
        
+       /// <summary>
+       /// If the customer is served, check if the recipe is good to be evaluate
+       /// and evaluate it if he can
+       /// </summary>
+       /// <param name="serving"></param>
        public void TryAcceptServing(Servable serving)
        {
-           Debug.Log($"[Client] {name} TryAcceptServing called");
-           if (serving == null || !serving.Enabled)
-           {
-               Debug.LogWarning("[Client] Servable is null");
-               return;
-           }
-           if (CurrentOrder == null)
-           {
-               Debug.LogWarning($"[Client] {name} has no current order");
-               return;
-           }
+           if (serving == null || !serving.Enabled) return;
+           if (CurrentOrder == null) return;
 
            var recipeComponent = serving.Owner as Recipe;
-           if (recipeComponent == null)
-           {
-               Debug.LogWarning("[Client] Servable owner is not a Recipe component");
-               return;
-           }
+           if (recipeComponent == null) return;
 
            SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
-           if (soRecipe == null)
-           {
-               Debug.LogWarning("[Client] F_Recipe returned null SO_Recipe");
-               return;
-           }
+           if (soRecipe == null) return;
 
            var info = new Orders.ServingInfo(soRecipe);
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);
 
-           Debug.Log($"[Client] Order resolved, unregistering seat");
            CurrentSeat?.TryUnregister(this);
        }
 

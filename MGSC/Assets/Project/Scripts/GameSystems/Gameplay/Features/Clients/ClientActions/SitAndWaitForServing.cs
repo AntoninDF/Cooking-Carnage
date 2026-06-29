@@ -25,10 +25,8 @@ namespace Features
 		{
 			base.Perform();
 			bool sat = _seat.TrySit(_client);
-			Debug.Log($"[SitAndWait] TrySit result : {sat} for {_client.name}");
 			_seat.OnMealReady        += TryGrabMeal;
 			_seat.OnClientUnregister += HandleUnregister;
-			Debug.Log($"[SitAndWait] {_client.name} is now sitting and waiting for meal");
 
 		}
 		
@@ -38,22 +36,18 @@ namespace Features
     
 			if (_seat.Owner is not OrderingArea orderingArea)
 			{
-				Debug.LogWarning("[SitAndWait] Seat owner is not ServingArea");
 				return;
 			}
 			var heldItem = orderingArea.ServingArea.MealSlot?.Container?.HeldItem;
 			if (heldItem == null)
 			{
-				Debug.LogWarning("[SitAndWait] No item in MealSlot");
 				return;
 			}
 			if (!heldItem.TryGetSibling(out Servable servable, true))
 			{
-				Debug.LogWarning("[SitAndWait] HeldItem has no Servable sibling — Servable pas dans la collection du Plate");
 				return;
 			}
 
-			Debug.Log("[SitAndWait] Servable found, dropping and serving");
 			orderingArea.ServingArea.MealSlot.Container.RequestDrop(heldItem);
 			_client.TryAcceptServing(servable);
 			
@@ -62,7 +56,6 @@ namespace Features
 				if (heldItem.TryGetSibling(out F_GoToAnimation anim))
 					anim.Enabled = false;
 
-				Debug.Log($"[SitAndWait] Destroying served plate : {plateComp.gameObject.name}");
 				UnityEngine.Object.Destroy(plateComp.gameObject);
 			}
 			
