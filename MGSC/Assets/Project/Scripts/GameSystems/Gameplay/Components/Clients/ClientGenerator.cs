@@ -105,9 +105,9 @@ namespace Clients
         {
             if (!_useUpgrades) return this;
             if (!Reference.TryGetManager(out UpgradeManager uMan)) return this;
-            IngredientDropUpgrade upgrade = uMan.GetUpgradeByType<IngredientDropUpgrade>();
-            if (upgrade == null) return this;
-            upgrade.Apply(this);
+            // IngredientDropUpgrade upgrade = uMan.GetUpgradeByType<IngredientDropUpgrade>();
+            // if (upgrade == null) return this;
+            // upgrade.Apply(this);
             return this;
         }
 

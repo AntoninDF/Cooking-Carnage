@@ -23,9 +23,9 @@ namespace Upgrades
 
         #region Fields
         
-        private List<Upgrade>        _upgrades;
-        private MoneyManager         _moneyManager;
-        private UpgradeManagerConfig _config;
+        private List<Upgrade>                    _upgrades;
+        private MoneyManager                     _moneyManager;
+        private Dictionary<Type, SubscriberList> _subscribers = new();
         
         #endregion
 
@@ -42,64 +42,65 @@ namespace Upgrades
         /// </summary>
         public void Init()
         {
-            _config = UpgradeManagerConfig.Instance;
-            
-            // It's not necessary to throw errors for a variable that isn't even used
-            // if (_config == null)
-                // throw new InvalidOperationException("[UpgradeManager] SetConfig() must be called before Init().");
-
-            _upgrades = new List<Upgrade>();
-            //Get all the inherited upgrades 
-            var allUpgrade = Assembly.GetExecutingAssembly().GetTypes()
-                .Where(t => t.IsSubclassOf(typeof(Upgrade)) && !t.IsAbstract);
-
-            //Init every upgrades and add them to the upgrade list
-            foreach (var upgrade in allUpgrade)
+            var index = UpgradeBindingIndex.Instance;
+            if (index == null)
             {
-                _upgrades.Add((Upgrade)Activator.CreateInstance(upgrade));
+                this.Log(LogType.Error, "UpgradeBindingIndex not found — cannot initialize upgrades");
+                return;
+            }
+
+            _upgrades    = new List<Upgrade>();
+            _subscribers = new Dictionary<Type, SubscriberList>();
+
+            var concreteTypes = AppDomain.CurrentDomain.GetAssemblies()
+                                         .SelectMany(a => a.GetTypes())
+                                         .Where(t => t.IsSubclassOf(typeof(Upgrade)) && !t.IsAbstract)
+                                         .ToDictionary(t => t.Name);
+
+            foreach (var entry in index.Bindings)
+            {
+                if (entry.Config == null)
+                {
+                    this.Log(LogType.Warning, $"Config is null for '{entry.UpgradeTypeName}' — skipping");
+                    continue;
+                }
+
+                if (!concreteTypes.TryGetValue(entry.UpgradeTypeName, out var type))
+                {
+                    this.Log(LogType.Warning, $"No type found for '{entry.UpgradeTypeName}' — skipping");
+                    continue;
+                }
+
+                var upgrade = (Upgrade)Activator.CreateInstance(type);
+                upgrade.SetConfig(entry.Config);
+
+                upgrade.OnLevelUpInternal += DispatchLevelUp;
+
+                _upgrades.Add(upgrade);
             }
 
             if (!Reference.TryGetManager(out _moneyManager))
-            {
-                this.Log(LogType.Warning, "No money manager found");
-            }
+                this.Log(LogType.Warning, "No MoneyManager found");
             else
-            {
                 this.Log(LogType.Log, "UpgradeManager correctly initialized");
-            }
-
-            ApplyUpgrades();
         }
-
-        public void ApplyUpgrades()
+        
+        private void DispatchLevelUp(Upgrade upgrade)
         {
-            foreach (var upgrade in _upgrades)
-            {
-                upgrade.Apply();
-            }
+            var type = upgrade.GetType();
+            if (_subscribers.TryGetValue(type, out var list))
+                list.Dispatch(upgrade);
         }
 
         public T GetUpgradeByType<T>() where T : Upgrade
-        {
-            foreach (var upgrade in _upgrades)
-                if (upgrade is T)
-                    return upgrade as T;
-            return null;
-        }
-        
-        public Upgrade GetUpgradeByType(Type type)
-        {
-            return _upgrades.FirstOrDefault(u => u.GetType() == type);
-        }
+            => _upgrades.OfType<T>().FirstOrDefault();
 
-        /// <summary>
-        /// To Get an Upgrade with the associated Config
-        /// </summary>
+        public Upgrade GetUpgradeByType(Type type)
+            => _upgrades.FirstOrDefault(u => u.GetType() == type);
+
         public Upgrade GetUpgradeByConfig(UpgradeConfig config)
             => _upgrades.FirstOrDefault(u => u.Config == config);
-        
-        
-        
+
         public bool HasUpgradeOfType<T>(out T upgrade) where T : Upgrade
         {
             upgrade = GetUpgradeByType<T>();
@@ -195,5 +196,27 @@ namespace Upgrades
         }
 
         #endregion
+        
+        #region Subscriber Wrapper
+
+        private abstract class SubscriberList
+        {
+            public abstract void Dispatch(Upgrade upgrade);
+        }
+
+        private class SubscriberList<T> : SubscriberList where T : Upgrade
+        {
+            public List<IUpgradable<T>> Subscribers = new();
+
+            public override void Dispatch(Upgrade upgrade)
+            {
+                if (upgrade is not T typed) return;
+                foreach (var sub in Subscribers)
+                    sub.OnUpgraded(typed);
+            }
+        }
+
+        #endregion
+        
     }
 }

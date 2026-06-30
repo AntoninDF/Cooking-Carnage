@@ -64,9 +64,10 @@ namespace Clients
 
         #region Fields
        
-        private Order      _currentOrder;
-        private ClientSeat _currentSeat;
-        private ClientLook _clientLook;
+        private Order                 _currentOrder;
+        private ClientSeat            _currentSeat;
+        private ClientLook            _clientLook;
+
 
         private float _cookingDelay = 3f;
        #endregion

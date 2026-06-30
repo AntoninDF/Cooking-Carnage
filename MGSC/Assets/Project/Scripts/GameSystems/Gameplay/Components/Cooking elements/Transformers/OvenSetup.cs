@@ -3,10 +3,11 @@ using GameSystem;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Upgrades;
 
 namespace Cooking
 {
-    public class OvenSetup : MonoBehaviour
+    public class OvenSetup : MonoBehaviour, IUpgradable<OvenCountUpgrade>
     {
         #region Properties
 
@@ -69,5 +70,14 @@ namespace Cooking
         }
 
         #endregion
+
+        public void OnUpgradeInit(OvenCountUpgrade upgrade)
+        {
+            
+        }
+
+        public void OnUpgraded(OvenCountUpgrade upgrade)
+        {
+        }
     }
 }
