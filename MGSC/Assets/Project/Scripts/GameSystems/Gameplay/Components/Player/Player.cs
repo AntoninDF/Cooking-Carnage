@@ -10,6 +10,20 @@ public class Player : MonoBehaviour, IFeatureCollection
     public F_SoloContainer Container { get; private set; }
     public BasePlayerInputs PlayerInputs { get; private set; }
     public PlayerMovement PlayerMovement { get; private set; }
+    public F_LookAtTarget LookedAtObject
+    {
+        get => _lookedAtObject;
+        set
+        {
+            if (value == _lookedAtObject) return;
+            if (_lookedAtObject != null)
+                _lookedAtObject.IsLookedAt = false;
+            _lookedAtObject = value;
+            if (_lookedAtObject != null)
+                _lookedAtObject.IsLookedAt = true;
+        }
+    }
+    private F_LookAtTarget _lookedAtObject;
 
     [SerializeField] private Transform head;
     [SerializeField] private SlotContainer hand;
@@ -44,6 +58,10 @@ public class Player : MonoBehaviour, IFeatureCollection
     void Update()
     {
         Collection.Update();
+
+        var cam = Camera.main;
+        if (LookedAtObject != null && !LookedAtObject.CheckIfLookedAt(cam.transform.position, cam.transform.forward))
+            LookedAtObject = null;
     }
 
     void BindPlayerActions()
@@ -71,10 +89,10 @@ public class Player : MonoBehaviour, IFeatureCollection
                 var obj = feature as F_LookAtTarget;
                 obj.IsLookedAt = true;
                 obj.LookPosition = PlayerActor.LookPosition;
+                LookedAtObject = obj;
                 return true;
             }
             );
-
     }
 
     public Transform GetCameraTransform()

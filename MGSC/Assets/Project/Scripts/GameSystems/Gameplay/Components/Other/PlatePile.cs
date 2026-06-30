@@ -64,7 +64,7 @@ public class PlatePile : MonoBehaviour
         if (TryGetComponent(out _mf))
         {
             float y = _mf.sharedMesh.bounds.max.y;
-            if (TryGetComponent(out _mp))
+            if (TryGetComponent(out _mp) && _mp.count != 0)
                 y -= _mp.mesh.bounds.size.y;
             _target.localPosition = new Vector3(0, y, 0);
         }

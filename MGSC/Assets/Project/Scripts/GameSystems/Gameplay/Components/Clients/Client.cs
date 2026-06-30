@@ -2,11 +2,8 @@ using Features;
 using System;
 using System.Collections;
 using Cooking;
-using GameSystem;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Splines;
 
 namespace Clients
 {
@@ -213,11 +210,12 @@ namespace Clients
            CurrentSeat?.TryUnregister(this);
        }
 
-       #endregion
-       
-       #region Gizmos
+        #endregion
 
-       private void OnDrawGizmos()
+        #region Gizmos
+
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
        {
            if (!Application.isPlaying) return;
 
@@ -242,8 +240,8 @@ namespace Clients
            
            
        }
+#endif
+#endregion
 
-       #endregion
-       
     }
 }
