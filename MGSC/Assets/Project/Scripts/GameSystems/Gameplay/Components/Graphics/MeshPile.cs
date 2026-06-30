@@ -43,25 +43,20 @@ public class MeshPile : MonoBehaviour
 #if UNITY_EDITOR
     private void OnEnable()
     {
-        Debug.Log("On Enable");
         AppDomain.CurrentDomain.AssemblyLoad += RegenerateIfNull_Editor;
         EditorApplication.playModeStateChanged += RegenerateIfNull_Editor;
     }
     private void OnDisable()
     {
-        Debug.Log("On Disable");
         AppDomain.CurrentDomain.AssemblyLoad -= RegenerateIfNull_Editor;
         EditorApplication.playModeStateChanged -= RegenerateIfNull_Editor;
     }
 
-    void RegenerateIfNull_Editor() => RegenerateIfNull();
     void RegenerateIfNull_Editor(PlayModeStateChange temp) => RegenerateIfNull();
-    void RegenerateIfNull_Editor(object temp) => RegenerateIfNull();
     void RegenerateIfNull_Editor(object temp, object temp2) => RegenerateIfNull();
 #endif
     public void RegenerateIfNull()
     {
-        Debug.Log("Regenerate if null");
         if (mf.sharedMesh == null || mf.sharedMesh)
             Regenerate();
     }
