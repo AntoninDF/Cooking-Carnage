@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using Features;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshCollider), typeof(SlotContainer), typeof(MeshPile))]
@@ -16,9 +16,14 @@ public class PlatePile : MonoBehaviour
     {
         TryGetComponent(out _mp);
         TrySpawn();
-        Container.Container.OnDrop += _ => TrySpawn();
-        Container.Container.OnDrop += _ => _mp.RemoveOneElement();
-        Container.Container.OnDrop += _ => Debug.Log("DROP");
+        Container.Container.OnDrop += OnPlateDropped;
+    }
+
+    private void OnPlateDropped(F_Grabbable plateDropped)
+    {
+        if (_mp.count == 0) return;
+        _mp.RemoveOneElement();
+        TrySpawn();
     }
     public void TrySpawn()
     {
@@ -27,13 +32,17 @@ public class PlatePile : MonoBehaviour
             Debug.LogWarning("[SpawnItemInSlot] Couldn't spawn item because there were missing references on " + name + ".");
             return;
         }
-
         if (Container.Container.HeldItem != null) return;
 
         SetupTarget();
 
         GameObject go = Instantiate(ItemPrefab.gameObject);
-        Container.Container.RequestGrab(go.GetComponent<Item>().Grabbable);
+        var item = go.GetComponent<Item>();
+        item.Anim.Enabled = false;
+        Container.Container.RequestGrab(item.Grabbable);
+        go.transform.SetParent(_target);
+        go.transform.localPosition = Vector3.zero;
+        item.Anim.Enabled = true;
     }
 
     void SetupTarget()
@@ -55,6 +64,8 @@ public class PlatePile : MonoBehaviour
         if (TryGetComponent(out _mf))
         {
             float y = _mf.sharedMesh.bounds.max.y;
+            if (TryGetComponent(out _mp) && _mp.count != 0)
+                y -= _mp.mesh.bounds.size.y;
             _target.localPosition = new Vector3(0, y, 0);
         }
 

@@ -21,9 +21,6 @@ namespace Features
             get => _isLookedAt;
             set
             {
-                _lastCheckedFrame = Time.frameCount;
-                if (value)
-                    RequestResetOnNextFrame();
                 if (_isLookedAt == value) return;
                 _isLookedAt = value;
                 if (_isLookedAt)
@@ -41,7 +38,6 @@ namespace Features
 
         #region Fields
         private bool _isLookedAt;
-        private int _lastCheckedFrame;
         #endregion
 
         public F_LookAtTarget(IFeatureCollection owner, Transform transform) : base(owner)
@@ -76,17 +72,5 @@ namespace Features
             return false;
         }
 
-        public virtual void RequestResetOnNextFrame()
-        {
-            TimerManager.StartTimer("Reset lookat (" + Time.time + ")", 3, TryReset, true);
-        }
-
-        protected virtual void TryReset()
-        {
-            if (_lastCheckedFrame < Time.frameCount - 1) // Reset only if the last check is at least two frames old
-            {
-                IsLookedAt = false;
-            }
-        }
     }
 }
