@@ -1178,6 +1178,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6661078938106993693, guid: 696995ea1b38fec4782427f5137cbc36, type: 3}
   m_PrefabInstance: {fileID: 2787869168083736850}
   m_PrefabAsset: {fileID: 0}
+--- !u!198 &8930469966712737542 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6728350504361924116, guid: 696995ea1b38fec4782427f5137cbc36, type: 3}
+  m_PrefabInstance: {fileID: 2787869168083736850}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3515349744718125138
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2617,6 +2622,18 @@ MonoBehaviour:
         - m_Target: {fileID: 9010698450651919534}
           m_TargetAssemblyTypeName: OrderingArea, Assembly-CSharp
           m_MethodName: KillClient
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8930469966712737542}
+          m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+          m_MethodName: Play
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
