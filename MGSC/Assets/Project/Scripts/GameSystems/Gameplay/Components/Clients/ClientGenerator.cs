@@ -12,7 +12,7 @@ namespace Clients
     /// This part of the client class handles the Client generation.
     /// For client behaviour, see Client.cs
     /// </summary>
-    public partial class Client : MonoBehaviour
+    public partial class Client : MonoBehaviour, IUpgradable<IngredientDropUpgrade>
     {
 
         #region Properties
@@ -35,6 +35,7 @@ namespace Clients
         private float _speed         = 1f;
         private float _reachDistance = 1f;
         private SplineContainer _splineComp;
+        private float _dropRateIncrement = 0f;
         //private ClientMovement _movement;
 
         #endregion
@@ -55,11 +56,12 @@ namespace Clients
                 Debug.LogError("[Client] New : The specified client model was null. Please pass in a valid model");
                 return null;
             }
+
             return
                 Client
-                .New(model.prefab, model.clientType, model.loot, model.dropRate, model.name, position, speed)
-                .SetModel(model)
-                .TryUseUpgrades();
+                    .New(model.prefab, model.clientType, model.loot, model.dropRate, model.name, position, speed)
+                    .SetModel(model);
+            //.TryUseUpgrades();
         }
         /// <summary>
         /// If you spawn a client this way, you should probably use SetModel on it afterwards.
@@ -101,15 +103,15 @@ namespace Clients
         }
         #endregion
 
-        private Client TryUseUpgrades()
-        {
-            if (!_useUpgrades) return this;
-            if (!Reference.TryGetManager(out UpgradeManager uMan)) return this;
-            // IngredientDropUpgrade upgrade = uMan.GetUpgradeByType<IngredientDropUpgrade>();
-            // if (upgrade == null) return this;
-            // upgrade.Apply(this);
-            return this;
-        }
+        // private Client TryUseUpgrades()
+        // {
+        //     if (!_useUpgrades) return this;
+        //     if (!Reference.TryGetManager(out UpgradeManager uMan)) return this;
+        //     // IngredientDropUpgrade upgrade = uMan.GetUpgradeByType<IngredientDropUpgrade>();
+        //     // if (upgrade == null) return this;
+        //     // upgrade.Apply(this);
+        //     return this;
+        // }
 
 
         #region Client properties
@@ -128,6 +130,8 @@ namespace Clients
         public Client SetLoot(SO_Ingredient loot, Vector2 dropRate)
         {
             IngredientToDrop = loot;
+            Vector2 finalDropRate = new Vector2(dropRate.x +  _dropRateIncrement, dropRate.y +  _dropRateIncrement);
+           
             DropRate = dropRate;
             return this;
         }
@@ -158,7 +162,26 @@ namespace Clients
         }
         #endregion
 
-        
+        #region Upgrade
+
+        public void OnUpgradeInit(IngredientDropUpgrade upgrade)
+        {
+            OnUpgrade(upgrade);
+        }
+
+        public void OnUpgraded(IngredientDropUpgrade upgrade)
+        {
+            OnUpgrade(upgrade);
+        }
+
+        public void OnUpgrade(IngredientDropUpgrade upgrade)
+        {
+            _dropRateIncrement = upgrade.DropRateIncrement;
+        }
+
+        #endregion
+
+       
     }
 
 }

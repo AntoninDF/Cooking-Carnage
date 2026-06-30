@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Upgrades
 {
+	/// <summary>
+	/// Scriptable Singleton that automaticly reference all the inherited Upgrades class
+	/// So we can associate the SO config that we want for each of them
+	/// </summary>
 	[CreateAssetMenu(menuName = "Scriptable Objects/Upgrades/Binding Index")]
 	public class UpgradeBindingIndex : ScriptableObject
 	{

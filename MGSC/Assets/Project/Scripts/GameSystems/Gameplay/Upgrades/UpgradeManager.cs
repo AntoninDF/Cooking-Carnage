@@ -85,67 +85,22 @@ namespace Upgrades
                 this.Log(LogType.Log, "UpgradeManager correctly initialized");
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="upgrade"></param>
         private void DispatchLevelUp(Upgrade upgrade)
         {
             var type = upgrade.GetType();
             if (_subscribers.TryGetValue(type, out var list))
                 list.Dispatch(upgrade);
         }
-
-        public T GetUpgradeByType<T>() where T : Upgrade
-            => _upgrades.OfType<T>().FirstOrDefault();
-
-        public Upgrade GetUpgradeByType(Type type)
-            => _upgrades.FirstOrDefault(u => u.GetType() == type);
-
-        public Upgrade GetUpgradeByConfig(UpgradeConfig config)
-            => _upgrades.FirstOrDefault(u => u.Config == config);
-
-        public bool HasUpgradeOfType<T>(out T upgrade) where T : Upgrade
-        {
-            upgrade = GetUpgradeByType<T>();
-            return upgrade != null;
-        }
-
-    
-        public int LevelUp<T>() where T : Upgrade
-        {
-            T upgrade;
-            if (!HasUpgradeOfType<T>(out upgrade))
-            {
-                this.Log(LogType.Error, "No upgrade of type " + nameof(T) + " found");
-            }
-        
-            LevelUp(upgrade);
-            return upgrade.Level;
-        }
-
-        private void LevelUp<T>(T upgrade) where T : Upgrade
-        {
-            upgrade?.LevelUp();
-            if (upgrade != null)
-            {
-                this.Log(LogType.Log, $"{upgrade} level up");
-            }
-        }
         
 
-        /// <summary>
-        /// If there's enough money, spend it and apply the level up
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns>True if the level up happens, false otherwise</returns>
-        /// 
-        public bool TryLevelUp<T>() where T : Upgrade
-        {
-            if (!HasUpgradeOfType<T>(out T upgrade))
-            {
-                this.Log(LogType.Error, $"No upgrade of type {typeof(T).Name} found");
-                return false;
-            }
-            return TryLevelUpInternal(upgrade);
-        }
+        #endregion
         
+        #region Public Mehtods
+
         /// <summary>
         /// Try to level up but by using a config to access the correct upgrade
         /// </summary>
@@ -185,7 +140,20 @@ namespace Upgrades
             return true;
         }
         
+        public T GetUpgradeByType<T>() where T : Upgrade => _upgrades.OfType<T>().FirstOrDefault();
+        public Upgrade GetUpgradeByType(Type type) => _upgrades.FirstOrDefault(u => u.GetType() == type);
+        public Upgrade GetUpgradeByConfig(UpgradeConfig config) => _upgrades.FirstOrDefault(u => u.Config == config);
+
+        public bool HasUpgradeOfType<T>(out T upgrade) where T : Upgrade
+        {
+            upgrade = GetUpgradeByType<T>();
+            return upgrade != null;
+        }
+
+        #endregion
         
+        #region IManager
+
         public void Register()
         {
             Reference.SetManager(this);

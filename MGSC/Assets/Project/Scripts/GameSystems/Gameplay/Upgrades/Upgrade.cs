@@ -31,9 +31,7 @@ namespace Upgrades
 
         internal void SetConfig(UpgradeConfig config)
         {
-            _config = config ??
-                      throw new ArgumentNullException(nameof(config),
-                                                      $"[{GetType().Name}] UpgradeConfig cannot be null");
+            _config = config ?? throw new ArgumentNullException(nameof(config),$"[{GetType().Name}] UpgradeConfig cannot be null");
         }
         
         public virtual void LevelUp()

@@ -1752,7 +1752,7 @@ GameObject:
   - component: {fileID: 1508417771706654838}
   - component: {fileID: 5700694133266696112}
   - component: {fileID: 4461118013921912202}
-  - component: {fileID: 7993675270422424906}
+  - component: {fileID: 7806711825382488873}
   m_Layer: 0
   m_Name: P_Oven
   m_TagString: Untagged
@@ -2093,7 +2093,7 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
           m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         Path: []
-        OwningObject: {fileID: 7993675270422424906}
+        OwningObject: {fileID: 0}
       source: 0
     Event:
       m_PersistentCalls:
@@ -2126,7 +2126,7 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
           m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         Path: []
-        OwningObject: {fileID: 7993675270422424906}
+        OwningObject: {fileID: 0}
       source: 0
     Event:
       m_PersistentCalls:
@@ -2182,7 +2182,7 @@ MonoBehaviour:
             Culture=neutral, PublicKeyToken=null
           m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         Path: []
-        OwningObject: {fileID: 7993675270422424906}
+        OwningObject: {fileID: 0}
       source: 0
     Event:
       m_PersistentCalls:
@@ -2214,7 +2214,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
---- !u!114 &7993675270422424906
+--- !u!114 &7806711825382488873
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2223,24 +2223,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 8542838040648014806}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de06c7504b89fa44fb5bce40ddcf14e9, type: 3}
+  m_Script: {fileID: 11500000, guid: 4294b0179dfa37f4b8d1316bf1c3f7c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Oven
   _itemSlot: {fileID: 4820131973737151873}
   _button: {fileID: 7929391311183339527}
   ProgressFeedbacks:
     MaterialProperty:
-      Name: _Fade
-      TargetRenderer: {fileID: 844473465717316273}
+      Name: 
+      TargetRenderer: {fileID: 0}
     AnimatedTransform:
-      Transform: {fileID: 2126724887176806307}
-      StartRotation: {x: 0, y: 0, z: 0.6427876, w: 0.76604444}
-      EndRotation: {x: 0, y: 0, z: 0.64278764, w: -0.76604444}
+      Transform: {fileID: 0}
+      StartRotation: {x: 0, y: 0, z: 0, w: 0}
+      EndRotation: {x: 0, y: 0, z: 0, w: 0}
     PercentageText: {fileID: 3919562422496712881}
-    IngredientInfoScreens:
-    - {fileID: 885096864005664793}
-    - {fileID: 3901059833229521834}
-    - {fileID: 3627208796412773535}
+    IngredientInfoScreens: []
 --- !u!1 &8991466077180281026
 GameObject:
   m_ObjectHideFlags: 0
@@ -3005,11 +3002,6 @@ MonoBehaviour:
   _endVector: {x: 1, y: 1, z: 1, w: 1}
   _startColor: {r: 0, g: 0, b: 0, a: 1}
   _endColor: {r: 1, g: 1, b: 1, a: 1}
---- !u!4 &2126724887176806307 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 556021938034343851, guid: af80d9f14e50b2641a7f4dafa72955c7, type: 3}
-  m_PrefabInstance: {fileID: 1888351872528121864}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2309473761756812667 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4195138390265566579, guid: af80d9f14e50b2641a7f4dafa72955c7, type: 3}

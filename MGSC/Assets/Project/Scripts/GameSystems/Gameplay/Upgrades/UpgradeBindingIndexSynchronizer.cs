@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace Upgrades
 {
+	/// <summary>
+	/// Editor Script that use Systm.Reflection for get allt he Upgrades
+	/// </summary>
 	[InitializeOnLoad]
 	public class UpgradeBindingIndexSynchronizer
 	{
