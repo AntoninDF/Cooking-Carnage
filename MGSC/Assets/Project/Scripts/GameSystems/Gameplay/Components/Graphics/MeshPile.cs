@@ -1,9 +1,12 @@
 #if UNITY_EDITOR
+using System;
 using UnityEditor;
+
 #endif
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
+[ExecuteAlways]
 public class MeshPile : MonoBehaviour
 {
 
@@ -29,6 +32,7 @@ public class MeshPile : MonoBehaviour
         TryGetComponent(out mr);
         TryAssignDefaultMaterial();
         TryAssignDefaultMesh();
+        RegenerateIfNull();
     }
     void Reset()
     {
@@ -36,16 +40,31 @@ public class MeshPile : MonoBehaviour
         TryAssignDefaultMesh();
         Regenerate_Editor();
     }
+#if UNITY_EDITOR
     private void OnEnable()
     {
-#if UNITY_EDITOR
-        Regenerate_Editor();
-#else
-        Regenerate();
-#endif
-
+        Debug.Log("On Enable");
+        AppDomain.CurrentDomain.AssemblyLoad += RegenerateIfNull_Editor;
+        EditorApplication.playModeStateChanged += RegenerateIfNull_Editor;
+    }
+    private void OnDisable()
+    {
+        Debug.Log("On Disable");
+        AppDomain.CurrentDomain.AssemblyLoad -= RegenerateIfNull_Editor;
+        EditorApplication.playModeStateChanged -= RegenerateIfNull_Editor;
     }
 
+    void RegenerateIfNull_Editor() => RegenerateIfNull();
+    void RegenerateIfNull_Editor(PlayModeStateChange temp) => RegenerateIfNull();
+    void RegenerateIfNull_Editor(object temp) => RegenerateIfNull();
+    void RegenerateIfNull_Editor(object temp, object temp2) => RegenerateIfNull();
+#endif
+    public void RegenerateIfNull()
+    {
+        Debug.Log("Regenerate if null");
+        if (mf.sharedMesh == null || mf.sharedMesh)
+            Regenerate();
+    }
     private void TryAssignDefaultMesh()
     {
         if (mesh != null) return;
@@ -75,6 +94,7 @@ public class MeshPile : MonoBehaviour
         if (material != null)
             mr.sharedMaterial = material;
     }
+    [ContextMenu("Regenerate mesh")]
     internal void Regenerate_Editor()
     {
         TryGetComponent(out mf);
@@ -109,6 +129,12 @@ public class MeshPileEditor : Editor
     {
         Handles.color = Color.cyan;
         MeshPile myObj = (MeshPile)target;
+        //myObj.RegenerateIfNull();
+        if (myObj.GetComponent<MeshFilter>().sharedMesh == null)
+        {
+            Debug.Log("Mesh for " + myObj.gameObject + " is null");
+            return;
+        }
         var bounds = myObj.GetComponent<MeshFilter>().sharedMesh.bounds;
         Handles.DrawWireCube(myObj.transform.position + bounds.center, bounds.size);
         Undo.RecordObject(myObj, "Modify pile object count");
