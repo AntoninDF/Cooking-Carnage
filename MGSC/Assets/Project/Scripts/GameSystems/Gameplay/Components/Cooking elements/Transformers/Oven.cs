@@ -85,6 +85,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
     private void TryStartCooking(InteractionContext context)
     {
         if (Container.HeldItem == null) return;
+        _button.gameObject.SetActive(false);
         if (Container.HeldItem.TryGetSibling(out F_Cookable cookable, true) && cookable.CanBeTransformed)
         {
             Cooker.RequestStartTransformation(cookable);
@@ -110,6 +111,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
     private void OnStopCooking(TransformableAfterTimer target=null)
     {
         Container.IsLocked = false;
+        _button.gameObject.SetActive(true);
         OnCookingProgress(0f);
         Cooker.RequestStopTransformation();
     }
