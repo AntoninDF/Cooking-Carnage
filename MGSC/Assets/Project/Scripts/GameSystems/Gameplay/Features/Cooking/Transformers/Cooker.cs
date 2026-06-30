@@ -4,11 +4,13 @@ namespace Features
 {
     public class Cooker : TransformAfterTimer, IUpgradable<CookingSpeedUpgrade>
     {
-        private float _upgradedSpeed;
+        private float _baseDuration;
+        
         public Cooker(IFeatureCollection owner) : base(owner)
         {
             Conditions.AddCondition(item => item is F_Cookable || item is F_OverCookable);
             Conditions.AddCondition(item => Globals.Gameplay.AllowCooking);
+            _baseDuration = SpeedMultiplier;
         }
 
         #region Upgrade
@@ -24,7 +26,7 @@ namespace Features
 
         public void OnLevelUp(CookingSpeedUpgrade upgrade)
         {
-            SpeedMultiplier = upgrade.SpeedMultiplier;
+            SpeedMultiplier = upgrade.GetFinalDuration(_baseDuration);
         }
 
         #endregion

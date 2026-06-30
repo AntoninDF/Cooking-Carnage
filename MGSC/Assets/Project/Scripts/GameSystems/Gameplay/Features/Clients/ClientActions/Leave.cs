@@ -9,7 +9,7 @@ namespace Features
     /// </summary>
     public class Leave : BaseClientAction
     {
-        public Action OnExited { get; set; }
+        public Action OnExited      { get; set; }
 
         private ClientMovement _movement;
         private Client         _client;

@@ -16,7 +16,7 @@ namespace Features
         public Action<Client> OnClientUnregister {get; set; }
         
         public Action<Client> OnClientSitting {get; set; }
-        public Action<Client> OnClientLeaving {get; set; }
+        public Action OnClientLeaving {get; set; }
         
         public Action OnMealReady { get; set; }
         
@@ -37,8 +37,6 @@ namespace Features
             set
             {
                 if (_sittingClient == value) return;
-                if (_sittingClient != null)
-                    OnClientLeaving?.Invoke(_sittingClient);
                 if (value != null)
                     OnClientSitting?.Invoke(value);
                 _sittingClient = value;
@@ -69,8 +67,9 @@ namespace Features
             if (client == null)return false;
             if (RegisteredClient != null)return false;
             
-            client.CurrentSeat = this;
-            RegisteredClient = client;
+            client.CurrentSeat        =  this;
+            client.Behaviour.OnEatEnd += OnClientLeaving; 
+            RegisteredClient          =  client;
             ActualizeSeatPos(client);
             return true;
         }
@@ -121,6 +120,7 @@ namespace Features
                 return false;
             }
             SittingClient = null;
+            //OnClientLeaving?.Invoke(client);
             return true;
         }
 

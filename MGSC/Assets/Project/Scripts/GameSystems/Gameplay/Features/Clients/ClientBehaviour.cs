@@ -19,9 +19,13 @@ namespace Features
 
         public BaseClientAction CurrentAction { get; private set; }
 
-        public Action             OnSitting        { get; set; }
+        public Action      OnSitting      { get; set; }
         public Action      OnSplineUpdate { get; set; }
+        public Action      OnEatStart     { get; set; }
+        public Action      OnEatEnd       { get; set; }
+        public Action      OnLeaving      { get; set; }
         public WaitInQueue WaitInQueue    { get; private set; }
+        
         
 
         #endregion
@@ -133,12 +137,14 @@ namespace Features
         private Eat BuildEat()
         {
 
-            var eat = new Eat(this, _eatingTime);
-            eat.StopEating += () =>
-            {
-                (Owner as Client)?.QuitSeat();
-                Perform(BuildLeave());
-            };
+            Eat eat = new Eat(this, _eatingTime);
+            eat.StartEating += OnEatStart;
+            eat.StopEating += () => { 
+                                  Perform(BuildLeave());
+                                  OnEatEnd?.Invoke();
+                                  TimerManager.StartTimer("Wait For Quit the seat", 3f,
+                                                          () => { (Owner as Client)?.QuitSeat(); }, true);
+                              };
             return eat ;
         }
 
@@ -149,6 +155,7 @@ namespace Features
                               {
                                   UnityEngine.Object.Destroy((Owner as Client)?.gameObject);
                               };
+            OnLeaving?.Invoke();
             return leave;
         }
         #endregion

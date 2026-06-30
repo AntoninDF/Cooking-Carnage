@@ -4,12 +4,16 @@ namespace Features
 {
     public class Cutter : TransformAfterTimer, IUpgradable<BlenderSpeedUpgrade>
     {
+        private float _baseDuration;
+        
         public Cutter(IFeatureCollection owner) : base(owner)
         {
             Conditions.AddCondition(item => item is F_Cuttable);
             Conditions.AddCondition(item => Globals.Gameplay.AllowCutting);
+            _baseDuration = SpeedMultiplier;
         }
-
+        
+        
         #region Upgrade
 
         public void OnUpgradeInit(BlenderSpeedUpgrade upgrade)
@@ -24,7 +28,7 @@ namespace Features
 
         public void OnLevelUp(BlenderSpeedUpgrade upgrade)
         {
-            SpeedMultiplier = upgrade.SpeedMultiplier;
+            SpeedMultiplier =  upgrade.GetFinalDuration(_baseDuration);
         }
 
         #endregion
