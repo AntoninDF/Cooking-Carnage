@@ -132,7 +132,7 @@ namespace Clients
             IngredientToDrop = loot;
             Vector2 finalDropRate = new Vector2(dropRate.x +  _dropRateIncrement, dropRate.y +  _dropRateIncrement);
            
-            DropRate = dropRate;
+            DropRate = finalDropRate;
             return this;
         }
 

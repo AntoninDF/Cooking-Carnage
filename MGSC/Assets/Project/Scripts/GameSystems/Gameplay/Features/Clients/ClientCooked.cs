@@ -45,6 +45,7 @@ namespace Features
 
 			if (Reference.TryGetManager(out ClientManager cm))
 			{
+				
 				_client.CurrentSeat?.TryUnregister(_client);
 				cm.AddClientData(_client, isDone: true, killed: true);
 				cm.WaitingQueue?.Remove(_client);

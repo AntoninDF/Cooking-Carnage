@@ -1,5 +1,6 @@
 using GameSystem;
 using System;
+using System.Collections.Generic;
 using Clients;
 using Cooking;
 using UnityEngine;
@@ -46,12 +47,12 @@ namespace Features
 
         public Transform transform;
         public Transform parentTransform;
+        public  List<SlotContainer> dropSlots = new List<SlotContainer>();
 
         private Client  _registeredClient;
         private Client  _sittingClient;
         private Vector3 _defaultPosition;
         private ClientSeatHeightConfig _servingAreaConfig;
-        
 
         public ClientManager ClientManager => Reference.GetManager<ClientManager>();
         public ClientSeat(IFeatureCollection owner, Transform seatTransform, Transform seatParent, ClientSeatHeightConfig servingAreaConfig) : base(owner)
@@ -79,7 +80,14 @@ namespace Features
             if (client == null) return false;
             if (RegisteredClient != client) return false;
             
-            TryLeave(client);
+            if(!client.IsCooked)
+            {
+                TryLeave(client);
+            }
+            else
+            {
+                client.SpawnIngredients(dropSlots);
+            }
     
             parentTransform.localPosition = _defaultPosition;
 
