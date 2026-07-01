@@ -37,6 +37,8 @@ public class Player : MonoBehaviour, IFeatureCollection
         PlayerInputs = new PlayerInputReader(this);
 
         BindPlayerActions();
+        GameLoop.OnPause += UnbindPlayerActions;
+        GameLoop.OnResume += BindPlayerActions;
         AddInteractions();
     }
     void Start()
@@ -57,6 +59,7 @@ public class Player : MonoBehaviour, IFeatureCollection
     // Update is called once per frame
     void Update()
     {
+        if (!GameLoop.IsRunning) return;
         Collection.Update();
 
         var cam = Camera.main;
@@ -66,10 +69,19 @@ public class Player : MonoBehaviour, IFeatureCollection
 
     void BindPlayerActions()
     {
-        PlayerInputs.OnPrimaryAction += () => PlayerActor.TryAnyPlayerAction();
-        PlayerInputs.OnMovement += () => PlayerMovement.MovementDirection = PlayerInputs.MovementDirection;
-        PlayerInputs.OnLook += () => PlayerMovement.LookOffset = PlayerInputs.LookOffset;
+        PlayerInputs.OnPrimaryAction += TryAnyPlayerAction;
+        PlayerInputs.OnMovement += UpdateMovement;
+        PlayerInputs.OnLook += UpdateCamera;
     }
+    void UnbindPlayerActions()
+    {
+        PlayerInputs.OnPrimaryAction -= TryAnyPlayerAction;
+        PlayerInputs.OnMovement -= UpdateMovement;
+        PlayerInputs.OnLook -= UpdateCamera;
+    }
+    void TryAnyPlayerAction() => PlayerActor.TryAnyPlayerAction();
+    void UpdateMovement() => PlayerMovement.MovementDirection = PlayerInputs.MovementDirection;
+    void UpdateCamera() => PlayerMovement.LookOffset = PlayerInputs.LookOffset;
 
     void AddInteractions()
     {

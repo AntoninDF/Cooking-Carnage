@@ -37,5 +37,8 @@ public static partial class Globals
 
         // PRICES
         public static Param<float> WrongMealPrice { get; set; } = new(5f);
+        
+        // UPGRADES
+        public static Param<bool> AllowUpgrades { get; set; } = new(true);
     }
 }

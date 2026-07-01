@@ -3,6 +3,10 @@ using UnityEngine.Events;
 
 namespace Upgrades
 {
+    /// <summary>
+    /// Script that request an upgrade for a specific Upgrade
+    /// UpgradeManager will use the config as a key to allow the good upgrade to update
+    /// </summary>
     public class UpgradeRequester : MonoBehaviour
     {
         #region Properties
@@ -33,8 +37,12 @@ namespace Upgrades
 
         #region Methods
 
+        /// <summary>
+        /// Method that request an upgrade to the UpgradeManager
+        /// </summary>
         public void TryLevelUp()
-        {
+        {   
+            if (!Globals.Gameplay.AllowUpgrades) return;
             if (_upgradeManager == null || _targetUpgrade == null) return;
 
             bool granted = _upgradeManager.TryLevelUp(_targetUpgrade);

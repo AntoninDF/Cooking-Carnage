@@ -38,6 +38,7 @@ namespace Features
 
         public override void Update()
         {
+            if (!Enabled) return;
             Collection.Update();
             GetLookedAtObjects();
             UpdateConstantActions();
@@ -57,6 +58,7 @@ namespace Features
 
         public bool TryAnyPlayerAction()
         {
+            if (!Enabled) return false;
             if (AvailableFeatures == null || AvailableFeatures.Count == 0) return false;
             bool result = false;
             foreach (Feature feature in AvailableFeatures)
@@ -148,6 +150,7 @@ namespace Features
         private void UpdateConstantActions()
         {
             if (!Globals.Gameplay.Player.AllowPlayerInteractions) return;
+            if (!Enabled) return;
 
             if (AvailableFeatures == null || AvailableFeatures.Count == 0) return;
 

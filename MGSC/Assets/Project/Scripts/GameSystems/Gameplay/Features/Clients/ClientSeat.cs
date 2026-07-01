@@ -1,5 +1,6 @@
 using GameSystem;
 using System;
+using System.Collections.Generic;
 using Clients;
 using Cooking;
 using UnityEngine;
@@ -15,9 +16,10 @@ namespace Features
         public Action<Client> OnClientUnregister {get; set; }
         
         public Action<Client> OnClientSitting {get; set; }
-        public Action<Client> OnClientLeaving {get; set; }
+        public Action OnClientLeaving {get; set; }
         
         public Action OnMealReady { get; set; }
+        public Action OnIngredientDropped { get; set; }
         
         public Client RegisteredClient
         {
@@ -36,8 +38,6 @@ namespace Features
             set
             {
                 if (_sittingClient == value) return;
-                if (_sittingClient != null)
-                    OnClientLeaving?.Invoke(_sittingClient);
                 if (value != null)
                     OnClientSitting?.Invoke(value);
                 _sittingClient = value;
@@ -46,12 +46,12 @@ namespace Features
 
         public Transform transform;
         public Transform parentTransform;
+        public  List<SlotContainer> dropSlots = new List<SlotContainer>();
 
         private Client  _registeredClient;
         private Client  _sittingClient;
         private Vector3 _defaultPosition;
         private ClientSeatHeightConfig _servingAreaConfig;
-        
 
         public ClientManager ClientManager => Reference.GetManager<ClientManager>();
         public ClientSeat(IFeatureCollection owner, Transform seatTransform, Transform seatParent, ClientSeatHeightConfig servingAreaConfig) : base(owner)
@@ -68,8 +68,9 @@ namespace Features
             if (client == null)return false;
             if (RegisteredClient != null)return false;
             
-            client.CurrentSeat = this;
-            RegisteredClient = client;
+            client.CurrentSeat        =  this;
+            client.Behaviour.OnEatEnd += OnClientLeaving; 
+            RegisteredClient          =  client;
             ActualizeSeatPos(client);
             return true;
         }
@@ -79,7 +80,15 @@ namespace Features
             if (client == null) return false;
             if (RegisteredClient != client) return false;
             
-            TryLeave(client);
+            if(!client.IsCooked)
+            {
+                TryLeave(client);
+            }
+            else
+            {
+                OnIngredientDropped?.Invoke();
+                client.SpawnIngredients(dropSlots);
+            }
     
             parentTransform.localPosition = _defaultPosition;
 
@@ -113,6 +122,7 @@ namespace Features
                 return false;
             }
             SittingClient = null;
+            //OnClientLeaving?.Invoke(client);
             return true;
         }
 

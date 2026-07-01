@@ -114,7 +114,6 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
-            Debug.Log("Launch");
             TimerManager.StartTimer(timerName, delay, () => TrySpawnClient());
         }
 

@@ -1,5 +1,6 @@
 using Features;
 using System;
+using System.Collections.Generic;
 using Clients;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,7 +16,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     #endregion
 
     #region Fields
-
+    
     
     public Transform SeatTransform;
     public Transform SeatParent;
@@ -24,6 +25,10 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     public ClientSeatHeightConfig ServingAreaConfig;
     
     public UnityEvent OnCustomerKilled;
+    
+    
+    [SerializeField] private Transform _slotParent;
+   
 
     #endregion
 
@@ -37,12 +42,24 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         OrderingCounter = new(this);
         ServingArea.Initialize(ClientSeat);
         BindEvents();
+        GetDropSlots();
     }
 
     private void BindEvents()
     {
         ClientSeat.OnClientRegister += RequestOrder;
         ClientSeat.OnClientSitting += AssignOrder;
+    }
+
+    private void GetDropSlots()
+    {
+        for (int i = 0; i < _slotParent.childCount; i++)
+        {
+            if (_slotParent.GetChild(i).TryGetComponent(out SlotContainer slotContainer))
+            {
+                ClientSeat.dropSlots.Add(slotContainer);
+            }
+        }
     }
 
     public void RequestOrder(Client client)
@@ -70,6 +87,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         }
         
     }
+    
     
     private void OnDrawGizmos()
     {
