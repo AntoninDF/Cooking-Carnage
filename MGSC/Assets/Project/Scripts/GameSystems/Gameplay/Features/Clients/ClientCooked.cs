@@ -18,6 +18,7 @@ namespace Features
 		{
 			_client       = owner as Client;
 			_destroyDelay = destroyDelay;
+			
 		}
 		
 		public void Trigger()

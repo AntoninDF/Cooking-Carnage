@@ -32,6 +32,7 @@ namespace Features
 
         #region Fields
 
+        private Client _client;
         private IFeatureCollection _owner;
         private Transform          _clientTransform;
         private SplineContainer    _splineComponent;
@@ -62,11 +63,11 @@ namespace Features
 
         public void Begin()
         {
-            var client = _owner as Client;
-            ClientMovement = new ClientMovement(this, _clientTransform, Agent, client.SplineComp, client.Speed);         
+            _client = _owner as Client;
+            ClientMovement = new ClientMovement(this, _clientTransform, Agent, _client.SplineComp, _client.Speed);         
             ClientMovement.SwitchToSpline(0f);
             
-            client.InitFeatures(ClientMovement);
+            _client.InitFeatures(ClientMovement);
 
             Perform(BuildSelectSeat());
         }
@@ -75,8 +76,19 @@ namespace Features
         {
             WaitInQueue = new WaitInQueue(this);
             _waitAction = WaitInQueue;
-            Perform(_waitAction);
 
+            WaitInQueue.OnQueuePointReached += () =>
+            {
+                _client.ClientLook.SetWaiting(true);
+            };
+
+            WaitInQueue.OnExitQueue += () =>
+            {
+                _client.ClientLook.SetWaiting(false);
+            };
+            
+            Perform(_waitAction);
+            
             var queue = Reference.GetManager<ClientManager>().WaitingQueue;
             queue.OnSeatAvailable += OnQueueSeatAvailable;
         }
@@ -131,7 +143,7 @@ namespace Features
 
         private void CanLeave()
         {
-            if ((_owner as Client)?.IsCooked == false) Perform(BuildEat());
+            if (_client.IsCooked == false) Perform(BuildEat());
         }
 
         private Eat BuildEat()
@@ -139,14 +151,10 @@ namespace Features
 
             Eat eat = new Eat(this, _eatingTime);
             eat.StartEating += OnEatStart;
-            eat.StopEating += () => { 
-                                    Debug.Log("[Client Behavior] eat");
-                                  
-                                  OnEatEnd?.Invoke();
-                                  TimerManager.StartTimer("Wait For Quit the seat", 2f,
+            eat.StopEating += () => { OnEatEnd?.Invoke(); TimerManager.StartTimer("Wait For Quit the seat", 2f,
                                       () =>
                                       {
-                                          (Owner as Client)?.QuitSeat();
+                                          _client.QuitSeat();
                                           Perform(BuildLeave());
                                       }, false);
                               };
@@ -158,7 +166,7 @@ namespace Features
             var leave = new Leave(this);
             leave.OnExited += () =>
                               {
-                                  UnityEngine.Object.Destroy((Owner as Client)?.gameObject);
+                                  UnityEngine.Object.Destroy(_client.gameObject);
                               };
             OnLeaving?.Invoke();
             return leave;

@@ -19,6 +19,7 @@ namespace Features
         public Action OnClientLeaving {get; set; }
         
         public Action OnMealReady { get; set; }
+        public Action OnIngredientDropped { get; set; }
         
         public Client RegisteredClient
         {
@@ -85,6 +86,7 @@ namespace Features
             }
             else
             {
+                OnIngredientDropped?.Invoke();
                 client.SpawnIngredients(dropSlots);
             }
     
