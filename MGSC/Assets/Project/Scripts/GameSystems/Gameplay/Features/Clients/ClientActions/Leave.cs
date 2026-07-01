@@ -9,7 +9,7 @@ namespace Features
     /// </summary>
     public class Leave : BaseClientAction
     {
-        public Action OnExited { get; set; }
+        public Action OnExited      { get; set; }
 
         private ClientMovement _movement;
         private Client         _client;
@@ -28,7 +28,7 @@ namespace Features
             
             if (_client.transform.parent != null)
             {
-                _client.transform.SetParent(null);
+                //_client.transform.SetParent(null);
                 _movement.GetUp();
             }
 

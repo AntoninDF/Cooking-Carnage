@@ -65,9 +65,7 @@ namespace Features
 		private void HandleUnregister(Client client)
 		{
 			_seat.OnMealReady        -= TryGrabMeal; 
-			Debug.Log($"[SitAndWait] HandleUnregister called for {client.name}, expected {_client.name}");
 			if (client != _client) return;
-			Debug.Log($"[SitAndWait] {_client.name} unregistered, invoking OnServed");
 			_seat.OnClientUnregister -= HandleUnregister;
 			OnServed?.Invoke();
 		}

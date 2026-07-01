@@ -3,10 +3,11 @@ using GameSystem;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Upgrades;
 
 namespace Cooking
 {
-    public class OvenSetup : MonoBehaviour
+    public class OvenSetup : MonoBehaviour, IUpgradable<OvenCountUpgrade>
     {
         #region Properties
 
@@ -17,6 +18,7 @@ namespace Cooking
         [Tooltip("List of all the ovens that can get activated")]
         [SerializeField] private List<Oven> _ovens;
 
+        private int _maxOvenNumber = 1; //start with one oven enable
         #endregion
 
         #region Methods
@@ -25,7 +27,7 @@ namespace Cooking
         {
             EnforceReferences();
             SetupSlots();
-            Setup(0);
+            Setup();
         }
 
         private void EnforceReferences()
@@ -34,8 +36,24 @@ namespace Cooking
                 Debug.LogError("[OvenSetup] : Please reference at least a few slots for the ovens to go in the inspector (" + name + ")");
         }
 
-        public void Setup(int maxOvenCount)
+        public void Setup()
         {
+            int activeOvenNumer = 0;
+            foreach (var oven in _ovens)
+            {
+                if (oven == null) continue;
+                if (activeOvenNumer < _maxOvenNumber)
+                {
+                    oven.enabled = true;
+                    Debug.Log("[OvenSetup] : " + oven.name);
+                    activeOvenNumer++;
+                }
+                else
+                {
+                    Debug.Log("[OvenSetup] not unlocked : " + oven.name);
+                    oven.enabled = false;
+                }
+            }
             // A refacto, To Do
 
             /*
@@ -69,5 +87,26 @@ namespace Cooking
         }
 
         #endregion
+
+        #region Upgrade
+
+        public void OnUpgradeInit(OvenCountUpgrade upgrade)
+        {
+            ActualizeOvenCount(upgrade);
+        }
+
+        public void OnUpgraded(OvenCountUpgrade upgrade)
+        {
+            ActualizeOvenCount(upgrade);
+        }
+
+        void ActualizeOvenCount(OvenCountUpgrade upgrade)
+        {
+            _maxOvenNumber = upgrade.OvenCount;
+            Setup();
+        }
+
+        #endregion
+        
     }
 }

@@ -17,11 +17,14 @@ namespace Features
         private Transform      _client;
         private ClientMovement _movement;
         private bool           _isSitting;
+        private bool           _isWaiting;
         
         private Vector3 _currentDirection;
         private Vector3 _smoothVelocity;
         private float   _smoothTime = 0.15f;
-
+        
+        private Vector3 _waitDirection = new Vector3(-1f, 0, 0);
+        private float   _waitSmoothTime = 0.15f;
         #endregion
 
         public ClientLook(IFeatureCollection owner, Transform clientTransform, ClientMovement movement) : base(owner)
@@ -32,15 +35,21 @@ namespace Features
 
         public override void Update()
         {
-           
-            if (_isSitting)
+            
+            if (_isSitting && _isWaiting == false)
             {
                 return;
             }
+            
 
             Vector3 targetDirection = GetMovementDirection();
             if (targetDirection == Vector3.zero) return;
-            _currentDirection = Vector3.SmoothDamp(_currentDirection, targetDirection, ref _smoothVelocity, _smoothTime);
+            ActualizeDirection(_isWaiting ? _waitDirection : targetDirection, _smoothTime);
+        }
+
+        private void ActualizeDirection(Vector3 targetDirection, float smoothTime)
+        {
+            _currentDirection = Vector3.SmoothDamp(_currentDirection, targetDirection, ref _smoothVelocity, smoothTime);
             if (_currentDirection.sqrMagnitude < 0.001f) return;
             _client.rotation = Quaternion.LookRotation(_currentDirection) * Quaternion.Euler(0, 0, 0);
             _client.rotation = Quaternion.Euler(0, _client.eulerAngles.y, 0);
@@ -67,13 +76,19 @@ namespace Features
         {
             _isSitting      = true;
             _smoothVelocity = Vector3.zero;
+            
         }
 
         public void SetClientLeaving(Client client)
         {
             _isSitting = false;
         }
-        
+
+        public void SetWaiting(bool value)
+        {
+            Debug.Log("[ClientLook]  isWaiting = " + value);
+            _isWaiting = value;
+        }
 
         
     }

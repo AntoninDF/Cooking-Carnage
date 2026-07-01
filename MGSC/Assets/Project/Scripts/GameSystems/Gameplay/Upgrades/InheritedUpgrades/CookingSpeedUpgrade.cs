@@ -1,37 +1,19 @@
 
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Upgrades
 {
 
     public class CookingSpeedUpgrade : Upgrade
     {
-        #region Properties
-        #endregion
+        private const float ReductionPerLevel = 0.5f;
+        
+        public float TimeReduction => _level * ReductionPerLevel;
 
-        #region Fields
-        private List<Oven> _targetOvens;
-        #endregion
-
-        #region Methods
-
-        public CookingSpeedUpgrade() : base()
+        public float GetFinalDuration(float baseDuration, float minDuration = 0.1f)
         {
-            config = UpgradeManagerConfig.Instance.CookingSpeed;
+            return Mathf.Max(minDuration, baseDuration - TimeReduction);
         }
-
-        public override void Apply()
-        {
-            /*
-            _targetOvens = Reference.GetAll<Oven>();
-
-            foreach (Oven o in _targetOvens)
-            {
-                //o.SetStrength(level * 2f);
-            }
-            */
-        }
-
-        #endregion
     }
 }

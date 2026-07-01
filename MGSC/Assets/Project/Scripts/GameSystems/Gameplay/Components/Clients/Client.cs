@@ -1,9 +1,11 @@
 using Features;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Cooking;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 namespace Clients
 {
@@ -61,9 +63,10 @@ namespace Clients
 
         #region Fields
        
-        private Order      _currentOrder;
-        private ClientSeat _currentSeat;
-        private ClientLook _clientLook;
+        private Order                 _currentOrder;
+        private ClientSeat            _currentSeat;
+        private ClientLook            _clientLook;
+
 
         private float _cookingDelay = 3f;
        #endregion
@@ -102,6 +105,17 @@ namespace Clients
        public void CookClient()
        {
            Cooked.Trigger();
+       }
+
+       public void SpawnIngredients(List<SlotContainer> containers)
+       {
+           List<SlotContainer> positions = containers;
+           int numberToDrop = Random.Range((int)DropRate.x, (int)DropRate.y);
+
+           for (int i = 0; i < numberToDrop; i++)
+           {
+               Instantiate(Model.loot.Prefab, positions[i].transform);
+           }
        }
 
        #region Seat
@@ -143,6 +157,7 @@ namespace Clients
        /// </summary>
        public void QuitSeat()
        {
+           Debug.Log("[Client] Seat Quited - parent null");
            transform.SetParent(null);
            Behaviour.ClientMovement.GetUp();
            ClientLook.SetClientLeaving(this);
