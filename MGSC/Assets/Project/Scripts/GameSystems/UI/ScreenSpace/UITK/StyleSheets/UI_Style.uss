@@ -1,0 +1,123 @@
+:root {
+    --color-main-btn: rgb(247, 247, 186);
+    --color-main-shadow: rgb(77, 77, 52);
+    --color-main-btn-hover: rgb(247, 231, 0);
+    --color-main-shadow-hover: rgb(77, 77, 0);
+    --color-credits-title: rgb(0, 0, 0);
+    --color-credits-text: rgb(255, 255, 255);
+    --color-black: rgb(0, 0, 0);
+}
+
+.screen-container {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding-left: 20%;
+    padding-bottom: 10%;
+}
+
+.main-menu-btn {
+    -unity-font-definition: url("project://database/Assets/Project/Art/UI/Fonts/alphakind/Alphakind%20SDF.asset?fileID=11400000&guid=c9e51d73b69bacd4496caed16ba1c02e&type=2#Alphakind SDF");
+    font-size: 70px;
+    color: var(--color-main-btn);
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    margin: 5px 0;
+    padding: 0;
+    -unity-text-align: middle-left;
+    text-shadow: -2px 9px 0 var(--color-main-shadow);
+    transition: scale 0.1s ease-in-out;
+    -unity-text-align: middle-center;
+    margin-top: -12px;
+}
+
+.main-menu-btn:hover {
+    scale: 1.05;
+    color: var(--color-main-btn-hover);
+    text-shadow: -2px 9px 0 var(--color-main-shadow-hover);
+    cursor: url("project://database/Assets/Project/Art/UI/Menus/BOUTONHOME_CURSOR/CookingCarnage_CursorON.png?fileID=2800000&guid=4736c3c8f8564534d80ca95679cc54b2&type=3#CookingCarnage_CursorON");
+}
+
+.shift-info-text {
+    -unity-font-definition: url("project://database/Assets/Project/Art/UI/Fonts/alphakind/Alphakind%20SDF.asset?fileID=11400000&guid=c9e51d73b69bacd4496caed16ba1c02e&type=2#Alphakind SDF");
+    font-size: 50px;
+    color: var(--color-main-btn);
+    text-shadow: -2px 9px 0 var(--color-main-shadow);
+    position: absolute;
+    bottom: auto;
+    right: auto;
+    -unity-text-align: middle-left;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+}
+
+.credits-container {
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 15%;
+}
+
+.credits-column {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0 5%;
+}
+
+.credits-title {
+    -unity-font-definition: url("project://database/Assets/Project/Art/UI/Fonts/allegro/allegro%20SDF.asset?fileID=11400000&guid=8a95e5f6f8c54534b89e94693ad1251d&type=2#allegro SDF");
+    font-size: 40px;
+    color: var(--color-credits-title);
+    margin-top: 30px;
+    margin-bottom: 5px;
+    -unity-text-align: middle-left;
+}
+
+.credits-text {
+    -unity-font-definition: url("project://database/Assets/Project/Art/UI/Fonts/alphakind/Alphakind%20SDF.asset?fileID=11400000&guid=c9e51d73b69bacd4496caed16ba1c02e&type=2#Alphakind SDF");
+    font-size: 28px;
+    color: var(--color-credits-text);
+    text-shadow: -3px 3px 0 var(--color-black);
+    margin: 2px 0;
+    padding: 0;
+    -unity-text-align: middle-left;
+}
+
+.btn-back {
+    position: absolute;
+    bottom: 5%;
+    left: 5%;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+}
+
+.pause-menu-btn {
+    -unity-font-definition: url("project://database/Assets/Project/Art/UI/Fonts/alphakind/Alphakind%20SDF.asset?fileID=11400000&guid=c9e51d73b69bacd4496caed16ba1c02e&type=2#Alphakind SDF");
+    font-size: 65px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    margin: 5px 0;
+    padding: 0;
+    -unity-text-align: middle-left;
+    text-shadow: -2px 9px 0 var(--color-main-shadow);
+    transition: scale 0.1s ease-in-out;
+    -unity-text-align: middle-center;
+    margin-top: -12px;
+    -unity-text-auto-size: best-fit 10px 65px;
+    -unity-text-generator: advanced;
+    width: 100%;
+    color: rgb(255, 255, 255);
+}
+
+.pause-menu-btn:hover {
+    scale: 1.01 1.01;
+    text-shadow: -2px 9px 0 var(--color-main-shadow-hover);
+    cursor: url("project://database/Assets/Project/Art/UI/Menus/BOUTONHOME_CURSOR/CookingCarnage_CursorON.png?fileID=2800000&guid=4736c3c8f8564534d80ca95679cc54b2&type=3#CookingCarnage_CursorON");
+    filter: tint(rgb(247, 200, 55));
+    color: rgb(255, 255, 255);
+}
