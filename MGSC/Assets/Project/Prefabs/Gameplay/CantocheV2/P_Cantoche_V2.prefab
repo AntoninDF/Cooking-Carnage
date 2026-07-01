@@ -70,7 +70,7 @@ Transform:
   m_LocalScale: {x: 0.17350721, y: 0.17350721, z: 0.17350721}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1908994641498234656}
+  m_Father: {fileID: 2291982041884601123}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1498376806260483307
 MeshFilter:
@@ -1009,6 +1009,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2478198699858772326, guid: 84cc5c2d50fb12f4c878adcfaf242070, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.682
+      objectReference: {fileID: 0}
+    - target: {fileID: 2478198699858772326, guid: 84cc5c2d50fb12f4c878adcfaf242070, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.453
+      objectReference: {fileID: 0}
+    - target: {fileID: 2498172466048816113, guid: 84cc5c2d50fb12f4c878adcfaf242070, type: 3}
+      propertyPath: m_InitialState
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4711619987797456095, guid: 84cc5c2d50fb12f4c878adcfaf242070, type: 3}
       propertyPath: m_Name
       value: ---- Structure ----
@@ -1018,6 +1030,7 @@ PrefabInstance:
     - {fileID: 5683961991640565219, guid: 84cc5c2d50fb12f4c878adcfaf242070, type: 3}
     - {fileID: 7943679955901060338, guid: 84cc5c2d50fb12f4c878adcfaf242070, type: 3}
     - {fileID: 3349226328702686560, guid: 84cc5c2d50fb12f4c878adcfaf242070, type: 3}
+    - {fileID: 4310843045244341488, guid: 84cc5c2d50fb12f4c878adcfaf242070, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5187241524540996181, guid: 84cc5c2d50fb12f4c878adcfaf242070, type: 3}
@@ -1066,7 +1079,7 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8728761108826728626}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
           m_MethodName: Play
           m_Mode: 1
@@ -1081,11 +1094,6 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
---- !u!320 &8728761108826728626 stripped
-PlayableDirector:
-  m_CorrespondingSourceObject: {fileID: 6712766357886697280, guid: 84cc5c2d50fb12f4c878adcfaf242070, type: 3}
-  m_PrefabInstance: {fileID: 2596959141861513202}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3421923737784863222
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1263,7 +1271,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4294b0179dfa37f4b8d1316bf1c3f7c2, type: 3}
+  m_Script: {fileID: 11500000, guid: de06c7504b89fa44fb5bce40ddcf14e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Oven
 --- !u!4 &5633628899636598528 stripped
@@ -1279,7 +1287,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4294b0179dfa37f4b8d1316bf1c3f7c2, type: 3}
+  m_Script: {fileID: 11500000, guid: de06c7504b89fa44fb5bce40ddcf14e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Oven
 --- !u!114 &8340566371450103037 stripped
@@ -1290,7 +1298,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4294b0179dfa37f4b8d1316bf1c3f7c2, type: 3}
+  m_Script: {fileID: 11500000, guid: de06c7504b89fa44fb5bce40ddcf14e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Oven
 --- !u!1001 &7184915538754222167
@@ -2009,8 +2017,8 @@ PrefabInstance:
     - {fileID: 8402966522882247061, guid: f6292a93249b7ee4cafb6262008faa6e, type: 3}
     - {fileID: 8967983109023660852, guid: f6292a93249b7ee4cafb6262008faa6e, type: 3}
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7119570689031759024, guid: f6292a93249b7ee4cafb6262008faa6e, type: 3}
-      insertIndex: 0
+    - targetCorrespondingSourceObject: {fileID: 7457141670731976883, guid: f6292a93249b7ee4cafb6262008faa6e, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 112275086354620112}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5726984733293345150, guid: f6292a93249b7ee4cafb6262008faa6e, type: 3}
@@ -2060,11 +2068,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b98f5b01dd6b0194ba0a628d6a3d082d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OrderingArea
---- !u!4 &1908994641498234656 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7119570689031759024, guid: f6292a93249b7ee4cafb6262008faa6e, type: 3}
-  m_PrefabInstance: {fileID: 8697532048503815056}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2291982041884601123 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7457141670731976883, guid: f6292a93249b7ee4cafb6262008faa6e, type: 3}
