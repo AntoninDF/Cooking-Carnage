@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Upgrades
 {
@@ -9,39 +10,44 @@ namespace Upgrades
     {
         #region Properties
         
-        public int           Level     => level;
-        public Action<int>   OnLevelUp { get; set; }
-        public UpgradeConfig Config    => config;
+        public int               Level     => _level;
+        public UpgradeConfig     Config    => _config;
+        
+        internal event Action<Upgrade> OnLevelUpInternal;
         
         #endregion
 
         #region Fields
 
-        protected UpgradeConfig config;
-        protected int           level;          // Starts at 0
+        protected UpgradeConfig _config;
+        protected int           _level;          
         
         #endregion
 
         #region Methods
 
-        //Initialize the config in the constructor
         protected Upgrade()
+        { }
+
+        internal void SetConfig(UpgradeConfig config)
         {
-            
-            //config = config ?? throw new ArgumentNullException(nameof(config), $"[{GetType().Name}] UpgradeConfig cannot be null");
-            OnLevelUp += (level) => Apply();
+            _config = config ?? throw new ArgumentNullException(nameof(config),$"[{GetType().Name}] UpgradeConfig cannot be null");
         }
-
-        public abstract void Apply();
-
-        //Defined here because all the inherited class use the same implementation
+        
         public virtual void LevelUp()
         {
-            level++;
-            OnLevelUp?.Invoke(level);
+            if (!CanLevelUp())
+            {
+                Debug.LogWarning($"[{GetType().Name}] Cannot level up further (level {_level}/{_config?.MaxLevel})");
+                return;
+            }
+            _level++;
+            OnLevelUpInternal?.Invoke(this);
         }
-        public virtual float GetPrice() => config.PriceCurve.Evaluate(level);
-        public virtual bool CanLevelUp() => level < config.MaxLevel;
+        
+        public virtual float GetPrice()   => _config.PriceCurve.Evaluate(_level);
+        public virtual bool  CanLevelUp() => _level < _config.MaxLevel;
+        
         #endregion
     }
 }

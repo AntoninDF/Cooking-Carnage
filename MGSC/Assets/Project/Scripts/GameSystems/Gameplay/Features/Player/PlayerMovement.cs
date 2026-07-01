@@ -50,6 +50,7 @@ namespace Features
 
         public override void Update()
         {
+            if (!Enabled) return;
             if (!Globals.Gameplay.Player.AllowControllerMovement) return;
             if (!Mathf.Approximately(CharacterController.height, CharacterSize)) /*REFACTO : Cest uniquement pour du parametrage, a jarter assez vite*/
             {
@@ -70,6 +71,7 @@ namespace Features
 
         private void HandleMovement()
         {
+            if (!Enabled) return;
             Vector3 worldDirection = CalculateWorldDirection();
 
             _currentMovement.x = worldDirection.x * WalkSpeed;
@@ -95,19 +97,6 @@ namespace Features
             }
         }
 
-        /*
-        private void ApplyHorizontalRotation(float rotationAmount)
-        {
-            ControlledTransform.Rotate(0, rotationAmount, 0);
-        }
-
-        private void ApplyVerticalRotation(float rotationAmount)
-        {
-            _verticalRotation = Mathf.Clamp(_verticalRotation - rotationAmount, -VerticalLookRange, VerticalLookRange);
-            if (HeadTransform != null)
-                HeadTransform.localRotation = Quaternion.Euler(_verticalRotation, 0, 0);
-        }
-        */
         private void ApplyLookDirection(Vector3 direction)
         {
             var yawDirection = new Vector3(direction.x, 0, direction.z); 
@@ -121,12 +110,14 @@ namespace Features
 
         private void UpdateLookDirectionFromOffset(Vector2 offset)
         {
+            if (!Enabled) return;
             if (!Globals.Gameplay.Player.AllowControllerMovement) return;
             LookDirection = Quaternion.Euler(0, offset.x * LookSpeed, 0) * LookDirection;
             _verticalRotation = Mathf.Clamp(_verticalRotation - offset.y *LookSpeed, -VerticalLookRange, VerticalLookRange);
         }
         private void HandleRotation()
         {
+            if (!Enabled) return;
             if (!Globals.Gameplay.Player.AllowControllerMovement) return;
             ApplyLookDirection(LookDirection);
         }

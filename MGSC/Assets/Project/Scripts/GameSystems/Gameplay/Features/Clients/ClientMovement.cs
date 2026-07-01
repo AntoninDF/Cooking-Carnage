@@ -64,7 +64,7 @@ namespace Features
             SplineComponent     = splineComponent;
             Speed               = speed;
             _navmeshAgent.speed        = speed;
-            _navmeshAgent.stoppingDistance = 0.2f;
+            _navmeshAgent.stoppingDistance = 0.5f;
             _validSetup         = controlledTransform != null && splineComponent != null;
             
            

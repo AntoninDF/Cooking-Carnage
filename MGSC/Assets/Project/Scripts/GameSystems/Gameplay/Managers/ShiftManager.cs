@@ -23,11 +23,19 @@ namespace GameSystem
         public int ShiftNumber { get => Globals.Gameplay.ShiftNumber; set => Globals.Gameplay.ShiftNumber.Value = value; }
         public float ShiftDuration => _shiftDuration;
         public bool IsShiftActive { get; set; }
-    
+        /// <summary>
+        /// Can be null if the timer hasn't been launched yet
+        /// </summary>
+        public Timer TimerUntilEndOfShift { get; private set; }
+        /// <summary>
+        /// Can be null if the timer hasn't been launched yet
+        /// </summary>
+        public Timer TimerUntilFinalWarning { get; private set; }
+
         #endregion
 
         #region Fields
-    
+
         // Refacto : Ensure all these dependencies are necessary, and won't break the shiftManager if missing
         // Refacto : Ensure that features that depend on other Managers (or even ones that don't) are optional and can be toggled
 
@@ -65,13 +73,21 @@ namespace GameSystem
             this.Log(LogType.Log, $"Launching new shift for {duration}s");
             IsShiftActive = true;
             OnShiftBegin?.Invoke();
-            TimerManager.StartTimer("shiftDuration", duration, EndShift, false);
-            TimerManager.StartTimer("shiftDurationWithoutNoon", duration - _noonDuration, LaunchShiftNoon, false);
+            TimerUntilEndOfShift = TimerManager.StartTimer("shiftDuration", duration, EndShift, false);
+            TimerUntilFinalWarning = TimerManager.StartTimer("shiftDurationWithoutNoon", duration - _noonDuration, InvokeFinalWarning, false);
+            // Subscribe to the GameLoop in case the game pauses
+            GameLoop.BindTimer(TimerUntilEndOfShift);
+            GameLoop.BindTimer(TimerUntilFinalWarning);
         }
 
-        void LaunchShiftNoon()
+        void InvokeFinalWarning()
         {
             OnShiftNoon?.Invoke();
+            if (TimerUntilFinalWarning != null)
+            {
+                GameLoop.UnbindTimer(TimerUntilFinalWarning);
+                TimerUntilFinalWarning = null;
+            }
             this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
         }
 
@@ -85,6 +101,11 @@ namespace GameSystem
             this.Log(LogType.Log, $"End of the Shift triggered.");
             IsShiftActive = false;
             OnShiftEnded?.Invoke();
+            if (TimerUntilEndOfShift != null)
+            {
+                GameLoop.UnbindTimer(TimerUntilEndOfShift);
+                TimerUntilEndOfShift = null;
+            }
 
             bool validRent = TryPayRent();
 
