@@ -3,7 +3,7 @@ using System;
 
 public static class GameLoop
 {
-    public static bool IsRunning { get; private set; }
+    public static bool IsRunning { get; private set; } = true;
     public static Action OnPause { get; set; }
     public static Action OnResume { get; set; }
 
@@ -22,11 +22,13 @@ public static class GameLoop
 
     static void Pause()
     {
+        if (!IsRunning) return;
         IsRunning = false;
         OnPause?.Invoke();
     }
     static void Resume()
     {
+        if (IsRunning) return;
         IsRunning = true;
         OnResume?.Invoke();
     }
