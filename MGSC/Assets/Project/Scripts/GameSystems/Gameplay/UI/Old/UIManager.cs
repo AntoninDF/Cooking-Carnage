@@ -209,6 +209,7 @@ namespace UI
             //_gameLoop.StopRunning(isPauseMenu);
             _playerInputs.Disable();
             _UIInputs.Enable();
+            GameLoop.RequestPause();
             
             if (isPauseMenu)
             {
@@ -235,7 +236,8 @@ namespace UI
             _playerInputs.Enable();
             _UIInputs.Enable();
             _onResume?.Invoke();
-            
+            GameLoop.RequestResume();
+
             SetCursorFreedom(false);
             
             this.Log(LogType.Log, $"Game has been resumed");
