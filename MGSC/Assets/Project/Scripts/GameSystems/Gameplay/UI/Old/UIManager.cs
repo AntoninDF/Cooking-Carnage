@@ -206,9 +206,6 @@ namespace UI
         {
             bool isPauseMenu = _currentMenu.name == _pauseMenuName;
             
-            //_gameLoop.StopRunning(isPauseMenu);
-            _playerInputs.Disable();
-            _UIInputs.Enable();
             GameLoop.RequestPause();
             
             if (isPauseMenu)
@@ -231,10 +228,6 @@ namespace UI
                 SkipTutorial();
             }
             
-            
-            //_gameLoop.StartRunning();
-            _playerInputs.Enable();
-            _UIInputs.Enable();
             _onResume?.Invoke();
             GameLoop.RequestResume();
 
