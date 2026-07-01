@@ -2,9 +2,7 @@ using System;
 using Controller;
 using Features;
 using NaughtyAttributes;
-using Orders;
 using UI;
-using Unity.AI.Navigation;
 using UnityEngine;
 using Upgrades;
 namespace GameSystem
@@ -75,7 +73,7 @@ namespace GameSystem
             // Instantiate the scene and create all the MonoBehaviour managers
             if (_gameProfile.ApplyScenePreset) ApplyScenePreset();
 
-            if (_gameProfile.AddUI) AddUI();
+            if (_gameProfile.AddUI) new UISystem();
 
             if (_gameProfile.AddPlayer) PlayerSetup.TrySetupPlayer();
 
@@ -121,17 +119,6 @@ namespace GameSystem
             // Create all the objects as requested in the scene preset
             foreach (var go in _gameProfile.ScenePreset.Objects)
                 Instantiate(go);
-        }
-
-
-        private void AddUI()
-        {
-            if (Reference.AssetReferences.UI == null)
-                Debug.LogWarning("[GameInitializer] : Couldn't add the UI prefab because it was not referenced in the asset references object");
-            else
-            {
-                Instantiate(Reference.AssetReferences.UI);
-            }
         }
 
         private void SetupDebug()
