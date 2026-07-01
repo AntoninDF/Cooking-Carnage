@@ -140,10 +140,15 @@ namespace Features
             Eat eat = new Eat(this, _eatingTime);
             eat.StartEating += OnEatStart;
             eat.StopEating += () => { 
-                                  Perform(BuildLeave());
+                                    Debug.Log("[Client Behavior] eat");
+                                  
                                   OnEatEnd?.Invoke();
-                                  TimerManager.StartTimer("Wait For Quit the seat", 3f,
-                                                          () => { (Owner as Client)?.QuitSeat(); }, true);
+                                  TimerManager.StartTimer("Wait For Quit the seat", 2f,
+                                      () =>
+                                      {
+                                          (Owner as Client)?.QuitSeat();
+                                          Perform(BuildLeave());
+                                      }, false);
                               };
             return eat ;
         }

@@ -28,7 +28,7 @@ namespace Features
             
             if (_client.transform.parent != null)
             {
-                _client.transform.SetParent(null);
+                //_client.transform.SetParent(null);
                 _movement.GetUp();
             }
 

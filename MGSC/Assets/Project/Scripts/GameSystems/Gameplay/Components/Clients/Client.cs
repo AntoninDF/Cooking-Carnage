@@ -157,6 +157,7 @@ namespace Clients
        /// </summary>
        public void QuitSeat()
        {
+           Debug.Log("[Client] Seat Quited - parent null");
            transform.SetParent(null);
            Behaviour.ClientMovement.GetUp();
            ClientLook.SetClientLeaving(this);
