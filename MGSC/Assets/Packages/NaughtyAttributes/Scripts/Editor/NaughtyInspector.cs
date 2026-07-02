@@ -73,7 +73,22 @@ namespace NaughtyAttributes.Editor
         {
             foreach (var attr in target.GetType().GetCustomAttributes<HelpBoxAttribute>(true))
             {
-                EditorGUILayout.HelpBox(attr.Message, attr.MessageType);
+                MessageType messageType = MessageType.None;
+                switch (attr.MessageType)
+                {
+                    case EInfoBoxType.Normal:
+                        messageType = MessageType.Info;
+                        break;
+
+                    case EInfoBoxType.Warning:
+                        messageType = MessageType.Warning;
+                        break;
+
+                    case EInfoBoxType.Error:
+                        messageType = MessageType.Error;
+                        break;
+                }
+                EditorGUILayout.HelpBox(attr.Message, messageType);
             }
         }
         protected void DrawSerializedProperties()
