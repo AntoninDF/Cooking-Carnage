@@ -118,6 +118,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
 
     private void OnCookingProgress(float progression01)
     {
+        
         var renderer = ProgressFeedbacks.MaterialProperty.TargetRenderer;
         if (renderer != null)
         {
