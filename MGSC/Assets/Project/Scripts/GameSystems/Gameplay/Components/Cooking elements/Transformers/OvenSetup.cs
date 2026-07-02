@@ -45,12 +45,12 @@ namespace Cooking
                 if (activeOvenNumer < _maxOvenNumber)
                 {
                     oven.enabled = true;
-                    Debug.Log("[OvenSetup] : " + oven.name);
+                    //Debug.Log("[OvenSetup] : " + oven.name);
                     activeOvenNumer++;
                 }
                 else
                 {
-                    Debug.Log("[OvenSetup] not unlocked : " + oven.name);
+                    //Debug.Log("[OvenSetup] not unlocked : " + oven.name);
                     oven.enabled = false;
                 }
             }

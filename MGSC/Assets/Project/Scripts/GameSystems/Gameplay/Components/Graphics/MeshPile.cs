@@ -57,7 +57,8 @@ public class MeshPile : MonoBehaviour
 #endif
     public void RegenerateIfNull()
     {
-        if (mf.sharedMesh == null || mf.sharedMesh)
+        TryGetComponent(out mf);
+        if (mf.sharedMesh == null)
             Regenerate();
     }
     private void TryAssignDefaultMesh()

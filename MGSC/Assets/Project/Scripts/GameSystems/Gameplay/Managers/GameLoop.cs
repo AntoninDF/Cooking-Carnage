@@ -1,5 +1,6 @@
 using GameSystem;
 using System;
+using System.Collections.Generic;
 
 public static class GameLoop
 {
@@ -7,18 +8,51 @@ public static class GameLoop
     public static Action OnPause { get; set; }
     public static Action OnResume { get; set; }
 
-    // This method can be extended later to check if the game can be paused before actually doing it
-    public static bool RequestPause()
+    private static List<object> _objectsRequiringPause = new();
+
+    /// <summary>
+    /// Checks if a pause has been requested and updates the gameloop's status based on that
+    /// </summary>
+    public static void Update()
     {
-        Pause();
-        return true;
+        if (_objectsRequiringPause.Count > 0)
+            Pause();
+        else
+            Resume();
     }
-    // This method can be extended later to check if the game can be paused before actually doing it
-    public static bool RequestResume()
+
+    /// <summary>
+    /// Tells the GameLoop that the requester no longer needs the game to be paused.
+    /// If the requester was the last object still requiring the game to be paused, the game resumes
+    /// </summary>
+    /// <param name="requester"></param>
+    public static void TryResume(object requester)
     {
-        Resume();
-        return true;
+        _objectsRequiringPause.Remove(requester);
+        Update();
     }
+    /// <summary>
+    /// Tells the cursor that the requester needs the cursor to be active and visible to function.
+    /// Remember to call <see cref="TryFreeCursor(object)"/> when the requester no longer needs the cursor to work.
+    /// </summary>
+    /// <param name="requester"></param>
+    public static void RequestPause(object requester)
+    {
+        if (!_objectsRequiringPause.Contains(requester))
+            _objectsRequiringPause.Add(requester);
+        Update();
+    }
+
+    /// <summary>
+    /// Removes every request for the game to pause so that it can go back to playing.
+    /// </summary>
+    public static void ClearRequests()
+    {
+        _objectsRequiringPause.Clear();
+        Update();
+    }
+
+    
 
     static void Pause()
     {

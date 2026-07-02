@@ -32,7 +32,7 @@ public class SurfaceContainer : MonoBehaviour, IFeatureCollection
         Filter = new(this);
         Container.Filter = Filter;
         Container.AllowItemPlacedOnSurfaceRatherThanTransform = true;
-        LookAtTarget = new LookAtTargetByRaycast(this, transform);
+        LookAtTarget = new F_LookAtTarget(this, transform);
         Interactable = new (this);
 
         BindEvents();

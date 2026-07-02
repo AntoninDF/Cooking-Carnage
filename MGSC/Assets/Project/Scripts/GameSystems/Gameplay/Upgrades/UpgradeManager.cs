@@ -23,7 +23,7 @@ namespace Upgrades
 
         #region Fields
         
-        private List<Upgrade>                    _upgrades;
+        private List<Upgrade>                    _upgrades = new();
         private MoneyManager                     _moneyManager;
         private Dictionary<Type, SubscriberList> _subscribers = new();
         

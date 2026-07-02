@@ -206,10 +206,7 @@ namespace UI
         {
             bool isPauseMenu = _currentMenu.name == _pauseMenuName;
             
-            //_gameLoop.StopRunning(isPauseMenu);
-            _playerInputs.Disable();
-            _UIInputs.Enable();
-            GameLoop.RequestPause();
+            GameLoop.RequestPause(this);
             
             if (isPauseMenu)
             {
@@ -222,7 +219,7 @@ namespace UI
         {
             if (_shiftManager == null) return;
             _shiftManager.SetupShift(_shiftManager.ShiftNumber);
-            _shiftManager.LaunchShiftTimer();
+            _shiftManager.RequestShiftTimer();
         }
         public void ResumeGame(bool skiptutorial=false)
         {
@@ -231,12 +228,8 @@ namespace UI
                 SkipTutorial();
             }
             
-            
-            //_gameLoop.StartRunning();
-            _playerInputs.Enable();
-            _UIInputs.Enable();
             _onResume?.Invoke();
-            GameLoop.RequestResume();
+            GameLoop.TryResume(this);
 
             SetCursorFreedom(false);
             

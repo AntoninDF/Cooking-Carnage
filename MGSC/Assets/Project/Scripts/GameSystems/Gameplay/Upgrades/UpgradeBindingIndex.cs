@@ -18,9 +18,9 @@ namespace Upgrades
 			get
 			{
 				if (_instance == null)
-					_instance = Resources.Load<UpgradeBindingIndex>("Upgrades/UpgradesBindingIndex");
+					_instance = Resources.Load<UpgradeBindingIndex>("Upgrades/UpgradeBindingIndex");
 				if (_instance == null)
-					Debug.LogError("[UpgradeBindingIndex] Asset not found in Resources/Upgrades/UpgradesBindingIndex");
+					Debug.LogError("[UpgradeBindingIndex] Asset not found in Resources/Upgrades/UpgradeBindingIndex");
 				return _instance;
 			}
 		}
