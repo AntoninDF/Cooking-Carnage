@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: Readme
+  m_EditorClassIdentifier: Assembly-CSharp::Readme
+  icon: {fileID: 0}
+  title: UI Prefabs
+  sections:
+  - heading: Naming conventions
+    text: If everything follows naming conventions, it's great. But most importantly,
+      everything that has to be controlled by script should strictly adhere to these
+      naming conventions. Buttons should start with "B_" ; Text (or labels) should
+      start with "L_" (and not "T_" because they aren't textures) ; Images (or sprites)
+      should start with "I_"
+    linkText: 
+    url: 
+  - heading: Where to reference things
+    text: Every prefab should have a custom UI Widget component at it's root, and
+      as few other custom components as possible. Every object that will get controlled
+      by script must be referenced in this root component. If the name for the gameObjects
+      is strictly identical to that of the variable to which they must be assigned,
+      they can be detected automatically by the script.
+    linkText: 
+    url: 
+  - heading: Test
+    text: Line 1\nLine 2\nLine3
+    linkText: 
+    url: 
+  loadedLayout: 0

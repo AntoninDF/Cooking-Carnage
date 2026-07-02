@@ -48,8 +48,24 @@ namespace Features
         public virtual bool CheckIfLookedAt(Vector3 position, Vector3 direction) => CheckIfLookedAt(position, direction, float.MaxValue);
         public virtual bool CheckIfLookedAt(Vector3 position, Vector3 direction, float distance)
         {
-            //UnityEngine.Debug.Log("Look at target checking lookat");
             LookPosition = transform.position;
+
+            if (transform.TryGetComponent(out Collider col))
+            {
+                if (Physics.Raycast(position, direction, out RaycastHit hit, distance))
+                {
+                    LookPosition = hit.point;
+                    IsLookedAt = true;
+                    return true;
+                }
+                else
+                {
+                    IsLookedAt = false;
+                    return false;
+                }
+            }
+
+
             float angularTolerance = 30f;
 
             if (Vector3.Distance(position, transform.position) > distance)
@@ -60,11 +76,8 @@ namespace Features
 
             float alignment = Vector3.Dot((transform.position - position).normalized, direction.normalized);
 
-            //UnityEngine.Debug.Log("Alignement is " + alignment);
-
             if (Mathf.Acos(alignment) / Mathf.PI * 180 < angularTolerance / 2f)
             {
-                //UnityEngine.Debug.Log("Angle is " + Mathf.Acos(alignment) / Mathf.PI * 180);
                 IsLookedAt = true;
                 return true;
             }

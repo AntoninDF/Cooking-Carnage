@@ -37,13 +37,15 @@ namespace NaughtyAttributes.Editor
         {
             GetSerializedProperties(ref _serializedProperties);
 
-            bool anyNaughtyAttribute = _serializedProperties.Any(p => PropertyUtility.GetAttribute<INaughtyAttribute>(p) != null);
+            bool anyNaughtyAttribute = _serializedProperties.Any(p => PropertyUtility.GetAttribute<INaughtyAttribute>(p) != null)
+                || target.GetType().GetCustomAttributes(true).Any(attr => attr is INaughtyAttribute);
             if (!anyNaughtyAttribute)
             {
                 DrawDefaultInspector();
             }
             else
             {
+                DrawHelpBoxes();
                 DrawSerializedProperties();
             }
 
@@ -67,7 +69,28 @@ namespace NaughtyAttributes.Editor
                 }
             }
         }
+        protected void DrawHelpBoxes()
+        {
+            foreach (var attr in target.GetType().GetCustomAttributes<HelpBoxAttribute>(true))
+            {
+                MessageType messageType = MessageType.None;
+                switch (attr.MessageType)
+                {
+                    case EInfoBoxType.Normal:
+                        messageType = MessageType.Info;
+                        break;
 
+                    case EInfoBoxType.Warning:
+                        messageType = MessageType.Warning;
+                        break;
+
+                    case EInfoBoxType.Error:
+                        messageType = MessageType.Error;
+                        break;
+                }
+                EditorGUILayout.HelpBox(attr.Message, messageType);
+            }
+        }
         protected void DrawSerializedProperties()
         {
             serializedObject.Update();
@@ -77,6 +100,7 @@ namespace NaughtyAttributes.Editor
             {
                 if (property.name.Equals("m_Script", System.StringComparison.Ordinal))
                 {
+                    if (target.GetType().GetCustomAttributes<HideScriptFieldAttribute>(true).Count() > 0) continue;
                     using (new EditorGUI.DisabledScope(disabled: true))
                     {
                         EditorGUILayout.PropertyField(property);
