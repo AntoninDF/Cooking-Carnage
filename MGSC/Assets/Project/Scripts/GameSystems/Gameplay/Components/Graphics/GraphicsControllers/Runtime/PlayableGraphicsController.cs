@@ -46,6 +46,7 @@ public abstract class PlayableGraphicsController : GraphicsController
     protected virtual void Update()
     {
         ProcessElapsedTime();
+        //Debug.Log($"GameObject : {this.gameObject.name}, TimeElapsed: {TimeElapsed}, DelayTimeElapsed: {DelayTimeElapsed}");
     }
 
     public virtual void Play(bool skipDelay=false)
@@ -57,11 +58,13 @@ public abstract class PlayableGraphicsController : GraphicsController
     }
     public virtual void PlayOnce(bool skipDelay = false)
     {
+        TimeElapsed = 0;
         AnimationMode = EAnimationMode.PlayOnce;
         Play(skipDelay);
     }
     public virtual void PlayReverse(bool skipDelay = false)
     {
+        //TimeElapsed = Duration;
         AnimationMode = EAnimationMode.PlayReverse;
         Play(skipDelay);
     }
