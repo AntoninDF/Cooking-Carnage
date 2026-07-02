@@ -44,7 +44,7 @@ namespace UI
             Debug.Log("UISystem Init");
             AddPrefabs(Reference.AssetReferences.UIPrefabs);
             ResetSceneHierarchy();
-            LoadAllWidgets(); // To remove later
+            LoadNecessaryWidgets();
         }
 
         /// <summary>
@@ -159,13 +159,19 @@ namespace UI
             }
             return false;
         }
-
-
         public void LoadAllWidgets()
         {
             foreach(var widgetPrefab in _widgetPrefabs)
             {
                 LoadWidget_Internal(widgetPrefab);
+            }
+        }
+        public void LoadNecessaryWidgets()
+        {
+            foreach(var widgetPrefab in _widgetPrefabs)
+            {
+                if (widgetPrefab.ForceLoadOnUIInitialization)
+                    LoadWidget_Internal(widgetPrefab);
             }
         }
         /// <summary>

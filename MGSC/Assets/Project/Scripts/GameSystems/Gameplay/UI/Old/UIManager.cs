@@ -206,7 +206,7 @@ namespace UI
         {
             bool isPauseMenu = _currentMenu.name == _pauseMenuName;
             
-            GameLoop.RequestPause();
+            GameLoop.RequestPause(this);
             
             if (isPauseMenu)
             {
@@ -229,7 +229,7 @@ namespace UI
             }
             
             _onResume?.Invoke();
-            GameLoop.RequestResume();
+            GameLoop.TryResume(this);
 
             SetCursorFreedom(false);
             

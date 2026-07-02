@@ -9,7 +9,7 @@ namespace NaughtyAttributes
         Error
     }
 
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class InfoBoxAttribute : DrawerAttribute
     {
         public string Text { get; private set; }

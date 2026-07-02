@@ -1,11 +1,13 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
 {
-    [HideScriptField]
     public class MainMenu : UIMenu
     {
+        public override bool ForceLoadOnUIInitialization => true;
+
         #region Fields
         [Tooltip("This is the play button, it will start the game")]
         public Button B_Play;
@@ -23,13 +25,35 @@ namespace UI
         {
             base.OnLoad();
             Enable();
+            BindAll();
         }
 
-        void Reset()
+        void BindAll()
         {
-            B_Play = gameObject.FindAnyObjectByName<Button>("B_Play");
-            B_Credits = gameObject.FindAnyObjectByName<Button>("B_Credits");
-            B_Quit = gameObject.FindAnyObjectByName<Button>("B_Quit");
+            if (B_Play != null)
+                B_Play.onClick.AddListener(OnPlay);
+            
+            if (B_Credits != null)
+                B_Credits.onClick.AddListener(OnCredits);
+            
+            if (B_Quit != null)
+                B_Quit.onClick.AddListener(OnQuit);
+        }
+        void OnPlay()
+        {
+            Disable();
+        }
+
+        void OnCredits()
+        {
+            var menu = Owner.GetWidget<CreditsMenu>();
+            menu.Enable();
+        }
+
+        void OnQuit()
+        {
+            var menu = Owner.GetWidget<QuitConfirmationPopUp>();
+            menu.Enable();
         }
 
 

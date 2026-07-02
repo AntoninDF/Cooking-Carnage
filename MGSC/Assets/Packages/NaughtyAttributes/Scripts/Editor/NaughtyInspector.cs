@@ -37,13 +37,15 @@ namespace NaughtyAttributes.Editor
         {
             GetSerializedProperties(ref _serializedProperties);
 
-            bool anyNaughtyAttribute = _serializedProperties.Any(p => PropertyUtility.GetAttribute<INaughtyAttribute>(p) != null);
+            bool anyNaughtyAttribute = _serializedProperties.Any(p => PropertyUtility.GetAttribute<INaughtyAttribute>(p) != null)
+                || target.GetType().CustomAttributes.Any(data => typeof(INaughtyAttribute).IsAssignableFrom(data.AttributeType));
             if (!anyNaughtyAttribute)
             {
                 DrawDefaultInspector();
             }
             else
             {
+                DrawHelpBoxes();
                 DrawSerializedProperties();
             }
 
@@ -67,7 +69,13 @@ namespace NaughtyAttributes.Editor
                 }
             }
         }
-
+        protected void DrawHelpBoxes()
+        {
+            foreach (var attr in target.GetType().GetCustomAttributes<HelpBoxAttribute>(true))
+            {
+                EditorGUILayout.HelpBox(attr.Message, attr.MessageType);
+            }
+        }
         protected void DrawSerializedProperties()
         {
             serializedObject.Update();
@@ -77,6 +85,7 @@ namespace NaughtyAttributes.Editor
             {
                 if (property.name.Equals("m_Script", System.StringComparison.Ordinal))
                 {
+                    if (target.GetType().CustomAttributes.Any(data => data.AttributeType == typeof(HideScriptFieldAttribute))) continue;
                     using (new EditorGUI.DisabledScope(disabled: true))
                     {
                         EditorGUILayout.PropertyField(property);

@@ -8,9 +8,19 @@ namespace UI
 	{
 		public UIMenu()
 		{
-			OnEnable += () => CursorUtility.RequestCursor(this);
-			OnDisable += () => CursorUtility.TryFreeCursor(this);
+			OnEnable += OnMenuOpen;
+			OnDisable += OnMenuClose;
 		}
+		protected virtual void OnMenuOpen()
+		{
+            CursorUtility.RequestCursor(this);
+			GameLoop.RequestPause(this);
+        }
+		protected virtual void OnMenuClose()
+		{
+            CursorUtility.TryFreeCursor(this);
+			GameLoop.TryResume(this);
+        }
 	}
 
 }
