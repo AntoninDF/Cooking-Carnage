@@ -1,3 +1,4 @@
+using System;
 using Upgrades;
 
 namespace Features
@@ -5,6 +6,8 @@ namespace Features
     public class Cooker : TransformAfterTimer, IUpgradable<CookingSpeedUpgrade>
     {
         private float _baseDuration;
+        
+        public Action FailedLaunchCooking { get; set; }
         
         public Cooker(IFeatureCollection owner) : base(owner)
         {

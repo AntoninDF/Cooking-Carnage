@@ -1557,6 +1557,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 647448363593362783}
+          m_TargetAssemblyTypeName: ModelController, Assembly-CSharp
+          m_MethodName: AuthorizeOutlines
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
   - ActionPath:
       ActionVariableName: Start
       SerializedType:
@@ -1632,6 +1644,18 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: Turn On
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 647448363593362783}
+          m_TargetAssemblyTypeName: ModelController, Assembly-CSharp
+          m_MethodName: AuthorizeOutlines
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
   - ActionPath:
@@ -1768,6 +1792,50 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+  - ActionPath:
+      ActionVariableName: FailedLaunchCooking
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Cooker
+        SerializedType:
+          m_Name: Cooker
+          m_AssemblyQualifiedName: Features.Cooker, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 7806711825382488873}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2682451889310641081}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Turn Off
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 647448363593362783}
+          m_TargetAssemblyTypeName: ModelController, Assembly-CSharp
+          m_MethodName: AuthorizeOutlines
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
   references:
     version: 2
     RefIds: []
@@ -1798,6 +1866,11 @@ MonoBehaviour:
     - {fileID: 885096864005664793}
     - {fileID: 3901059833229521834}
     - {fileID: 3627208796412773535}
+  OvenComponentsData:
+    scripts:
+    - {fileID: 7231666564453243733}
+    - {fileID: 647448363593362783}
+    - {fileID: 7806711825382488873}
 --- !u!1 &8991466077180281026
 GameObject:
   m_ObjectHideFlags: 0

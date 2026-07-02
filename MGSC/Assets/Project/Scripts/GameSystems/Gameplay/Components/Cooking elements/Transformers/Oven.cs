@@ -12,11 +12,13 @@ public class Oven : MonoBehaviour, IFeatureCollection
     public F_SoloContainer Container { get; set; }
     public Cooker Cooker { get; set; }
 
-
+    
+    
     #region Fields
     [SerializeField] private SlotContainer _itemSlot;
     [SerializeField] private InteractionButton _button;
     [SerializeField] private Feedbacks ProgressFeedbacks;
+    
 
     #endregion
 
@@ -84,7 +86,12 @@ public class Oven : MonoBehaviour, IFeatureCollection
     }
     private void TryStartCooking(InteractionContext context)
     {
-        if (Container.HeldItem == null) return;
+
+        if (Container.HeldItem == null)
+        {
+            Cooker.FailedLaunchCooking?.Invoke();
+            return;
+        }
         _button.gameObject.SetActive(false);
         if (Container.HeldItem.TryGetSibling(out F_Cookable cookable, true) && cookable.CanBeTransformed)
         {
