@@ -25,6 +25,7 @@ namespace Features
 		{
 			base.Perform();
 			bool sat = _seat.TrySit(_client);
+			//_seat.OnMealReady += _client.Behaviour.OnMealServed;
 			_seat.OnMealReady        += TryGrabMeal;
 			_seat.OnClientUnregister += HandleUnregister;
 

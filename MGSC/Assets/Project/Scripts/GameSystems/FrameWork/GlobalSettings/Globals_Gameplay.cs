@@ -31,7 +31,7 @@ public static partial class Globals
 
         // SHIFT
         public static Param<int> ShiftNumber { get; set; } = new(0);
-        public static Param<float> ShiftDuration { get; set; } = new(300); // In seconds
+        public static Param<float> ShiftDuration { get; set; } = new(3000); // In seconds
         public static Param<float> ShiftFinalWarningDuration { get; set; } = new(10f); // Must be less than ShiftDuration
         public static Param<AnimationCurve> ShiftRentPriceCurve { get; set; } = new(AnimationCurve.Linear(0,0,1,1));
 

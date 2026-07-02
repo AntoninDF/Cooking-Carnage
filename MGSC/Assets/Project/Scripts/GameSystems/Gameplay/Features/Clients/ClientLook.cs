@@ -86,7 +86,7 @@ namespace Features
 
         public void SetWaiting(bool value)
         {
-            Debug.Log("[ClientLook]  isWaiting = " + value);
+//            Debug.Log("[ClientLook]  isWaiting = " + value);
             _isWaiting = value;
         }
 
