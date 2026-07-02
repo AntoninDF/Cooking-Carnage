@@ -8,6 +8,7 @@ namespace Features
 
         public Action<InteractionContext> OnInteraction { get; set; }
         protected List<Func<InteractionContext, bool>> _conditions = new();
+        public bool ActivatedObject { get; set; } = true;
 
         public F_Interactable(IFeatureCollection owner) : base(owner)
         {
@@ -26,6 +27,7 @@ namespace Features
         {
             if (!Enabled) return false;
             if (!CheckConditions(context)) return false;
+            if(!ActivatedObject) return false;
 
             return true;
         }

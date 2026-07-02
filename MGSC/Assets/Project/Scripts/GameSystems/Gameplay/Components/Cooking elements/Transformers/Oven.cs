@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class Oven : MonoBehaviour, IFeatureCollection
@@ -12,11 +13,14 @@ public class Oven : MonoBehaviour, IFeatureCollection
     public F_SoloContainer Container { get; set; }
     public Cooker Cooker { get; set; }
 
-
+    
+    
     #region Fields
     [SerializeField] private SlotContainer _itemSlot;
     [SerializeField] private InteractionButton _button;
+    [SerializeField] private ModelController _graphics;
     [SerializeField] private Feedbacks ProgressFeedbacks;
+    
 
     #endregion
 
@@ -52,6 +56,8 @@ public class Oven : MonoBehaviour, IFeatureCollection
             Container.OnGrab += _ => ShowRecipeSprites();
             Container.OnDrop += _ => ResetDisplayedSprites();
             Container.OnDrop += _ => OnStopCooking();
+            
+            Container.IsLocked = !_isOvenActive;
         }
         if (_button != null)
         {
@@ -84,7 +90,12 @@ public class Oven : MonoBehaviour, IFeatureCollection
     }
     private void TryStartCooking(InteractionContext context)
     {
-        if (Container.HeldItem == null) return;
+
+        if (Container.HeldItem == null)
+        {
+            Cooker.FailedLaunchCooking?.Invoke();
+            return;
+        }
         _button.gameObject.SetActive(false);
         if (Container.HeldItem.TryGetSibling(out F_Cookable cookable, true) && cookable.CanBeTransformed)
         {
@@ -189,6 +200,19 @@ public class Oven : MonoBehaviour, IFeatureCollection
             img.sprite = null;
             img.gameObject.SetActive(false);
         }
+    }
+    
+    public bool _isOvenActive = true;
+
+    public void SetOvenActive(bool active)
+    {
+        _isOvenActive = active;
+        if (_button != null)
+            _button.gameObject.SetActive(active);
+        _button.Model.AuthorizeOutlines(active);
+        _graphics.AuthorizeOutlines(active);
+        //if(Container != null) Container.IsLocked = !active;
+
     }
 
     public void ShowRecipeSprites() => ShowSpriteList(GetSpritesFromIngredients(GetContainedIngredients()));
