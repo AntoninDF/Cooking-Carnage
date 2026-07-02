@@ -13,12 +13,12 @@ namespace GameSystem
         public static Action OnShiftTimerStart { get; set; }
         [GlobalEvent("Shift/OnFinalWarning")]
         public static Action OnShiftFinalWarning { get; set; }
+        [GlobalEvent("Shift/OnEnd")]
+        public static Action OnShiftEnded { get; set; }
         [GlobalEvent("Shift/OnFail")]
         public static Action OnShiftFailed { get; set; }
         [GlobalEvent("Shift/OnSuccess")]
         public static Action OnShiftSucceeded { get; set; }
-        [GlobalEvent("Shift/OnEnd")]
-        public static Action OnShiftEnded { get; set; }
         [GlobalEvent("Shift/OnNextShiftTriggered")]
         public static Action OnNextShift { get; set; }
 
@@ -63,34 +63,39 @@ namespace GameSystem
             Globals.Bind(value => _noonDuration = value, Globals.Gameplay.ShiftFinalWarningDuration);
             Globals.Bind(value => _rentPriceCurve = value, Globals.Gameplay.ShiftRentPriceCurve);
         }
-        public float GetCurrentRentPrice() => GetRentPrice(ShiftNumber);
-        public float GetRentPrice(int shiftCount) => _rentPriceCurve.Evaluate(shiftCount);
+
+        void BeginShift()
+        {
+            if (IsShiftActive) return;
+            // Eventually check if the request should be granted or not
+            IsShiftActive = true;
+            OnShiftBegin?.Invoke();
+        }
 
         /// <summary>
         /// Simply invokes <see cref="OnShiftBegin"/>, and starts the timers for the end of shift.
         /// </summary>
-        public void LaunchShiftTimer() => LaunchShiftTimer(_shiftDuration);
+        public void RequestShiftTimer() => LaunchShiftTimer(_shiftDuration);
         void LaunchShiftTimer(float duration)
         {
             this.Log(LogType.Log, $"Launching new shift for {duration}s");
-            IsShiftActive = true;
-            OnShiftBegin?.Invoke();
             TimerUntilEndOfShift = TimerManager.StartTimer("shiftDuration", duration, EndShift, false);
             TimerUntilFinalWarning = TimerManager.StartTimer("shiftDurationWithoutNoon", duration - _noonDuration, InvokeFinalWarning, false);
             // Subscribe to the GameLoop in case the game pauses
             GameLoop.BindTimer(TimerUntilEndOfShift);
             GameLoop.BindTimer(TimerUntilFinalWarning);
+            OnShiftTimerStart?.Invoke();
         }
 
         void InvokeFinalWarning()
         {
-            OnShiftFinalWarning?.Invoke();
             if (TimerUntilFinalWarning != null)
             {
                 GameLoop.UnbindTimer(TimerUntilFinalWarning);
                 TimerUntilFinalWarning = null;
             }
             this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
+            OnShiftFinalWarning?.Invoke();
         }
 
         /// <summary>
@@ -102,7 +107,6 @@ namespace GameSystem
         {
             this.Log(LogType.Log, $"End of the Shift triggered.");
             IsShiftActive = false;
-            OnShiftEnded?.Invoke();
             if (TimerUntilEndOfShift != null)
             {
                 GameLoop.UnbindTimer(TimerUntilEndOfShift);
@@ -117,6 +121,7 @@ namespace GameSystem
                 OnShiftFailed?.Invoke();
 
             SaveManager.SaveGameData();
+            OnShiftEnded?.Invoke();
         }
 
         /// <summary>
@@ -140,18 +145,8 @@ namespace GameSystem
             return true;
         }
 
-        /// <summary>
-        /// Resets all the items and the player
-        /// </summary>
-        private void ResetAll()
-        {
-            Debug.Log("Reset everything for the next shift");
 
-            Reference.GetManager<ItemManager>()?.DestroyAllActive();
-            PlayerSetup.TryResetPlayer();
-        }
-
-        public void NextShift()
+        public void RequestStartShift()
         {
             Debug.Log("NextShift called");
             ShiftNumber++;
@@ -174,6 +169,18 @@ namespace GameSystem
             Reference.GetManager<ItemManager>()?.SpawnInitialItems(shiftCount);
 
         }
+        /// <summary>
+        /// Resets all the items and the player
+        /// </summary>
+        private void ResetAll()
+        {
+            Debug.Log("Reset everything for the next shift");
+
+            Reference.GetManager<ItemManager>()?.DestroyAllActive();
+            PlayerSetup.TryResetPlayer();
+        }
+        public float GetCurrentRentPrice() => GetRentPrice(ShiftNumber);
+        public float GetRentPrice(int shiftCount) => _rentPriceCurve.Evaluate(shiftCount);
 
         public void Register()
         {

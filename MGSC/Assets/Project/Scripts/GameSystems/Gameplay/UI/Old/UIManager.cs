@@ -219,7 +219,7 @@ namespace UI
         {
             if (_shiftManager == null) return;
             _shiftManager.SetupShift(_shiftManager.ShiftNumber);
-            _shiftManager.LaunchShiftTimer();
+            _shiftManager.RequestShiftTimer();
         }
         public void ResumeGame(bool skiptutorial=false)
         {

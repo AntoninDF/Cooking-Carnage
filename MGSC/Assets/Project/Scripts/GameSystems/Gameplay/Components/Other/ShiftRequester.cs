@@ -22,7 +22,7 @@ public class ShiftRequester : MonoBehaviour
         {
             if (shiftMgr.IsShiftActive) return;
             Debug.Log("RequestShiftLaunch");
-            shiftMgr.LaunchShiftTimer();
+            shiftMgr.RequestShiftTimer();
         }
     }
 }

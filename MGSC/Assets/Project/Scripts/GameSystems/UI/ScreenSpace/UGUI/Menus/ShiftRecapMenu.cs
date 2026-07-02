@@ -40,7 +40,7 @@ namespace UI
         {
             if (Reference.TryGetManager(out ShiftManager mgr))
             {
-                mgr.NextShift();
+                mgr.RequestNextShift();
             }
             Disable();
         }

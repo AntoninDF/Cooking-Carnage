@@ -1,3 +1,4 @@
+using GameSystem;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,6 +43,10 @@ namespace UI
         void OnPlay()
         {
             Disable();
+            if (Reference.TryGetManager(out ShiftManager mgr))
+            {
+                mgr.RequestNextShift();
+            }
         }
 
         void OnCredits()
