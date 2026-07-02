@@ -16,6 +16,7 @@ namespace Features
         public MeshRenderer OutlineRenderer { get => outlineRenderer; set => outlineRenderer = value; }
         protected MeshRenderer outlineRenderer;
         public MeshFilter OutlineMesh { get; set; }
+        public bool CanShowOutline { get; set; } = true;
         public Color Color
         {
             get => color;
@@ -60,6 +61,7 @@ namespace Features
         }
         public virtual void EnableOutline()
         {
+            if(!CanShowOutline) return;
             enabled = true;
             if (OutlineObject == null)
             {

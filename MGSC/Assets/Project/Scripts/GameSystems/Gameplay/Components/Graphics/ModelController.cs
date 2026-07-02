@@ -66,7 +66,11 @@ public class ModelController : MonoBehaviour, IFeatureCollection
             DisableShadows();
     }
 
-        
+
+    public void AuthorizeOutlines(bool allow)
+    {
+        Outline.CanShowOutline = allow;
+    }
 
     #region Forwarded
     public virtual Mesh GetCombinedMeshes(Transform relativeTo=null) => MeshController.GetCombinedMeshes(relativeTo);

@@ -11,7 +11,6 @@ namespace UI
     [HelpBox("If you name your GameObjects exactly the same as the variable names, you can click 'Auto assign fields' and it will work the magic for you :)")]
     public class UIWidget : MonoBehaviour
     {
-        protected byte _;
         #region Properties
         public bool Enabled
         {
