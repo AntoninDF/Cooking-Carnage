@@ -38,7 +38,7 @@ namespace NaughtyAttributes.Editor
             GetSerializedProperties(ref _serializedProperties);
 
             bool anyNaughtyAttribute = _serializedProperties.Any(p => PropertyUtility.GetAttribute<INaughtyAttribute>(p) != null)
-                || target.GetType().CustomAttributes.Any(data => typeof(INaughtyAttribute).IsAssignableFrom(data.AttributeType));
+                || target.GetType().GetCustomAttributes(true).Any(attr => attr is INaughtyAttribute);
             if (!anyNaughtyAttribute)
             {
                 DrawDefaultInspector();
@@ -85,7 +85,7 @@ namespace NaughtyAttributes.Editor
             {
                 if (property.name.Equals("m_Script", System.StringComparison.Ordinal))
                 {
-                    if (target.GetType().CustomAttributes.Any(data => data.AttributeType == typeof(HideScriptFieldAttribute))) continue;
+                    if (target.GetType().GetCustomAttributes<HideScriptFieldAttribute>(true).Count() > 0) continue;
                     using (new EditorGUI.DisabledScope(disabled: true))
                     {
                         EditorGUILayout.PropertyField(property);

@@ -58,14 +58,12 @@ public static class GameLoop
     {
         if (!IsRunning) return;
         IsRunning = false;
-        UnityEngine.Debug.Log("GameLoop paused");
         OnPause?.Invoke();
     }
     static void Resume()
     {
         if (IsRunning) return;
         IsRunning = true;
-        UnityEngine.Debug.Log("GameLoop resumed");
         OnResume?.Invoke();
     }
 

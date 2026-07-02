@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    [HideScriptField]
     public class ShiftRecapMenu : UIMenu
     {
         public override bool ForceLoadOnUIInitialization => true;

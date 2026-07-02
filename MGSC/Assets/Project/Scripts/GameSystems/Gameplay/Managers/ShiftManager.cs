@@ -7,14 +7,16 @@ namespace GameSystem
     public class ShiftManager : IManager
     {
         #region Properties
+        [GlobalEvent("Shift/OnBegin")]
+        public static Action OnShiftBegin { get; set; }
+        [GlobalEvent("Shift/OnTimerStart")]
+        public static Action OnShiftTimerStart { get; set; }
+        [GlobalEvent("Shift/OnFinalWarning")]
+        public static Action OnShiftFinalWarning { get; set; }
         [GlobalEvent("Shift/OnFail")]
         public static Action OnShiftFailed { get; set; }
         [GlobalEvent("Shift/OnSuccess")]
         public static Action OnShiftSucceeded { get; set; }
-        [GlobalEvent("Shift/OnBegin")]
-        public static Action OnShiftBegin { get; set; }
-        [GlobalEvent("Shift/OnFinalWarning")]
-        public static Action OnShiftNoon { get; set; }
         [GlobalEvent("Shift/OnEnd")]
         public static Action OnShiftEnded { get; set; }
         [GlobalEvent("Shift/OnNextShiftTriggered")]
@@ -82,7 +84,7 @@ namespace GameSystem
 
         void InvokeFinalWarning()
         {
-            OnShiftNoon?.Invoke();
+            OnShiftFinalWarning?.Invoke();
             if (TimerUntilFinalWarning != null)
             {
                 GameLoop.UnbindTimer(TimerUntilFinalWarning);
@@ -143,7 +145,7 @@ namespace GameSystem
         /// </summary>
         private void ResetAll()
         {
-            this.Log("Reset everything for the next shift");
+            Debug.Log("Reset everything for the next shift");
 
             Reference.GetManager<ItemManager>()?.DestroyAllActive();
             PlayerSetup.TryResetPlayer();
@@ -151,13 +153,12 @@ namespace GameSystem
 
         public void NextShift()
         {
+            Debug.Log("NextShift called");
             ShiftNumber++;
 
             SetupShift(ShiftNumber);
 
             this.Log(LogType.Log, $"Shift {ShiftNumber - 1} is over, launching shift {ShiftNumber}");
-
-            // if (_uiManager) _uiManager.ResumeGame();
 
             OnNextShift?.Invoke();
         }

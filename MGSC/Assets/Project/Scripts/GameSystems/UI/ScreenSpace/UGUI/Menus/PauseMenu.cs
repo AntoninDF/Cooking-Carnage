@@ -1,11 +1,8 @@
-using System;
-using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace UI
 {
-    [HideScriptField]
     public class PauseMenu : UIMenu
     {
         public override bool ForceLoadOnUIInitialization => true;

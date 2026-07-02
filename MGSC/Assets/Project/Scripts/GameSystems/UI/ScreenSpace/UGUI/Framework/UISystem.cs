@@ -36,12 +36,12 @@ namespace UI
 
         public UISystem()
         {
-            Debug.Log("UISystem constructor called");
+            //Debug.Log("UISystem constructor called");
             Register();
         }
         public void Init()
         {
-            Debug.Log("UISystem Init");
+            //Debug.Log("UISystem Init");
             AddPrefabs(Reference.AssetReferences.UIPrefabs);
             ResetSceneHierarchy();
             LoadNecessaryWidgets();
@@ -106,7 +106,7 @@ namespace UI
                 return;
             }
             widget.transform.SetParent(parent);
-            Debug.Log($"[UISystem] Showing widget '{widget.name}'");
+            //Debug.Log($"[UISystem] Showing widget '{widget.name}'");
         }
         public bool HasLoadedWidget<T>()
         {
@@ -188,7 +188,7 @@ namespace UI
             var result = go.GetComponent<UIWidget>();
             _loadedWidgets.Add(result);
             result.Owner = this;
-            Debug.Log($"[UISystem] Widget '{result.name}' has been loaded");
+            //Debug.Log($"[UISystem] Widget '{result.name}' has been loaded");
             result.OnLoad();
             return result;
         }

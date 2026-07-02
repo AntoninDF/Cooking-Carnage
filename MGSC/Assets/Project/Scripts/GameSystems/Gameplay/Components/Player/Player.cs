@@ -1,4 +1,5 @@
 using Features;
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -16,13 +17,16 @@ public class Player : MonoBehaviour, IFeatureCollection
         set
         {
             if (value == _lookedAtObject) return;
+            Debug.Log("Looked at object set");
             if (_lookedAtObject != null)
                 _lookedAtObject.IsLookedAt = false;
             _lookedAtObject = value;
             if (_lookedAtObject != null)
                 _lookedAtObject.IsLookedAt = true;
+            OnNewTargetLookedAt?.Invoke(value);
         }
     }
+    public Action<F_LookAtTarget> OnNewTargetLookedAt;
     private F_LookAtTarget _lookedAtObject;
 
     [SerializeField] private Transform head;
@@ -60,11 +64,24 @@ public class Player : MonoBehaviour, IFeatureCollection
     void Update()
     {
         if (!GameLoop.IsRunning) return;
+        TryResetLookedAtObject();
+
         Collection.Update();
 
+    }
+
+    private void TryResetLookedAtObject()
+    {
         var cam = Camera.main;
         if (LookedAtObject != null && !LookedAtObject.CheckIfLookedAt(cam.transform.position, cam.transform.forward))
             LookedAtObject = null;
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out var hit))
+        {
+            var features = FeatureScannerByHierarchy.Get<F_LookAtTarget>(hit.transform.gameObject);
+            if (features.Count > 0)
+                LookedAtObject = features[0];
+            LookedAtObject = null;
+        }
     }
 
     void BindPlayerActions()
