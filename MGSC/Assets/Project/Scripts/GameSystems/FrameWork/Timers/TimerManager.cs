@@ -74,7 +74,7 @@ namespace GameSystem
             var t = new Timer( name, duration, onComplete, onUpdate, frameBased);
             timers[name] = t;
             
-            Debug.Log("[TimerManager] TIMER STARTED");
+//            Debug.Log("[TimerManager] TIMER STARTED");
             //this.Log(LogType.Log, "Timer " + name + " has been launched");
             
             return t;

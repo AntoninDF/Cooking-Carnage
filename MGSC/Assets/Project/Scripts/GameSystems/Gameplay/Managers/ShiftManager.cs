@@ -175,7 +175,7 @@ namespace GameSystem
         /// </summary>
         private void ResetAll()
         {
-            Debug.Log("Reset everything for the next shift");
+//            Debug.Log("Reset everything for the next shift");
 
             Reference.GetManager<ItemManager>()?.DestroyAllActive();
             PlayerSetup.TryResetPlayer();
