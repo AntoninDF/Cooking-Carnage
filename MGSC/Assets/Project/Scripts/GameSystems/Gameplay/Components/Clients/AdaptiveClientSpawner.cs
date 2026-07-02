@@ -91,8 +91,13 @@ namespace GameSystem
             else
                 this.Log(" has been initialized");
 
+            Debug.Log("Initialize AdaptiveClientSpawner");
             // Start spawning clients when the shift begins
-            ShiftManager.OnShiftBegin += () => Launch(2);
+            ShiftManager.OnShiftBegin += () =>
+            {
+                Debug.LogError("Shift started, client will spawn soon");
+                Launch(2);
+            };
         }
 
         public void PostInit()
@@ -114,6 +119,7 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
+            Debug.Log("START SPAWN ROUTINE");
             TimerManager.StartTimer(timerName, delay, () => TrySpawnClient());
         }
 
