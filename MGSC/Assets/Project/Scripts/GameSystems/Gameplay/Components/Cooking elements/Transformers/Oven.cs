@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -13,7 +14,9 @@ public class Oven : MonoBehaviour, IFeatureCollection
     public F_SoloContainer Container { get; set; }
     public Cooker Cooker { get; set; }
 
-    
+    //Will be moved later to be able to be used with Event display
+    public UnityEvent OnOvenActivated; 
+    public UnityEvent OnOvenDeactivated;
     
     #region Fields
     [SerializeField] private SlotContainer _itemSlot;
@@ -209,12 +212,16 @@ public class Oven : MonoBehaviour, IFeatureCollection
 
     public void SetOvenActive(bool active)
     {
+        
         _isOvenActive = active;
         if (_button != null)
             _button.gameObject.SetActive(active);
         _button.Model.AuthorizeOutlines(active);
-        _graphics.AuthorizeOutlines(active);
-        //  if(Container != null) Container.IsLocked = !active;
+        _graphics.AuthorizeOutlines(active); 
+        if(Container != null) Container.IsLocked = !active;
+        
+        if(active) OnOvenActivated?.Invoke();
+        else OnOvenDeactivated?.Invoke();
 
     }
 
