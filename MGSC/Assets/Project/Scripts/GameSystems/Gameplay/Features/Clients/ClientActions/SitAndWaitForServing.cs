@@ -34,32 +34,34 @@ namespace Features
 		private void TryGrabMeal()
 		{
 			_seat.OnMealReady -= TryGrabMeal;
-    
+
 			if (_seat.Owner is not OrderingArea orderingArea)
-			{
 				return;
-			}
+
 			var heldItem = orderingArea.ServingArea.MealSlot?.Container?.HeldItem;
 			if (heldItem == null)
-			{
 				return;
-			}
 			if (!heldItem.TryGetSibling(out Servable servable, true))
-			{
 				return;
-			}
 
 			orderingArea.ServingArea.MealSlot.Container.RequestDrop(heldItem);
 			_client.TryAcceptServing(servable);
-			
+
 			if (heldItem.Owner is Component plateComp)
 			{
-				if (heldItem.TryGetSibling(out F_GoToAnimation anim))
-					anim.Enabled = false;
-
-				UnityEngine.Object.Destroy(plateComp.gameObject);
+				if (heldItem.TryGetSibling(out F_GoToAnimation anim) && anim.CanAnimate())
+				{
+					anim.OnAnimationStop += () =>
+					                        {
+						                        anim.Enabled = false;
+						                        _client.Behaviour.OnEatEnd += () => UnityEngine.Object.Destroy(plateComp.gameObject);
+					                        };
+				}
+				else
+				{
+					_client.Behaviour.OnEatEnd += () => UnityEngine.Object.Destroy(plateComp.gameObject);
+				}
 			}
-			
 		}
 		
 
