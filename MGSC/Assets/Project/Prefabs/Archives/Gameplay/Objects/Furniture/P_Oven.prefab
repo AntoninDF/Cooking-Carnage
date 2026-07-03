@@ -1417,18 +1417,6 @@ MonoBehaviour:
             m_StringArgument: Turn Off
             m_BoolArgument: 1
           m_CallState: 2
-        - m_Target: {fileID: 2682451889310641081}
-          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-          m_MethodName: ResetTrigger
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Turn Off
-            m_BoolArgument: 1
-          m_CallState: 2
   - ActionPath:
       ActionVariableName: OnDrop
       SerializedType:
@@ -1510,10 +1498,10 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-        - m_Target: {fileID: 2682451889310641081}
-          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-          m_MethodName: SetTrigger
-          m_Mode: 5
+        - m_Target: {fileID: 3492002027963606634}
+          m_TargetAssemblyTypeName: AnimatorBoolSwitch, Assembly-CSharp
+          m_MethodName: SetFalse
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1671,10 +1659,10 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 2682451889310641081}
-          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-          m_MethodName: SetTrigger
-          m_Mode: 5
+        - m_Target: {fileID: 3492002027963606634}
+          m_TargetAssemblyTypeName: AnimatorBoolSwitch, Assembly-CSharp
+          m_MethodName: SetTrue
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1849,10 +1837,10 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 2682451889310641081}
-          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-          m_MethodName: SetTrigger
-          m_Mode: 5
+        - m_Target: {fileID: 3492002027963606634}
+          m_TargetAssemblyTypeName: AnimatorBoolSwitch, Assembly-CSharp
+          m_MethodName: SetFalse
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2261,6 +2249,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8477774588222936270, guid: e957b693df49de24189c4112cc27daf2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 647448363593362783}
+    - targetCorrespondingSourceObject: {fileID: 8899890975783549826, guid: e957b693df49de24189c4112cc27daf2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3492002027963606634}
   m_SourcePrefab: {fileID: 100100000, guid: e957b693df49de24189c4112cc27daf2, type: 3}
 --- !u!4 &433868104670017788 stripped
 Transform:
@@ -2296,6 +2287,25 @@ MonoBehaviour:
     Color: {r: 1, g: 1, b: 1, a: 1}
     Thickness: 0.01
     Mode: 1
+--- !u!1 &8837629101786737885 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8899890975783549826, guid: e957b693df49de24189c4112cc27daf2, type: 3}
+  m_PrefabInstance: {fileID: 83126826216413023}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3492002027963606634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837629101786737885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64befc56a2fcbb440b71b832aaf58cf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimatorBoolSwitch
+  _animator: {fileID: 2682451889310641081}
+  _paramName: IsActive
 --- !u!1001 &253505842241375659
 PrefabInstance:
   m_ObjectHideFlags: 0
