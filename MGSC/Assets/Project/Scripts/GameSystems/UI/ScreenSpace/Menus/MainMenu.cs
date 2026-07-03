@@ -18,12 +18,7 @@ namespace UI
 
 
         #endregion
-        public override void Init()
-        {
-            base.Init();
-            MainMenuState.SetDefaultMenu<MainMenu>();
 
-        }
 
         #region Methods
         public override void OnLoad()
@@ -46,17 +41,11 @@ namespace UI
         void OnPlay()
         {
             GameLoop.RequestTransition(StateTransitions.StartShift);
-            //Disable();
-            //if (Reference.TryGetManager(out ShiftManager mgr))
-            //{
-            //    mgr.RequestStartShift();
-            //}
         }
 
         void OnCredits()
         {
-            var menu = Owner.GetWidget<CreditsMenu>();
-            menu.Enable();
+            GameLoop.RequestTransition(StateTransitions.OpenCredits);
         }
 
         void OnQuit()

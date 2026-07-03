@@ -24,7 +24,7 @@ namespace Features
         private float   _smoothTime = 0.15f;
         
         private Vector3 _waitDirection = new Vector3(-1f, 0, 0);
-        private float   _waitSmoothTime = 0.15f;
+        //private float   _waitSmoothTime = 0.15f;
         #endregion
 
         public ClientLook(IFeatureCollection owner, Transform clientTransform, ClientMovement movement) : base(owner)

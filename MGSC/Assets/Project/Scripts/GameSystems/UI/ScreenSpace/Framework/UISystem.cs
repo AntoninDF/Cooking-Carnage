@@ -76,8 +76,6 @@ namespace UI
             _inactiveFolder.SetParent(_root);
 
             _inactiveFolder.gameObject.SetActive(false);
-
-            Debug.Log("[UISystem] Hierarchy reset");
         }
         void InitPrefabs(IEnumerable<UIWidget> widgetPrefabs)
         {

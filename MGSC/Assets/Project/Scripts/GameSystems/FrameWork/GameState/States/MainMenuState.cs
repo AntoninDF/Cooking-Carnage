@@ -1,14 +1,9 @@
-using UnityEngine;
+
+using UI;
 
 public class MainMenuState : MenuState
 {
-    // Si on appuie sur le bouton Play du menu principal, ça lance une transition
-
-    // TRANSITIONS
-
-    // → Play
-    // → Credits
-    // → Settings
+    protected override System.Type DefaultMenuType => typeof(MainMenu);
     public override GameState FindNext(StateTransitions transition = StateTransitions.None)
     {
         switch(transition)
@@ -16,7 +11,7 @@ public class MainMenuState : MenuState
             case StateTransitions.StartShift:
                 {
                     if (!Globals.Statistics.TutorialHasBeenPlayed)
-                        return new TutorialState();
+                        return new UpgradeState();
                     if (Globals.Gameplay.ShiftNumber != 0)
                         return new UpgradeState();
                     return new PreShiftState();
@@ -24,6 +19,8 @@ public class MainMenuState : MenuState
 
             case StateTransitions.OpenCredits:
                 return new CreditsState();
+            case StateTransitions.UpgradeShop:
+                return new UpgradeState();
             default:
             case StateTransitions.None:
                 return base.FindNext(transition);

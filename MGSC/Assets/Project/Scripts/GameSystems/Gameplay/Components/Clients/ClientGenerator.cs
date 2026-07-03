@@ -31,7 +31,7 @@ namespace Clients
         
         #region Fields
 
-        private bool _useUpgrades   = true;
+        //private bool _useUpgrades   = true;
         private float _speed         = 1f;
         private float _reachDistance = 1f;
         private SplineContainer _splineComp;

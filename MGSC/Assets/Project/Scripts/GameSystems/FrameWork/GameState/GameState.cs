@@ -13,14 +13,14 @@ public class GameState
     /// <summary>
     /// Notifies a state that it has been entered
     /// </summary>
-    public void OnEnter()
+    public virtual void OnEnter()
     {
         OnStateBegin?.Invoke();
     }
     /// <summary>
     /// Notifies a state that it has been exitted
     /// </summary>
-    public void OnExit()
+    public virtual void OnExit()
     {
         OnStateEnd?.Invoke();
     }

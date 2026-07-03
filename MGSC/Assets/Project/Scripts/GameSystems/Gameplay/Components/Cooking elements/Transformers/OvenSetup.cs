@@ -46,12 +46,12 @@ namespace Cooking
                 {
                     oven.SetOvenActive(true);
                     //oven.enabled = true;
-                    Debug.Log("[OvenSetup] : " + oven.name);
+                    //Debug.Log("[OvenSetup] : " + oven.name);
                     activeOvenNumer++;
                 }
                 else
                 {
-                    Debug.Log("[OvenSetup] not unlocked : " + oven.name);
+                    //Debug.Log("[OvenSetup] not unlocked : " + oven.name);
                     oven.SetOvenActive(false);
                     //oven.enabled = false;
                 }
