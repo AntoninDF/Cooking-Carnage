@@ -80,16 +80,21 @@ public static class GameLoop
     }
     #endregion
 
-    public static void SetState<T>() where T : GameState, new()
+    public static void SetState<T>() where T : GameState, new() => SetState(new T());
+    private static void SetState(GameState newState)
     {
+        if (newState == null) return;
         if (_currentState != null)
             _currentState.OnExit();
-        _currentState = new T();
+        _currentState = newState;
         _currentState.OnEnter();
     }
-    public static bool RequestTransition<T>() where T : GameState, new()
+    public static bool RequestTransition(StateTransitions transition = default)
     {
-        SetState<T>();
+        if (!StateNotNull) return false;
+        GameState next = CurrentState.FindNext(transition);
+        if (next == CurrentState) return false;
+        SetState(next);
         return true;
     }
 }

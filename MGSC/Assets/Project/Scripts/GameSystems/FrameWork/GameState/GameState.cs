@@ -8,11 +8,7 @@ public class GameState
 {
     public static Action OnStateBegin;
     public static Action OnStateEnd;
-    public virtual bool CanTransitionTo<T>() => false;
-    public virtual GameState FindBestTransition()
-    {
-        return null;
-    }
+    public virtual GameState FindNext(StateTransitions transition = default) => this;
 
     /// <summary>
     /// Notifies a state that it has been entered
