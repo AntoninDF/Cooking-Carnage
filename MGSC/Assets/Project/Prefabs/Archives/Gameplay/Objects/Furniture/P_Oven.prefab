@@ -707,6 +707,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7617651953431695278}
+  - {fileID: 5466312979170676989}
   m_Father: {fileID: 9034083574425323966}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!320 &5401988086745503503
@@ -1404,6 +1405,30 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+        - m_Target: {fileID: 1791840725672379995}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: ResetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Turn Off
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 2682451889310641081}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: ResetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Turn Off
+            m_BoolArgument: 1
+          m_CallState: 2
   - ActionPath:
       ActionVariableName: OnDrop
       SerializedType:
@@ -1473,7 +1498,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-        - m_Target: {fileID: 7474286857131079929}
+        - m_Target: {fileID: 7010901601316768597}
           m_TargetAssemblyTypeName: MaterialPlayable, Assembly-CSharp
           m_MethodName: PlayReverse
           m_Mode: 6
@@ -1483,7 +1508,7 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 0
+            m_BoolArgument: 1
           m_CallState: 2
         - m_Target: {fileID: 2682451889310641081}
           m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
@@ -1556,6 +1581,30 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 647448363593362783}
+          m_TargetAssemblyTypeName: ModelController, Assembly-CSharp
+          m_MethodName: AuthorizeOutlines
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 5401988086745503503}
+          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
           m_CallState: 2
   - ActionPath:
       ActionVariableName: Start
@@ -1632,6 +1681,18 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: Turn On
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 647448363593362783}
+          m_TargetAssemblyTypeName: ModelController, Assembly-CSharp
+          m_MethodName: AuthorizeOutlines
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
   - ActionPath:
@@ -1768,6 +1829,50 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+  - ActionPath:
+      ActionVariableName: FailedLaunchCooking
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Cooker
+        SerializedType:
+          m_Name: Cooker
+          m_AssemblyQualifiedName: Features.Cooker, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 7806711825382488873}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2682451889310641081}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Turn Off
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 647448363593362783}
+          m_TargetAssemblyTypeName: ModelController, Assembly-CSharp
+          m_MethodName: AuthorizeOutlines
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
   references:
     version: 2
     RefIds: []
@@ -1783,8 +1888,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de06c7504b89fa44fb5bce40ddcf14e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Oven
+  OnOvenActivated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7132724051464361236}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 4654450551455681095}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2397439560275469689}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  OnOvenDeactivated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7132724051464361236}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4654450551455681095}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2397439560275469689}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _itemSlot: {fileID: 4820131973737151873}
   _button: {fileID: 7929391311183339527}
+  _graphics: {fileID: 2326839042123090242}
   ProgressFeedbacks:
     MaterialProperty:
       Name: _Fade
@@ -1798,6 +1982,7 @@ MonoBehaviour:
     - {fileID: 885096864005664793}
     - {fileID: 3901059833229521834}
     - {fileID: 3627208796412773535}
+  _isOvenActive: 1
 --- !u!1 &8991466077180281026
 GameObject:
   m_ObjectHideFlags: 0
@@ -3040,6 +3225,137 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!1001 &5500733305729726230
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1184491519599458438}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0.833
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2e05f057a8a784b4590255a015c9137c, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0716ab422843daa4bb13c2b1a4191e40, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 80d30aafd67972f4ab2e487b35c87d0e, type: 2}
+    - target: {fileID: 919132149155446097, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_Name
+      value: SM_DoorMicrowave_Deactivated
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5199871101198431581}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1042739714996775401}
+  m_SourcePrefab: {fileID: 100100000, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+--- !u!1 &4654450551455681095 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+  m_PrefabInstance: {fileID: 5500733305729726230}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1818360609 &5199871101198431581
+RotationConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4654450551455681095}
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
+--- !u!95 &1042739714996775401
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4654450551455681095}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &5466312979170676989 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
+  m_PrefabInstance: {fileID: 5500733305729726230}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5925236888719728965
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3405,7 +3721,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 97ebc7f7a4752024da915564d78a7d3e, type: 2}
     - target: {fileID: 919132149155446097, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
       propertyPath: m_Name
-      value: SM_DoorMicrowave
+      value: SM_DoorMicrowave_Activated
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7ba6ad4dc6cd99c4c89160899e793529, type: 3}
       propertyPath: m_IsActive

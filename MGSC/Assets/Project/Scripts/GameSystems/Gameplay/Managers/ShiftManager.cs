@@ -69,6 +69,7 @@ namespace GameSystem
             if (IsShiftActive) return;
             // Eventually check if the request should be granted or not
             IsShiftActive = true;
+            ShiftNumber++;
             OnShiftBegin?.Invoke();
         }
 
@@ -129,22 +130,6 @@ namespace GameSystem
         /// Tries to pay the rent due for the current shift (<see cref="ShiftNumber"/>)
         /// </summary>
         /// <returns>Wether or not the rent could be payed. False can either mean there was no money manager, or the money owned wasn't sufficient. True means the money has been payed</returns>
-        private bool TryPayRent()
-        {
-            Reference.GetManager(out MoneyManager moneyManager);
-            if (moneyManager == null) return false;
-
-            var rentPrice = GetRentPrice(ShiftNumber);
-            if (moneyManager.MoneyInfo < rentPrice)
-            {
-                this.Log(LogType.Log,
-                    $"Not enough money ({moneyManager.MoneyInfo}) to pay the rent ({rentPrice}€)");
-                moneyManager.AddMoney(-rentPrice);
-                return false;
-            }
-            moneyManager.AddMoney(-rentPrice);
-            return true;
-        }
 
 
         public void RequestStartShift()
@@ -179,6 +164,22 @@ namespace GameSystem
 
             Reference.GetManager<ItemManager>()?.DestroyAllActive();
             PlayerSetup.TryResetPlayer();
+        }
+        bool TryPayRent()
+        {
+            Reference.GetManager(out MoneyManager moneyManager);
+            if (moneyManager == null) return false;
+
+            var rentPrice = GetRentPrice(ShiftNumber);
+            if (moneyManager.MoneyInfo < rentPrice)
+            {
+                this.Log(LogType.Log,
+                    $"Not enough money ({moneyManager.MoneyInfo}) to pay the rent ({rentPrice}€)");
+                moneyManager.AddMoney(-rentPrice);
+                return false;
+            }
+            moneyManager.AddMoney(-rentPrice);
+            return true;
         }
         public float GetCurrentRentPrice() => GetRentPrice(ShiftNumber);
         public float GetRentPrice(int shiftCount) => _rentPriceCurve.Evaluate(shiftCount);

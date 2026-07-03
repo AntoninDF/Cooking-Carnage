@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 67545995560495373}
   - component: {fileID: 5484031204550595368}
+  - component: {fileID: 3480687682958553735}
   m_Layer: 0
   m_Name: P_Door_01
   m_TagString: Untagged
@@ -55,6 +56,53 @@ PlayableDirector:
     value: {fileID: 4365802828941003299}
   m_ExposedReferences:
     m_References: []
+--- !u!114 &3480687682958553735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 881977100146450250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
+  Events:
+  - ActionPath:
+      ActionVariableName: On New Client Spawned
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: 
+        SerializedType:
+          m_Name: 
+          m_AssemblyQualifiedName: 
+          m_AssemblyName: 
+        Path: []
+        OwningObject: {fileID: 0}
+      source: 1
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5484031204550595368}
+          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &914719243506945292
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -73,7 +121,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 043541076f38dcc4a88f57656c93a929, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.77
+      value: -0.922
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 043541076f38dcc4a88f57656c93a929, type: 3}
       propertyPath: m_LocalRotation.w

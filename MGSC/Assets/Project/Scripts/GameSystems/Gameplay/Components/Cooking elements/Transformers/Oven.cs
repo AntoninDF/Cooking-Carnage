@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class Oven : MonoBehaviour, IFeatureCollection
@@ -12,11 +14,16 @@ public class Oven : MonoBehaviour, IFeatureCollection
     public F_SoloContainer Container { get; set; }
     public Cooker Cooker { get; set; }
 
-
+    //Will be moved later to be able to be used with Event display
+    public UnityEvent OnOvenActivated; 
+    public UnityEvent OnOvenDeactivated;
+    
     #region Fields
     [SerializeField] private SlotContainer _itemSlot;
     [SerializeField] private InteractionButton _button;
+    [SerializeField] private ModelController _graphics;
     [SerializeField] private Feedbacks ProgressFeedbacks;
+    
 
     #endregion
 
@@ -31,7 +38,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
     {
         Collection.LateSetup();
         BindExternalEvents();
-        OnCookingProgress(0f);
+        OnCookingProgress(0f, false);
         ResetDisplayedSprites();
     }
     
@@ -52,6 +59,8 @@ public class Oven : MonoBehaviour, IFeatureCollection
             Container.OnGrab += _ => ShowRecipeSprites();
             Container.OnDrop += _ => ResetDisplayedSprites();
             Container.OnDrop += _ => OnStopCooking();
+            
+            Container.IsLocked = !_isOvenActive;
         }
         if (_button != null)
         {
@@ -68,7 +77,9 @@ public class Oven : MonoBehaviour, IFeatureCollection
         Cooker.OnTransformationStart += OnStartCooking;
         Cooker.OnTransformationOver += OnStopCooking;
         Cooker.OnTransformationOver += _ => TryStartOverCooking();
-        Cooker.OnTransformationProgress += OnCookingProgress;
+        //Cooker.OnTransformationProgress += OnCookingProgress;
+        Cooker.OnCookingProgress += p => OnCookingProgress(p, false);
+        Cooker.OnOvercookingProgress += p => OnCookingProgress(p, true);
     }
 
 
@@ -84,7 +95,12 @@ public class Oven : MonoBehaviour, IFeatureCollection
     }
     private void TryStartCooking(InteractionContext context)
     {
-        if (Container.HeldItem == null) return;
+
+        if (Container.HeldItem == null)
+        {
+            Cooker.FailedLaunchCooking?.Invoke();
+            return;
+        }
         _button.gameObject.SetActive(false);
         if (Container.HeldItem.TryGetSibling(out F_Cookable cookable, true) && cookable.CanBeTransformed)
         {
@@ -112,11 +128,11 @@ public class Oven : MonoBehaviour, IFeatureCollection
     {
         Container.IsLocked = false;
         _button.gameObject.SetActive(true);
-        OnCookingProgress(0f);
+        OnCookingProgress(0f, false);
         Cooker.RequestStopTransformation();
     }
 
-    private void OnCookingProgress(float progression01)
+    private void OnCookingProgress(float progression01, bool isOvercooking)
     {
         
         var renderer = ProgressFeedbacks.MaterialProperty.TargetRenderer;
@@ -125,6 +141,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
             MaterialPropertyBlock mpb = new();
             renderer.GetPropertyBlock(mpb);
             mpb.SetFloat(ProgressFeedbacks.MaterialProperty.Name, progression01);
+            mpb.SetFloat("_IsOvercooking", isOvercooking ? 1f : 0f);
             renderer.SetPropertyBlock(mpb);
         }
         if (ProgressFeedbacks.AnimatedTransform.Transform != null)
@@ -189,6 +206,23 @@ public class Oven : MonoBehaviour, IFeatureCollection
             img.sprite = null;
             img.gameObject.SetActive(false);
         }
+    }
+    
+    public bool _isOvenActive = true;
+
+    public void SetOvenActive(bool active)
+    {
+        
+        _isOvenActive = active;
+        if (_button != null)
+            _button.gameObject.SetActive(active);
+        _button.Model.AuthorizeOutlines(active);
+        _graphics.AuthorizeOutlines(active); 
+        if(Container != null) Container.IsLocked = !active;
+        
+        if(active) OnOvenActivated?.Invoke();
+        else OnOvenDeactivated?.Invoke();
+
     }
 
     public void ShowRecipeSprites() => ShowSpriteList(GetSpritesFromIngredients(GetContainedIngredients()));
