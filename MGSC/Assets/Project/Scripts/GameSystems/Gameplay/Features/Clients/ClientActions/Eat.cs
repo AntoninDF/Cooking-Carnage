@@ -17,7 +17,7 @@ namespace Features
         {
             StartEating = () =>
             {
-                TimerManager.StartTimer($"Customer Eating Timer + {(owner.Owner as Client)?.gameObject.GetInstanceID()}", launchDuration, ()=>StopEating?.Invoke(), false);
+                TimerManager.StartTimer($"Customer Eating Timer + {(owner.Owner as Client)?.UniqueID}", launchDuration, ()=>StopEating?.Invoke(), false);
             };
         }
 

@@ -28,6 +28,7 @@ namespace Clients
         public ClientLook         ClientLook       => _clientLook;
         
         public bool               IsCooked         { get; set; }
+        public int UniqueID { get; set; }
         
         public Order CurrentOrder
         {
@@ -78,6 +79,7 @@ namespace Clients
            Behaviour   = new ClientBehaviour(this, transform, agent, _splineComp, _speed);
            
            OnSeatRegister += OnNewSeatRegister;
+           UniqueID = gameObject.GetInstanceID();
        }
 
        public void Begin()
