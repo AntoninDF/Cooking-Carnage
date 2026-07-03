@@ -21,7 +21,7 @@ namespace UI
 
         void OnBack()
         {
-            Disable();
+            GameLoop.RequestTransition(StateTransitions.OpenMainMenu);
         }
     }
 }

@@ -5,12 +5,12 @@ namespace UI
 {
     public class UpgradeMenu : UIMenu
     {
-        public override bool ForceLoadOnUIInitialization => true;
         public Button B_Confirm;
 
+ 
         public override void OnLoad()
         {
-            ShiftManager.OnNextShift += TryShowUpgrades;
+            //ShiftManager.OnNextShift += TryShowUpgrades;
 
             if (B_Confirm != null)
                 B_Confirm.onClick.AddListener(TriggerGameStart);

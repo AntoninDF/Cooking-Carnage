@@ -6,4 +6,5 @@ public enum StateTransitions
     OpenMainMenu,
     StartShiftCountdown,
     ShowShiftRecap,
+    UpgradeShop,
 }

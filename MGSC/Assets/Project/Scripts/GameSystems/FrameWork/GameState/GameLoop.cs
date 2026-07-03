@@ -88,6 +88,7 @@ public static class GameLoop
             _currentState.OnExit();
         _currentState = newState;
         _currentState.OnEnter();
+        UnityEngine.Debug.Log("Current state is " + CurrentState.GetType().Name);
     }
     public static bool RequestTransition(StateTransitions transition = default)
     {
