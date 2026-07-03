@@ -24,6 +24,11 @@ namespace Features
         public Action      OnEatStart     { get; set; }
         public Action      OnEatEnd       { get; set; }
         public Action      OnLeaving      { get; set; }
+        public Action      OnMealServed     { get; set; }
+        
+        public Action OnExitQueue { get; set; }
+        public Action OnQueuePointReached { get; set; }
+        
         public WaitInQueue WaitInQueue    { get; private set; }
         
         
@@ -80,11 +85,13 @@ namespace Features
             WaitInQueue.OnQueuePointReached += () =>
             {
                 _client.ClientLook.SetWaiting(true);
+                OnQueuePointReached?.Invoke();
             };
 
             WaitInQueue.OnExitQueue += () =>
             {
                 _client.ClientLook.SetWaiting(false);
+                OnExitQueue?.Invoke();
             };
             
             Perform(_waitAction);

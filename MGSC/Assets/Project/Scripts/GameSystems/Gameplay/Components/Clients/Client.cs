@@ -19,7 +19,6 @@ namespace Clients
     {
         #region Properties
         public FeatureCollection  Collection       { get; set; } = new();
-        public Action             OnMealServed     { get; set; }
         public Action<Order>      OnNewOrder       { get; set; }
         public Action<Order>      OnOrderAccepted  { get; set; }
         public Action<ClientSeat> OnSeatRegister   { get; set; }

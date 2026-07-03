@@ -48,6 +48,12 @@ namespace Features
         public virtual bool CheckIfLookedAt(Vector3 position, Vector3 direction) => CheckIfLookedAt(position, direction, float.MaxValue);
         public virtual bool CheckIfLookedAt(Vector3 position, Vector3 direction, float distance)
         {
+            if (transform == null) 
+            {
+                IsLookedAt = false;
+                return false;
+            }
+            
             LookPosition = transform.position;
 
             if (transform.TryGetComponent(out Collider col))

@@ -79,13 +79,14 @@ namespace GameSystem
         public void RequestShiftTimer() => LaunchShiftTimer(_shiftDuration);
         void LaunchShiftTimer(float duration)
         {
-            this.Log(LogType.Log, $"Launching new shift for {duration}s");
+            Debug.Log( $"Launching new shift for {duration}s");
             TimerUntilEndOfShift = TimerManager.StartTimer("shiftDuration", duration, EndShift, false);
             TimerUntilFinalWarning = TimerManager.StartTimer("shiftDurationWithoutNoon", duration - _noonDuration, InvokeFinalWarning, false);
             // Subscribe to the GameLoop in case the game pauses
             GameLoop.BindTimer(TimerUntilEndOfShift);
             GameLoop.BindTimer(TimerUntilFinalWarning);
             OnShiftTimerStart?.Invoke();
+            BeginShift();
         }
 
         void InvokeFinalWarning()
@@ -159,7 +160,7 @@ namespace GameSystem
         /// </summary>
         private void ResetAll()
         {
-            Debug.Log("Reset everything for the next shift");
+//            Debug.Log("Reset everything for the next shift");
 
             Reference.GetManager<ItemManager>()?.DestroyAllActive();
             PlayerSetup.TryResetPlayer();

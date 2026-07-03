@@ -39,7 +39,10 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
             return;
         }
 
-        MealSlot.Container.Filter += (obj) => obj is F_Grabbable grab && grab.TryGetSibling(out Servable temp, true);
+        MealSlot.Container.Filter += (obj) =>
+        {
+            return obj is F_Grabbable grab && grab.TryGetSibling(out Servable temp, true && ClientSeat.SittingClient != null);
+        };
     }
 
     public void Initialize(ClientSeat clientSeat)

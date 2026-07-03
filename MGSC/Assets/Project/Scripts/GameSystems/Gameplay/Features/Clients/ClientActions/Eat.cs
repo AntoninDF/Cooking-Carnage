@@ -1,4 +1,5 @@
 using System;
+using Clients;
 using GameSystem;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace Features
         {
             StartEating = () =>
             {
-                TimerManager.StartTimer("Customer Eating Timer", launchDuration, ()=>StopEating?.Invoke(), false);
+                TimerManager.StartTimer($"Customer Eating Timer + {(owner.Owner as Client)?.gameObject.GetInstanceID()}", launchDuration, ()=>StopEating?.Invoke(), false);
             };
         }
 
