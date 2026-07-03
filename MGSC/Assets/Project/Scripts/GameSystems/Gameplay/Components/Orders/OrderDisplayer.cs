@@ -17,14 +17,29 @@ namespace Orders
         
         [SerializeField] private AnimationClip _playTV;
         [SerializeField] private AnimationClip _stopTV;
+
+        void Start()
+        {
+            foreach (Image image in _ingredients)
+            {
+                image.preserveAspect = true;
+            }
+        }
         
         public void DisplayOrder(SO_Recipe recipe)
         {
             if(recipe.Ingredients.Count > 4) Debug.Log("What the fuck ??");
-            for (int i = 0; i < recipe.Ingredients.Count; i++)
+            for (int i = 0; i < _ingredients.Count; i++)
             {
-                _ingredients[i].sprite = recipe.Ingredients[i].Sprite;
-                _ingredients[i].preserveAspect = true;
+                if(i< recipe.Ingredients.Count)
+                {
+                    _ingredients[i].sprite = recipe.Ingredients[i].Sprite;
+                    _ingredients[i].color = Color.white;
+                }
+                else
+                {
+                    _ingredients[i].color = new Color(1, 1, 1, 0);
+                }
             }
 
             _price.text = recipe.Price.ToString() + " $";
