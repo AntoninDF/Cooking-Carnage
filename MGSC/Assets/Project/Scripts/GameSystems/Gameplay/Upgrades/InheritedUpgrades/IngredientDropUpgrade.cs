@@ -6,6 +6,6 @@ namespace Upgrades
 
     public class IngredientDropUpgrade : Upgrade
     {
-        public float DropRateIncrement => _level * 1f;
+        public float DropRateIncrement => 0.15f;
     }
 }

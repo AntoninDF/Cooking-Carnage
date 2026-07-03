@@ -25,13 +25,14 @@ public class Plate : Item
     [Tooltip("The recipe book should contain every possible recipe for this object.")]
     [SerializeField] private SO_RecipeBook _recipeBook;
     [SerializeField] MultiSlotContainer ContainerComponent;
-
+    
+    [Header("Feedback")]
+    [SerializeField] private Animation _animation;
+    [SerializeField] private AnimationClip _animationClip;
 
     private ModelController cookedVariant;
     #endregion
-        
-        
-
+    
     #region Methods
     public void Reset()
     {
@@ -197,5 +198,14 @@ public class Plate : Item
         }
         return result;
     }
+    #endregion
+
+    #region Animation
+
+    public void PlayAnimation()
+    {
+        _animation?.Play(_animationClip?.name);
+    }
+
     #endregion
 }

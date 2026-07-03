@@ -77,6 +77,8 @@ MonoBehaviour:
   defaultModel: {fileID: 2844071087282159002}
   _recipeBook: {fileID: 11400000, guid: 367f956cce92a474abe807c44ec4f8ab, type: 2}
   ContainerComponent: {fileID: 368072395188174107}
+  _animation: {fileID: 29671515956310084}
+  _animationClip: {fileID: 7400000, guid: 0883f3950039de14894d6973dc0d2816, type: 2}
 --- !u!114 &368072395188174107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +133,18 @@ MonoBehaviour:
         - m_Target: {fileID: 8859683979251061410}
           m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
           m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1857627047578693840}
+          m_TargetAssemblyTypeName: Plate, Assembly-CSharp
+          m_MethodName: PlayAnimation
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -569,6 +583,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2315878142991982192, guid: a8372aef40778bc4d9c36c08bb6ab7a6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2844071087282159002}
+    - targetCorrespondingSourceObject: {fileID: 2315878142991982192, guid: a8372aef40778bc4d9c36c08bb6ab7a6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 29671515956310084}
   m_SourcePrefab: {fileID: 100100000, guid: a8372aef40778bc4d9c36c08bb6ab7a6, type: 3}
 --- !u!1 &355972628204536756 stripped
 GameObject:
@@ -594,6 +611,23 @@ MonoBehaviour:
     Color: {r: 1, g: 1, b: 1, a: 1}
     Thickness: 0.01
     Mode: 1
+--- !u!111 &29671515956310084
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355972628204536756}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 0883f3950039de14894d6973dc0d2816, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 0883f3950039de14894d6973dc0d2816, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!4 &5957579794053847852 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8538436339016386280, guid: a8372aef40778bc4d9c36c08bb6ab7a6, type: 3}

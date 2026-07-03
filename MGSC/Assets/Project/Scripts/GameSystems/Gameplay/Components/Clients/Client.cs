@@ -19,7 +19,6 @@ namespace Clients
     {
         #region Properties
         public FeatureCollection  Collection       { get; set; } = new();
-        public Action             OnMealServed     { get; set; }
         public Action<Order>      OnNewOrder       { get; set; }
         public Action<Order>      OnOrderAccepted  { get; set; }
         public Action<ClientSeat> OnSeatRegister   { get; set; }
@@ -29,6 +28,7 @@ namespace Clients
         public ClientLook         ClientLook       => _clientLook;
         
         public bool               IsCooked         { get; set; }
+        public int UniqueID { get; set; }
         
         public Order CurrentOrder
         {
@@ -79,6 +79,7 @@ namespace Clients
            Behaviour   = new ClientBehaviour(this, transform, agent, _splineComp, _speed);
            
            OnSeatRegister += OnNewSeatRegister;
+           UniqueID = gameObject.GetInstanceID();
        }
 
        public void Begin()

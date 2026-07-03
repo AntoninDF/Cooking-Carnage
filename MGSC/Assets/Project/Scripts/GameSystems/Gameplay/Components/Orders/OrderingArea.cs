@@ -2,6 +2,8 @@ using Features;
 using System;
 using System.Collections.Generic;
 using Clients;
+using Cooking;
+using Orders;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -22,11 +24,12 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     public Transform SeatParent;
     public ServingArea ServingArea;
     
-    public ClientSeatHeightConfig ServingAreaConfig;
     
+    public ClientSeatHeightConfig ServingAreaConfig;
     public UnityEvent OnCustomerKilled;
     
     
+    [SerializeField] private OrderDisplayer _OrderDisplayer;
     [SerializeField] private Transform _slotParent;
    
 
@@ -49,6 +52,15 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     {
         ClientSeat.OnClientRegister += RequestOrder;
         ClientSeat.OnClientSitting += AssignOrder;
+        ClientSeat.OnClientSitting += (client) =>
+        {
+            _OrderDisplayer.DisplayOrder(client.CurrentOrder.Recipe);
+        };
+        
+        // ClientSeat.OnClientLeaving += () =>
+        // {
+        //     _OrderDisplayer.UndisplayOrder();
+        // };
     }
 
     private void GetDropSlots()

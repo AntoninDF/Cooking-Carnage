@@ -17,7 +17,7 @@ public class Player : MonoBehaviour, IFeatureCollection
         set
         {
             if (value == _lookedAtObject) return;
-            Debug.Log("Looked at object set");
+           // Debug.Log("Looked at object set");
             if (_lookedAtObject != null)
                 _lookedAtObject.IsLookedAt = false;
             _lookedAtObject = value;
@@ -75,12 +75,11 @@ public class Player : MonoBehaviour, IFeatureCollection
         var cam = Camera.main;
         if (LookedAtObject != null && !LookedAtObject.CheckIfLookedAt(cam.transform.position, cam.transform.forward))
             LookedAtObject = null;
+
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out var hit))
         {
             var features = FeatureScannerByHierarchy.Get<F_LookAtTarget>(hit.transform.gameObject);
-            if (features.Count > 0)
-                LookedAtObject = features[0];
-            LookedAtObject = null;
+            LookedAtObject = features.Count > 0 ? features[0] : null;
         }
     }
 

@@ -1583,72 +1583,6 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - ActionPath:
-      ActionVariableName: OnExitQueue
-      SerializedType:
-        m_Name: Action
-        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-      FeaturePath:
-        FeatureVariableName: WaitInQueue
-        SerializedType:
-          m_Name: WaitInQueue
-          m_AssemblyQualifiedName: Features.WaitInQueue, Assembly-CSharp, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        Path:
-        - rid: 7291174451504218118
-        OwningObject: {fileID: 3093260400232259055}
-      source: 0
-    Event:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 4146177463604353760}
-          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-          m_MethodName: SetTrigger
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Start Running
-            m_BoolArgument: 0
-          m_CallState: 2
-  - ActionPath:
-      ActionVariableName: OnQueuePointReached
-      SerializedType:
-        m_Name: Action
-        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-      FeaturePath:
-        FeatureVariableName: WaitInQueue
-        SerializedType:
-          m_Name: WaitInQueue
-          m_AssemblyQualifiedName: Features.WaitInQueue, Assembly-CSharp, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        Path:
-        - rid: 7291174451504218207
-        OwningObject: {fileID: 3093260400232259055}
-      source: 0
-    Event:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 4146177463604353760}
-          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-          m_MethodName: SetTrigger
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Wait
-            m_BoolArgument: 0
-          m_CallState: 2
-  - ActionPath:
       ActionVariableName: OnSitting
       SerializedType:
         m_Name: Action
@@ -1746,38 +1680,6 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - ActionPath:
-      ActionVariableName: OnMealReady
-      SerializedType:
-        m_Name: Action
-        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
-          PublicKeyToken=b77a5c561934e089
-        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-      FeaturePath:
-        FeatureVariableName: CurrentSeat
-        SerializedType:
-          m_Name: ClientSeat
-          m_AssemblyQualifiedName: Features.ClientSeat, Assembly-CSharp, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        Path: []
-        OwningObject: {fileID: 3093260400232259055}
-      source: 0
-    Event:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 4146177463604353760}
-          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-          m_MethodName: SetTrigger
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Start Eating
-            m_BoolArgument: 0
-          m_CallState: 2
-  - ActionPath:
       ActionVariableName: OnLeaving
       SerializedType:
         m_Name: Action
@@ -1809,31 +1711,105 @@ MonoBehaviour:
             m_StringArgument: Start Running
             m_BoolArgument: 0
           m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnQueuePointReached
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Behaviour
+        SerializedType:
+          m_Name: ClientBehaviour
+          m_AssemblyQualifiedName: Features.ClientBehaviour, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3093260400232259055}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4146177463604353760}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Wait
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnExitQueue
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Behaviour
+        SerializedType:
+          m_Name: ClientBehaviour
+          m_AssemblyQualifiedName: Features.ClientBehaviour, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3093260400232259055}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4146177463604353760}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Start Running
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnMealServed
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Behaviour
+        SerializedType:
+          m_Name: ClientBehaviour
+          m_AssemblyQualifiedName: Features.ClientBehaviour, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3093260400232259055}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4146177463604353760}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Start Eating
+            m_BoolArgument: 0
+          m_CallState: 2
   references:
     version: 2
     RefIds:
-    - rid: 7291174451504218118
-      type: {class: FeaturePath, ns: , asm: Assembly-CSharp}
-      data:
-        FeatureVariableName: Behaviour
-        SerializedType:
-          m_Name: ClientBehaviour
-          m_AssemblyQualifiedName: Features.ClientBehaviour, Assembly-CSharp, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        Path: []
-        OwningObject: {fileID: 3093260400232259055}
-    - rid: 7291174451504218207
-      type: {class: FeaturePath, ns: , asm: Assembly-CSharp}
-      data:
-        FeatureVariableName: Behaviour
-        SerializedType:
-          m_Name: ClientBehaviour
-          m_AssemblyQualifiedName: Features.ClientBehaviour, Assembly-CSharp, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        Path: []
-        OwningObject: {fileID: 3093260400232259055}
     - rid: 7291174451504218233
       type: {class: FeaturePath, ns: , asm: Assembly-CSharp}
       data:
