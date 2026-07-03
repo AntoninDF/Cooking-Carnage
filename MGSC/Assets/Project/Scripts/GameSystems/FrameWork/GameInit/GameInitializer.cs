@@ -87,6 +87,8 @@ namespace GameSystem
             CursorUtility.Update();
             // Reset the save file
             if (_gameProfile.ResetSaveFile) SaveManager.ResetSave();
+            GameLoop.SetState<MainMenuState>();
+            
 
             // Apply the base logic to ensure all managers are setup to work correctly
             PostInitManagers();

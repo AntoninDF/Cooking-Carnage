@@ -83,8 +83,8 @@ namespace GameSystem
             TimerUntilEndOfShift = TimerManager.StartTimer("shiftDuration", duration, EndShift, false);
             TimerUntilFinalWarning = TimerManager.StartTimer("shiftDurationWithoutNoon", duration - _noonDuration, InvokeFinalWarning, false);
             // Subscribe to the GameLoop in case the game pauses
-            GameLoop.BindTimer(TimerUntilEndOfShift);
-            GameLoop.BindTimer(TimerUntilFinalWarning);
+            GameLoop.BindTimerToGamePause(TimerUntilEndOfShift);
+            GameLoop.BindTimerToGamePause(TimerUntilFinalWarning);
             OnShiftTimerStart?.Invoke();
             BeginShift();
         }
@@ -93,7 +93,7 @@ namespace GameSystem
         {
             if (TimerUntilFinalWarning != null)
             {
-                GameLoop.UnbindTimer(TimerUntilFinalWarning);
+                GameLoop.UnbindTimerFromGamePause(TimerUntilFinalWarning);
                 TimerUntilFinalWarning = null;
             }
             this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
@@ -111,7 +111,7 @@ namespace GameSystem
             IsShiftActive = false;
             if (TimerUntilEndOfShift != null)
             {
-                GameLoop.UnbindTimer(TimerUntilEndOfShift);
+                GameLoop.UnbindTimerFromGamePause(TimerUntilEndOfShift);
                 TimerUntilEndOfShift = null;
             }
 
