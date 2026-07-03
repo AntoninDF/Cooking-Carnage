@@ -45,11 +45,12 @@ namespace UI
         }
         void OnPlay()
         {
-            Disable();
-            if (Reference.TryGetManager(out ShiftManager mgr))
-            {
-                mgr.RequestStartShift();
-            }
+            GameLoop.RequestTransition(StateTransitions.StartShift);
+            //Disable();
+            //if (Reference.TryGetManager(out ShiftManager mgr))
+            //{
+            //    mgr.RequestStartShift();
+            //}
         }
 
         void OnCredits()
