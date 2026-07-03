@@ -112,6 +112,10 @@ public class Item : MonoBehaviour, IFeatureCollection
         if (other == null) return;
         var otherContainer = other.Container;
         var currentContainer = Grabbable.Container;
+        
+        if (currentContainer != null && currentContainer.IsLocked) return;
+        if (otherContainer != null && otherContainer.IsLocked) return;
+        
         var targetPos = transform.position;
         var parent = transform.parent;
 
