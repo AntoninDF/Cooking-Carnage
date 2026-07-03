@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.UI;
@@ -78,8 +79,18 @@ namespace UI
 
             Debug.Log("[UISystem] Hierarchy reset");
         }
-
-        public void AddPrefabs(IEnumerable<UIWidget> widgetPrefabs) => _widgetPrefabs.AddRange(widgetPrefabs);
+        void InitPrefabs(IEnumerable<UIWidget> widgetPrefabs)
+        {
+            foreach (UIWidget widget in widgetPrefabs)
+            {
+                widget.Init();
+            }
+        }
+        public void AddPrefabs(IEnumerable<UIWidget> widgetPrefabs)
+        {
+            _widgetPrefabs.AddRange(widgetPrefabs);
+            InitPrefabs(widgetPrefabs);
+        }
         public void StashWidget(UIWidget widget) => widget?.transform.SetParent(_inactiveFolder);
         public void ShowWidget(UIWidget widget)
         {
@@ -117,28 +128,47 @@ namespace UI
         }
         public T GetWidget<T>() where T : UIWidget
         {
-            T result;
+            return GetWidget(typeof(T)) as T;
+        }
+        public UIWidget GetWidget(Type widgetType)
+        {
+            UIWidget result;
 
+            
+        
             // Return an already loaded widget if there is one
-            if (TryGetWidget(out result))
+            if (TryGetWidget(widgetType, out result))
                 return result;
 
             // Find a suitable widget prefab if there is one
             UIWidget widgetPrefab = null;
             foreach (var current in _widgetPrefabs)
             {
-                if (current is T)
+                if (IsSameOrSubclass(widgetType , current.GetType()))
                 {
                     widgetPrefab = current;
                     break;
                 }
             }
 
-            // Try to load it
-            UIWidget temp = LoadWidget_Internal(widgetPrefab);
+        // Try to load it
+        UIWidget temp = LoadWidget_Internal(widgetPrefab);
             if (temp == null) return null;
 
-            return temp as T;
+            return temp;
+        }
+        public bool TryGetWidget(Type widgetType, out UIWidget widget)
+        {
+            widget = null;
+            foreach (var current in _loadedWidgets)
+            {
+                if (IsSameOrSubclass(widgetType, current.GetType()))
+                {
+                    widget = current;
+                    return true;
+                }
+            }
+            return false;
         }
         /// <summary>
         /// Looks for a same typed widget in the loaded widgets. If multiple are found, the first one will be provided.
@@ -148,16 +178,9 @@ namespace UI
         /// <returns>True if a widget of the right type has been found, false otherwise</returns>
         public bool TryGetWidget<T>(out T widget) where T : UIWidget
         {
-            widget = null;
-            foreach(var current in _loadedWidgets)
-            {
-                if (current is T result)
-                {
-                    widget = result;
-                    return true;
-                }
-            }
-            return false;
+            bool success = TryGetWidget(typeof(T), out UIWidget result);
+            widget = result as T;
+            return success;
         }
         public void LoadAllWidgets()
         {
@@ -194,6 +217,9 @@ namespace UI
         }
 
         // Not interesting methods
+        // Utility method to compare types
+        bool IsSameOrSubclass(Type potentialBase, Type potentialDescendant) =>
+            potentialDescendant.IsSubclassOf(potentialBase) || potentialDescendant == potentialBase;
         public void Register() => Reference.SetManager(this);
         public void Unregister() => Reference.RemoveManager(this);
         #endregion

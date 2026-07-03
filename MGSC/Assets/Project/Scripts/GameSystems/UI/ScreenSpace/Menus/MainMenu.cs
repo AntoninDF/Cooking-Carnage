@@ -7,7 +7,6 @@ namespace UI
 {
     public class MainMenu : UIMenu
     {
-        public override bool ForceLoadOnUIInitialization => true;
 
         #region Fields
         [Tooltip("This is the play button, it will start the game")]
@@ -19,13 +18,17 @@ namespace UI
 
 
         #endregion
+        public override void Init()
+        {
+            base.Init();
+            MainMenuState.SetDefaultMenu<MainMenu>();
 
+        }
 
         #region Methods
         public override void OnLoad()
         {
             base.OnLoad();
-            Enable();
             BindAll();
         }
 

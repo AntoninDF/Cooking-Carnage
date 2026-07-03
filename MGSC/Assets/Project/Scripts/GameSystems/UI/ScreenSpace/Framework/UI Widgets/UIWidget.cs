@@ -34,8 +34,14 @@ namespace UI
 
         #region Methods
 
-
+        /// <summary>
+        /// OnLoad gets called when the widget is instantiated into the scene
+        /// </summary>
         public virtual void OnLoad() { }
+        /// <summary>
+        /// Init is called when the widget's prefab gets added to the UI System database (at the beginning of the game)
+        /// </summary>
+        public virtual void Init() { }
         /// <summary>
         /// Show the widget on the UI
         /// </summary>
@@ -124,6 +130,7 @@ namespace UI
             Debug.Log(result.ToString());
             return result.ToString();
         }
+
         #endregion
     }
 }

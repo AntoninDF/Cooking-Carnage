@@ -4,21 +4,45 @@ using System.Collections.Generic;
 
 public static class GameLoop
 {
+    public static bool StateNotNull => _currentState != null;
+    public static GameState CurrentState
+    {
+        get => _currentState;
+        set
+        {
+            if (_currentState == value) return;
+            _currentState = value;
+            OnStateChange?.Invoke(value);
+        }
+    }
+    public static Action<GameState> OnStateChange;
     public static bool IsRunning { get; private set; } = true;
+    [GlobalEvent("Gameloop/OnPause")]
     public static Action OnPause { get; set; }
+    [GlobalEvent("Gameloop/OnResume")]
     public static Action OnResume { get; set; }
 
     private static List<object> _objectsRequiringPause = new();
+    private static GameState _currentState;
 
+    #region Pause
     /// <summary>
     /// Checks if a pause has been requested and updates the gameloop's status based on that
     /// </summary>
-    public static void Update()
+    public static void UpdatePause()
     {
         if (_objectsRequiringPause.Count > 0)
-            Pause();
+        {
+            if (!IsRunning) return;
+            IsRunning = false;
+            OnPause?.Invoke();
+        }
         else
-            Resume();
+        { 
+            if (IsRunning) return;
+                IsRunning = true;
+                OnResume?.Invoke();
+        }
     }
 
     /// <summary>
@@ -29,7 +53,7 @@ public static class GameLoop
     public static void TryResume(object requester)
     {
         _objectsRequiringPause.Remove(requester);
-        Update();
+        UpdatePause();
     }
     /// <summary>
     /// Tells the cursor that the requester needs the cursor to be active and visible to function.
@@ -40,41 +64,32 @@ public static class GameLoop
     {
         if (!_objectsRequiringPause.Contains(requester))
             _objectsRequiringPause.Add(requester);
-        Update();
+        UpdatePause();
     }
 
-    /// <summary>
-    /// Removes every request for the game to pause so that it can go back to playing.
-    /// </summary>
-    public static void ClearRequests()
-    {
-        _objectsRequiringPause.Clear();
-        Update();
-    }
 
-    
-
-    static void Pause()
-    {
-        if (!IsRunning) return;
-        IsRunning = false;
-        OnPause?.Invoke();
-    }
-    static void Resume()
-    {
-        if (IsRunning) return;
-        IsRunning = true;
-        OnResume?.Invoke();
-    }
-
-    public static void BindTimer(Timer timer)
+    public static void BindTimerToGamePause(Timer timer)
     {
         OnPause += timer.Pause;
         OnResume += timer.Resume;
     }
-    public static void UnbindTimer(Timer timer)
+    public static void UnbindTimerFromGamePause(Timer timer)
     {
         OnPause -= timer.Pause;
         OnResume -= timer.Resume;
+    }
+    #endregion
+
+    public static void SetState<T>() where T : GameState, new()
+    {
+        if (_currentState != null)
+            _currentState.OnExit();
+        _currentState = new T();
+        _currentState.OnEnter();
+    }
+    public static bool RequestTransition<T>() where T : GameState, new()
+    {
+        SetState<T>();
+        return true;
     }
 }
