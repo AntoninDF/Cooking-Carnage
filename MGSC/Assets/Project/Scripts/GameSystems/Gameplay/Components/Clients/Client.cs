@@ -53,7 +53,7 @@ namespace Clients
                 {
                     OnSeatRegister?.Invoke(value);
                     value.OnClientSitting += _clientLook.SetClientSitting;
-                    Debug.Log("SITTING");
+                    //Debug.Log("SITTING");
                 }
                 _currentSeat = value;
             }

@@ -67,12 +67,12 @@ namespace Cooking
         }
         private void TryCut(InteractionContext context)
         {
-            Debug.Log("TryCut");
+            //Debug.Log("TryCut");
             if (Container.HeldItem == null) return;
             if (!Container.HeldItem.TryGetSibling(out F_Cuttable cuttable, true) || !cuttable.CanBeTransformed) return; // Ensure it is cuttable and not already cut
             if (!Cutter.CanStartTransformation(cuttable)) return;
             Cutter.RequestStartTransformation(cuttable);
-            Debug.Log("Cutting");
+            //Debug.Log("Cutting");
         }
         #endregion
     }
