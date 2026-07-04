@@ -5,14 +5,14 @@ namespace UI
 {
     public class UpgradeMenu : UIMenu
     {
-        public Button B_Confirm;
+        public Button B_NextShift;
         public Button B_MainMenu;
 
  
         public override void OnLoad()
         {
-            if (B_Confirm != null)
-                B_Confirm.onClick.AddListener(TriggerGameStart);
+            if (B_NextShift != null)
+                B_NextShift.onClick.AddListener(TriggerGameStart);
 
             if (B_MainMenu != null)
                 B_MainMenu.onClick.AddListener(OnMainMenu);

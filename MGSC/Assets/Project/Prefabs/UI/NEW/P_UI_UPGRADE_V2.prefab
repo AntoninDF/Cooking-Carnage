@@ -678,7 +678,7 @@ RectTransform:
   m_Father: {fileID: 8181818117035184550}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.49800003, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -880,7 +880,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6849669439243617985}
-  - component: {fileID: 285312968030454084}
+  - component: {fileID: 229890696877987217}
   m_Layer: 5
   m_Name: I_SliderUpgrade
   m_TagString: Untagged
@@ -895,7 +895,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1223048674472150119}
-  m_LocalRotation: {x: -0, y: -0, z: 0.72284406, w: 0.69101125}
+  m_LocalRotation: {x: -0, y: -0, z: 0.7262825, w: 0.6873964}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.79, y: 2.79, z: 2.79}
   m_ConstrainProportionsScale: 1
@@ -904,13 +904,13 @@ RectTransform:
   - {fileID: 8181818117035184550}
   - {fileID: 3731612244132207159}
   m_Father: {fileID: 1152760320152724561}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 92.58}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 93.151}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 625.18823, y: -62.178406}
+  m_AnchoredPosition: {x: 617, y: -40}
   m_SizeDelta: {x: 182.3603, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &285312968030454084
+--- !u!114 &229890696877987217
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -919,9 +919,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1223048674472150119}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Scrollbar
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -951,13 +951,11 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 7999024394220758641}
-  m_FillRect: {fileID: 4402371593263483463}
-  m_HandleRect: {fileID: 1433463439495045390}
+  m_HandleRect: {fileID: 3731612244132207159}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
-  m_WholeNumbers: 0
-  m_Value: 0.498
+  m_Value: 1
+  m_Size: 0.881
+  m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1432,7 +1430,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1854154392925095137}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1441,9 +1439,9 @@ RectTransform:
   m_Father: {fileID: 6849669439243617985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -9.8, y: 0.5999985}
+  m_SizeDelta: {x: 0.5099926, y: -2.3799984}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2003292407412019686
 GameObject:
@@ -1726,6 +1724,7 @@ GameObject:
   - component: {fileID: 2816465796543115533}
   - component: {fileID: 2735663079083214565}
   - component: {fileID: 1345482518338368377}
+  - component: {fileID: 3523090011151696516}
   m_Layer: 5
   m_Name: L_CurrentMoney
   m_TagString: Untagged
@@ -1852,6 +1851,24 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3523090011151696516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2180017523862026850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3532c7cdf9b674998e5c7f537dbe4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.DynamicText
+  _textObject: {fileID: 1345482518338368377}
+  _baseText: X$
+  _dataSource: {fileID: 0}
+  _dataReplacement:
+  - markup: X
+    info: 7
 --- !u!1 &2202295119790508591
 GameObject:
   m_ObjectHideFlags: 0
@@ -2813,7 +2830,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8181818117035184550
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2821,7 +2838,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3452676678816196066}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5146,7 +5163,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6139156804205117439}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6397,10 +6414,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3731612244132207159}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 37.1576, y: -7.4647}
+  m_SizeDelta: {x: 30, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8136138646193122699
 CanvasRenderer:
@@ -7964,7 +7981,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5861a913335e3254f9f8d112ae7b92b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.UpgradeMenu
-  B_Confirm: {fileID: 0}
+  B_NextShift: {fileID: 7711107949898563907}
+  B_MainMenu: {fileID: 0}
 --- !u!114 &2255335921979356087
 MonoBehaviour:
   m_ObjectHideFlags: 0

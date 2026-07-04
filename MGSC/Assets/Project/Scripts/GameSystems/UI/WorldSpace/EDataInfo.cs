@@ -5,6 +5,7 @@ namespace GameSystem
     /// </summary>
     public enum EDataInfo
     {
+        // Warning : Do not reorder anything ! it will break inspector references.
         // Data easily accessible by any manager or script, and that is shared by all, goes here
         ShiftCount,
         CorrectOrdersThisShift,
@@ -20,7 +21,7 @@ namespace GameSystem
         OvenCountUpgradeLevel,
         CuttingSpeedUpgradeLevel,
         TimeLeft,
-
+        MoneyGainedOnPreviousShift,
 
         // Data dependent on a specific object should be 50 or more
         ClientName = 50,

@@ -67,6 +67,13 @@ namespace GameSystem
 
         public float GetMoneyGainedOnShift(int shiftCount) => _moneyGainedPerShift.ContainsKey(shiftCount) ? _moneyGainedPerShift[shiftCount] : 0f;
         public float GetMoneyGainedThisShift() => GetMoneyGainedOnShift(shiftNumber);
+        public float GetMoneyOnPreviousShift()
+        {
+            if (shiftNumber <= 0) 
+                return 0f;
+            else
+                return GetMoneyGainedOnShift(shiftNumber - 1);
+        }
 
         public void AddMoney(float amount)
         {

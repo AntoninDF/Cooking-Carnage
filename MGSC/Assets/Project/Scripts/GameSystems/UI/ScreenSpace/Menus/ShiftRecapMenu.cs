@@ -59,7 +59,7 @@ namespace UI
             if (!Reference.TryGetManager(out ShiftManager sm)) return;
             SetMoneyGained(mm.GetMoneyGainedThisShift());
             SetCurrentTotalMoney(mm.MoneyInfo);
-            // Update other texts as well
+            SetPreviousTotalMoney(mm.GetMoneyOnPreviousShift());
         }
         void SetText(ref TMP_Text txt, float value)
         {
