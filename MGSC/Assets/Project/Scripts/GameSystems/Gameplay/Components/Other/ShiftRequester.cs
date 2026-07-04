@@ -17,12 +17,16 @@ public class ShiftRequester : MonoBehaviour
 
     void RequestShiftLaunch()
     {
-//        Debug.Log("TryRequestShiftLaunch");
+        //        Debug.Log("TryRequestShiftLaunch");
+        GameLoop.RequestTransition(StateTransitions.StartShiftCountdown);
+        return;
+        /*
         if (Reference.TryGetManager(out ShiftManager shiftMgr))
         {
             if (shiftMgr.IsShiftActive) return;
   //          Debug.Log("RequestShiftLaunch");
             shiftMgr.RequestShiftTimer();
         }
+        */
     }
 }

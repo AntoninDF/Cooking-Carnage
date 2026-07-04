@@ -32,7 +32,7 @@ namespace UI
             }
             
         }
-        void TriggerGameStart() => Disable();
+        void TriggerGameStart() => GameLoop.RequestTransition(StateTransitions.StartShift);
     }
 
 }

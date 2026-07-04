@@ -205,6 +205,7 @@ namespace UI
             GameObject prefab = widget.gameObject;
 
             var go = GameObject.Instantiate(prefab);
+            go.SetActive(true); // Just in case the prefab was disabled
             go.transform.SetParent(_inactiveFolder.transform);
             var result = go.GetComponent<UIWidget>();
             _loadedWidgets.Add(result);

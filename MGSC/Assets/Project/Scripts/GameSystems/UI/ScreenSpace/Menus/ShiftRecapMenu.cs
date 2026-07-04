@@ -46,8 +46,8 @@ namespace UI
         }
         void UpdateTexts()
         {
-            if (!TryGetComponent(out MoneyManager mm)) return;
-            if (!TryGetComponent(out ShiftManager sm)) return;
+            if (!Reference.TryGetManager(out MoneyManager mm)) return;
+            if (!Reference.TryGetManager(out ShiftManager sm)) return;
             SetMoneyGained(mm.GetMoneyGainedThisShift());
             SetCurrentTotalMoney(mm.MoneyInfo);
             // Update other texts as well

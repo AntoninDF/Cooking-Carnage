@@ -8,7 +8,16 @@ public class GameState
 {
     public static Action OnStateBegin;
     public static Action OnStateEnd;
-    public virtual GameState FindNext(StateTransitions transition = default) => this;
+    public virtual GameState FindNext(StateTransitions transition = default)
+    {
+        switch (transition)
+        {
+            case StateTransitions.OpenMainMenu:
+                return new MainMenuState();
+            default:
+                return this;
+        }
+    }
 
     /// <summary>
     /// Notifies a state that it has been entered
