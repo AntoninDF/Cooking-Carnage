@@ -21,7 +21,7 @@ public class SO_AssetReferences : ScriptableObject
     [Tooltip("The input action asset for the player")]
     [SerializeField] private InputActionAsset _inputActions;
 
-    public List<UIWidget> UIPrefabs;
+    public List<FullscreenWidget> UIPrefabs;
     public Material OutlineMaterial;
     public SO_RecipeBook DefaultRecipeBook;
 

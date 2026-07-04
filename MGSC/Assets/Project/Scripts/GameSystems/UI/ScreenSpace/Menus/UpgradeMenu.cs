@@ -55,10 +55,11 @@ namespace UI
             if (G_UpgradeButtonList == null)
                 return;
 
-            for (int i = G_UpgradeButtonList.childCount; i > 0; i--)
+            for (int i = G_UpgradeButtonList.childCount-1; i >= 0; i--)
             {
-                Debug.Log("Destroying " + G_UpgradeButtonList.GetChild(0).name);
-                GameObject.Destroy(G_UpgradeButtonList.GetChild(0).gameObject);
+                Transform temp = G_UpgradeButtonList.GetChild(i);
+                temp.SetParent(null);
+                GameObject.Destroy(temp.gameObject);
             }
         }
         void PopulateUpgradeList()
@@ -87,10 +88,14 @@ namespace UI
 
             GameObject go = GameObject.Instantiate(UpgradeButtonPrefab.gameObject);
             UpgradeButton result = go.GetComponent<UpgradeButton>();
+            go.TryGetComponent(out RectTransform rt);
 
             go.transform.SetParent(G_UpgradeButtonList);
             go.SetActive(true);
             result.Setup(config);
+
+            rt.localScale = Vector3.one;
+
 
             return result;
         }

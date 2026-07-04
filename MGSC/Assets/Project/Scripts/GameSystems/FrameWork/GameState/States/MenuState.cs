@@ -8,7 +8,7 @@ using UnityEngine;
 public class MenuState : GameState
 {
     protected virtual Type DefaultMenuType {  get;}
-    public UIWidget Menu {  get; private set; }
+    public FullscreenWidget Menu {  get; private set; }
     
     public override void OnEnter()
     {
