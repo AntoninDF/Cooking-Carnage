@@ -11,6 +11,9 @@ public class GameSettings : ScriptableObject
             _instance = _instance ?? Resources.Load<GameSettings>("GameSettings");
             return _instance; } }
 
+
+
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void Apply()
     {
@@ -19,6 +22,9 @@ public class GameSettings : ScriptableObject
 
         Globals.Gameplay.ShiftRentPriceCurve.Value = Instance.PriceSettings.ShiftRentPrice;
         Globals.Gameplay.WrongMealPrice.Value = Instance.PriceSettings.WrongMealPrice;
+
+        Globals.Gameplay.CookingDuration.Value = Instance.CookingSettings.CookingDuration;
+        Globals.Gameplay.OvercookingDuration.Value = Instance.CookingSettings.OverCookingDuration;
     }
 
     public S_ShiftSettings ShiftSettings;
@@ -38,6 +44,16 @@ public class GameSettings : ScriptableObject
         public AnimationCurve ShiftRentPrice;
         [Min(0)]
         public float WrongMealPrice;
+    }
+
+    public S_CookingSettings CookingSettings;
+    [Serializable]
+    public struct S_CookingSettings
+    {
+        [Min(0)]
+        public float CookingDuration;
+        [Min(0)]
+        public float OverCookingDuration;
     }
 
 }

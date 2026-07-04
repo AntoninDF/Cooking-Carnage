@@ -10,11 +10,11 @@ namespace Orders
     /// </summary>
     public struct ServingInfo
     {
-        public Meal      Meal   { get; private set; }
+        public Servable      Meal   { get; private set; }
         public SO_Recipe Recipe { get; private set; } 
         public float Timestamp { get; private set; }
 
-        public ServingInfo(Meal servedMeal)
+        public ServingInfo(Servable servedMeal)
         {
             Meal      = servedMeal;
             Recipe    = servedMeal?.Recipe;
@@ -34,7 +34,7 @@ namespace Orders
         public override bool Equals(object obj)
         {
             return obj is ServingInfo info &&
-                   EqualityComparer<Meal>.Default.Equals(Meal, info.Meal) &&
+                   EqualityComparer<Servable>.Default.Equals(Meal, info.Meal) &&
                    Timestamp == info.Timestamp;
         }
 

@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 
 /// <summary>
 /// Globals is a static class that contains many various parameters allowing control over the game's flow, rendering, etc.
@@ -20,5 +19,9 @@ public static partial class Globals
     {
         setter?.Invoke(parameter);
         parameter.OnValueChange += setter;
+    }
+    public static void Unbind<T>(Action<T> setter, Param<T> parameter)
+    {
+        parameter.OnValueChange -= setter;
     }
 }

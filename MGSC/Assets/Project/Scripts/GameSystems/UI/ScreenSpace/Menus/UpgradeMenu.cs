@@ -6,17 +6,22 @@ namespace UI
     public class UpgradeMenu : UIMenu
     {
         public Button B_Confirm;
+        public Button B_MainMenu;
 
  
         public override void OnLoad()
         {
-            //ShiftManager.OnNextShift += TryShowUpgrades;
-
             if (B_Confirm != null)
                 B_Confirm.onClick.AddListener(TriggerGameStart);
+
+            if (B_MainMenu != null)
+                B_MainMenu.onClick.AddListener(OnMainMenu);
         }
 
-
+        void OnMainMenu()
+        {
+            GameLoop.RequestTransition(StateTransitions.OpenMainMenu);
+        }
         void TryShowUpgrades()
         {
             if (!Reference.TryGetManager(out ShiftManager mgr)) return;

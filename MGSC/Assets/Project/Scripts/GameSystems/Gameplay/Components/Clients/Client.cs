@@ -76,7 +76,7 @@ namespace Clients
        private void Awake()
        {
            NavMeshAgent agent = GetComponent<NavMeshAgent>();
-           Behaviour   = new ClientBehaviour(this, transform, agent, _splineComp, _speed);
+           Behaviour = new ClientBehaviour(this, transform, agent, _splineComp, _speed);
            
            OnSeatRegister += OnNewSeatRegister;
            UniqueID = gameObject.GetInstanceID();
@@ -89,7 +89,7 @@ namespace Clients
        void Update()
        {
            Collection.Update();
-           Behaviour.Update();
+           //Behaviour.Update();
        }
 
        #endregion
@@ -218,7 +218,7 @@ namespace Clients
            SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
            if (soRecipe == null) return;
 
-           var info = new Orders.ServingInfo(soRecipe);
+           var info = new Orders.ServingInfo(serving);
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);

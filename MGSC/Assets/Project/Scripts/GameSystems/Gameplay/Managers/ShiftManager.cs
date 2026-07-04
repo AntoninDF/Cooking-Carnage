@@ -124,6 +124,7 @@ namespace GameSystem
 
             SaveManager.SaveGameData();
             OnShiftEnded?.Invoke();
+            GameLoop.RequestTransition(StateTransitions.ShowShiftRecap);
         }
 
         /// <summary>

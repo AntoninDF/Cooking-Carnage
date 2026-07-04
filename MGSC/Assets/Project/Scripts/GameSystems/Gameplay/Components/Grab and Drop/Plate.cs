@@ -14,6 +14,7 @@ using UnityEngine;
 public class Plate : Item
 {
     #region Properties
+    public SO_Recipe Recipe => DetectRecipe();
     public F_Cookable Cookable;
     public F_OverCookable OverCookable;
     public F_MultiSlotContainer Container;
@@ -152,9 +153,10 @@ public class Plate : Item
         }
     }
 
-    public void DetectRecipe(out SO_Recipe recipe)
+    public void DetectRecipe(out SO_Recipe recipe) => recipe = DetectRecipe();
+    public SO_Recipe DetectRecipe()
     {
-        recipe = null;
+        SO_Recipe recipe = null;
         var recipeComponent = gameObject.AddComponent<Recipe>();
         var recipeFeature = recipeComponent.GetFeature<F_Recipe>();
 
@@ -162,7 +164,7 @@ public class Plate : Item
         recipe = recipeFeature.Recipe;
         
         Collection.Add(recipeComponent.Servable);
-
+        return recipe;
     }
 
     void EnableRecipeModel(SO_Recipe recipe)

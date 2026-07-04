@@ -1,4 +1,4 @@
-public  partial class Globals
+public partial class Globals
 {
     public static class Statistics
     {

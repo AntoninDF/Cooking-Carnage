@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using NaughtyAttributes;
 
 namespace Cooking
 {
@@ -23,10 +24,7 @@ namespace Cooking
         public ModelController mealPrefab;
         [Tooltip("How much money does a recipe give")]
         public float Price;
-        [Tooltip("How long does it take to go from raw to cooked ?")]
-        public float timeToCook = 10f;
-        [Tooltip("How long does it take to go from cooked to overcooked ?")]
-        public float timeToOvercook = 12f;
+        
         [Tooltip("How likely this recipe is to be ordered by default. The unit is arbitrary and depends on the other recipes' probability rates.")]
         public float probabilityRate = 1f;
         [Tooltip("How much higher the probability rate will get each time a corresponding client is seen.")]

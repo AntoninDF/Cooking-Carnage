@@ -68,12 +68,12 @@ namespace UI
                     if (ing != null) result = ing.Model.Name;
                     break;
                 case (EDataInfo.MealName):
-                    var meal = _dataSource.GetComponent<Meal>();
-                    if (meal != null) result = meal.Recipe.Name;
+                    var meal = _dataSource.GetComponent<Plate>();
+                    if (meal != null) result = meal.Recipe?.Name;
                     break;
                 case (EDataInfo.MealIngredients):
-                    var mel = _dataSource.GetComponent<Meal>();
-                    if (mel != null) result = ToString(mel.Recipe.Ingredients);
+                    var mel = _dataSource.GetComponent<Plate>();
+                    if (mel != null) result = ToString(mel.Recipe?.Ingredients);
                     break;
                 
             }

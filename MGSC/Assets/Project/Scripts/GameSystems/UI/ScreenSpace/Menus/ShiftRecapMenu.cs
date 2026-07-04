@@ -9,7 +9,7 @@ namespace UI
     {
         public override bool ForceLoadOnUIInitialization => true;
         public Button B_NextShift;
-        private Button B_MainMenu;
+        public Button B_MainMenu;
 
         public TMP_Text L_MoneyGained;
         public TMP_Text L_RentPaid;
@@ -21,7 +21,6 @@ namespace UI
 
         public override void OnLoad()
         {
-            ShiftManager.OnShiftEnded += Enable;
             if (Reference.TryGetManager(out MoneyManager mgr))
             {
                 mgr.OnMoneyChange += SetMoneyGained;
@@ -34,15 +33,25 @@ namespace UI
         {
             if (B_NextShift != null)
                 B_NextShift.onClick.AddListener(OnNextShift);
+            if (B_MainMenu != null)
+                B_MainMenu.onClick.AddListener(OnMainMenu);
+        }
+
+        void OnMainMenu()
+        {
+            GameLoop.RequestTransition(StateTransitions.OpenMainMenu);
         }
 
         void OnNextShift()
         {
+            GameLoop.RequestTransition(StateTransitions.UpgradeShop);
+            /*
             if (Reference.TryGetManager(out ShiftManager mgr))
             {
                 mgr.RequestStartShift();
             }
             Disable();
+            */
         }
         void UpdateTexts()
         {

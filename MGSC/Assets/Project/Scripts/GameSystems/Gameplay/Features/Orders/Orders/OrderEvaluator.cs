@@ -32,18 +32,22 @@ namespace Orders
 
         private static float CalculateBasePrice(Order order)
         {
-            Meal meal = order.ServingInfo.Meal;
+            Servable meal = order.ServingInfo.Meal;
             
             if(meal == null || meal.Recipe == null)
                 return PlainJellyPrice;
             
-            if(meal.CookStatus == "Overcooked")
+            /*
+            if(meal.OverCookable.Transformed)
                 return RecipeFinder.AllRecipes.FailedRecipe.Price;
+            Debug.Log("Calculate base price : Didn't overcook");
             
             if(order.Recipe != order.ServingInfo.Recipe)
                 return Globals.Gameplay.WrongMealPrice;
+            Debug.Log("Calculate base price : Meal was correct");
+            */
             
-            return order.Recipe.Price;
+            return meal.Recipe.Price;
         }
 
         private static int CalculateStars(Order order)
