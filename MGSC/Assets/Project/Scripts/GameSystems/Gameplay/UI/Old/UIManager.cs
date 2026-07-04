@@ -132,8 +132,8 @@ namespace UI
         {
             if (Reference.TryGetManager(out UpgradeManager upgradeManager))
             {
-                upgradeManager.OnUpgradeSuccess.AddListener(PlayOnUpgradeSuccess);
-                upgradeManager.OnUpgradeFail.AddListener(PlayOnUpgradeFail);
+                UpgradeManager.OnUpgradeSuccess.AddListener(PlayOnUpgradeSuccess);
+                UpgradeManager.OnUpgradeFail.AddListener(PlayOnUpgradeFail);
             }
         }
         

@@ -16,6 +16,18 @@ namespace Upgrades
 		[Expandable]
 		[Tooltip("price over the level multiply by the base price")]
 		public AnimationCurve PriceCurve;
+
+		[Tooltip("The sprite that will be displayed in the upgrade menu")]
+		public Sprite Icon;
+
+		public Upgrade GetUpgrade()
+		{
+			if (Reference.TryGetManager(out UpgradeManager mgr))
+			{
+				return mgr.GetUpgradeByConfig(this);
+			}
+			return null;
+		}
 	}
 
 	

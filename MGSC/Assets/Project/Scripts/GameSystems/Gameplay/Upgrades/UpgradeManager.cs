@@ -15,9 +15,11 @@ namespace Upgrades
         #region Properties
         
         public List<Upgrade> Upgrades => _upgrades;
-        
-        public UnityEvent OnUpgradeFail    = new UnityEvent();
-        public UnityEvent OnUpgradeSuccess = new UnityEvent();
+
+        [GlobalEvent("Upgrades/OnTryLevelUpFailed")]
+        public static UnityEvent OnUpgradeFail    = new UnityEvent();
+        [GlobalEvent("Upgrades/OnLevelUp")]
+        public static UnityEvent OnUpgradeSuccess = new UnityEvent();
         
         #endregion
 

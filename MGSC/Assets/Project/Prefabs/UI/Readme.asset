@@ -16,23 +16,19 @@ MonoBehaviour:
   title: UI Prefabs
   sections:
   - heading: Naming conventions
-    text: If everything follows naming conventions, it's great. But most importantly,
+    text: If everything follows naming conventions, it's great. <br>But most importantly,
       everything that has to be controlled by script should strictly adhere to these
-      naming conventions. Buttons should start with "B_" ; Text (or labels) should
-      start with "L_" (and not "T_" because they aren't textures) ; Images (or sprites)
-      should start with "I_"
+      naming conventions. <br><br>Buttons should start with "B_" <br>Text (or labels)
+      should start with "L_" (and not "T_" because they aren't textures) <br>Images
+      (or sprites) should start with "I_" <br>Folders/Groups should start with G_
     linkText: 
     url: 
   - heading: Where to reference things
     text: Every prefab should have a custom UI Widget component at it's root, and
-      as few other custom components as possible. Every object that will get controlled
-      by script must be referenced in this root component. If the name for the gameObjects
-      is strictly identical to that of the variable to which they must be assigned,
-      they can be detected automatically by the script.
-    linkText: 
-    url: 
-  - heading: Test
-    text: Line 1\nLine 2\nLine3
+      as few other custom components as possible. <br><br>Every object that will
+      get controlled by script must be referenced in this root component. <br><br>If
+      the name for the gameObjects is strictly identical to that of the variable
+      to which they must be assigned, they can be detected automatically by the script.
     linkText: 
     url: 
   loadedLayout: 0
