@@ -120,15 +120,21 @@ namespace UI
         }
         public int GetCorrectOrdersCount()
         {
+            Debug.Log("GetCorrectOrdersCount : 1");
             if (!Reference.TryGetManager(out ClientManager clientMgr)) return 0;
+            Debug.Log("GetCorrectOrdersCount : 2");
             if (clientMgr.GetClientsHistory() == null) return 0;
+            Debug.Log("GetCorrectOrdersCount : 3");
             return clientMgr.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe == c.order.Recipe).Count();
         }
 
         public int GetWrongOrdersCount()
         {
+            Debug.Log("GetWrongOrdersCount : 1");
             if (!Reference.TryGetManager(out ClientManager clientMgr)) return 0;
+            Debug.Log("GetWrongOrdersCount : 2");
             if (clientMgr.GetClientsHistory() == null) return 0;
+            Debug.Log("GetWrongOrdersCount : 3");
             return clientMgr.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe != c.order.Recipe).Count();
         }
         private string ToString<T>(IEnumerable<T> items)
