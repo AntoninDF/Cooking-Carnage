@@ -115,8 +115,9 @@ public class Item : MonoBehaviour, IFeatureCollection
         var otherContainer = other.Container;
         var currentContainer = Grabbable.Container;
         
-        if (currentContainer != null && currentContainer.IsLocked) return;
-        if (otherContainer != null && otherContainer.IsLocked) return;
+        if (!CanSwapInto(otherContainer, Grabbable)) return ;
+        if (!CanSwapInto(currentContainer, other)) return ;
+        
         
         var targetPos = transform.position;
         var parent = transform.parent;
@@ -138,6 +139,20 @@ public class Item : MonoBehaviour, IFeatureCollection
         }
 
     }
+    
+    /// <summary>
+    /// Checks if an item could go into a container ignoring the fact that the container might currently be occupied (used for swaps)
+    /// </summary>
+    private bool CanSwapInto(F_Container container, F_Grabbable item)
+    {
+        if (container == null) return true; 
+        if (!container.Enabled) return false;
+        if (container.IsLocked) return false;
+        if (item.IsLocked) return false;
+        if (container.Filter != null && !container.Filter.IsValid(item)) return false;
+        return true;
+    }
+    
     public void SetActiveModel(ModelController model)
     {
         if (activeModel != null)
