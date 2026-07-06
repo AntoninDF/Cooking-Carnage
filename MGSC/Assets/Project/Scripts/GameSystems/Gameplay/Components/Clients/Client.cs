@@ -89,7 +89,7 @@ namespace Clients
        void Update()
        {
            Collection.Update();
-           //Behaviour.Update();
+           Behaviour.Update();
        }
 
        #endregion
@@ -158,7 +158,6 @@ namespace Clients
        /// </summary>
        public void QuitSeat()
        {
-           Debug.Log("[Client] Seat Quited - parent null");
            transform.SetParent(null);
            Behaviour.ClientMovement.GetUp();
            ClientLook.SetClientLeaving(this);
@@ -218,7 +217,7 @@ namespace Clients
            SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
            if (soRecipe == null) return;
 
-           var info = new Orders.ServingInfo(serving);
+           var info = new Orders.ServingInfo(soRecipe);
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);

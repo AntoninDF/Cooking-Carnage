@@ -70,9 +70,13 @@ namespace GameSystem
 
             foreach (var seat in ClientSeats.Seats)
             {
-                seat.OnClientUnregister += _ => WaitingQueue.OnSeatFreed(seat);
-                seat.OnClientUnregister += _ => Debug.Log("OnClientUnregistered");
+                seat.OnClientUnregister += (client => MakeSureClientEat(client, seat));
             }
+        }
+        
+        private void MakeSureClientEat(Client client, ClientSeat seat)
+        {
+            TimerManager.StartTimer($"{client.UniqueID}Wait For Quit the seat", 3, (() => WaitingQueue.OnSeatFreed(seat)), false);
         }
 
         private void Reset()

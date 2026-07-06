@@ -26,11 +26,14 @@ namespace Features
         public Action      OnLeaving      { get; set; }
         public Action      OnMealServed     { get; set; }
         
+        public Action GoodReaction { get; set;  }
+        public Action BadReaction   { get; set; }
+        
         public Action OnExitQueue { get; set; }
         public Action OnQueuePointReached { get; set; }
-        
-        public WaitInQueue WaitInQueue    { get; private set; }
-        
+        public Action<ClientSeat>      OnLeavingSeat      { get; set; }
+        public Action OnReactionStart { get; set; }
+        public Action OnReactionEnd      { get; set; }
         
 
         #endregion
@@ -79,16 +82,15 @@ namespace Features
         
         private void EnqueueAndWait()
         {
-            WaitInQueue = new WaitInQueue(this);
-            _waitAction = WaitInQueue;
-
-            WaitInQueue.OnQueuePointReached += () =>
+            _waitAction = new WaitInQueue(this);
+            
+            _waitAction.OnQueuePointReached += () =>
             {
                 _client.ClientLook.SetWaiting(true);
                 OnQueuePointReached?.Invoke();
             };
 
-            WaitInQueue.OnExitQueue += () =>
+            _waitAction.OnExitQueue += () =>
             {
                 _client.ClientLook.SetWaiting(false);
                 OnExitQueue?.Invoke();
@@ -158,13 +160,11 @@ namespace Features
 
             Eat eat = new Eat(this, _eatingTime);
             eat.StartEating += OnEatStart;
-            eat.StopEating += () => { OnEatEnd?.Invoke(); TimerManager.StartTimer("Wait For Quit the seat", 2f,
-                                      () =>
-                                      {
-                                          _client.QuitSeat();
-                                          Perform(BuildLeave());
-                                      }, false);
-                              };
+            eat.StopEating += () => 
+            { 
+                OnEatEnd?.Invoke();
+                WaitForFinishingEat();
+            };
             return eat ;
         }
 
@@ -178,6 +178,36 @@ namespace Features
             OnLeaving?.Invoke();
             return leave;
         }
+
+        private React BuildReact()
+        {
+            var react = new React(this, _client.CurrentOrder);
+            react.BadReaction += BadReaction;
+            react.GoodReaction += GoodReaction;
+            return react;
+        }
+        
+        #endregion
+        
+        #region Timers
+
+        private void WaitForFinishingEat()
+        {
+            OnReactionStart?.Invoke();
+            Perform(BuildReact());
+            TimerManager.StartTimer($"{_client.UniqueID} Wait For finishing the order ", 2f, WaitForFinishingDownAnim, false);
+        }
+
+        private void WaitForFinishingDownAnim()
+        {
+            OnReactionEnd?.Invoke();
+            TimerManager.StartTimer($"{_client.UniqueID} Wait finishing the react animation", 2, () =>
+            {
+                Perform(BuildLeave());
+                _client.QuitSeat();
+            }, false);
+        }
+
         #endregion
         
         public void SetWaitPosition(float t)
