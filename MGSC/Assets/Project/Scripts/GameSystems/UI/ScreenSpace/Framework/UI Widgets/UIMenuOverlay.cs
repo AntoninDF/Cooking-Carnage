@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace UI
 {
     [RequireComponent(typeof(GraphicRaycaster))]
-    public class UIMenuOverlay : UIWidget
+    public class UIMenuOverlay : FullscreenWidget
 	{
         public UIMenuOverlay()
         {

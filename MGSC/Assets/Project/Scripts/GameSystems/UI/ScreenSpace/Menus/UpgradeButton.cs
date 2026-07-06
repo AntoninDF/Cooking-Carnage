@@ -1,9 +1,7 @@
-using System;
 using TMPro;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using Upgrades;
-using static UnityEngine.Rendering.STP;
 
 namespace UI
 {
@@ -18,6 +16,7 @@ namespace UI
         public UnityEvent OnLevelUpFail;
         UpgradeConfig _config;
 
+        
         public void Setup(UpgradeConfig config)
         {
             BindWithUpgrade(config);
@@ -48,7 +47,7 @@ namespace UI
                 return;
 
             if (L_PriceTag != null)
-                L_PriceTag.text = upgrade.GetPrice().ToString();
+                L_PriceTag.text = upgrade.GetPrice().ToString() + "$";
 
             if (L_UnlockedUpgrades != null)
                 L_UnlockedUpgrades.text = "" + upgrade.Level + "/" + _config.MaxLevel;

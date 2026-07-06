@@ -4,8 +4,8 @@ using UnityEngine.UI;
 namespace UI
 {
     [RequireComponent(typeof(GraphicRaycaster))]
-    public class UIMenu : UIWidget
-	{
+    public class UIMenu : FullscreenWidget
+    {
 		public UIMenu()
 		{
 			OnEnable += OnMenuOpen;

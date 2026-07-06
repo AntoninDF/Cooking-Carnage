@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -27,8 +28,8 @@ namespace UI
         Transform _menusOverlayFolder;
         Transform _inactiveFolder;
 
-        List<UIWidget> _widgetPrefabs = new();
-        List<UIWidget> _loadedWidgets = new();
+        List<FullscreenWidget> _widgetPrefabs = new();
+        List<FullscreenWidget> _loadedWidgets = new();
 
         #endregion
 
@@ -62,12 +63,25 @@ namespace UI
             if (_inactiveFolder != null) GameObject.Destroy(_inactiveFolder);
 
             // Create the hierarchy
-            _root = new GameObject("UI_Root", typeof(InputSystemUIInputModule)).transform;
-            _HUDFolder = new GameObject("HUD Folder").transform;
-            _HUDOverlayFolder = new GameObject("HUD Overlay Folder").transform;
-            _menusFolder = new GameObject("Menus Folder").transform;
-            _menusOverlayFolder = new GameObject("Menus Overlay Folder").transform;
-            _inactiveFolder = new GameObject("Inactive Folder").transform;
+            _root = new GameObject(
+                "UI_Root",
+                typeof(InputSystemUIInputModule)
+                //typeof(Canvas),
+                //typeof(GraphicRaycaster),
+                //typeof(CanvasScaler)
+                ).transform;
+
+            /*
+            _root.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
+            _root.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            _root.GetComponent<CanvasScaler>().referenceResolution = new(1920, 1080);
+            */
+
+            _HUDFolder =            MakeMenuFolder("HUD Folder");
+            _HUDOverlayFolder =     MakeMenuFolder("HUD Overlay Folder");
+            _menusFolder =          MakeMenuFolder("Menus Folder");
+            _menusOverlayFolder =   MakeMenuFolder("Menus Overlay Folder");
+            _inactiveFolder =       MakeMenuFolder("Inactive Folder");
 
             _HUDFolder.SetParent(_root);
             _HUDOverlayFolder.SetParent(_root);
@@ -77,20 +91,34 @@ namespace UI
 
             _inactiveFolder.gameObject.SetActive(false);
         }
-        void InitPrefabs(IEnumerable<UIWidget> widgetPrefabs)
+        Transform MakeMenuFolder(string name)
         {
-            foreach (UIWidget widget in widgetPrefabs)
+            var go = new GameObject(name); //, typeof(RectTransform)
+
+            /*
+            RectTransform rt = go.GetComponent<RectTransform>();
+            var res = new Vector2(1920, 1080);
+            rt.localScale = Vector3.one;
+            rt.localPosition = new Vector2(res.x/2, res.y/2);
+            rt.sizeDelta = res;
+            */
+
+            return go.transform;
+        }
+        void InitPrefabs(IEnumerable<FullscreenWidget> widgetPrefabs)
+        {
+            foreach (FullscreenWidget widget in widgetPrefabs)
             {
                 widget.Init();
             }
         }
-        public void AddPrefabs(IEnumerable<UIWidget> widgetPrefabs)
+        public void AddPrefabs(IEnumerable<FullscreenWidget> widgetPrefabs)
         {
             _widgetPrefabs.AddRange(widgetPrefabs);
             InitPrefabs(widgetPrefabs);
         }
-        public void StashWidget(UIWidget widget) => widget?.transform.SetParent(_inactiveFolder);
-        public void ShowWidget(UIWidget widget)
+        public void StashWidget(FullscreenWidget widget) => widget?.transform.SetParent(_inactiveFolder);
+        public void ShowWidget(FullscreenWidget widget)
         {
             if (widget == null) return;
             Transform parent = null;
@@ -124,13 +152,13 @@ namespace UI
                     return true;
             return false;
         }
-        public T GetWidget<T>() where T : UIWidget
+        public T GetWidget<T>() where T : FullscreenWidget
         {
             return GetWidget(typeof(T)) as T;
         }
-        public UIWidget GetWidget(Type widgetType)
+        public FullscreenWidget GetWidget(Type widgetType)
         {
-            UIWidget result;
+            FullscreenWidget result;
 
             
         
@@ -139,7 +167,7 @@ namespace UI
                 return result;
 
             // Find a suitable widget prefab if there is one
-            UIWidget widgetPrefab = null;
+            FullscreenWidget widgetPrefab = null;
             foreach (var current in _widgetPrefabs)
             {
                 if (IsSameOrSubclass(widgetType , current.GetType()))
@@ -150,12 +178,12 @@ namespace UI
             }
 
         // Try to load it
-        UIWidget temp = LoadWidget_Internal(widgetPrefab);
+        FullscreenWidget temp = LoadWidget_Internal(widgetPrefab);
             if (temp == null) return null;
 
             return temp;
         }
-        public bool TryGetWidget(Type widgetType, out UIWidget widget)
+        public bool TryGetWidget(Type widgetType, out FullscreenWidget widget)
         {
             widget = null;
             foreach (var current in _loadedWidgets)
@@ -174,9 +202,9 @@ namespace UI
         /// <typeparam name="T">The type of the requested widget</typeparam>
         /// <param name="widget">The variable on which to write the result. Will be null if the return is false</param>
         /// <returns>True if a widget of the right type has been found, false otherwise</returns>
-        public bool TryGetWidget<T>(out T widget) where T : UIWidget
+        public bool TryGetWidget<T>(out T widget) where T : FullscreenWidget
         {
-            bool success = TryGetWidget(typeof(T), out UIWidget result);
+            bool success = TryGetWidget(typeof(T), out FullscreenWidget result);
             widget = result as T;
             return success;
         }
@@ -199,7 +227,7 @@ namespace UI
         /// Instantiates a UI widget prefab and stores it in the corresponding folder. Does not check if it has already been loaded
         /// </summary>
         /// <param name="widget"></param>
-        UIWidget LoadWidget_Internal(UIWidget widget)
+        FullscreenWidget LoadWidget_Internal(FullscreenWidget widget)
         {
             if (widget == null) return null; 
             GameObject prefab = widget.gameObject;
@@ -207,7 +235,14 @@ namespace UI
             var go = GameObject.Instantiate(prefab);
             go.SetActive(true); // Just in case the prefab was disabled
             go.transform.SetParent(_inactiveFolder.transform);
-            var result = go.GetComponent<UIWidget>();
+            /*
+            RectTransform rt = go.GetComponent<RectTransform>();
+            rt.position = new();
+            rt.sizeDelta = new();
+            rt.anchoredPosition = new();
+            rt.localScale = Vector3.one;
+            */
+            var result = go.GetComponent<FullscreenWidget>();
             _loadedWidgets.Add(result);
             result.Owner = this;
             //Debug.Log($"[UISystem] Widget '{result.name}' has been loaded");

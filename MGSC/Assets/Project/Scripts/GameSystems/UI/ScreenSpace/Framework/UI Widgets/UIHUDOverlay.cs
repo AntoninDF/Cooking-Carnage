@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace UI
 {
-	public class UIHUDOverlay : UIWidget
-	{
+	public class UIHUDOverlay : FullscreenWidget
+    {
 
 	}
 
