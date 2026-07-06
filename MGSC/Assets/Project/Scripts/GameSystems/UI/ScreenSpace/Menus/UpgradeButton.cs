@@ -8,9 +8,10 @@ namespace UI
     public class UpgradeButton : UIWidget
     {
         public Image I_Icon;
-        public Button B_LevelUp;
+        public TMP_Text L_Title;
+        public TMP_Text L_Subtitle;
         public TMP_Text L_PriceTag;
-        public TMP_Text L_UnlockedUpgrades;
+        public Button B_LevelUp;
 
         public UnityEvent OnLevelUpSuccess;
         public UnityEvent OnLevelUpFail;
@@ -21,6 +22,9 @@ namespace UI
         {
             BindWithUpgrade(config);
             UpdateGraphics();
+
+            OnLevelUpFail.AddListener(UpdateGraphics);
+            OnLevelUpSuccess.AddListener(UpdateGraphics);
         }
         public void BindWithUpgrade(UpgradeConfig config)
         {
@@ -46,11 +50,15 @@ namespace UI
             if (upgrade == null)
                 return;
 
+            // upgrade.GetType().Name can be replaced by _config.name to get the scriptable object's name instead of the type name
+            if (L_Title != null)
+                L_Title.text = NicifyName(upgrade.GetType().Name);
+
+            if (L_Subtitle != null)
+                L_Subtitle.text = "" + upgrade.Level + "/" + _config.MaxLevel;
+
             if (L_PriceTag != null)
                 L_PriceTag.text = upgrade.GetPrice().ToString() + "$";
-
-            if (L_UnlockedUpgrades != null)
-                L_UnlockedUpgrades.text = "" + upgrade.Level + "/" + _config.MaxLevel;
         }
 
         void RequestLevelUp()
@@ -78,6 +86,25 @@ namespace UI
             }
         }
 
+        string NicifyName(in string name)
+        {
+            string temp = name.Replace("Upgrade", "");
+            temp = temp.Replace("_", " ");
+            string result = "";
+            for (int i = 0; i < temp.Length; i++)
+            {
+                char c = temp[i];
+                if (i == 0)
+                {
+                    result += c;
+                    continue;
+                }
+                if (char.IsUpper(c) && char.IsLower(temp[i - 1]))
+                    result += " ";
+                result += c;
+            }
+            return result;
+        }
     }
 
 }
