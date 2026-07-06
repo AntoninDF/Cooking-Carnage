@@ -55,6 +55,9 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         ClientSeat.OnClientSitting += (client) =>
         {
             _OrderDisplayer.DisplayOrder(client.CurrentOrder.Recipe);
+            client.BeginOrderTimer();
+            client.OnOrderTimeProgress += _OrderDisplayer.UpdateTimeSlider;
+            
         };
         
         // ClientSeat.OnClientLeaving += () =>
@@ -95,6 +98,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         if (client != null && ClientSeat.SittingClient != null)
         {
             client.Cooked.Trigger();
+            GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
             OnCustomerKilled?.Invoke();
         }
         

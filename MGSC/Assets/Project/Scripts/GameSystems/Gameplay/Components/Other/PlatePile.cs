@@ -1,3 +1,4 @@
+using System.Collections;
 using Features;
 using UnityEngine;
 
@@ -21,7 +22,20 @@ public class PlatePile : MonoBehaviour
 
     private void OnPlateDropped(F_Grabbable plateDropped)
     {
-        if (_mp.count == 0) return;
+        StartCoroutine(CheckIfPlateWasActuallyTaken());
+    }
+
+    private IEnumerator CheckIfPlateWasActuallyTaken()
+    {
+        yield return null;
+
+        
+        if (Container.Container.HeldItem != null)
+            yield break;
+
+        if (_mp.count == 0)
+            yield break;
+
         _mp.RemoveOneElement();
         TrySpawn();
     }
