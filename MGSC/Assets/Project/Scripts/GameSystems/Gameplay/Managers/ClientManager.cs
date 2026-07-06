@@ -243,7 +243,15 @@ namespace GameSystem
         {
            return clientHistory.FirstOrDefault(data => data.id == entityId);
         }
-        
+
+        internal void DestroyEveryClients()
+        {
+            foreach (var client in currentClients)
+            {
+                client.Despawn();
+            }
+        }
+
         #endregion
 
     }

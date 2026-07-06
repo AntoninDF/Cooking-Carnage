@@ -61,7 +61,6 @@ namespace Clients
                 timerName,
                 order.PatienceDuration,
                 () => OnOrderTimeout(order),
-                false,
                 elapsed => OnOrderTimeProgress?.Invoke(Mathf.Clamp01(elapsed / order.PatienceDuration))
             );
         }
@@ -152,14 +151,21 @@ namespace Clients
            }
        }
 
-       #region Seat
-       
-       /// <summary>
-       /// Executed when a new Seat is registered (in general ta the spawn)
-       /// Or when the wait line have a nex seat free
-       /// </summary>
-       /// <param name="seat"></param>
-       public void OnNewSeatRegister(ClientSeat seat)
+
+        internal void Despawn()
+        {
+            CurrentOrder.Resolve(null);
+            Destroy(gameObject);
+        }
+
+        #region Seat
+
+        /// <summary>
+        /// Executed when a new Seat is registered (in general ta the spawn)
+        /// Or when the wait line have a nex seat free
+        /// </summary>
+        /// <param name="seat"></param>
+        public void OnNewSeatRegister(ClientSeat seat)
        {
            if (seat == null) return;
 
@@ -289,8 +295,9 @@ namespace Clients
            
            
        }
+
 #endif
-#endregion
+        #endregion
 
     }
 }

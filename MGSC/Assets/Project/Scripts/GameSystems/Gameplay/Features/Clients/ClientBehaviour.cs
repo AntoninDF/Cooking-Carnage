@@ -174,7 +174,7 @@ namespace Features
                                       {
                                           _client.QuitSeat();
                                           Perform(BuildLeave());
-                                      }, false);
+                                      });
                               };
             return eat ;
         }
