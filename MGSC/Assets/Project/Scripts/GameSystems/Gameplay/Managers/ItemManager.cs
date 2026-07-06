@@ -105,7 +105,7 @@ public class ItemManager : IManager
         
         GameObject spawned = GameObject.Instantiate(item, position, rotation, parent);
         
-        UpdateActiveList(item.GetComponent<Item>());
+        UpdateActiveList(spawned.GetComponent<Item>());
         
         this.Log(LogType.Log, "Spawned " + item.name);
         

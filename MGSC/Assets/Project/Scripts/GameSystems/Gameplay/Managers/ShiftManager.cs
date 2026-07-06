@@ -91,11 +91,7 @@ namespace GameSystem
 
         void InvokeFinalWarning()
         {
-            if (TimerUntilFinalWarning != null)
-            {
-                GameLoop.UnbindTimerFromGamePause(TimerUntilFinalWarning);
-                TimerUntilFinalWarning = null;
-            }
+            ResetTimerUntilFinalWarning();
             this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
             OnShiftFinalWarning?.Invoke();
         }
@@ -109,11 +105,7 @@ namespace GameSystem
         {
             this.Log(LogType.Log, $"End of the Shift triggered.");
             IsShiftActive = false;
-            if (TimerUntilEndOfShift != null)
-            {
-                GameLoop.UnbindTimerFromGamePause(TimerUntilEndOfShift);
-                TimerUntilEndOfShift = null;
-            }
+            ResetTimerUntilEndOfShift();
 
             bool validRent = TryPayRent();
 
@@ -127,17 +119,39 @@ namespace GameSystem
             GameLoop.RequestTransition(StateTransitions.ShowShiftRecap);
         }
 
+        private void ResetTimerUntilEndOfShift()
+        {
+            if (TimerUntilEndOfShift != null)
+            {
+                GameLoop.UnbindTimerFromGamePause(TimerUntilEndOfShift);
+                TimerUntilEndOfShift.Reset();
+                TimerUntilEndOfShift = null;
+            }
+        }
+
+        private void ResetTimerUntilFinalWarning()
+        {
+            if (TimerUntilFinalWarning != null)
+            {
+                GameLoop.UnbindTimerFromGamePause(TimerUntilFinalWarning);
+                TimerUntilFinalWarning.Reset();
+                TimerUntilFinalWarning = null;
+            }
+        }
+
         /// <summary>
         /// Resets all the items and the player
         /// </summary>
-        private void ResetAll()
+        public void ResetAll()
         {
-//            Debug.Log("Reset everything for the next shift");
+            Debug.Log("[ShiftManager] Reset everything");
 
             PlayerSetup.TryResetPlayer();
             Reference.GetManager<ItemManager>()?.DestroyAllActive();
             Reference.GetManager<ItemManager>()?.SpawnInitialItems(ShiftNumber);
             Reference.GetManager<ClientManager>()?.DestroyEveryClients();
+            ResetTimerUntilEndOfShift();
+            ResetTimerUntilFinalWarning();
         }
         bool TryPayRent()
         {

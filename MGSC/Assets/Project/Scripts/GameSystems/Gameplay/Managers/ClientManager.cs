@@ -246,8 +246,10 @@ namespace GameSystem
 
         internal void DestroyEveryClients()
         {
-            foreach (var client in currentClients)
+            for (int i = currentClients.Count-1; i >= 0; i--)
             {
+                var client = currentClients[i];
+                currentClients.RemoveAt(i);
                 client.Despawn();
             }
         }

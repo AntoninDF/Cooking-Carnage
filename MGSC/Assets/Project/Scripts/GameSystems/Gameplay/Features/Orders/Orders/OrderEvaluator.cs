@@ -17,7 +17,7 @@ namespace Orders
         {
             if (order.ServingInfo == default(ServingInfo))
             {
-                throw new System.Exception("The member 'ServingInfo' of Order was not set to a specific value.");
+                return new OrderRating(order, order.Recipe, 0);
             }
             
             float basePrice = CalculateBasePrice(order);

@@ -156,6 +156,7 @@ namespace Clients
         {
             CurrentOrder.Resolve(null);
             Destroy(gameObject);
+            Destroy(this);
         }
 
         #region Seat
