@@ -101,6 +101,7 @@ namespace Features
             RegisteredClient = null;
             SittingClient    = null;
             OnClientUnregister?.Invoke(unregistered);
+
             return true;
         }
         
@@ -124,6 +125,8 @@ namespace Features
                 return false;
             }
             SittingClient = null;
+            //OnClientUnregister?.Invoke(client);
+
             //OnClientLeaving?.Invoke(client);
             return true;
         }

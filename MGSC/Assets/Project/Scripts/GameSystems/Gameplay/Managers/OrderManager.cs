@@ -53,12 +53,12 @@ namespace GameSystem
             this.Log("Money gained : " + rating.MoneyGained);
             order.Resolve(info, rating);
             
-            Debug.Log($"Order n°"+ order.ID+ " Resolved " + 
-                      (order.OrderRating.IsCorrectRecipe ? "successfully": "poorly") 
-                      + " completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 
-                      + "s for client " + order.Owner.name + ". Money gained : " 
-                      + rating.MoneyGained + ". Expected '" + order.Recipe.Name 
-                      + "', received '" + info.Recipe?.Name + "'.");
+            this.Log(LogType.Log,"Order n°"+ order.ID+ " Resolved " + 
+                                 (order.OrderRating.IsCorrectRecipe ? "successfully": "poorly") 
+                                 + " completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 
+                                 + "s for client " + order.Owner.name + ". Money gained : " 
+                                 + rating.MoneyGained + ". Expected '" + order.Recipe.Name 
+                                 + "', received '" + info.Recipe?.Name + "'.");
             
             
             OnOrderResolved?.Invoke(order);

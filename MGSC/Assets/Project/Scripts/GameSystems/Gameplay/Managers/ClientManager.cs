@@ -34,6 +34,8 @@ namespace GameSystem
         List<ClientData> clientHistory =  new List<ClientData>(); // script copy
         
         Dictionary<EClientType, float> clientTypePart = new Dictionary<EClientType, float>();
+
+        private float _timeBeforeGoSeating = 3.5f;
         #endregion
         
         #region Methods
@@ -76,7 +78,8 @@ namespace GameSystem
         
         private void MakeSureClientEat(Client client, ClientSeat seat)
         {
-            TimerManager.StartTimer($"{client.UniqueID}Wait For Quit the seat", 3, (() => WaitingQueue.OnSeatFreed(seat)), false);
+            
+            TimerManager.StartTimer($"{client.UniqueID}Wait For Quit the seat", client.IsCooked ? 1f : _timeBeforeGoSeating, (() => WaitingQueue.OnSeatFreed(seat)), false);
         }
 
         private void Reset()

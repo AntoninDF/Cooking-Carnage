@@ -46,6 +46,8 @@ namespace Features
         private SplineContainer    _splineComponent;
         private float              _speed;
         private float              _eatingTime = 3;
+        private float _reactionTime = 2;
+        private float _seatDownTime = 1.25f;
         private WaitInQueue        _waitAction;
         
         #endregion
@@ -195,13 +197,13 @@ namespace Features
         {
             OnReactionStart?.Invoke();
             Perform(BuildReact());
-            TimerManager.StartTimer($"{_client.UniqueID} Wait For finishing the order ", 2f, WaitForFinishingDownAnim, false);
+            TimerManager.StartTimer($"{_client.UniqueID} Wait For finishing the order ", _reactionTime, WaitForFinishingDownAnim, false);
         }
 
         private void WaitForFinishingDownAnim()
         {
             OnReactionEnd?.Invoke();
-            TimerManager.StartTimer($"{_client.UniqueID} Wait finishing the react animation", 2, () =>
+            TimerManager.StartTimer($"{_client.UniqueID} Wait finishing the react animation", _seatDownTime, () =>
             {
                 Perform(BuildLeave());
                 _client.QuitSeat();
