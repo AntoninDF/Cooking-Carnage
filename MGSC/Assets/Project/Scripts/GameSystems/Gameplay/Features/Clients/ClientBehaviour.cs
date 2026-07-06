@@ -150,7 +150,18 @@ namespace Features
 
         private void CanLeave()
         {
-            if (_client.IsCooked == false) Perform(BuildEat());
+            if (_client.IsCooked == false && _client.IsAngry == false) Perform(BuildEat());
+            else if (_client.IsAngry)
+            {
+                OnEatEnd?.Invoke();
+                TimerManager.StartTimer("Wait For Quit the seat", 2f,
+                    () =>
+                    {
+                        
+                        _client.QuitSeat();
+                        Perform(BuildLeave());
+                    });
+            }
         }
 
         private Eat BuildEat()

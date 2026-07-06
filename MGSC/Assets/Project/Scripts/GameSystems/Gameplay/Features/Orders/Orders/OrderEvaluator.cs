@@ -55,10 +55,10 @@ namespace Orders
             if (order.ServingInfo.Equals(default(ServingInfo)))
                 return 0;
             
-            // Currently this function always act like the client always has 60 sec time waiting 
-            float elapsedSeconds = order.ServingInfo.Timestamp - order.Timestamp;
-            float patience = Mathf.Clamp01(1f - elapsedSeconds / 60f);
+            float elapsedSeconds = order.ServingInfo.Timestamp - order.SeatedTimestamp;
+            float patience = Mathf.Clamp01(1f - elapsedSeconds / order.PatienceDuration);
 
+            
             if (patience >= Threshold2Star) return 2; 
             if (patience >= Threshold1Star) return 1;
             return 0;
