@@ -89,6 +89,7 @@ namespace Features
         public virtual void EnableShadows() => Apply(obj => obj.EnableShadows());
         public virtual void ReplaceMesh(Mesh mesh) => Apply(obj => obj.ReplaceMesh(mesh));
         public virtual void ResetMeshToDefault() => Apply(obj => obj.ResetMeshToDefault());
+        public virtual void SetLayer(int layer) => Apply(obj => obj.SetLayer(layer));
 
         #endregion    
     }

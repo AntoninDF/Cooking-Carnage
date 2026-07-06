@@ -92,6 +92,10 @@ namespace Features
 			return new();
         }
 
+		public virtual void SetLayer(int layer)
+		{
+			Renderer.gameObject.layer = layer;
+		}
 
         #endregion
     }

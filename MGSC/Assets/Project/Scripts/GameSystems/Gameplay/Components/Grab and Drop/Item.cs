@@ -28,7 +28,9 @@ public class Item : MonoBehaviour, IFeatureCollection
 
     [SerializeField] protected ModelController defaultModel;
     protected Bounds bounds;
+    private int _originalLayer;
 
+    public ModelController ActiveModel => activeModel;
     protected ModelController activeModel;
 
     #endregion
@@ -158,6 +160,24 @@ public class Item : MonoBehaviour, IFeatureCollection
 
         LookAtTarget.OnStartLookAt += activeModel.Outline.EnableOutline;
         LookAtTarget.OnStopLookAt += activeModel.Outline.DisableOutline;
+    }
+    
+    public virtual void StoreLayerRecursive()
+    {
+        if (ActiveModel != null)
+            _originalLayer = ActiveModel.gameObject.layer;
+    }
+
+    public virtual void RestoreLayerRecursive()
+    {
+        if (ActiveModel != null)
+            ActiveModel.SetLayer(_originalLayer);
+    }
+    
+    public virtual void SetLayerRecursive(int layer)
+    {
+        if (ActiveModel != null)
+            ActiveModel.SetLayer(layer);
     }
     #endregion
 

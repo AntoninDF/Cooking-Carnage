@@ -200,6 +200,38 @@ public class Plate : Item
         }
         return result;
     }
+    
+    public override void SetLayerRecursive(int layer)
+    {
+        base.SetLayerRecursive(layer);
+
+        foreach (var slot in Container.SoloContainers)
+        {
+            if (slot?.HeldItem == null) continue;
+            if (slot.HeldItem.Owner is Item item)
+                item.SetLayerRecursive(layer);
+        }
+    }
+    
+    public override void StoreLayerRecursive()
+    {
+        base.StoreLayerRecursive();
+        foreach (var slot in Container.SoloContainers)
+        {
+            if (slot?.HeldItem?.Owner is Item item)
+                item.StoreLayerRecursive();
+        }
+    }
+
+    public override void RestoreLayerRecursive()
+    {
+        base.RestoreLayerRecursive();
+        foreach (var slot in Container.SoloContainers)
+        {
+            if (slot?.HeldItem?.Owner is Item item)
+                item.RestoreLayerRecursive();
+        }
+    }
     #endregion
 
     #region Animation

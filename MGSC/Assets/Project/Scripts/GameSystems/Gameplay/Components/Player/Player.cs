@@ -31,6 +31,7 @@ public class Player : MonoBehaviour, IFeatureCollection
 
     [SerializeField] private Transform head;
     [SerializeField] private SlotContainer hand;
+    [SerializeField] private int heldLayer;
 
 
     void Awake()
@@ -55,9 +56,30 @@ public class Player : MonoBehaviour, IFeatureCollection
         }
         else
             Container = new(this, transform);
+
+
+        Container.OnGrab += SetHeldLayer;
+        Container.OnDrop += ResetHeldLayer;
         PlayerMovement = new(this, transform, head, GetComponent<CharacterController>());
         
 
+    }
+
+    void SetHeldLayer(F_Grabbable item)
+    {
+        if (item == null) return;
+        if (item.Owner is not Item itemComponent) return;
+
+        itemComponent.StoreLayerRecursive();
+        itemComponent.SetLayerRecursive(heldLayer);
+    }
+
+    void ResetHeldLayer(F_Grabbable item)
+    {
+        if (item == null) return;
+        if (item.Owner is not Item itemComponent) return;
+
+        itemComponent.RestoreLayerRecursive();
     }
 
     // Update is called once per frame

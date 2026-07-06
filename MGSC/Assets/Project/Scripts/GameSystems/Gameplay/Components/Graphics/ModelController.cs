@@ -85,6 +85,7 @@ public class ModelController : MonoBehaviour, IFeatureCollection
     public virtual void EnableShadows() => MeshController.EnableShadows();
     public virtual void ReplaceMesh(Mesh mesh) => MeshController.ReplaceMesh(mesh);
     public virtual void ResetMeshToDefault() => MeshController.ResetMeshToDefault();
+    public virtual void SetLayer(int layer) => MeshController.SetLayer(layer);
 
     #endregion
     #endregion
