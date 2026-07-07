@@ -59,7 +59,7 @@ namespace Clients
 
             return
                 Client
-                    .New(model.prefab, model.clientType, model.loot, model.dropRate, model.name, position, speed)
+                    .New(model.prefab, model.clientType, model.loot, model.dropRate, model.name, position, model.movementSpeed)
                     .SetModel(model);
             //.TryUseUpgrades();
         }

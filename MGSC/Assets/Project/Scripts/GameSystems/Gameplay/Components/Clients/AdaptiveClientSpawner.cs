@@ -37,7 +37,6 @@ namespace GameSystem
         private float randomDelayRange = 10;
         private float retryDelay = 2;
         private string timerName = "clientSpawn";
-        private float clientSpeed = 0.5f;
         private List<SO_Client> models;
         private SplineContainer spline;
         
@@ -91,7 +90,6 @@ namespace GameSystem
             else
                 this.Log(" has been initialized");
 
-            Debug.Log("Initialize AdaptiveClientSpawner");
             // Start spawning clients when the shift begins
             ShiftManager.OnShiftBegin += () =>
             {
@@ -153,7 +151,7 @@ namespace GameSystem
                 ? (Vector3)pos + spline.transform.position
                 : Vector3.zero;
 
-            Client client = Client.New(clientSO, spawnPosition, clientSpeed).SetSplinePath(spline).SetSpeed(clientSpeed);
+            Client client = Client.New(clientSO, spawnPosition).SetSplinePath(spline).SetSpeed(clientSO.movementSpeed);
 
             client.Begin();
 

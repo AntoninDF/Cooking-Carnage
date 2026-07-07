@@ -12,6 +12,8 @@ namespace Clients
     {
         [Tooltip("The name will be used if needed in UI, or other places. It is the species' name rather than an individual name.")]
         public new string name;
+        [Tooltip("The movement speed of the customer")]
+        public float movementSpeed = 0.65f;
         [Tooltip("This is the specific prefab for this species. It should have the client component attached to the root object.")]
         public GameObject prefab;
         [Tooltip("The client type identifies the client's species")]
