@@ -1,6 +1,7 @@
 using Controller;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameSystem
 {
@@ -146,12 +147,16 @@ namespace GameSystem
         {
             Debug.Log("[ShiftManager] Reset everything");
 
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+            /*
             PlayerSetup.TryResetPlayer();
             Reference.GetManager<ItemManager>()?.DestroyAllActive();
             Reference.GetManager<ItemManager>()?.SpawnInitialItems(ShiftNumber);
             Reference.GetManager<ClientManager>()?.DestroyEveryClients();
-            ResetTimerUntilEndOfShift();
-            ResetTimerUntilFinalWarning();
+            foreach (Timer timer in TimerManager.Timers.Values)
+                timer.Reset();
+            */
         }
         bool TryPayRent()
         {
