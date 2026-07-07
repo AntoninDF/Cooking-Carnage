@@ -27,7 +27,7 @@ namespace Features
             {
                 GoodReaction?.Invoke();
             }
-            else if(_order?.OrderRating.Stars  <1)
+            else //if(_order?.OrderRating.Stars  =1 && _order?.OrderRating.Stars < 2)
             {
                 BadReaction?.Invoke();
             }
