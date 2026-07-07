@@ -154,7 +154,14 @@ namespace Features
 
         private void CanLeave()
         {
-            if (_client.IsCooked == false) Perform(BuildEat());
+            if (_client.IsCooked == false && !_client.IsAngry ) Perform(BuildEat());
+            else if (_client.IsAngry)
+            {
+                OnEatEnd?.Invoke();
+                Perform(BuildReact());
+                //TimerManager.StartTimer($"{_client.UniqueID} Wait For finishing the order ", _reactionTime, WaitForFinishingDownAnim);
+                WaitForFinishingDownAnim(); //Play instant because they just left, they had no food Madge
+            }
         }
 
         private Eat BuildEat()
@@ -183,7 +190,7 @@ namespace Features
 
         private React BuildReact()
         {
-            var react = new React(this, _client.CurrentOrder);
+            var react = new React(this, _client.OrderLog);
             react.BadReaction += BadReaction;
             react.GoodReaction += GoodReaction;
             return react;

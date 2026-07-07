@@ -17,17 +17,22 @@ namespace Features
         {
             _order = order;
             _client = owner.Owner as Client;
+        
         }
         
         public override void Perform()
         {
             base.Perform();
-            
-            if (_order?.OrderRating.Stars >= 2)
+
+            if (_client.IsAngry)
+            {
+                BadReaction?.Invoke();
+            }
+            else if (  _order.Recipe == _order.ServingInfo.Recipe)
             {
                 GoodReaction?.Invoke();
             }
-            else //if(_order?.OrderRating.Stars  =1 && _order?.OrderRating.Stars < 2)
+            else 
             {
                 BadReaction?.Invoke();
             }

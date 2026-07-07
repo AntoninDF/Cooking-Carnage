@@ -32,6 +32,7 @@ namespace Clients
         public bool               IsAngry          { get; set; }
         public int UniqueID { get; set; }
         
+        public Order OrderLog { get;  set; }
         public Order CurrentOrder
         {
             get => _currentOrder;
@@ -43,7 +44,7 @@ namespace Clients
                 {
                     OnNewOrder?.Invoke(value);
                 }
-                    
+
             }
         }
         
