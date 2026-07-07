@@ -49,7 +49,7 @@ namespace Features
 			if (Reference.TryGetManager(out ClientManager cm))
 			{
 				
-				cm.AddClientData(_client, isDone: true, killed: true);
+				//cm.AddClientData(_client, isDone: true, killed: true);
 				cm.WaitingQueue?.Remove(_client);
 			}
 

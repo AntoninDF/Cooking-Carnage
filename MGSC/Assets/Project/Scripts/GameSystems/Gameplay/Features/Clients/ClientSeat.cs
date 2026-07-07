@@ -93,14 +93,16 @@ namespace Features
             }
     
             //parentTransform.localPosition = _defaultPosition;
-
+            var unregistered = _registeredClient;
+            OnClientUnregister?.Invoke(unregistered);
+            
             client.CurrentSeat  = null;
             client.CurrentOrder = null;
 
-            var unregistered = _registeredClient;
+            
             RegisteredClient = null;
             SittingClient    = null;
-            OnClientUnregister?.Invoke(unregistered);
+            
 
             return true;
         }
