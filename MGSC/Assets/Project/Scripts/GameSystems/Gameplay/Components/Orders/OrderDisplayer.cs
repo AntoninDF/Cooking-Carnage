@@ -14,6 +14,8 @@ namespace Orders
         [SerializeField] private TMP_Text _price;
         [SerializeField] private List<Image> _ingredients;
         [SerializeField] private List<RectTransform> _cookingMethodsPositions;
+        [SerializeField] private Slider _timeSlider;
+
         
         [SerializeField] private AnimationClip _playTV;
         [SerializeField] private AnimationClip _stopTV;
@@ -45,6 +47,12 @@ namespace Orders
             _price.text = recipe.Price.ToString() + " $";
             
             StartDisplay();
+        }
+        
+        public void UpdateTimeSlider(float progress01)
+        {
+            if (_timeSlider != null)
+                _timeSlider.value = 1f - progress01; 
         }
 
         public void UndisplayOrder()

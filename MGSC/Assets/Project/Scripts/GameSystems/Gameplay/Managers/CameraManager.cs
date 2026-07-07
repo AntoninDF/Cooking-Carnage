@@ -12,7 +12,7 @@ public class CameraManager : IManager
 
     #region Fields
 
-    private UIManager _uiManager;
+    //private UIManager _uiManager;
 
 
     private CinemachineVirtualCameraBase camFPV;
@@ -66,6 +66,7 @@ public class CameraManager : IManager
         focusPivot = new GameObject("Focus Pivot");
     }
 
+    /*
     public void LookAt(Transform target, float duration = 0, bool showMouse = false, float distance = 0.5f)
     {
         Vector3 targetPos = target.transform.position + target.transform.forward * -distance;
@@ -95,6 +96,7 @@ public class CameraManager : IManager
         }
             
     }
+    */
 
     public void EnableFirstPersonView()
     {
@@ -102,7 +104,7 @@ public class CameraManager : IManager
         Cursor.visible = false;
             
         ChangeState(CameraState.FirstPerson);
-        _uiManager.SwitchPlayerInputs(true);
+        //_uiManager.SwitchPlayerInputs(true);
     }
 
     public void Animate(Transform start, Transform end, float duration, AnimationCurve motion=null, Transform lookAtTarget = null)

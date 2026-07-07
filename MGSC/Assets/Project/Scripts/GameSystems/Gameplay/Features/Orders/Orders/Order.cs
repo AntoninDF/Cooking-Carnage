@@ -18,6 +18,8 @@ public class Order
     public Action OnCancel { get => _onCancel; set => _onCancel = value; }
     public Orders.ServingInfo ServingInfo { get; set; }
     public Orders.OrderRating OrderRating { get; set; }
+    public float PatienceDuration { get; set; } = 60f;
+    public float SeatedTimestamp { get; set; }
 
     #endregion
 
@@ -36,6 +38,7 @@ public class Order
 
     #region Methods
 
+    
     public Order()
     {
     }

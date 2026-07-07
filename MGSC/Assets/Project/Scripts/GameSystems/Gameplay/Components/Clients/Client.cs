@@ -23,11 +23,13 @@ namespace Clients
         public Action<Order>      OnOrderAccepted  { get; set; }
         public Action<ClientSeat> OnSeatRegister   { get; set; }
         public Action<ClientSeat> OnSeatUnregister { get; set; }
+        public Action<float> OnOrderTimeProgress { get; set; }
         public ClientBehaviour    Behaviour        { get; set; }
         public ClientCooked       Cooked           { get; private set; }
         public ClientLook         ClientLook       => _clientLook;
         
         public bool               IsCooked         { get; set; }
+        public bool               IsAngry          { get; set; }
         public int UniqueID { get; set; }
         
         public Order CurrentOrder
@@ -38,8 +40,37 @@ namespace Clients
                 if (_currentOrder == value) return;
                 _currentOrder = value;
                 if (value != null)
+                {
                     OnNewOrder?.Invoke(value);
+                }
+                    
             }
+        }
+        
+        public void BeginOrderTimer()
+        {
+            if (CurrentOrder == null) return;
+            if (_currentOrder != null) _currentOrder.SeatedTimestamp = Time.time;
+            StartOrderTimer(CurrentOrder);
+        }
+        
+        private void StartOrderTimer(Order order)
+        {
+            string timerName = "OrderTimer_" + UniqueID;
+            GameSystem.TimerManager.StartTimer(
+                timerName,
+                order.PatienceDuration,
+                () => OnOrderTimeout(order),
+                elapsed => OnOrderTimeProgress?.Invoke(Mathf.Clamp01(elapsed / order.PatienceDuration))
+            );
+        }
+        
+        private void OnOrderTimeout(Order order)
+        {
+            if (CurrentOrder != order) return;
+            IsAngry = true;
+            order.Cancel();
+            CurrentSeat?.TryUnregister(this);
         }
 
         public ClientSeat CurrentSeat
@@ -106,6 +137,7 @@ namespace Clients
        public void CookClient()
        {
            Cooked.Trigger();
+           
        }
 
        public void SpawnIngredients(List<SlotContainer> containers)
@@ -119,14 +151,21 @@ namespace Clients
            }
        }
 
-       #region Seat
-       
-       /// <summary>
-       /// Executed when a new Seat is registered (in general ta the spawn)
-       /// Or when the wait line have a nex seat free
-       /// </summary>
-       /// <param name="seat"></param>
-       public void OnNewSeatRegister(ClientSeat seat)
+
+        internal void Despawn()
+        {
+            CurrentOrder.Resolve(null);
+            Destroy(gameObject);
+        }
+
+        #region Seat
+
+        /// <summary>
+        /// Executed when a new Seat is registered (in general ta the spawn)
+        /// Or when the wait line have a nex seat free
+        /// </summary>
+        /// <param name="seat"></param>
+        public void OnNewSeatRegister(ClientSeat seat)
        {
            if (seat == null) return;
 
@@ -221,7 +260,7 @@ namespace Clients
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);
-
+            GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);
            CurrentSeat?.TryUnregister(this);
        }
 
@@ -255,8 +294,9 @@ namespace Clients
            
            
        }
+
 #endif
-#endregion
+        #endregion
 
     }
 }

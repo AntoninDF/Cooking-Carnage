@@ -197,7 +197,7 @@ namespace Features
         {
             OnReactionStart?.Invoke();
             Perform(BuildReact());
-            TimerManager.StartTimer($"{_client.UniqueID} Wait For finishing the order ", _reactionTime, WaitForFinishingDownAnim, false);
+            TimerManager.StartTimer($"{_client.UniqueID} Wait For finishing the order ", _reactionTime, WaitForFinishingDownAnim);
         }
 
         private void WaitForFinishingDownAnim()
@@ -207,7 +207,7 @@ namespace Features
             {
                 Perform(BuildLeave());
                 _client.QuitSeat();
-            }, false);
+            });
         }
 
         #endregion
