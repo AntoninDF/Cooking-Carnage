@@ -258,7 +258,7 @@ namespace Clients
            if (soRecipe == null) return;
 
            var info = new Orders.ServingInfo(soRecipe);
-
+           //CurrentOrder.ServingInfo = info;
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);
             GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);

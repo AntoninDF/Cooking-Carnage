@@ -70,5 +70,19 @@ namespace Orders
             1 => TipMultiplier1Star * basePrice,
             _ => 0f
         };
+
+        // private static int CalculateMoneyGained(Order order)
+        // {
+        //     if (order.ServingInfo.Equals(default(ServingInfo)) || order.ServingInfo.Meal == null)
+        //         return 0;
+        //     ServingInfo info = order.ServingInfo;
+        //
+        //     if ()
+        //     {
+        //         
+        //     }
+        //     
+        //     
+        // }
     }
 }

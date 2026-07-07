@@ -50,8 +50,8 @@ namespace GameSystem
         {
             order.ServingInfo = info;
             OrderRating rating = OrderEvaluator.Evaluate(order);
-            this.Log("Money gained : " + rating.MoneyGained);
             order.Resolve(info, rating);
+            Debug.Log("Money gained : " + rating.MoneyGained);
             
             this.Log(LogType.Log,"Order n°"+ order.ID+ " Resolved " + 
                                  (order.OrderRating.IsCorrectRecipe ? "successfully": "poorly") 
@@ -62,9 +62,10 @@ namespace GameSystem
             
             
             OnOrderResolved?.Invoke(order);
+            Debug.Log(SO_Recipe.Compare(info.Recipe, order.Recipe));
             //Debug.Log($"{rating.Stars}  stars for {order.Owner.name}.");
             this.Log(LogType.Log, "*Order Resolved* Feedbacks Invoked");
-            
+           // ajouter money ici
             // Tell the money manager that money's been made
             StashOrder(order);
         }
