@@ -30,25 +30,25 @@ namespace Orders
             return orderRating;
         }
 
-        private static float CalculateBasePrice(Order order)
-        {
-            Servable meal = order.ServingInfo.Meal;
-            
-            if(meal == null || meal.Recipe == null)
-                return PlainJellyPrice;
-            
-            /*
-            if(meal.OverCookable.Transformed)
-                return RecipeFinder.AllRecipes.FailedRecipe.Price;
-            Debug.Log("Calculate base price : Didn't overcook");
-            
-            if(order.Recipe != order.ServingInfo.Recipe)
-                return Globals.Gameplay.WrongMealPrice;
-            Debug.Log("Calculate base price : Meal was correct");
-            */
-            
-            return meal.Recipe.Price;
-        }
+        // private static float CalculateBasePrice(Order order)
+        // {
+        //     Servable meal = order.ServingInfo.Meal;
+        //     
+        //     if(meal == null || meal.Recipe == null)
+        //         return PlainJellyPrice;
+        //     
+        //     /*
+        //     if(meal.OverCookable.Transformed)
+        //         return RecipeFinder.AllRecipes.FailedRecipe.Price;
+        //     Debug.Log("Calculate base price : Didn't overcook");
+        //     
+        //     if(order.Recipe != order.ServingInfo.Recipe)
+        //         return Globals.Gameplay.WrongMealPrice;
+        //     Debug.Log("Calculate base price : Meal was correct");
+        //     */
+        //     
+        //     return meal.Recipe.Price;
+        // }
 
         private static int CalculateStars(Order order)
         {
@@ -71,18 +71,16 @@ namespace Orders
             _ => 0f
         };
 
-        // private static int CalculateMoneyGained(Order order)
-        // {
-        //     if (order.ServingInfo.Equals(default(ServingInfo)) || order.ServingInfo.Meal == null)
-        //         return 0;
-        //     ServingInfo info = order.ServingInfo;
-        //
-        //     if ()
-        //     {
-        //         
-        //     }
-        //     
-        //     
-        // }
+        private static float CalculateBasePrice(Order order)
+        {
+            Servable meal = order.ServingInfo.Meal;
+
+            if (meal == null || meal.Recipe == null)
+                return PlainJellyPrice;
+
+            float basePrice  = RecipePriceTable.GetBasePrice(meal.Recipe);
+
+            return basePrice ;
+        }
     }
 }

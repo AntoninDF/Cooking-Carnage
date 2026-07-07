@@ -257,11 +257,12 @@ namespace Clients
            SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
            if (soRecipe == null) return;
 
-           var info = new Orders.ServingInfo(soRecipe);
-           //CurrentOrder.ServingInfo = info;
+           var info = new Orders.ServingInfo(serving); 
+           CurrentOrder.ServingInfo = info;            
+
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);
-            GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);
+           GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);
            CurrentSeat?.TryUnregister(this);
        }
 
