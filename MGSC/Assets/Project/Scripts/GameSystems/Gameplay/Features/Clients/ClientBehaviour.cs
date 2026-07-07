@@ -26,11 +26,14 @@ namespace Features
         public Action      OnLeaving      { get; set; }
         public Action      OnMealServed     { get; set; }
         
+        public Action GoodReaction { get; set;  }
+        public Action BadReaction   { get; set; }
+        
         public Action OnExitQueue { get; set; }
         public Action OnQueuePointReached { get; set; }
-        
-        public WaitInQueue WaitInQueue    { get; private set; }
-        
+        public Action<ClientSeat>      OnLeavingSeat      { get; set; }
+        public Action OnReactionStart { get; set; }
+        public Action OnReactionEnd      { get; set; }
         
 
         #endregion
@@ -43,6 +46,8 @@ namespace Features
         private SplineContainer    _splineComponent;
         private float              _speed;
         private float              _eatingTime = 3;
+        private float _reactionTime = 2;
+        private float _seatDownTime = 1.25f;
         private WaitInQueue        _waitAction;
         
         #endregion
@@ -79,16 +84,15 @@ namespace Features
         
         private void EnqueueAndWait()
         {
-            WaitInQueue = new WaitInQueue(this);
-            _waitAction = WaitInQueue;
-
-            WaitInQueue.OnQueuePointReached += () =>
+            _waitAction = new WaitInQueue(this);
+            
+            _waitAction.OnQueuePointReached += () =>
             {
                 _client.ClientLook.SetWaiting(true);
                 OnQueuePointReached?.Invoke();
             };
 
-            WaitInQueue.OnExitQueue += () =>
+            _waitAction.OnExitQueue += () =>
             {
                 _client.ClientLook.SetWaiting(false);
                 OnExitQueue?.Invoke();
@@ -150,18 +154,7 @@ namespace Features
 
         private void CanLeave()
         {
-            if (_client.IsCooked == false && _client.IsAngry == false) Perform(BuildEat());
-            else if (_client.IsAngry)
-            {
-                OnEatEnd?.Invoke();
-                TimerManager.StartTimer("Wait For Quit the seat", 2f,
-                    () =>
-                    {
-                        
-                        _client.QuitSeat();
-                        Perform(BuildLeave());
-                    });
-            }
+            if (_client.IsCooked == false) Perform(BuildEat());
         }
 
         private Eat BuildEat()
@@ -169,13 +162,11 @@ namespace Features
 
             Eat eat = new Eat(this, _eatingTime);
             eat.StartEating += OnEatStart;
-            eat.StopEating += () => { OnEatEnd?.Invoke(); TimerManager.StartTimer("Wait For Quit the seat", 2f,
-                                      () =>
-                                      {
-                                          _client.QuitSeat();
-                                          Perform(BuildLeave());
-                                      });
-                              };
+            eat.StopEating += () => 
+            { 
+                OnEatEnd?.Invoke();
+                WaitForFinishingEat();
+            };
             return eat ;
         }
 
@@ -189,6 +180,36 @@ namespace Features
             OnLeaving?.Invoke();
             return leave;
         }
+
+        private React BuildReact()
+        {
+            var react = new React(this, _client.CurrentOrder);
+            react.BadReaction += BadReaction;
+            react.GoodReaction += GoodReaction;
+            return react;
+        }
+        
+        #endregion
+        
+        #region Timers
+
+        private void WaitForFinishingEat()
+        {
+            OnReactionStart?.Invoke();
+            Perform(BuildReact());
+            TimerManager.StartTimer($"{_client.UniqueID} Wait For finishing the order ", _reactionTime, WaitForFinishingDownAnim);
+        }
+
+        private void WaitForFinishingDownAnim()
+        {
+            OnReactionEnd?.Invoke();
+            TimerManager.StartTimer($"{_client.UniqueID} Wait finishing the react animation", _seatDownTime, () =>
+            {
+                Perform(BuildLeave());
+                _client.QuitSeat();
+            });
+        }
+
         #endregion
         
         public void SetWaitPosition(float t)

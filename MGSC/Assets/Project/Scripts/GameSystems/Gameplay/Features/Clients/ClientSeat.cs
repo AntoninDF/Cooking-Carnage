@@ -1,5 +1,6 @@
 using GameSystem;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Clients;
 using Cooking;
@@ -20,6 +21,7 @@ namespace Features
         
         public Action OnMealReady { get; set; }
         public Action OnIngredientDropped { get; set; }
+        public Action<Client> ClientLeaveTheSeat {get; set; }
         
         public Client RegisteredClient
         {
@@ -69,7 +71,7 @@ namespace Features
             if (RegisteredClient != null)return false;
             
             client.CurrentSeat        =  this;
-            client.Behaviour.OnEatEnd += OnClientLeaving; 
+            client.Behaviour.OnReactionEnd += OnClientLeaving;
             RegisteredClient          =  client;
             ActualizeSeatPos(client);
             return true;
@@ -90,7 +92,7 @@ namespace Features
                 client.SpawnIngredients(dropSlots);
             }
     
-            parentTransform.localPosition = _defaultPosition;
+            //parentTransform.localPosition = _defaultPosition;
 
             client.CurrentSeat  = null;
             client.CurrentOrder = null;
@@ -99,6 +101,7 @@ namespace Features
             RegisteredClient = null;
             SittingClient    = null;
             OnClientUnregister?.Invoke(unregistered);
+
             return true;
         }
         
@@ -122,12 +125,28 @@ namespace Features
                 return false;
             }
             SittingClient = null;
+            //OnClientUnregister?.Invoke(client);
+
             //OnClientLeaving?.Invoke(client);
             return true;
         }
 
         private void ActualizeSeatPos(Client client)
         {
+            (Owner as OrderingArea)?.StartCoroutine(LerpSeatPos(client, ClientSeatPosition(client)));
+        }
+
+        private IEnumerator LerpSeatPos(Client client, Vector3 pos)
+        {
+            float elapsed = 0;
+            Vector3 startPosition = parentTransform.localPosition;
+            while (elapsed < 1)
+            {
+                elapsed += Time.deltaTime;
+                parentTransform.localPosition = Vector3.Lerp(startPosition, pos, elapsed/1);
+                yield return null;
+            }
+            
             parentTransform.localPosition = ClientSeatPosition(client);
         }
 
