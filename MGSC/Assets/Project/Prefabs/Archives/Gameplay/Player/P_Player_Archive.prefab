@@ -291,6 +291,7 @@ GameObject:
   - component: {fileID: 5571478051521837875}
   - component: {fileID: 5669648483433275896}
   - component: {fileID: 3710185291597277482}
+  - component: {fileID: 1961693097215192754}
   m_Layer: 0
   m_Name: CinemachineBrain
   m_TagString: MainCamera
@@ -353,7 +354,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 567
+    m_Bits: 1591
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -648,6 +649,47 @@ MonoBehaviour:
         stencilDepthFailOperation: 0
         shaderPass: 0
         variableRateShading: 0
+--- !u!114 &1961693097215192754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4650989589209113625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26d6499a6bd256e47b859377446493a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.HighDefinition.Runtime::UnityEngine.Rendering.HighDefinition.CustomPassVolume
+  m_IsGlobal: 1
+  fadeRadius: 0
+  priority: 0
+  customPasses:
+  - rid: 8250880571969896704
+  injectionPoint: 1
+  m_TargetCamera: {fileID: 0}
+  useTargetCamera: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 8250880571969896704
+      type: {class: OutlineCustomPass, ns: , asm: Assembly-CSharp}
+      data:
+        m_Name: Custom Pass
+        enabled: 1
+        targetColorBuffer: 0
+        targetDepthBuffer: 0
+        clearFlags: 0
+        passFoldout: 0
+        m_Version: 0
+        outlineLayer:
+          serializedVersion: 2
+          m_Bits: 1024
+        fullscreenOutlineMaterial: {fileID: 2100000, guid: 93e7c1207ffbb00439bcce1231f2771c, type: 2}
+        outlineColor: {r: 1, g: 1, b: 1, a: 1}
+        outlineThickness: 8
+        depthMin: 0.05
+        depthMax: 2
 --- !u!1 &6331963460517924519
 GameObject:
   m_ObjectHideFlags: 0
