@@ -8,34 +8,102 @@ using UnityEngine;
 
 namespace Orders
 {
-
     public static class OrderPicker
     {
+        private const float UpgradeProbability = 1f / 3f; 
+        private const int ForcedFullRecipeInterval = 15;   
+
+        private static int _selectionCount = 0; 
+
         public static SO_Recipe Pick()
         {
+            _selectionCount++;
+
+            SO_RecipeBook         book         = FindCurrentRecipeBook();
+
+            if (_selectionCount % ForcedFullRecipeInterval == 0
+                && RecipeUnlockChecker.IsUnlocked(RecipeCategory.MixteTriple))
+            {
+                SO_Recipe forced = FindTripleDistinctRecipe(book);
+                if (forced != null) return forced;
+                Debug.LogWarning("[OrderPicker] Recette ABC introuvable pour le tirage forcé, retour au tirage normal.");
+            }
+
             ClientManager clientManager = Reference.GetManager<ClientManager>();
             if (clientManager == null)
                 throw new NullReferenceException("[OrderPicker] : client manager not found");
 
-            SO_Recipe output;
             Dictionary<EClientType, int> clientCount = clientManager.GetSeenClientTypesCount();
-            IEnumerable<SO_Recipe> recipes = FindCurrentRecipeBook().Recipes;
-            if (recipes == null)
-                throw new NullReferenceException("[OrderPicker] : No recipe list found");
-            List<SO_Client> clientModels = Reference.AssetReferences.clientList;
-            EnforceSeenClientsCountTypes(ref clientCount, clientModels.Select((model) => model.clientType));
-            Dictionary<SO_Recipe, float> recipeWeights = SetupRecipeWeights(recipes, clientCount, clientModels);
+            IEnumerable<SO_Recipe> recipes = book.Recipes
+                                                 .Where(IsBaseRecipe)
+                                                 .Where(r => RecipeUnlockChecker.IsUnlocked(r));
 
+            if (!recipes.Any())
+                throw new NullReferenceException("[OrderPicker] : Aucune recette de base débloquée pour ce shift");
+
+            List<SO_Client> clientModels = Reference.AssetReferences.clientList;
+            EnforceSeenClientsCountTypes(ref clientCount, clientModels.Select(model => model.clientType));
             Dictionary<SO_Recipe, float> weights = SetupRecipeWeights(recipes, clientCount, clientModels);
 
-            output = PickRandomRecipe(weights);
-            return output;
+            SO_Recipe picked = PickRandomRecipe(weights);
+            return ApplyUpgrade(picked, book, SO_RecipeUnlockConfig.Instance);
+        }
+        
+        private static bool IsBaseRecipe(SO_Recipe recipe)
+        {
+            return recipe.Ingredients.Count == recipe.Ingredients.Distinct().Count();
+        }
+
+        private static SO_Recipe FindTripleDistinctRecipe(SO_RecipeBook book)
+        {
+            return book.Recipes.FirstOrDefault(r => r.Ingredients.Count == 3 && r.Ingredients.Distinct().Count() == 3);
+        }
+        
+        private static SO_Recipe ApplyUpgrade(SO_Recipe picked, SO_RecipeBook book, SO_RecipeUnlockConfig unlockConfig)
+        {
+            int total    = picked.Ingredients.Count;
+            int distinct = picked.Ingredients.Distinct().Count();
+
+            if (total == 1)
+            {
+                if (RecipeUnlockChecker.IsUnlocked(RecipeCategory.DoubleSupplement)
+                    && UnityEngine.Random.value < UpgradeProbability)
+                {
+                    SO_Ingredient x       = picked.Ingredients[0];
+                    SO_Recipe     doubled = book.FindByIngredients(new List<SO_Ingredient> { x, x });
+                    if (doubled != null) return doubled;
+                    Debug.LogWarning($"[OrderPicker] Recette doublée introuvable pour {picked.name}.");
+                }
+                return picked;
+            }
+
+            if (total == 2 && distinct == 2)
+            {
+                if (RecipeUnlockChecker.IsUnlocked(RecipeCategory.MixteSupplement)
+                    && UnityEngine.Random.value < UpgradeProbability)
+                {
+                    SO_Ingredient x     = picked.Ingredients[0];
+                    SO_Ingredient y     = picked.Ingredients[1];
+                    bool          isXXY = UnityEngine.Random.value < 0.5f;
+
+                    List<SO_Ingredient> tripled = isXXY
+                        ? new List<SO_Ingredient> { x, x, y }
+                        : new List<SO_Ingredient> { y, y, x };
+
+                    SO_Recipe upgraded = book.FindByIngredients(tripled);
+                    if (upgraded != null) return upgraded;
+                    Debug.LogWarning($"[OrderPicker] Recette triplée introuvable pour {picked.name}.");
+                }
+                return picked;
+            }
+
+            return picked;
         }
 
         public static SO_RecipeBook FindCurrentRecipeBook()
         {
             var ar = Reference.AssetReferences;
-            var sm = Reference.GetManager<ShiftManager>() ;
+            var sm = Reference.GetManager<ShiftManager>();
             SO_RecipeBook book = ar.DefaultRecipeBook;
 
             if (sm != null)
@@ -51,19 +119,16 @@ namespace Orders
         {
             bool emptyWeights = false;
             float sum = 0;
-            foreach (var kvp  in weights)
-            {
+            foreach (var kvp in weights)
                 sum += kvp.Value;
-            }
-            // Rendre al�atoire entre les 3 premi�res recettes si la somme des poids en 0 (aucun client vu)
+
             if (sum == 0)
             {
-                sum = 3;
+                sum = weights.Count;
                 emptyWeights = true;
             }
             float randomTarget = UnityEngine.Random.Range(0f, sum);
 
-            
             float current = 0;
             foreach (var kvp in weights)
             {
@@ -71,48 +136,23 @@ namespace Orders
                 if (current >= randomTarget)
                     return kvp.Key;
             }
-            MonoBehaviour.print("[OrderPicker] : No recipe picked. There might be a problem with the picking algorithm");
+            Debug.LogWarning("[OrderPicker] : No recipe picked. There might be a problem with the picking algorithm");
             return null;
         }
 
-        private static Dictionary<EClientType, int> CountClients(IEnumerable<EClientType> pastClients)
-        {
-            MonoBehaviour.print("pastClients count : " + pastClients.Count());
-            Dictionary<EClientType, int> clientCount = new();
-
-            foreach (EClientType client in pastClients)
-            {
-                if (!clientCount.ContainsKey(client))
-                    clientCount[client] = 0;
-                clientCount[client] ++;
-            }
-
-            return clientCount;
-        }
-
-        /// <summary>
-        /// Specifies how likely a recipe is to be picked
-        /// </summary>
-        /// <param name="recipes"></param>
-        /// <param name="clientCount"></param>
-        /// <param name="clients"></param>
-        /// <returns></returns>
         private static Dictionary<SO_Recipe, float> SetupRecipeWeights(IEnumerable<SO_Recipe> recipes, Dictionary<EClientType, int> clientCount, IEnumerable<SO_Client> clients)
         {
             Dictionary<SO_Recipe, float> recipeWeights = new();
             Dictionary<SO_Recipe, List<EClientType>> matchyMatchy = MatchRecipesToClients(recipes, clients);
-            //DebugMatchingTypes(matchyMatchy);
 
             foreach (var recipe in recipes)
             {
                 recipeWeights[recipe] = recipe.probabilityRate;
                 float increment = float.MaxValue;
-                foreach (var kvp in clientCount) 
+                foreach (var kvp in clientCount)
                 {
                     if (matchyMatchy[recipe].Contains(kvp.Key))
-                    {
                         increment = Mathf.Min(increment, kvp.Value * recipe.probabilityRateIncrement);
-                    }
                 }
                 if (increment < float.MaxValue) recipeWeights[recipe] += increment;
             }
@@ -120,23 +160,17 @@ namespace Orders
             return recipeWeights;
         }
 
-        /// <summary>
-        /// Specifies to which types of client a recipe is associated, based on the ingredients needed and who can drop them
-        /// </summary>
-        /// <param name="recipes"></param>
-        /// <param name="clients"></param>
-        /// <returns></returns>
         private static Dictionary<SO_Recipe, List<EClientType>> MatchRecipesToClients(IEnumerable<SO_Recipe> recipes, IEnumerable<SO_Client> clients)
         {
             Dictionary<SO_Recipe, List<EClientType>> output = new();
 
-            foreach(SO_Recipe recipe in recipes)
+            foreach (SO_Recipe recipe in recipes)
             {
                 output[recipe] = new List<EClientType>();
-                foreach(SO_Client client in clients)
+                foreach (SO_Client client in clients)
                 {
                     if (output[recipe].Contains(client.clientType)) continue;
-                    if(!recipe.Ingredients.Contains(client.loot)) continue;
+                    if (!recipe.Ingredients.Contains(client.loot)) continue;
                     output[recipe].Add(client.clientType);
                 }
             }
@@ -146,39 +180,8 @@ namespace Orders
         private static void EnforceSeenClientsCountTypes(ref Dictionary<EClientType, int> clientCount, IEnumerable<EClientType> clients)
         {
             foreach (EClientType clientType in clients)
-            {
                 if (!clientCount.ContainsKey(clientType))
                     clientCount[clientType] = 0;
-            }
-        }
-
-        private static void DebugWeights(Dictionary<SO_Recipe, float> weights)
-        {
-            string text = "Recipe weights : \n";
-            foreach(var kvp in weights)
-            {
-                text += kvp.Key.Name;
-                text += " : ";
-                text += kvp.Value.ToString();
-                text += "\n";
-            }
-            MonoBehaviour.print(text);
-        }
-        private static void DebugMatchingTypes(Dictionary<SO_Recipe, List<EClientType>> matchyMatchy)
-        {
-            string text = "Recipe types : \n";
-            foreach (var kvp in matchyMatchy)
-            {
-                text += kvp.Key.Name;
-                text += " : [";
-                foreach(var t  in kvp.Value)
-                {
-                    text += t;
-                    text += " ; ";
-                }
-                text += "]\n";
-            }
-            MonoBehaviour.print(text);
         }
     }
 }

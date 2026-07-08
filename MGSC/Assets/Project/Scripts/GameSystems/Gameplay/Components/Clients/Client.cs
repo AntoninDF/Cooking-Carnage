@@ -154,7 +154,7 @@ namespace Clients
 
         internal void Despawn()
         {
-            CurrentOrder.Resolve(null);
+           // CurrentOrder.Resolve(CurrentOrder.ServingInfo);
             Destroy(gameObject);
             Destroy(this);
         }

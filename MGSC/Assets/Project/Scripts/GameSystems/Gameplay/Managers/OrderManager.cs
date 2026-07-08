@@ -48,25 +48,17 @@ namespace GameSystem
 
         public void ResolveOrder(Order order, ServingInfo info)
         {
-            order.ServingInfo = info;
-            OrderRating rating = OrderEvaluator.Evaluate(order);
-            //order.Resolve(info, rating);
-            Debug.Log("Money gained : " + rating.MoneyGained);
-            
-            this.Log(LogType.Log,"Order n°"+ order.ID+ " Resolved " + 
-                                 (order.OrderRating.IsCorrectRecipe ? "successfully": "poorly") 
-                                 + " completed in " + Mathf.Round((info.Timestamp - order.Timestamp)*100)/100 
-                                 + "s for client " + order.Owner.name + ". Money gained : " 
-                                 + rating.MoneyGained + ". Expected '" + order.Recipe.Name 
-                                 + "', received '" + info.Recipe?.Name + "'.");
-            
-            
+            order.Resolve(info);
+
+            this.Log(LogType.Log, "Order n°" + order.ID + " Resolved "
+                                  + (order.OrderRating.IsCorrectRecipe ? "successfully" : "poorly")
+                                  + " completed in " + Mathf.Round((info.Timestamp - order.Timestamp) * 100) / 100
+                                  + "s for client " + order.Owner.name + ". Money gained : "
+                                  + order.OrderRating.MoneyGained + ". Expected '" + order.Recipe.Name
+                                  + "', received '" + info.Recipe?.Name + "'.");
+
             OnOrderResolved?.Invoke(order);
-            Debug.Log(SO_Recipe.Compare(info.Recipe, order.Recipe));
-            //Debug.Log($"{rating.Stars}  stars for {order.Owner.name}.");
-            this.Log(LogType.Log, "*Order Resolved* Feedbacks Invoked");
-            Reference.GetManager<MoneyManager>().AddMoney(rating.MoneyGained);
-            // Tell the money manager that money's been made
+            Reference.GetManager<MoneyManager>().AddMoney(order.OrderRating.MoneyGained);
             StashOrder(order);
         }
 
