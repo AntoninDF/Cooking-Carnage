@@ -27,4 +27,18 @@ public static class RecipeFinder
 
         return AllRecipes.FailedRecipe;
     }
+    
+    public static SO_Recipe FindByIngredients(this SO_RecipeBook book, IEnumerable<SO_Ingredient> ingredients)
+    {
+        List<SO_Ingredient> target = ingredients.OrderBy(i => i.GetInstanceID()).ToList();
+
+        foreach (var recipe in book.Recipes)
+        {
+            if (recipe.Ingredients.Count != target.Count) continue;
+
+            List<SO_Ingredient> candidate = recipe.Ingredients.OrderBy(i => i.GetInstanceID()).ToList();
+            if (candidate.SequenceEqual(target)) return recipe;
+        }
+        return null;
+    }
 }
