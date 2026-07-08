@@ -26,12 +26,19 @@ Shader "Hidden/OutlineFullscreen"
         // Sample up/down/left/right, offset by thickness, and look at how far each neighbor's depth is from the center pixel's depth.
         // A big jump = either the silhouette's outer edge (neighbor is empty/background, whose depth is the large sentinel value) or an internal seam where one part
         // of the mesh occludes another.
-        float2 offsets[4] = {
-            float2(1, 0), float2(-1, 0), float2(0, 1), float2(0, -1)
+        float2 offsets[8] = {
+            float2(1, 0),
+            float2(-1, 0),
+            float2(0, 1),
+            float2(0, -1),
+            float2( 1,  1),
+            float2(-1,  1),
+            float2( 1, -1),
+            float2(-1, -1)
         };
 
         float maxDelta = 0;
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 8; i++)
         {
             float2 samplePos = positionSS + offsets[i] * thickness;
             float neighborDepth = LOAD_TEXTURE2D_X(_MaskTexture, samplePos).r;
