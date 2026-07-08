@@ -40,7 +40,9 @@ namespace Upgrades
                 Debug.LogWarning($"[{GetType().Name}] Cannot level up further (level {_level}/{_config?.MaxLevel})");
                 return;
             }
+            
             _level++;
+            Debug.Log($"[{GetType().Name}] Level {_level}/{_config?.MaxLevel}");
             OnLevelUpInternal?.Invoke(this);
         }
         

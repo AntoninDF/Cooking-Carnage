@@ -94,11 +94,11 @@ namespace Clients
             client
                 .SetType(type)
                 .SetLoot(ingredientDroppedOnKill, dropRate)
-                .SetSpeed(speed);
+                .SetSpeed(speed).SubscribeToUpgrade();
 
             if (name != null)
                 go.name = name;
-
+            
             return client;
         }
         #endregion
@@ -158,6 +158,12 @@ namespace Clients
         public Client SetSplinePath(SplineContainer splineObject)
         {
             _splineComp = splineObject;
+            return this;
+        }
+
+        public Client SubscribeToUpgrade()
+        {
+            this.TrySubscribe<IngredientDropUpgrade>();
             return this;
         }
         #endregion
