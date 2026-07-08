@@ -97,6 +97,7 @@ namespace Features
             OnClientUnregister?.Invoke(unregistered);
             
             client.CurrentSeat  = null;
+            client.OrderLog = client.CurrentOrder;
             client.CurrentOrder = null;
 
             
