@@ -5,7 +5,7 @@ using System;
 namespace Upgrades
 {
 
-    public class OvenCountUpgrade : Upgrade
+    public class OvenCountUpgrade : Upgrade<OvenCountUpgrade>
     {
         public int OvenCount => _level + 1;
     }

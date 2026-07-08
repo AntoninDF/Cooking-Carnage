@@ -23,6 +23,8 @@ namespace Cooking
 
         #region Methods
 
+        private void OnEnable() => this.TrySubscribe<OvenCountUpgrade>();
+        
         private void Start()
         {
             EnforceReferences();
