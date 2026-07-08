@@ -72,7 +72,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         {
             if (_slotParent.GetChild(i).TryGetComponent(out SlotContainer slotContainer))
             {
-                ClientSeat.dropSlots.Add(slotContainer);
+               if(slotContainer.gameObject.activeSelf) ClientSeat.dropSlots.Add(slotContainer);
             }
         }
     }
