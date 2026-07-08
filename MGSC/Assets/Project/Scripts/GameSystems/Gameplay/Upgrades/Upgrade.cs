@@ -48,6 +48,11 @@ namespace Upgrades
         
         public virtual float GetPrice()   => _config.PriceCurve.Evaluate(_level);
         public virtual bool  CanLevelUp() => _level < _config.MaxLevel;
+
+        public void SetLevel(int level)
+        {
+            _level = level;
+        }
         
         internal abstract void UnsubscribeObject(object subscriber);
         internal abstract void ClearSubscribers();

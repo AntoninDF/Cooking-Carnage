@@ -99,6 +99,14 @@ namespace Upgrades
             if (_subscribers.TryGetValue(type, out var list))
                 list.Dispatch(upgrade);
         }
+
+        public void ActualizeAllUpgrade()
+        {
+            foreach (var upgrade in _upgrades)
+            {
+                DispatchLevelUp(upgrade);
+            }
+        }
         
 
         #endregion
@@ -215,6 +223,11 @@ namespace Upgrades
         {
             Debug.Log($"Disposing : {GetType().Name} & Clearing All Subscribers" );
             ClearAllSubscribers();
+        }
+
+        public void SaveUpgrades()
+        {
+            
         }
     }
 }
