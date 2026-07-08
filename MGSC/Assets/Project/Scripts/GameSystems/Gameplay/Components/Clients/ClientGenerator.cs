@@ -182,7 +182,7 @@ namespace Clients
 
         public void OnUpgrade(IngredientDropUpgrade upgrade)
         {
-            _dropRateIncrement = upgrade.DropRateIncrement;
+            _dropRateIncrement = upgrade.GetDropRate();
         }
 
         #endregion
