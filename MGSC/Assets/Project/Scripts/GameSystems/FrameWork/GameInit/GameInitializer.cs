@@ -28,11 +28,11 @@ namespace GameSystem
         public FeatureCollection Collection { get; set; } = new FeatureCollection();
 
         // PRIVATE FIELDS
-        
+        static Action OnReset;
         #endregion
 
         #region Methods
-
+        public static void ResetAll() => OnReset?.Invoke();
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
         {
@@ -43,7 +43,7 @@ namespace GameSystem
             new ShiftManager(); 
             new MoneyManager();
             new UpgradeManager();
-            new CameraManager();
+            //new CameraManager();
             new ItemManager();
             new FeatureManager();
             new AdaptiveClientSpawner();
@@ -57,6 +57,18 @@ namespace GameSystem
         void Start()
         {
             SetupScene();
+        }
+        void OnEnable()
+        {
+            OnReset += Init;
+            OnReset += ResetScene;
+            OnReset += SetupScene;
+        }
+        void OnDisable()
+        {
+            OnReset -= Init;
+            OnReset -= ResetScene;
+            OnReset -= SetupScene;
         }
         /// <summary>
         /// Instantiate all objects specified in the scene preset, and put them all in place

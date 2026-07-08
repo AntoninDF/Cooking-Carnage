@@ -147,7 +147,8 @@ namespace GameSystem
         {
             Debug.Log("[ShiftManager] Reset everything");
 
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Reference.Managers.Clear();
+            GameInitializer.ResetAll();
 
             /*
             PlayerSetup.TryResetPlayer();
@@ -193,7 +194,7 @@ namespace GameSystem
 
             SaveManager.LoadGlobalData();
 
-            ResetAll();
+            //ResetAll();
         }
 
         public void SkipTutorialShift()

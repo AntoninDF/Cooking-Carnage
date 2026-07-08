@@ -8,7 +8,7 @@ namespace GameSystem
     public class PlayerStart : MonoBehaviour
     {
         public static PlayerStart Instance { get; set; }
-        private void Awake()
+        private void OnEnable()
         {
             if (Instance == null)
                 Instance = this;
@@ -16,6 +16,13 @@ namespace GameSystem
             {
                 Debug.LogWarning("More than one PlayerStart component was put in the scene. Please leave only one");
                 Destroy(this);
+            }
+        }
+        private void OnDisable()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
             }
         }
     }

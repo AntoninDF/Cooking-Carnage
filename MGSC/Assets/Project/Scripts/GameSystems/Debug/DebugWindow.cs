@@ -172,11 +172,6 @@ public class DebugWindow : MonoBehaviour
 
         GUILayout.Space(15);
         
-        if (GUILayout.Button("Reset Camera"))
-        {
-            Reference.GetManager<CameraManager>().EnableFirstPersonView();
-        }
-        
         GUILayout.Space(5);
 
         if (GUILayout.Button("Save and Reload"))
