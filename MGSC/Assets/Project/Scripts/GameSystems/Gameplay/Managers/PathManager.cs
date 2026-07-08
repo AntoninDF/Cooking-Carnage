@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Orders;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -8,6 +9,8 @@ namespace GameSystem
     {
         public Spline MainSpline => _splineComponent.Spline;
         public SplineContainer SplineComponent => _splineComponent;
+        
+        public SO_RecipeUnlockConfig _recipeUnlockCongig;
         
         [SerializeField] private SplineContainer _splineComponent;
 

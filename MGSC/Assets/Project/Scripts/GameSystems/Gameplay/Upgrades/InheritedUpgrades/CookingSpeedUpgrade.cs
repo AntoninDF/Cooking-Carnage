@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Upgrades
 {
 
-    public class CookingSpeedUpgrade : Upgrade
+    public class CookingSpeedUpgrade : Upgrade<CookingSpeedUpgrade>
     {
         private const float ReductionPerLevel = 0.5f;
         

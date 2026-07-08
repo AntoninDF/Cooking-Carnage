@@ -180,6 +180,11 @@ namespace GameSystem
             }
         }
 
+        public void OnDisable()
+        {
+            Reference.GetManager<UpgradeManager>().ClearAllSubscribers();
+        }
+
         #endregion
     }
 

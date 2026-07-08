@@ -32,6 +32,7 @@ namespace Clients
         public bool               IsAngry          { get; set; }
         public int UniqueID { get; set; }
         
+        public Order OrderLog { get;  set; }
         public Order CurrentOrder
         {
             get => _currentOrder;
@@ -43,7 +44,7 @@ namespace Clients
                 {
                     OnNewOrder?.Invoke(value);
                 }
-                    
+
             }
         }
         
@@ -154,7 +155,7 @@ namespace Clients
 
         internal void Despawn()
         {
-            CurrentOrder.Resolve(null);
+           // CurrentOrder.Resolve(CurrentOrder.ServingInfo);
             Destroy(gameObject);
             Destroy(this);
         }
@@ -257,11 +258,12 @@ namespace Clients
            SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
            if (soRecipe == null) return;
 
-           var info = new Orders.ServingInfo(soRecipe);
+           var info = new Orders.ServingInfo(serving); 
+           CurrentOrder.ServingInfo = info;            
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);
-            GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);
+           GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);
            CurrentSeat?.TryUnregister(this);
        }
 

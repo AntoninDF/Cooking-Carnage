@@ -142,10 +142,10 @@ namespace Upgrades
             return true;
         }
         
-        public T GetUpgradeByType<T>() where T : Upgrade => _upgrades.OfType<T>().FirstOrDefault();
-        public Upgrade GetUpgradeByType(Type type) => _upgrades.FirstOrDefault(u => u.GetType() == type);
+        public T       GetUpgradeByType<T>() where T : Upgrade  => _upgrades.OfType<T>().FirstOrDefault();
+        public Upgrade GetUpgradeByType(Type            type)   => _upgrades.FirstOrDefault(u => u.GetType() == type);
         public Upgrade GetUpgradeByConfig(UpgradeConfig config) => _upgrades.FirstOrDefault(u => u.Config == config);
-
+        
         public bool HasUpgradeOfType<T>(out T upgrade) where T : Upgrade
         {
             upgrade = GetUpgradeByType<T>();
@@ -184,6 +184,26 @@ namespace Upgrades
                 foreach (var sub in Subscribers)
                     sub.OnUpgraded(typed);
             }
+        }
+        
+        public void Subscribe<T>(IUpgradable<T> subscriber) where T : Upgrade<T>
+        {
+            if (GetUpgradeByType<T>() is T upgrade)
+                upgrade.Subscribe(subscriber);
+            else
+                this.Log(LogType.Warning, $"[UpgradeManager] Aucune upgrade de type {typeof(T).Name} trouvée pour {subscriber.GetType().Name}");
+        }
+
+        public void UnsubscribeFromAll(object subscriber)
+        {
+            foreach (var upgrade in _upgrades)
+                upgrade.UnsubscribeObject(subscriber);
+        }
+
+        public void ClearAllSubscribers()
+        {
+            foreach (var upgrade in _upgrades)
+                upgrade.ClearSubscribers();
         }
 
         #endregion
