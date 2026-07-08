@@ -69,7 +69,8 @@ namespace Upgrades
             _subscribers.Add(subscriber);
             subscriber.OnUpgradeInit((TSelf)this);
         }
-
+        
+        
         public void Unsubscribe(IUpgradable<TSelf> subscriber) => _subscribers.Remove(subscriber);
 
         internal override void UnsubscribeObject(object subscriber)

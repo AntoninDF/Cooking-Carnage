@@ -5,12 +5,13 @@ using System.Linq;
 using UnityEngine;
 using System.Reflection;
 using UnityEngine.Events;
+using Object = System.Object;
 
 
 namespace Upgrades
 {
 
-    public class UpgradeManager : IManager
+    public class UpgradeManager : IManager, IDisposable
     {
         #region Properties
         
@@ -36,6 +37,7 @@ namespace Upgrades
         public UpgradeManager()
         {
             Register();
+           // ( as MonoBehaviour).enabled = true;
         }
         
         
@@ -162,6 +164,7 @@ namespace Upgrades
         }
         public void Unregister()
         {
+            Debug.Log("Unregistered " + GetType().Name);
             Reference.RemoveManager(this);
         }
 
@@ -207,6 +210,11 @@ namespace Upgrades
         }
 
         #endregion
-        
+
+        public void Dispose()
+        {
+            Debug.Log($"Disposing : {GetType().Name} & Clearing All Subscribers" );
+            ClearAllSubscribers();
+        }
     }
 }
