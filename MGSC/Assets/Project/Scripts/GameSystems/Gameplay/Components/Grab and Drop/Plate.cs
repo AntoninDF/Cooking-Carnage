@@ -148,8 +148,8 @@ public class Plate : Item
             if (slot.HeldItem == null) continue;
             Item item = slot.HeldItem.Owner as Item;
             if (item == null) continue;
-            manager.Despawn(item);
-
+            Destroy(item.gameObject);
+            slot.RequestDrop();
         }
     }
 

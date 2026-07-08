@@ -69,6 +69,9 @@ namespace GameSystem
             OnReset -= Init;
             OnReset -= ResetScene;
             OnReset -= SetupScene;
+
+            // REFACTO : To remove
+            Reference.GetManager<UpgradeManager>().ClearAllSubscribers();
         }
         /// <summary>
         /// Instantiate all objects specified in the scene preset, and put them all in place
@@ -180,10 +183,6 @@ namespace GameSystem
             }
         }
 
-        public void OnDisable()
-        {
-            Reference.GetManager<UpgradeManager>().ClearAllSubscribers();
-        }
 
         #endregion
     }

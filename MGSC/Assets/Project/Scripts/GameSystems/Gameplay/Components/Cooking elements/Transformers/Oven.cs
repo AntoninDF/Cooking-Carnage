@@ -215,8 +215,11 @@ public class Oven : MonoBehaviour, IFeatureCollection
         
         _isOvenActive = active;
         if (_button != null)
+        {
             _button.gameObject.SetActive(active);
-        _button.Model.AuthorizeOutlines(active);
+            _button.Model.AuthorizeOutlines(active);
+        }
+
         _graphics.AuthorizeOutlines(active); 
         if(Container != null) Container.IsLocked = !active;
         

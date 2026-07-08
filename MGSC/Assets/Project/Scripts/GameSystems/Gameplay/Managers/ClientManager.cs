@@ -4,7 +4,6 @@ using Clients;
 using UnityEngine;
 using System.Linq;
 using Features;
-using Unity.AI.Navigation;
 
 namespace GameSystem
 {

@@ -70,14 +70,15 @@ namespace Controller
                 "[Player Setup] : The player to be reset was null"))
                 return false;
 
+            Debug.Log($"[PlayerSetup] Player is '{Player}', pos is '{pos}', rot is '{rot}'");
             ResetPlayer(Player, pos, rot);
             return true;
         }
 
         private static void ResetPlayer(Player player, Vector3 position, Quaternion rotation)
         {
-            player.transform.position = position;
-            player.transform.rotation = rotation;
+            player.PlayerMovement.SetPosition(position);
+            player.PlayerMovement.SetRotation(rotation);
             SetPlayerReferences(player);
         }
 

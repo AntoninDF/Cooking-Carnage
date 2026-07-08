@@ -1,26 +1,20 @@
 using System.Collections.Generic;
-using Cooking;
-using GameSystem;
 using UnityEngine;
 
 public class ItemManager : IManager
 {
-    #region Properties
-    
-    #endregion
-
     #region Fields
     
-    List<Item> spawnItems = new List<Item>();
+    List<Item> _spawnItems = new List<Item>();
     
-    List<Vector3> spawnPositions = new List<Vector3>(); //REFACTO
-    private Transform spawnParent; // REFACTO
+    List<Vector3> _spawnPositions = new List<Vector3>(); //REFACTO
+    private Transform _spawnParent; // REFACTO
     
-    List<Item> activeItems = new List<Item>();
+    List<Item> _activeItems = new List<Item>();
 
     // Specifies, for shift X, the maximum amount of items Y that can be spawned. If Y is superior to the amount of items available in the scene, no additional items are spawned
     //                                                                           X   Y
-    Dictionary<int, int> _maxSpawnItemsPerShift = new Dictionary<int, int>() { { 0 , 1 } };
+    int _maxSpawnItemsOnTutorial = 2;
     
     private Transform _itemsPooled;
     
@@ -32,6 +26,8 @@ public class ItemManager : IManager
     public ItemManager()
     {
         Register();
+        Item.OnItemEnabled += AddItem;
+        Item.OnItemDisabled += RemoveItem;
     }
     
     public void Register()
@@ -56,15 +52,22 @@ public class ItemManager : IManager
     {
         DetectSpawnItems();
     }
+
+    void AddItem(Item item)
+    {
+        if (!_activeItems.Contains(item))
+            _activeItems.Add(item);
+    }
+    void RemoveItem(Item item) => _activeItems.Remove(item);
     
     private void DetectSpawnItems()
     {
         foreach (var item in GameObject.FindObjectsByType<Item>(FindObjectsSortMode.None))
         {
-            spawnItems.Add(item);
-            spawnPositions.Add(item.transform.position);
+            _spawnItems.Add(item);
+            _spawnPositions.Add(item.transform.position);
         }
-        spawnParent = spawnItems.Count > 0 ? spawnItems[0].transform.parent : null;
+        _spawnParent = _spawnItems.Count > 0 ? _spawnItems[0].transform.parent : null;
     }
 
 
@@ -74,17 +77,17 @@ public class ItemManager : IManager
         {
             if (item.gameObject.activeSelf)
             {
-                if (!activeItems.Contains(item))
+                if (!_activeItems.Contains(item))
                 {
-                    activeItems.Add(item);
+                    _activeItems.Add(item);
                     this.Log(LogType.Log, item.name + " has been registered as active item");
                 }
             }
             else
             {
-                if (activeItems.Contains(item))
+                if (_activeItems.Contains(item))
                 {
-                    activeItems.Remove(item);
+                    _activeItems.Remove(item);
                 }
             }
         }
@@ -105,7 +108,7 @@ public class ItemManager : IManager
         
         GameObject spawned = GameObject.Instantiate(item, position, rotation, parent);
         
-        UpdateActiveList(spawned.GetComponent<Item>());
+        // UpdateActiveList(spawned.GetComponent<Item>());
         
         this.Log(LogType.Log, "Spawned " + item.name);
         
@@ -126,7 +129,7 @@ public class ItemManager : IManager
         }
         itemToDespawn.gameObject.SetActive(false);
 
-        UpdateActiveList(itemToDespawn);
+        //UpdateActiveList(itemToDespawn);
         
         this.Log(LogType.Log, "Despawned " + itemToDespawn.name );
 
@@ -143,26 +146,25 @@ public class ItemManager : IManager
     public void DestroyAllActive()
     {
         //Debug.Log("Active items : " + activeItems.Count + " (being stored)");
-        for (var index = activeItems.Count-1; index >= 0; index--)
+        for (var index = _activeItems.Count-1; index >= 0; index--)
         {
-            var item = activeItems[index];
-            Despawn(item);
+            var item = _activeItems[index];
+            GameObject.Destroy(item.gameObject);
         }
-        activeItems.Clear();
+        _activeItems.Clear();
     }
 
     public void SpawnInitialItems(int shiftCount)
     {
         this.Log("Spawning initial items");
         int i = 0;
-        foreach (var item in spawnItems)
+        foreach (var item in _spawnItems)
         {
-            if (_maxSpawnItemsPerShift.ContainsKey(shiftCount))
-                if (_maxSpawnItemsPerShift[shiftCount] <= i)
-                    break;
+            if (GameLoop.CurrentState is TutorialState && _maxSpawnItemsOnTutorial <= i)
+                break;
             this.Log(item.transform.position);
-            int index = spawnItems.IndexOf(item);
-            TrySpawn(item.gameObject, spawnPositions[index], item.transform.rotation, item.transform.parent);
+            int index = _spawnItems.IndexOf(item);
+            TrySpawn(item.gameObject, _spawnPositions[index], item.transform.rotation, item.transform.parent);
             i++;
         }
     }

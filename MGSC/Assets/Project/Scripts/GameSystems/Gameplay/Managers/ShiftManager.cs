@@ -1,5 +1,6 @@
 using Controller;
 using System;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -147,8 +148,8 @@ namespace GameSystem
         {
             Debug.Log("[ShiftManager] Reset everything");
 
-            Reference.Managers.Clear();
-            GameInitializer.ResetAll();
+            
+            PlayerSetup.TryResetPlayer();
 
             /*
             PlayerSetup.TryResetPlayer();

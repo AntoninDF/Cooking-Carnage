@@ -40,6 +40,7 @@ public class Player : MonoBehaviour, IFeatureCollection
         PlayerActor.SortFeaturesByDistance = true;
         PlayerActor.GetAllFeaturesInSight = false;
         PlayerInputs = new PlayerInputReader(this);
+        PlayerMovement = new(this, transform, head, GetComponent<CharacterController>());
 
         BindPlayerActions();
         GameLoop.OnPause += UnbindPlayerActions;
@@ -60,7 +61,6 @@ public class Player : MonoBehaviour, IFeatureCollection
 
         Container.OnGrab += SetHeldLayer;
         Container.OnDrop += ResetHeldLayer;
-        PlayerMovement = new(this, transform, head, GetComponent<CharacterController>());
         
 
     }
