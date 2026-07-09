@@ -64,6 +64,15 @@ namespace Features
             _defaultPosition = parentTransform.localPosition;
             ClientManager.Register(this);
             _servingAreaConfig = servingAreaConfig;
+
+            GameLoop.OnReset += Reset;
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            RegisteredClient = null;
+            SittingClient = null;
         }
 
         public bool TryRegister(Client client)
