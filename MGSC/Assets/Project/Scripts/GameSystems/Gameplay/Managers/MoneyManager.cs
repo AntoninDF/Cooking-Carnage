@@ -9,6 +9,7 @@ namespace GameSystem
     {
         #region Properties
         public float MoneyInfo { get; set; }
+        public float LastMoneyDelta { get; set; }
         public Action<float> OnMoneyChange { get; set; }
         [GlobalEvent("Money/Money Gained")]
         public static Action OnMoneyGain;
@@ -88,6 +89,8 @@ namespace GameSystem
 
             if (amount > 0) OnMoneyGain?.Invoke();
             if (amount < 0) OnMoneyLoss?.Invoke();
+
+            LastMoneyDelta = amount;
             
             this.Log(LogType.Log, $"{amount}€ update");
         }
