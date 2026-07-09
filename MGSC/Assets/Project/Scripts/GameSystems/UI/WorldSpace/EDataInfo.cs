@@ -22,6 +22,7 @@ namespace GameSystem
         CuttingSpeedUpgradeLevel,
         TimeLeft,
         MoneyGainedOnPreviousShift,
+        LastMoneyDelta,
 
         // Data dependent on a specific object should be 50 or more
         ClientName = 50,
