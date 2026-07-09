@@ -70,6 +70,7 @@ public class Player : MonoBehaviour, IFeatureCollection
         if (item == null) return;
         if (item.Owner is not Item itemComponent) return;
 
+        itemComponent.SetHeld(true);
         itemComponent.StoreLayerRecursive();
         itemComponent.SetLayerRecursive(heldLayer);
     }
@@ -79,6 +80,7 @@ public class Player : MonoBehaviour, IFeatureCollection
         if (item == null) return;
         if (item.Owner is not Item itemComponent) return;
 
+        itemComponent.SetHeld(false);
         itemComponent.RestoreLayerRecursive();
     }
 

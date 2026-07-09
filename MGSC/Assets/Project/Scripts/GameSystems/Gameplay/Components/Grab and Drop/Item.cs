@@ -32,7 +32,10 @@ public class Item : MonoBehaviour, IFeatureCollection
 
     public ModelController ActiveModel => activeModel;
     protected ModelController activeModel;
-
+    
+    public bool IsHeld { get; private set; }
+    public void SetHeld(bool held) => IsHeld = held;
+    
     #endregion
 
     #region Methods

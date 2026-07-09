@@ -74,7 +74,8 @@ namespace Features
             foreach (var renderer in Renderers)
                 renderer.gameObject.layer = LayerMask.NameToLayer("Outlined");
             enabled = true;
-            return;
+            
+            /*
             if (OutlineObject == null)
             {
                 OutlineObject = MakeOutlineVariant(Mesh, out outlineRenderer);
@@ -86,15 +87,25 @@ namespace Features
                 SetVisibility(Visible);
             }
             OutlineObject.SetActive(true);
+            */
         }
         public virtual void DisableOutline()
         {
             enabled = false;
             for (int i = 0; i < Renderers.Length; i++)
+            {
+                if(IsHeld()) continue;
                 Renderers[i].gameObject.layer = originalLayers[i];
-            return;
-            if (OutlineObject == null) return;
-            OutlineObject.SetActive(false);
+            }
+                
+            
+            //if (OutlineObject == null) return;
+            //OutlineObject.SetActive(false);
+        }
+
+        private bool IsHeld()
+        {
+            return TargetParent != null && TargetParent.GetComponentInParent<Item>() is { IsHeld: true };
         }
 
         public void SetVisible() => SetVisibility(true);
