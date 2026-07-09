@@ -24,6 +24,8 @@ public class GameSettings : ScriptableObject
 
         Globals.Gameplay.CookingDuration.Value = Instance.CookingSettings.CookingDuration;
         Globals.Gameplay.OvercookingDuration.Value = Instance.CookingSettings.OverCookingDuration;
+
+        Globals.Gameplay.Player.LookSpeed.Value = Instance.ControllerSettings.LookSensitivity;
     }
 
     public S_ShiftSettings ShiftSettings;
@@ -53,6 +55,14 @@ public class GameSettings : ScriptableObject
         public float CookingDuration;
         [Min(0)]
         public float OverCookingDuration;
+    }
+
+    public S_ControllerSettings ControllerSettings;
+    [Serializable]
+    public struct S_ControllerSettings
+    {
+        [Min(0.01f)]
+        public float LookSensitivity;
     }
 
 }

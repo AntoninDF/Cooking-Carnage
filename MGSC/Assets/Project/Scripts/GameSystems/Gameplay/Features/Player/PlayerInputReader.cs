@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,6 +22,7 @@ namespace Features
 
         public PlayerInputReader(IFeatureCollection owner) : base(owner)
         {
+           
         }
 
         public override void LateSetup()
