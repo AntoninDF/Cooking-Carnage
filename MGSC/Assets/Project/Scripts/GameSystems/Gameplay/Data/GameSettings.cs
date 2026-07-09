@@ -1,4 +1,3 @@
-using NaughtyAttributes;
 using System;
 using UnityEngine;
 
@@ -32,9 +31,9 @@ public class GameSettings : ScriptableObject
     public struct S_ShiftSettings
     {
         [Min(30), Tooltip("In seconds")]
-        public float ShiftDuration;
-        [MaxValue(30), Tooltip("In seconds")]
-        public float ShiftFinalWarningDuration;
+        public int ShiftDuration;
+        [Min(0), Tooltip("In seconds")]
+        public int ShiftFinalWarningDuration;
     }
 
     public S_PriceSettings PriceSettings;

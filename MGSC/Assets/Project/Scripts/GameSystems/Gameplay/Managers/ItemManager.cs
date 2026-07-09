@@ -3,18 +3,8 @@ using UnityEngine;
 
 public class ItemManager : IManager
 {
-    #region Fields
-    
-    List<Item> _spawnItems = new List<Item>();
-    
-    List<Vector3> _spawnPositions = new List<Vector3>(); //REFACTO
-    private Transform _spawnParent; // REFACTO
-    
+    #region Fields    
     List<Item> _activeItems = new List<Item>();
-
-    // Specifies, for shift X, the maximum amount of items Y that can be spawned. If Y is superior to the amount of items available in the scene, no additional items are spawned
-    //                                                                           X   Y
-    int _maxSpawnItemsOnTutorial = 2;
     
     private Transform _itemsPooled;
     
@@ -28,6 +18,8 @@ public class ItemManager : IManager
         Register();
         Item.OnItemEnabled += AddItem;
         Item.OnItemDisabled += RemoveItem;
+
+        GameLoop.OnReset += Reset;
     }
     
     public void Register()
@@ -50,7 +42,6 @@ public class ItemManager : IManager
 
     public void PostInit()
     {
-        DetectSpawnItems();
     }
 
     void AddItem(Item item)
@@ -60,16 +51,6 @@ public class ItemManager : IManager
     }
     void RemoveItem(Item item) => _activeItems.Remove(item);
     
-    private void DetectSpawnItems()
-    {
-        foreach (var item in GameObject.FindObjectsByType<Item>(FindObjectsSortMode.None))
-        {
-            _spawnItems.Add(item);
-            _spawnPositions.Add(item.transform.position);
-        }
-        _spawnParent = _spawnItems.Count > 0 ? _spawnItems[0].transform.parent : null;
-    }
-
 
     private void UpdateActiveList(Item item)
     {
@@ -142,7 +123,10 @@ public class ItemManager : IManager
         
     }
     
-
+    public void Reset()
+    {
+        DestroyAllActive();
+    }
     public void DestroyAllActive()
     {
         //Debug.Log("Active items : " + activeItems.Count + " (being stored)");
@@ -152,21 +136,6 @@ public class ItemManager : IManager
             GameObject.Destroy(item.gameObject);
         }
         _activeItems.Clear();
-    }
-
-    public void SpawnInitialItems(int shiftCount)
-    {
-        this.Log("Spawning initial items");
-        int i = 0;
-        foreach (var item in _spawnItems)
-        {
-            if (GameLoop.CurrentState is TutorialState && _maxSpawnItemsOnTutorial <= i)
-                break;
-            this.Log(item.transform.position);
-            int index = _spawnItems.IndexOf(item);
-            TrySpawn(item.gameObject, _spawnPositions[index], item.transform.rotation, item.transform.parent);
-            i++;
-        }
     }
     
     #region Item Pooling Archive 

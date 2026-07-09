@@ -44,6 +44,10 @@ namespace Features
 
         public abstract bool RequestGrab(F_Grabbable item);
         public abstract bool RequestDrop(F_Grabbable item = null);
+        /// <summary>
+        /// Empty() will simply remove all references to the container's content, but will not explicitely 
+        /// destroy any contained objects
+        /// </summary>
         public abstract void Empty();
         public virtual bool CanGrab(F_Grabbable item)
         {

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Upgrades;
 
 public class Oven : MonoBehaviour, IFeatureCollection
 {
@@ -38,11 +38,40 @@ public class Oven : MonoBehaviour, IFeatureCollection
     {
         Collection.LateSetup();
         BindExternalEvents();
-        OnCookingProgress(0f, false);
+        UpdateFeedbacks(0f, false);
         ResetDisplayedSprites();
     }
-    
 
+    private void OnEnable()
+    {
+        GameLoop.OnReset += ResetThis;
+    }
+    private void OnDisable()
+    {
+        GameLoop.OnReset -= ResetThis;
+    }
+
+    void ResetThis()
+    {
+        Container?.Empty();
+        Cooker.OnTransformationOver?.Invoke(null);
+        Cooker.OnTransformation?.Invoke();
+        Container.OnDrop?.Invoke(null);
+        ResetDisplayedSprites();
+        OnStopCooking();
+        UpdateFeedbacks(0f, false);
+    }
+
+    private void BindEvents()
+    {
+        Interactable.OnInteraction += TryInteract;
+        Cooker.OnTransformationStart += OnStartCooking;
+        Cooker.OnTransformationOver += OnStopCooking;
+        Cooker.OnTransformationOver += _ => TryStartOverCooking();
+        //Cooker.OnTransformationProgress += OnCookingProgress;
+        Cooker.OnCookingProgress += p => UpdateFeedbacks(p, false);
+        Cooker.OnOvercookingProgress += p => UpdateFeedbacks(p, true);
+    }
     private void BindExternalEvents()
     {
         if (_itemSlot != null)
@@ -71,16 +100,6 @@ public class Oven : MonoBehaviour, IFeatureCollection
         }
     }
 
-    private void BindEvents()
-    {
-        Interactable.OnInteraction += TryInteract;
-        Cooker.OnTransformationStart += OnStartCooking;
-        Cooker.OnTransformationOver += OnStopCooking;
-        Cooker.OnTransformationOver += _ => TryStartOverCooking();
-        //Cooker.OnTransformationProgress += OnCookingProgress;
-        Cooker.OnCookingProgress += p => OnCookingProgress(p, false);
-        Cooker.OnOvercookingProgress += p => OnCookingProgress(p, true);
-    }
 
 
     private void TryInteract(InteractionContext context)
@@ -128,11 +147,11 @@ public class Oven : MonoBehaviour, IFeatureCollection
     {
         Container.IsLocked = false;
         _button.gameObject.SetActive(true);
-        OnCookingProgress(0f, false);
+        UpdateFeedbacks(0f, false);
         Cooker.RequestStopTransformation();
     }
 
-    private void OnCookingProgress(float progression01, bool isOvercooking)
+    private void UpdateFeedbacks(float progression01, bool isOvercooking)
     {
         
         var renderer = ProgressFeedbacks.MaterialProperty.TargetRenderer;
@@ -212,7 +231,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
 
     public void SetOvenActive(bool active)
     {
-        
+        Debug.Log($"[Oven] {name} was {(active ? "enabled" : "disabled")}.");
         _isOvenActive = active;
         if (_button != null)
         {

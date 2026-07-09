@@ -69,6 +69,8 @@ namespace Features
             var look = rot * Vector3.forward;
             var forward = new Vector3(look.x, 0, look.z).normalized;
             _verticalRotation = rot.eulerAngles.x;
+            if (_verticalRotation > 180)
+                _verticalRotation -= 360;
             LookDirection = forward;
         }
         public override void Update()
