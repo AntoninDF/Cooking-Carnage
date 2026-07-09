@@ -18,6 +18,7 @@ namespace Features
         
         public Action<Client> OnClientSitting {get; set; }
         public Action OnClientLeaving {get; set; }
+        public Action OnClientLeavingWithTips {get; set; }
         
         public Action OnMealReady { get; set; }
         public Action OnIngredientDropped { get; set; }
@@ -72,6 +73,7 @@ namespace Features
             
             client.CurrentSeat        =  this;
             client.Behaviour.OnReactionEnd += OnClientLeaving;
+            client.Behaviour.GoodReaction += OnClientLeavingWithTips;
             RegisteredClient          =  client;
             ActualizeSeatPos(client);
             return true;

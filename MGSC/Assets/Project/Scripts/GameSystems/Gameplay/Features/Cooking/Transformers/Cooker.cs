@@ -27,6 +27,7 @@ namespace Features
             OnTransformationStart += HandleStart;
             OnTransformationProgress += HandleProgress;
             OnTransformationOver += HandleOver;
+            this.TrySubscribe<CookingSpeedUpgrade>();
         }
 
         #region CookerSpecificTransformerAction

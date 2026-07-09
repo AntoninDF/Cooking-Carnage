@@ -24,18 +24,15 @@ namespace Features
         {
             base.Perform();
 
-            if (_client.IsAngry)
+            if (_client.IsAngry || !_order.OrderRating.IsCorrectRecipe)
             {
                 BadReaction?.Invoke();
             }
-            else if (  _order.Recipe == _order.ServingInfo.Recipe)
+            else if ( _order.OrderRating.Stars == 2)
             {
                 GoodReaction?.Invoke();
             }
-            else 
-            {
-                BadReaction?.Invoke();
-            }
+           
         }
         
         

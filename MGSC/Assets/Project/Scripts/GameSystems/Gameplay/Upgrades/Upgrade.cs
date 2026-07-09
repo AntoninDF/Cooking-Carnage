@@ -40,12 +40,19 @@ namespace Upgrades
                 Debug.LogWarning($"[{GetType().Name}] Cannot level up further (level {_level}/{_config?.MaxLevel})");
                 return;
             }
+            
             _level++;
+            Debug.Log($"[{GetType().Name}] Level {_level}/{_config?.MaxLevel}");
             OnLevelUpInternal?.Invoke(this);
         }
         
         public virtual float GetPrice()   => _config.PriceCurve.Evaluate(_level);
         public virtual bool  CanLevelUp() => _level < _config.MaxLevel;
+
+        public void SetLevel(int level)
+        {
+            _level = level;
+        }
         
         internal abstract void UnsubscribeObject(object subscriber);
         internal abstract void ClearSubscribers();
@@ -67,7 +74,8 @@ namespace Upgrades
             _subscribers.Add(subscriber);
             subscriber.OnUpgradeInit((TSelf)this);
         }
-
+        
+        
         public void Unsubscribe(IUpgradable<TSelf> subscriber) => _subscribers.Remove(subscriber);
 
         internal override void UnsubscribeObject(object subscriber)
