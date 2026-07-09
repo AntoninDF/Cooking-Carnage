@@ -5,12 +5,13 @@ using System.Linq;
 using UnityEngine;
 using System.Reflection;
 using UnityEngine.Events;
+using Object = System.Object;
 
 
 namespace Upgrades
 {
 
-    public class UpgradeManager : IManager
+    public class UpgradeManager : IManager, IDisposable
     {
         #region Properties
         
@@ -36,7 +37,7 @@ namespace Upgrades
         public UpgradeManager()
         {
             Register();
-            GameLoop.OnAfterReset += DispatchLevelUpToAllUpgrades;
+           // ( as MonoBehaviour).enabled = true;
         }
         
         
@@ -99,15 +100,15 @@ namespace Upgrades
             if (_subscribers.TryGetValue(type, out var list))
                 list.Dispatch(upgrade);
         }
-        /// <summary>
-        /// Apply every upgrade at once to make sure everything is correctly set up
-        /// </summary>
-        void DispatchLevelUpToAllUpgrades()
+
+        public void ActualizeAllUpgrade()
         {
-            Debug.Log("Updating every upgrade");
             foreach (var upgrade in _upgrades)
+            {
                 DispatchLevelUp(upgrade);
+            }
         }
+        
 
         #endregion
         
@@ -172,6 +173,7 @@ namespace Upgrades
         }
         public void Unregister()
         {
+            Debug.Log("Unregistered " + GetType().Name);
             Reference.RemoveManager(this);
         }
 
@@ -221,6 +223,16 @@ namespace Upgrades
         }
 
         #endregion
-        
+
+        public void Dispose()
+        {
+            Debug.Log($"Disposing : {GetType().Name} & Clearing All Subscribers" );
+            ClearAllSubscribers();
+        }
+
+        public void SaveUpgrades()
+        {
+            
+        }
     }
 }

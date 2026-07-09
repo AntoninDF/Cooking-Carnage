@@ -54,10 +54,10 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         ClientSeat.OnClientSitting += AssignOrder;
         ClientSeat.OnClientSitting += (client) =>
         {
-            _OrderDisplayer.DisplayOrder(client.CurrentOrder.Recipe);
             client.BeginOrderTimer();
             client.OnOrderTimeProgress += _OrderDisplayer.UpdateTimeSlider;
-            
+            Debug.Log($"[OrderingArea] Ordering Sitting : {client}");
+            _OrderDisplayer.DisplayOrder(client.CurrentOrder.Recipe);
         };
         
         // ClientSeat.OnClientLeaving += () =>
@@ -73,7 +73,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         {
             if (_slotParent.GetChild(i).TryGetComponent(out SlotContainer slotContainer))
             {
-                ClientSeat.dropSlots.Add(slotContainer);
+               if(slotContainer.gameObject.activeSelf) ClientSeat.dropSlots.Add(slotContainer);
             }
         }
     }
