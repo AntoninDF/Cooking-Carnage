@@ -10,6 +10,10 @@ namespace GameSystem
         #region Properties
         public float MoneyInfo { get; set; }
         public Action<float> OnMoneyChange { get; set; }
+        [GlobalEvent("Money/Money Gained")]
+        public static Action OnMoneyGain;
+        [GlobalEvent("Money/Money Lost")]
+        public static Action OnMoneyLoss;
         #endregion
 
         #region Fields
@@ -81,6 +85,9 @@ namespace GameSystem
             if(amount>=0) _moneyGainedPerShift[shiftNumber] += amount;
             
             OnMoneyChange?.Invoke(amount);
+
+            if (amount > 0) OnMoneyGain?.Invoke();
+            if (amount < 0) OnMoneyLoss?.Invoke();
             
             this.Log(LogType.Log, $"{amount}€ update");
         }
