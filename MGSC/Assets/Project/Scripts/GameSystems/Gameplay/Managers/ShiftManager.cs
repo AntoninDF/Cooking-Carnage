@@ -1,7 +1,6 @@
 using Controller;
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace GameSystem
 {
@@ -56,6 +55,16 @@ namespace GameSystem
         {
             Register();
             Setup();
+            GameLoop.OnReset += Reset;
+        }
+
+        void Reset()
+        {
+            IsShiftActive = false;
+            ResetTimerUntilEndOfShift();
+            ResetTimerUntilFinalWarning();
+            if (GameLoop.CurrentState is ShiftState)
+                GameLoop.SetState<PreShiftState>();
         }
         // Bind sur globals
         public void Setup()
@@ -126,6 +135,7 @@ namespace GameSystem
             {
                 GameLoop.UnbindTimerFromGamePause(TimerUntilEndOfShift);
                 TimerUntilEndOfShift.Reset();
+                TimerManager.RemoveTimer(TimerUntilEndOfShift.Name);
                 TimerUntilEndOfShift = null;
             }
         }
@@ -136,28 +146,11 @@ namespace GameSystem
             {
                 GameLoop.UnbindTimerFromGamePause(TimerUntilFinalWarning);
                 TimerUntilFinalWarning.Reset();
+                TimerManager.RemoveTimer(TimerUntilFinalWarning.Name);
                 TimerUntilFinalWarning = null;
             }
         }
 
-        /// <summary>
-        /// Resets all the items and the player
-        /// </summary>
-        public void ResetAll()
-        {
-            Debug.Log("[ShiftManager] Reset everything");
-
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-
-            /*
-            PlayerSetup.TryResetPlayer();
-            Reference.GetManager<ItemManager>()?.DestroyAllActive();
-            Reference.GetManager<ItemManager>()?.SpawnInitialItems(ShiftNumber);
-            Reference.GetManager<ClientManager>()?.DestroyEveryClients();
-            foreach (Timer timer in TimerManager.Timers.Values)
-                timer.Reset();
-            */
-        }
         bool TryPayRent()
         {
             Reference.GetManager(out MoneyManager moneyManager);
@@ -193,7 +186,7 @@ namespace GameSystem
 
             SaveManager.LoadGlobalData();
 
-            ResetAll();
+            //ResetAll();
         }
 
         public void SkipTutorialShift()

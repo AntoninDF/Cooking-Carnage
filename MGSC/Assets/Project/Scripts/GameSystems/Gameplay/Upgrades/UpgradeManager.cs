@@ -95,6 +95,7 @@ namespace Upgrades
         /// <param name="upgrade"></param>
         private void DispatchLevelUp(Upgrade upgrade)
         {
+            Debug.Log("Applying upgrade " + upgrade?.GetType().Name);
             var type = upgrade.GetType();
             if (_subscribers.TryGetValue(type, out var list))
                 list.Dispatch(upgrade);
@@ -191,9 +192,13 @@ namespace Upgrades
 
             public override void Dispatch(Upgrade upgrade)
             {
+                Debug.Log("Subscribers are :\n" + Subscribers.ToString_EasyRead(separator: "\n"));
                 if (upgrade is not T typed) return;
                 foreach (var sub in Subscribers)
+                {
+                    Debug.Log("Upgrading subscriber " + sub);
                     sub.OnUpgraded(typed);
+                }
             }
         }
         

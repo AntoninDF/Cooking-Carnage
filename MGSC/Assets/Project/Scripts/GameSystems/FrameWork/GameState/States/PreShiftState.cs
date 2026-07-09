@@ -4,10 +4,14 @@ public class PreShiftState : GameplayState
     HeadsUpDisplay HUD;
     public override void OnEnter()
     {
+        //GameLoop.ResetAll();
         base.OnEnter();
-        if (!Reference.TryGetManager(out UISystem ui)) return;
-        HUD = ui.GetWidget<HeadsUpDisplay>();
-        HUD?.Enable();
+        if (Reference.TryGetManager(out UISystem ui))
+        {
+            HUD = ui.GetWidget<HeadsUpDisplay>();
+            HUD?.Enable();
+        }
+        IngredientSpawnPosition.SpawnIngredients(6);
     }
 
     public override void OnExit()

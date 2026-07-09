@@ -78,6 +78,7 @@ public class MeshPile : MonoBehaviour
 
     public void Regenerate(bool applyRandomPresets=true)
     {
+        if (mr == null) TryGetComponent(out mr);
         if (mesh == null) return;
         Mesh newMesh = mf.sharedMesh;
         if (applyRandomPresets)
