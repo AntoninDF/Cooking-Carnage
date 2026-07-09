@@ -88,30 +88,47 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
         bindEventProfilerMarker.End();
     }
 
-    private void BindGlobalEvent(UnityEventWrapper e)
+    private static Dictionary<string, PropertyOrFieldInfo> _globalEventMembers;
+
+    private static void BuildGlobalEventLookup()
     {
-        string targetName = e.ActionPath.ActionVariableName;
-        bool bound = false;
+        _globalEventMembers = new();
+        _cachedGlobalActions = new();
 
         foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
         {
-            foreach (var types in asm.GetTypes())
+            Type[] types;
+            try { types = asm.GetTypes(); }
+            catch (ReflectionTypeLoadException ex) { types = ex.Types; }
+
+            foreach (var type in types)
             {
-                foreach (var member in types.GetMembers(BindingFlags.Static | BindingFlags.Public))
+                if (type == null) continue;
+
+                foreach (var member in type.GetMembers(BindingFlags.Public | BindingFlags.Static))
                 {
                     var attr = member.GetCustomAttribute<GlobalEventAttribute>();
-                    if (attr == null || attr.Name != targetName) continue;
-                    
+                    if (attr == null) continue;
+
                     var info = new PropertyOrFieldInfo(member);
-                    if(info.Type == null) continue;
-                    
-                    if(!IsValidActionType(info.Type)) continue;
-                    TryBindCallbackToFeature(null, () => e.Event?.Invoke(), info);
-                    bound = true;
+                    if (info.Type == null || !IsValidActionType(info.Type)) continue;
+
+                    _globalEventMembers[attr.Name] = info;
+                    _cachedGlobalActions.Add(new ActionPath(attr.Name, info.Type));
                 }
             }
         }
-        if (!bound) SkippedEventWarning(e);
+    }
+
+    private void BindGlobalEvent(UnityEventWrapper e)
+    {
+        if (_globalEventMembers == null) BuildGlobalEventLookup();
+
+        string targetName = e.ActionPath.ActionVariableName;
+        if (_globalEventMembers.TryGetValue(targetName, out var info))
+            TryBindCallbackToFeature(null, () => e.Event?.Invoke(), info);
+        else
+            SkippedEventWarning(e);
     }
 
     

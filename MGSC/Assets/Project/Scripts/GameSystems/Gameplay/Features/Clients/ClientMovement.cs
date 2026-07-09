@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Splines;
+using Random = UnityEngine.Random;
 
 namespace Features
 {
@@ -65,6 +66,8 @@ namespace Features
             Speed               = speed;
             _navmeshAgent.speed        = speed;
             _navmeshAgent.stoppingDistance = 0.5f;
+            //_navmeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
+            _navmeshAgent.avoidancePriority = Random.Range(0, 99);
             _validSetup         = controlledTransform != null && splineComponent != null;
             
            

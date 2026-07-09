@@ -172,11 +172,6 @@ public class DebugWindow : MonoBehaviour
 
         GUILayout.Space(15);
         
-        if (GUILayout.Button("Reset Camera"))
-        {
-            Reference.GetManager<CameraManager>().EnableFirstPersonView();
-        }
-        
         GUILayout.Space(5);
 
         if (GUILayout.Button("Save and Reload"))
@@ -289,7 +284,7 @@ public class DebugWindow : MonoBehaviour
         foreach (var c in history)
         {
             string id = c.id.ToString();
-            string type = c.ClientType.ToString();
+            string type = c.clientType.ToString();
             string order = c.order?.Recipe.Name ?? "None";
             
             GUILayout.BeginHorizontal();

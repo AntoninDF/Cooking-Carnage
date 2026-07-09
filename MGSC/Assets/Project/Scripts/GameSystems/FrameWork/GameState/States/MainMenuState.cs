@@ -14,6 +14,8 @@ public class MainMenuState : MenuState
                         return new TutorialState();
                     if (Globals.Gameplay.ShiftNumber != 0)
                         return new UpgradeState();
+
+                    GameLoop.ResetAll();
                     return new PreShiftState();
                 }
 

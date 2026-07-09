@@ -55,6 +55,16 @@ namespace GameSystem
         {
             Register();
             Setup();
+            GameLoop.OnReset += Reset;
+        }
+
+        void Reset()
+        {
+            IsShiftActive = false;
+            ResetTimerUntilEndOfShift();
+            ResetTimerUntilFinalWarning();
+            if (GameLoop.CurrentState is ShiftState)
+                GameLoop.SetState<PreShiftState>();
         }
         // Bind sur globals
         public void Setup()
@@ -80,8 +90,8 @@ namespace GameSystem
         void LaunchShiftTimer(float duration)
         {
             Debug.Log( $"Launching new shift for {duration}s");
-            TimerUntilEndOfShift = TimerManager.StartTimer("shiftDuration", duration, EndShift, false);
-            TimerUntilFinalWarning = TimerManager.StartTimer("shiftDurationWithoutNoon", duration - _noonDuration, InvokeFinalWarning, false);
+            TimerUntilEndOfShift = TimerManager.StartTimer("shiftDuration", duration, EndShift);
+            TimerUntilFinalWarning = TimerManager.StartTimer("shiftDurationWithoutNoon", duration - _noonDuration, InvokeFinalWarning);
             // Subscribe to the GameLoop in case the game pauses
             GameLoop.BindTimerToGamePause(TimerUntilEndOfShift);
             GameLoop.BindTimerToGamePause(TimerUntilFinalWarning);
@@ -91,11 +101,7 @@ namespace GameSystem
 
         void InvokeFinalWarning()
         {
-            if (TimerUntilFinalWarning != null)
-            {
-                GameLoop.UnbindTimerFromGamePause(TimerUntilFinalWarning);
-                TimerUntilFinalWarning = null;
-            }
+            ResetTimerUntilFinalWarning();
             this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
             OnShiftFinalWarning?.Invoke();
         }
@@ -109,11 +115,7 @@ namespace GameSystem
         {
             this.Log(LogType.Log, $"End of the Shift triggered.");
             IsShiftActive = false;
-            if (TimerUntilEndOfShift != null)
-            {
-                GameLoop.UnbindTimerFromGamePause(TimerUntilEndOfShift);
-                TimerUntilEndOfShift = null;
-            }
+            ResetTimerUntilEndOfShift();
 
             bool validRent = TryPayRent();
 
@@ -127,45 +129,28 @@ namespace GameSystem
             GameLoop.RequestTransition(StateTransitions.ShowShiftRecap);
         }
 
-        /// <summary>
-        /// Tries to pay the rent due for the current shift (<see cref="ShiftNumber"/>)
-        /// </summary>
-        /// <returns>Wether or not the rent could be payed. False can either mean there was no money manager, or the money owned wasn't sufficient. True means the money has been payed</returns>
-
-
-        public void RequestStartShift()
+        private void ResetTimerUntilEndOfShift()
         {
-            Debug.Log("NextShift called");
-            ShiftNumber++;
-
-            SetupShift(ShiftNumber);
-
-            this.Log(LogType.Log, $"Shift {ShiftNumber - 1} is over, launching shift {ShiftNumber}");
-
-            OnNextShift?.Invoke();
+            if (TimerUntilEndOfShift != null)
+            {
+                GameLoop.UnbindTimerFromGamePause(TimerUntilEndOfShift);
+                TimerUntilEndOfShift.Reset();
+                TimerManager.RemoveTimer(TimerUntilEndOfShift.Name);
+                TimerUntilEndOfShift = null;
+            }
         }
-        /// <summary>
-        /// Resets the specified shift without moving to the next one. 
-        /// </summary>
-        public void SetupShift(int shiftCount)
+
+        private void ResetTimerUntilFinalWarning()
         {
-            SaveManager.SaveGameData();
-            
-            ResetAll();
-
-            Reference.GetManager<ItemManager>()?.SpawnInitialItems(shiftCount);
-
+            if (TimerUntilFinalWarning != null)
+            {
+                GameLoop.UnbindTimerFromGamePause(TimerUntilFinalWarning);
+                TimerUntilFinalWarning.Reset();
+                TimerManager.RemoveTimer(TimerUntilFinalWarning.Name);
+                TimerUntilFinalWarning = null;
+            }
         }
-        /// <summary>
-        /// Resets all the items and the player
-        /// </summary>
-        private void ResetAll()
-        {
-//            Debug.Log("Reset everything for the next shift");
 
-            Reference.GetManager<ItemManager>()?.DestroyAllActive();
-            PlayerSetup.TryResetPlayer();
-        }
         bool TryPayRent()
         {
             Reference.GetManager(out MoneyManager moneyManager);
@@ -201,7 +186,7 @@ namespace GameSystem
 
             SaveManager.LoadGlobalData();
 
-            SetupShift(ShiftNumber);
+            //ResetAll();
         }
 
         public void SkipTutorialShift()

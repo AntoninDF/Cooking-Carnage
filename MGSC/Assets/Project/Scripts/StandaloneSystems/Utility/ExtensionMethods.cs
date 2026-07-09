@@ -140,7 +140,7 @@ public static class ExtensionMethods
 
         return result;
     }
-    public static string ToString_EasyRead<T>(this List<T> list, string startWith="(", string endWith=")")
+    public static string ToString_EasyRead<T>(this List<T> list, string startWith="(", string separator=", ", string endWith=")")
     {
         if (list == null) return "null";
         if (list.Count == 0) return "(empty list)";
@@ -154,7 +154,7 @@ public static class ExtensionMethods
                 result += obj.ToString();
             else
                 result += typeof(T).Name;
-            result += ", ";
+            result += separator;
         }
         result = result.Substring(0, result.Length - 2);
         result += endWith;

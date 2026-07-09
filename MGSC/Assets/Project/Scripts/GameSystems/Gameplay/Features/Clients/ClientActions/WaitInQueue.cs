@@ -1,4 +1,5 @@
 using System;
+using GameSystem;
 using UnityEngine;
 
 namespace Features
@@ -21,6 +22,7 @@ namespace Features
 		public override void Perform()
 		{
 			base.Perform();
+			Reference.GetManager<AdaptiveClientSpawner>().canSpawnClient = false;
 			var client = ClientOwner.Owner as Clients.Client;
 			var queue  = Reference.GetManager<GameSystem.ClientManager>().WaitingQueue;
 			_targetT            =  queue.Enqueue(client);
@@ -51,6 +53,7 @@ namespace Features
 		{
 			OnExitQueue?.Invoke();
 			ClientOwner.OnSplineUpdate -= TickSpline;
+			Reference.GetManager<AdaptiveClientSpawner>().canSpawnClient = true;
 		}
 		
     

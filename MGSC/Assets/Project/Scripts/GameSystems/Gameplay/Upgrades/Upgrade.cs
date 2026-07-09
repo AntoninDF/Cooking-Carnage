@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Debug = UnityEngine.Debug;
 
 namespace Upgrades
@@ -12,7 +13,8 @@ namespace Upgrades
         public UpgradeConfig     Config    => _config;
         
         internal event Action<Upgrade> OnLevelUpInternal;
-        
+        [GlobalEvent("Upgrades/OnUpgradeSuccessfullyBought")]
+        public static Action OnUpgradeSuccess;
         #endregion
 
         #region Fields
@@ -39,13 +41,68 @@ namespace Upgrades
                 Debug.LogWarning($"[{GetType().Name}] Cannot level up further (level {_level}/{_config?.MaxLevel})");
                 return;
             }
+            
             _level++;
+            Debug.Log($"[{GetType().Name}] Level {_level}/{_config?.MaxLevel}");
+            OnUpgradeSuccess?.Invoke();
             OnLevelUpInternal?.Invoke(this);
         }
         
         public virtual float GetPrice()   => _config.PriceCurve.Evaluate(_level);
         public virtual bool  CanLevelUp() => _level < _config.MaxLevel;
+
+        public void SetLevel(int level)
+        {
+            _level = level;
+        }
+        
+        internal abstract void UnsubscribeObject(object subscriber);
+        internal abstract void ClearSubscribers();
         
         #endregion
     }
+    
+    /// <summary>
+    /// Classe permettant aux classes héritées de souscrire automatiquement à UgradeManager
+    /// </summary>
+    /// <typeparam name="TSelf"></typeparam>
+    public abstract class Upgrade<TSelf> : Upgrade where TSelf : Upgrade<TSelf>
+    {
+        private readonly List<IUpgradable<TSelf>> _subscribers = new();
+
+        public void Subscribe(IUpgradable<TSelf> subscriber)
+        {
+            if (subscriber == null || _subscribers.Contains(subscriber)) return;
+            _subscribers.Add(subscriber);
+            subscriber.OnUpgradeInit((TSelf)this);
+        }
+        
+        
+        public void Unsubscribe(IUpgradable<TSelf> subscriber) => _subscribers.Remove(subscriber);
+
+        internal override void UnsubscribeObject(object subscriber)
+        {
+            if (subscriber is IUpgradable<TSelf> typed)
+                _subscribers.Remove(typed);
+        }
+
+        internal override void ClearSubscribers() => _subscribers.Clear();
+
+        public override void LevelUp()
+        {
+            base.LevelUp();
+            for (int i = _subscribers.Count - 1; i >= 0; i--)
+            {
+                var sub = _subscribers[i];
+                if (sub is UnityEngine.Object uo && uo == null)
+                {
+                    Debug.LogError("An Upgrade subscriber has been destroyed, level up impossible");
+                    _subscribers.RemoveAt(i);
+                    continue;
+                }
+                sub?.OnUpgraded((TSelf)this);
+            }
+        }
+    }
+    
 }

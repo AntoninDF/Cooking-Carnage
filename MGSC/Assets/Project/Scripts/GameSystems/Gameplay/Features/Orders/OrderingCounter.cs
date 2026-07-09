@@ -16,18 +16,13 @@ namespace Features
 
         public Order GetNewOrder(Client client)
         {
-            var allRecipes = RecipeFinder.AllRecipes?.Recipes;
-    
-            var builder = OrderBuilder.New().SetOwner(client);
-    
-            if (allRecipes != null)
-                foreach (var recipe in allRecipes)
-                    builder.SetRecipe(recipe);
+            SO_Recipe recipe = Orders.OrderPicker.Pick();
 
-            var result = builder.Build();
-            OnNewOrder?.Invoke(result);
-            DisplayRecipe?.Invoke(result.Recipe);
-            return result;
+            var order = Reference.GetManager<GameSystem.OrderManager>().NewOrder(client, recipe);
+
+            OnNewOrder?.Invoke(order);
+            DisplayRecipe?.Invoke(order.Recipe);
+            return order;
         }
     }
 }

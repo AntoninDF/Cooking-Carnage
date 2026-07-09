@@ -94,13 +94,14 @@ namespace UI
                 case EDataInfo.WrongOrdersThisShift:            return GetWrongOrdersCount().ToString();
                 case EDataInfo.ClientsKilledThisShift:          return Reference.GetManager<ClientManager>()?.ClientsKilledThisShift.ToString();
                 case EDataInfo.MoneyGainedThisShift:            return Reference.GetManager<MoneyManager>()?.GetMoneyGainedThisShift().ToString();
-                case EDataInfo.MoneyGainedOnPreviousShift:            return Reference.GetManager<MoneyManager>()?.GetMoneyOnPreviousShift().ToString();
+                case EDataInfo.MoneyGainedOnPreviousShift:      return Reference.GetManager<MoneyManager>()?.GetMoneyOnPreviousShift().ToString();
                 case EDataInfo.MoneyAmount:                     return Reference.GetManager<MoneyManager>()?.MoneyInfo.ToString();
                 case EDataInfo.CookingSpeedUpgradeLevel:        return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<CookingSpeedUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.IngredientDropUpgradeLevel:      return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<IngredientDropUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.OvenCountUpgradeLevel:           return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<OvenCountUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.CuttingSpeedUpgradeLevel:        return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<BlenderSpeedUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.TimeLeft:                        return ProcessTimeLeft();
+                case EDataInfo.LastMoneyDelta:                  return ((int)Reference.GetManager<MoneyManager>()?.LastMoneyDelta).ToString() ;
 
             }
             return result;
@@ -120,22 +121,15 @@ namespace UI
         }
         public int GetCorrectOrdersCount()
         {
-            Debug.Log("GetCorrectOrdersCount : 1");
             if (!Reference.TryGetManager(out ClientManager clientMgr)) return 0;
-            Debug.Log("GetCorrectOrdersCount : 2");
-            if (clientMgr.GetClientsHistory() == null) return 0;
-            Debug.Log("GetCorrectOrdersCount : 3");
-            return clientMgr.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe == c.order.Recipe).Count();
+            return clientMgr.GetClientsHistory().Count(c => !c.killed && c.wasCorrectRecipe);
         }
 
         public int GetWrongOrdersCount()
         {
-            Debug.Log("GetWrongOrdersCount : 1");
             if (!Reference.TryGetManager(out ClientManager clientMgr)) return 0;
-            Debug.Log("GetWrongOrdersCount : 2");
-            if (clientMgr.GetClientsHistory() == null) return 0;
-            Debug.Log("GetWrongOrdersCount : 3");
-            return clientMgr.GetClientsHistory().Where((c) => !c.killed && c.order.ServingInfo.Recipe != c.order.Recipe).Count();
+            return clientMgr.GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe);
+            //This version consider client leaving without food as wrong order, if u don't want to count them add && c.served
         }
         private string ToString<T>(IEnumerable<T> items)
         {

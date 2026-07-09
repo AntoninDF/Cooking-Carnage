@@ -40,6 +40,7 @@ public class Player : MonoBehaviour, IFeatureCollection
         PlayerActor.SortFeaturesByDistance = true;
         PlayerActor.GetAllFeaturesInSight = false;
         PlayerInputs = new PlayerInputReader(this);
+        PlayerMovement = new(this, transform, head, GetComponent<CharacterController>());
 
         BindPlayerActions();
         GameLoop.OnPause += UnbindPlayerActions;
@@ -60,7 +61,6 @@ public class Player : MonoBehaviour, IFeatureCollection
 
         Container.OnGrab += SetHeldLayer;
         Container.OnDrop += ResetHeldLayer;
-        PlayerMovement = new(this, transform, head, GetComponent<CharacterController>());
         
 
     }
@@ -70,6 +70,7 @@ public class Player : MonoBehaviour, IFeatureCollection
         if (item == null) return;
         if (item.Owner is not Item itemComponent) return;
 
+        itemComponent.SetHeld(true);
         itemComponent.StoreLayerRecursive();
         itemComponent.SetLayerRecursive(heldLayer);
     }
@@ -79,6 +80,7 @@ public class Player : MonoBehaviour, IFeatureCollection
         if (item == null) return;
         if (item.Owner is not Item itemComponent) return;
 
+        itemComponent.SetHeld(false);
         itemComponent.RestoreLayerRecursive();
     }
 

@@ -37,14 +37,22 @@ namespace Features
         protected Globals.Rendering.Outline.OutlineMode mode = Globals.Rendering.Outline.Mode;
         public bool Visible { get => visible; set => SetVisibility(value); }
         protected bool visible = Globals.Rendering.Outline.AllowOutlines;
+        
+        public MeshRenderer[] Renderers { get; set; }
+        protected int[] originalLayers;
         #endregion
 
 
         #region Methods
-        public OutlineController(IFeatureCollection owner, Mesh target, Transform targetParent) : base(owner)
+        public OutlineController(IFeatureCollection owner, Mesh target, Transform targetParent, MeshRenderer[] renderers) : base(owner)
         {
             Mesh = target;
             TargetParent = targetParent;
+            Renderers = renderers;
+            originalLayers = new int[renderers.Length];
+            for (int i = 0; i < renderers.Length; i++)
+                originalLayers[i] = renderers[i].gameObject.layer;
+
             OnEnable += EnableOutline;
             OnDisable += DisableOutline;
 
@@ -63,6 +71,11 @@ namespace Features
         {
             if(!CanShowOutline) return;
             enabled = true;
+            foreach (var renderer in Renderers)
+                renderer.gameObject.layer = LayerMask.NameToLayer("Outlined");
+            enabled = true;
+            
+            /*
             if (OutlineObject == null)
             {
                 OutlineObject = MakeOutlineVariant(Mesh, out outlineRenderer);
@@ -74,12 +87,25 @@ namespace Features
                 SetVisibility(Visible);
             }
             OutlineObject.SetActive(true);
+            */
         }
         public virtual void DisableOutline()
         {
             enabled = false;
-            if (OutlineObject == null) return;
-            OutlineObject.SetActive(false);
+            for (int i = 0; i < Renderers.Length; i++)
+            {
+                if(IsHeld()) continue;
+                Renderers[i].gameObject.layer = originalLayers[i];
+            }
+                
+            
+            //if (OutlineObject == null) return;
+            //OutlineObject.SetActive(false);
+        }
+
+        private bool IsHeld()
+        {
+            return TargetParent != null && TargetParent.GetComponentInParent<Item>() is { IsHeld: true };
         }
 
         public void SetVisible() => SetVisibility(true);
@@ -90,6 +116,7 @@ namespace Features
             if (OutlineRenderer != null)
                 OutlineRenderer.enabled = visible;
         }
+        /*
         public void SetParent(Transform target)
         {
             if (OutlineObject == null || target == null) return;
@@ -125,6 +152,7 @@ namespace Features
 
             return result;
         }
+        */
 
         public void ApplyOnAllMaterials(Action<Material> action)
         {
@@ -144,6 +172,12 @@ namespace Features
 
             // Reapply
             OutlineRenderer.materials = newMaterials;
+        }
+        
+        public void SetLayer(int layer)
+        {
+            if (OutlineObject != null)
+                OutlineObject.layer = layer;
         }
 
         public void SetParameters(Globals.Rendering.Outline.OutlineOptions parameters)
@@ -201,5 +235,7 @@ namespace Features
         }
         #endregion
     }
+    
+    
 
 }

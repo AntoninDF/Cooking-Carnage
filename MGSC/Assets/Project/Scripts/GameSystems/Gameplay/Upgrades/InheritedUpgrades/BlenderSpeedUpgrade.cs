@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Upgrades
 {
 
-    public class BlenderSpeedUpgrade : Upgrade
+    public class BlenderSpeedUpgrade : Upgrade<BlenderSpeedUpgrade>
     {
         private const float ReductionPerLevel = 0.25f;
         public float TimeReduction => _level * ReductionPerLevel;

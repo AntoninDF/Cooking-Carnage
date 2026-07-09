@@ -4,7 +4,6 @@ using Clients;
 using UnityEngine;
 using System.Linq;
 using Features;
-using Unity.AI.Navigation;
 
 namespace GameSystem
 {
@@ -34,6 +33,8 @@ namespace GameSystem
         List<ClientData> clientHistory =  new List<ClientData>(); // script copy
         
         Dictionary<EClientType, float> clientTypePart = new Dictionary<EClientType, float>();
+
+        private float _timeBeforeGoSeating = 3.5f;
         #endregion
         
         #region Methods
@@ -42,6 +43,7 @@ namespace GameSystem
         {
             Register();
             ClientSeats = new(this);
+            GameLoop.OnReset += DestroyEveryClient;
         }
         
         /// <summary>
@@ -70,9 +72,15 @@ namespace GameSystem
 
             foreach (var seat in ClientSeats.Seats)
             {
-                seat.OnClientUnregister += _ => WaitingQueue.OnSeatFreed(seat);
-                seat.OnClientUnregister += _ => Debug.Log("OnClientUnregistered");
+                seat.OnClientUnregister += (client => MakeSureClientEat(client, seat));
+                seat.OnClientUnregister += (client => AddClientData(client, isDone: true, killed: client.IsCooked));
             }
+        }
+        
+        private void MakeSureClientEat(Client client, ClientSeat seat)
+        {
+            
+            TimerManager.StartTimer($"{client.UniqueID}Wait For Quit the seat", client.IsCooked ? 1f : _timeBeforeGoSeating, (() => WaitingQueue.OnSeatFreed(seat)));
         }
 
         private void Reset()
@@ -141,9 +149,20 @@ namespace GameSystem
             if (Reference.TryGetManager(out ShiftManager sm))
                 shiftCount = sm.ShiftNumber;
 
-            //ClientData clientData = new ClientData(client.GetEntityId(), client.Type, killed, -1, Time.time, client.Order, shiftNumber);
+            float moneyGave = client.CurrentOrder?.OrderRating.MoneyGained ?? 0f;
             
-            //clientHistory.Add(clientData);
+            ClientData clientData = new ClientData(
+                client.GetEntityId(),
+                client.Type,
+                killed,
+                moneyGave,
+                Time.time,
+                client.CurrentOrder,
+                clientHistory.Count,
+                shiftCount
+            );
+            
+            clientHistory.Add(clientData);
             if (killed)
             {
                 ClientsKilledThisShift++;
@@ -190,7 +209,7 @@ namespace GameSystem
         public Dictionary<EClientType, int> GetSeenClientTypesCount(int amount = -1)
         {
             List<EClientType> seenTypes = currentClients.Where((client) => true).Select((client) => EClientType.None).ToList();
-            seenTypes.InsertRange(0, clientHistory.Select((data) => data.ClientType).ToList());
+            seenTypes.InsertRange(0, clientHistory.Select((data) => data.clientType).ToList());
             if (amount < -1) throw new ArgumentException("[ClientManager] : You cannot ask for a negative amount of client types. Only use -1 to get all of the seen types.");
             if (amount != -1)
             {
@@ -223,7 +242,7 @@ namespace GameSystem
            
            foreach (var t in clientHistory)
            {
-               clientTypePart[t.ClientType]++;
+               clientTypePart[t.clientType]++;
            }
 
            foreach (var t in currentClients)
@@ -243,7 +262,17 @@ namespace GameSystem
         {
            return clientHistory.FirstOrDefault(data => data.id == entityId);
         }
-        
+
+        internal void DestroyEveryClient()
+        {
+            for (int i = currentClients.Count-1; i >= 0; i--)
+            {
+                var client = currentClients[i];
+                currentClients.RemoveAt(i);
+                client.Despawn();
+            }
+        }
+
         #endregion
 
     }

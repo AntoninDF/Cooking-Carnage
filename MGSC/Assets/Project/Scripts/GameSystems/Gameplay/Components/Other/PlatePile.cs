@@ -1,3 +1,4 @@
+using System.Collections;
 using Features;
 using UnityEngine;
 
@@ -12,16 +13,52 @@ public class PlatePile : MonoBehaviour
     private SlotContainer _sc;
     private MeshPile _mp;
 
-    void Start()
+
+    int _defaultPileCount;
+    private void Awake()
     {
         TryGetComponent(out _mp);
+        _defaultPileCount = _mp.count;
+    }
+    private void OnEnable()
+    {
+        // ResetThis should be called on after reset to avoid having the plate be destroyed by the ItemManager
+        GameLoop.OnAfterReset += ResetThis;
+    }
+    private void OnDisable()
+    {
+        GameLoop.OnAfterReset -= ResetThis;
+    }
+    void Start()
+    {
         TrySpawn();
         Container.Container.OnDrop += OnPlateDropped;
     }
 
+    void ResetThis()
+    {
+        _mp.count = _defaultPileCount;
+        _mp.Regenerate();
+        Container?.Container?.RequestDrop();
+        TrySpawn();
+    }
+
     private void OnPlateDropped(F_Grabbable plateDropped)
     {
-        if (_mp.count == 0) return;
+        StartCoroutine(CheckIfPlateWasActuallyTaken());
+    }
+
+    private IEnumerator CheckIfPlateWasActuallyTaken()
+    {
+        yield return null;
+
+        
+        if (Container.Container.HeldItem != null)
+            yield break;
+
+        if (_mp.count == 0)
+            yield break;
+
         _mp.RemoveOneElement();
         TrySpawn();
     }
