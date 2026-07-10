@@ -21,6 +21,8 @@ public class GameSettings : ScriptableObject
 
         Globals.Gameplay.ShiftRentPriceCurve.Value = Instance.PriceSettings.ShiftRentPrice;
         Globals.Gameplay.WrongMealPrice.Value = Instance.PriceSettings.WrongMealPrice;
+        Globals.Gameplay.Threshold1Star.Value = Instance.PriceSettings.Threshold1Star;
+        Globals.Gameplay.Threshold2Star.Value = Instance.PriceSettings.Threshold2Star;
 
         Globals.Gameplay.CookingDuration.Value = Instance.CookingSettings.CookingDuration;
         Globals.Gameplay.OvercookingDuration.Value = Instance.CookingSettings.OverCookingDuration;
@@ -50,6 +52,9 @@ public class GameSettings : ScriptableObject
         public AnimationCurve ShiftRentPrice;
         [Min(0)]
         public float WrongMealPrice;
+
+        public float Threshold1Star;
+        public float Threshold2Star;
     }
 
     public S_CookingSettings CookingSettings;
