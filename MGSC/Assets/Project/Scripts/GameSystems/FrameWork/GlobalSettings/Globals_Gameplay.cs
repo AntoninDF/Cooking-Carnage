@@ -1,9 +1,9 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public static partial class Globals
+public partial class Globals
 {
-    public static class Gameplay
+    public class Gameplay
     {
         // TIMERS
         public static Param<bool> AllowTimerUpdate { get; set; } = new(true);

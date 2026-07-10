@@ -26,7 +26,12 @@ public class GameSettings : ScriptableObject
         Globals.Gameplay.OvercookingDuration.Value = Instance.CookingSettings.OverCookingDuration;
 
         Globals.Gameplay.Player.LookSpeed.Value = Instance.ControllerSettings.LookSensitivity;
+
+        Globals.Rendering.Outline.Thickness.Value = Instance.GraphicsSettings.OutlineWidth;
+        Globals.Rendering.Outline.Color.Value = Instance.GraphicsSettings.OutlineColor;
     }
+
+    void OnValidate() => Apply();
 
     public S_ShiftSettings ShiftSettings;
     [Serializable]
@@ -63,6 +68,15 @@ public class GameSettings : ScriptableObject
     {
         [Min(0.01f)]
         public float LookSensitivity;
+    }
+    
+    public S_GraphicsSettings GraphicsSettings;
+    [Serializable]
+    public struct S_GraphicsSettings
+    {
+        [Min(0f)]
+        public float OutlineWidth;
+        public Color OutlineColor;
     }
 
 }
