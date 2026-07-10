@@ -13,7 +13,8 @@ namespace Upgrades
         public UpgradeConfig     Config    => _config;
         
         internal event Action<Upgrade> OnLevelUpInternal;
-        
+        [GlobalEvent("Upgrades/OnUpgradeSuccessfullyBought")]
+        public static Action OnUpgradeSuccess;
         #endregion
 
         #region Fields
@@ -43,6 +44,7 @@ namespace Upgrades
             
             _level++;
             Debug.Log($"[{GetType().Name}] Level {_level}/{_config?.MaxLevel}");
+            OnUpgradeSuccess?.Invoke();
             OnLevelUpInternal?.Invoke(this);
         }
         
