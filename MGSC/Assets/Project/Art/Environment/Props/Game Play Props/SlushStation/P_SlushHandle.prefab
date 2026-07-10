@@ -26,13 +26,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1530933228497205023}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0.0000000037252899, y: 0.0000000013969838, z: -0.11064868, w: 0.99385965}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5807080249635956712}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -12.705}
 --- !u!33 &6664900816253529445
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -99,10 +99,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5807080249635956712}
-  - component: {fileID: 348847699203849406}
   - component: {fileID: 6083732710800685459}
   - component: {fileID: 3153832169025217327}
-  - component: {fileID: 3624595831976653216}
+  - component: {fileID: 580859143286663979}
   m_Layer: 0
   m_Name: P_SlushHandle
   m_TagString: Untagged
@@ -127,28 +126,6 @@ Transform:
   - {fileID: 7606059229518166716}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &348847699203849406
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7874441409090807864}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a74be3acbcc2ae2428f51cc7d0f78392, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &6083732710800685459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,23 +173,23 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 348847699203849406}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-          m_MethodName: SetTrigger
+          m_MethodName: Play
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Slush
+            m_StringArgument: A_SlushActivation
             m_BoolArgument: 0
           m_CallState: 2
   references:
     version: 2
     RefIds: []
---- !u!136 &3624595831976653216
-CapsuleCollider:
+--- !u!65 &580859143286663979
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -229,11 +206,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.19
-  m_Height: 0
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 3
+  m_Size: {x: 0.34, y: 0.31, z: 0.25}
+  m_Center: {x: -0.03, y: 0, z: 0}
 --- !u!1 &8375228111748610559
 GameObject:
   m_ObjectHideFlags: 0
