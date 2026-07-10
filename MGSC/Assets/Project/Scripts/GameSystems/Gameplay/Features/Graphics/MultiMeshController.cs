@@ -43,7 +43,6 @@ namespace Features
         /// <returns>A single mesh representing all the meshes from the MeshRenderers, with one single submesh</returns>
         public Mesh GetCombinedMeshes(Transform relativeTo=null, bool combineInactiveMeshes=false)
         {
-            Debug.Log(relativeTo);
             //if (Controllers.Length == 0) return new();
 
             List<CombineInstance> instances = new ();
@@ -65,7 +64,6 @@ namespace Features
             }
             else
             {
-                Debug.Log(relativeTo.name + " : Skinned mesh renderers : " + relativeTo.GetComponentsInChildren<SkinnedMeshRenderer>().Length);
                 meshes = Controllers
                         .Where(controller => controller.Renderer.enabled)
                         .Select(controller => controller.GetMesh())
@@ -91,7 +89,6 @@ namespace Features
                 var mesh = meshes[i];
                 var transform = transforms[i];
                 if (mesh == null || transform == null) continue;
-                Debug.Log(mesh.name);
                 Matrix4x4 child = transform.localToWorldMatrix;
                 Matrix4x4 parent = Matrix4x4.identity;
                 if (relativeTo != null)
