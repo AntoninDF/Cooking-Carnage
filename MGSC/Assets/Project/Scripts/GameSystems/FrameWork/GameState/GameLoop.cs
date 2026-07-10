@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public static class GameLoop
 {
+    public static GameState DefaultState => new MainMenuState();
     public static bool StateNotNull => _currentState != null;
     public static GameState CurrentState
     {
@@ -85,6 +86,11 @@ public static class GameLoop
     }
     #endregion
 
+
+    public static void Init()
+    {
+        SetState(DefaultState);
+    }
     /// <summary>
     /// Will invoke <see cref="OnReset"/>. All systems that must be reset should subscribe to <see cref="OnReset"/>.
     /// </summary>

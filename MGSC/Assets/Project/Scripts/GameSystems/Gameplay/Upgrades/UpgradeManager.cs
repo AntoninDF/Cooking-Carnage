@@ -36,7 +36,7 @@ namespace Upgrades
         public UpgradeManager()
         {
             Register();
-           // ( as MonoBehaviour).enabled = true;
+            GameLoop.OnAfterReset += ActualizeAllUpgrade;
         }
         
         

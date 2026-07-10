@@ -65,6 +65,7 @@ namespace GameSystem
         
         void Reset()
         {
+            canSpawnClient = true;
             StopTryingSpawn();
         }
         
@@ -130,6 +131,9 @@ namespace GameSystem
 
         bool TrySpawnClient()
         {
+            Debug.Log($"TrySpawnClient called. CanSpawnClient is {CanSpawnClient}." +
+                $" _canSpawnClient is {canSpawnClient}. Spline is {spline}." +
+                $" SeatsOrQueueAvailable is {SeatsOrQueueAvailable()}. SpawnPointisClear is {SpawnPointIsClear()}");
             if (CanSpawnClient)
             {
                 SpawnClient();
@@ -147,6 +151,7 @@ namespace GameSystem
         /// </summary>
         void SpawnClient()
         {
+            Debug.Log("Spawning client");
             if (nextClients.Count == 0)
             {
                 EnqueueClient(NewClient());
