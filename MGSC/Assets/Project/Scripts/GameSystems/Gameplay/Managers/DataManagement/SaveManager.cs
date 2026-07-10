@@ -66,23 +66,22 @@ namespace GameSystem
             return File.Exists(filePath);
         }
 
+        public static GameData GetCurrentData()
+        {
+            if (!SaveFileExists())
+            {
+                ResetSave();
+            }
+            string json = File.ReadAllText(filePath);
+            return JsonUtility.FromJson<GameData>(json);
+        }
         /// <summary>
         /// Load multiple data (money, upgrades, daycount) and reload the game
         /// </summary>
         /// <returns>Wether or not a save file could be loaded</returns>
         public static bool LoadGlobalData()
         {
-            //Debug.Log("Loading global data");
-            
-            if (!SaveFileExists())
-            {
-                //Debug.Log("No save file found");
-                
-                ResetSave();
-                return false;
-            }
-            string json = File.ReadAllText(filePath);
-            Data = JsonUtility.FromJson<GameData>(json);
+            Data = GetCurrentData();
             
             if (Reference.TryGetManager(out MoneyManager moneyMgr))
                 moneyMgr.MoneyInfo = Data.money;
