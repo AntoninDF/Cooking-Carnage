@@ -79,7 +79,30 @@ public class Plate : Item
         {
             interactable.Enabled = false;
         }
+
+        ContainerComponent.Container.OnGrab += BindIngredient;
+        ContainerComponent.Container.OnDrop += UnbindIngredient;
     }
+
+    private void BindIngredient(F_Grabbable grabbable)
+    {
+        Debug.Log("Bind ingredient");
+        if (grabbable.Owner is Item item)
+        {
+            LookAtTarget.OnStartLookAt += item.ActiveModel.Outline.EnableOutline;
+            LookAtTarget.OnStopLookAt  += item.ActiveModel.Outline.DisableOutline;
+        }
+    }
+    private void UnbindIngredient(F_Grabbable grabbable)
+    {
+        Debug.Log("Unbind ingredient");
+        if (grabbable.Owner is Item item)
+        {
+            LookAtTarget.OnStartLookAt -= item.ActiveModel.Outline.EnableOutline;
+            LookAtTarget.OnStopLookAt  -= item.ActiveModel.Outline.DisableOutline;
+        }
+    }
+
     bool GrabbableCondition(object item)
     {
         F_Grabbable grabbable = (F_Grabbable)item;
@@ -100,7 +123,7 @@ public class Plate : Item
     {
         if (context.TryGetFeature(out F_Container playerContainer))
         {
-            // Try to take the player's ingredient, otherwise, try to get grabbed
+            // Try to take the player's item, otherwise, try to get grabbed
             if (!Container.RequestGrab(playerContainer.HeldItem))
             {
                 // Try to swap the plates
@@ -148,8 +171,9 @@ public class Plate : Item
             if (slot.HeldItem == null) continue;
             Item item = slot.HeldItem.Owner as Item;
             if (item == null) continue;
-            Destroy(item.gameObject);
+            UnbindIngredient(item.Grabbable);
             slot.RequestDrop();
+            Destroy(item.gameObject);
         }
     }
 
