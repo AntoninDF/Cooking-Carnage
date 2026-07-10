@@ -47,6 +47,8 @@ namespace GameSystem
         private Queue<SO_Client> nextClients = new();
         
         private float _spawnSafeZoneT = 0.1f;
+
+        Timer _spawnTimer;
         
         #endregion
 
@@ -58,8 +60,14 @@ namespace GameSystem
         public AdaptiveClientSpawner()
         {
             Register();
+            GameLoop.OnReset += Reset;
         }
         
+        void Reset()
+        {
+            canSpawnClient = true;
+            StopTryingSpawn();
+        }
         
         /// <summary>
         /// IManager Interface method to register itself to the ReferenceManager
@@ -93,7 +101,7 @@ namespace GameSystem
             // Start spawning clients when the shift begins
             ShiftManager.OnShiftBegin += () =>
             {
-                //Debug.Log("Shift started, client will spawn soon");
+                Debug.Log("Shift started, client will spawn soon");
                 Launch(2);
             };
         }
@@ -117,12 +125,15 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
-//            Debug.Log("START SPAWN ROUTINE");
+            //            Debug.Log("START SPAWN ROUTINE");
             TimerManager.StartTimer(timerName, delay, () => TrySpawnClient());
         }
 
         bool TrySpawnClient()
         {
+            Debug.Log($"TrySpawnClient called. CanSpawnClient is {CanSpawnClient}." +
+                $" _canSpawnClient is {canSpawnClient}. Spline is {spline}." +
+                $" SeatsOrQueueAvailable is {SeatsOrQueueAvailable()}. SpawnPointisClear is {SpawnPointIsClear()}");
             if (CanSpawnClient)
             {
                 SpawnClient();
@@ -140,6 +151,7 @@ namespace GameSystem
         /// </summary>
         void SpawnClient()
         {
+            Debug.Log("Spawning client");
             if (nextClients.Count == 0)
             {
                 EnqueueClient(NewClient());

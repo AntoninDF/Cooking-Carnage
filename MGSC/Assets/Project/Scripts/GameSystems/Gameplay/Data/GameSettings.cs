@@ -1,4 +1,3 @@
-using NaughtyAttributes;
 using System;
 using UnityEngine;
 
@@ -25,6 +24,8 @@ public class GameSettings : ScriptableObject
 
         Globals.Gameplay.CookingDuration.Value = Instance.CookingSettings.CookingDuration;
         Globals.Gameplay.OvercookingDuration.Value = Instance.CookingSettings.OverCookingDuration;
+
+        Globals.Gameplay.Player.LookSpeed.Value = Instance.ControllerSettings.LookSensitivity;
     }
 
     public S_ShiftSettings ShiftSettings;
@@ -32,9 +33,9 @@ public class GameSettings : ScriptableObject
     public struct S_ShiftSettings
     {
         [Min(30), Tooltip("In seconds")]
-        public float ShiftDuration;
-        [MaxValue(30), Tooltip("In seconds")]
-        public float ShiftFinalWarningDuration;
+        public int ShiftDuration;
+        [Min(0), Tooltip("In seconds")]
+        public int ShiftFinalWarningDuration;
     }
 
     public S_PriceSettings PriceSettings;
@@ -54,6 +55,14 @@ public class GameSettings : ScriptableObject
         public float CookingDuration;
         [Min(0)]
         public float OverCookingDuration;
+    }
+
+    public S_ControllerSettings ControllerSettings;
+    [Serializable]
+    public struct S_ControllerSettings
+    {
+        [Min(0.01f)]
+        public float LookSensitivity;
     }
 
 }

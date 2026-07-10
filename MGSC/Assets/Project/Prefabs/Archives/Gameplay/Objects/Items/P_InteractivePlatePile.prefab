@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1203302186578192290}
   - component: {fileID: 5352238403921679951}
-  - component: {fileID: 6887302966327209835}
   - component: {fileID: 5554561384989418789}
   - component: {fileID: 65019802026757738}
   - component: {fileID: 4106163410907960234}
@@ -59,21 +58,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &6887302966327209835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1988903365140035185}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63a59fd62de223d418de0c80dab5994c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlotContainer
-  isInteractable: 1
-  passThrough: 1
-  Model: {fileID: 0}
 --- !u!23 &5554561384989418789
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -149,6 +133,7 @@ MonoBehaviour:
   randomRotation: 1
   randomScale: 0.1
   jitter: 0.03
+  colliderPile: {fileID: 5352238403921679951}
 --- !u!114 &6865946759690285870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,5 +146,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9b68ccbc2c0b434e970b51f37ee901c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlatePile
-  Container: {fileID: 6887302966327209835}
   ItemPrefab: {fileID: 1857627047578693840, guid: 41f1052143ccdf74281052a219d3de9a, type: 3}

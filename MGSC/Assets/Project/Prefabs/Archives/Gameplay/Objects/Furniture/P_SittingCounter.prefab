@@ -341,6 +341,38 @@ MonoBehaviour:
             m_StringArgument: Chara Standing Out
             m_BoolArgument: 0
           m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnClientLeavingWithTips
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: ClientSeat
+        SerializedType:
+          m_Name: ClientSeat
+          m_AssemblyQualifiedName: Features.ClientSeat, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 9010698450651919534}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5948082515384401312}
+          m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   references:
     version: 2
     RefIds: []
@@ -1758,6 +1790,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7538862057007532722, guid: e465c6052e4caef4a89549a205474d28, type: 3}
   m_PrefabInstance: {fileID: 4784125903873748280}
   m_PrefabAsset: {fileID: 0}
+--- !u!198 &5948082515384401312 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1220322259232706712, guid: e465c6052e4caef4a89549a205474d28, type: 3}
+  m_PrefabInstance: {fileID: 4784125903873748280}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5263567971664657012
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2536,6 +2573,14 @@ PrefabInstance:
     - target: {fileID: 2342053994506365014, guid: c057f3fa474100447b33347ea37024d5, type: 3}
       propertyPath: _filterByClient
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3673170586749270199, guid: c057f3fa474100447b33347ea37024d5, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3673170586749270199, guid: c057f3fa474100447b33347ea37024d5, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5073779519757761507, guid: c057f3fa474100447b33347ea37024d5, type: 3}
       propertyPath: m_Name

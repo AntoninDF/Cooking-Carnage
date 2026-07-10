@@ -22,7 +22,7 @@ public class SO_AssetReferences : ScriptableObject
     [SerializeField] private InputActionAsset _inputActions;
 
     public List<FullscreenWidget> UIPrefabs;
-    public Material OutlineMaterial;
+    //public Material OutlineMaterial ;
     public SO_RecipeBook DefaultRecipeBook;
 
     public SO_RecipeBook CurrentRecipeBook => OrderPicker.FindCurrentRecipeBook();

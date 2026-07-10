@@ -4,7 +4,6 @@ using Clients;
 using UnityEngine;
 using System.Linq;
 using Features;
-using Unity.AI.Navigation;
 
 namespace GameSystem
 {
@@ -44,6 +43,7 @@ namespace GameSystem
         {
             Register();
             ClientSeats = new(this);
+            GameLoop.OnReset += DestroyEveryClient;
         }
         
         /// <summary>
@@ -263,7 +263,7 @@ namespace GameSystem
            return clientHistory.FirstOrDefault(data => data.id == entityId);
         }
 
-        internal void DestroyEveryClients()
+        internal void DestroyEveryClient()
         {
             for (int i = currentClients.Count-1; i >= 0; i--)
             {

@@ -3,14 +3,14 @@ using GameSystem;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System.Reflection;
 using UnityEngine.Events;
+using Object = System.Object;
 
 
 namespace Upgrades
 {
 
-    public class UpgradeManager : IManager
+    public class UpgradeManager : IManager, IDisposable
     {
         #region Properties
         
@@ -36,6 +36,7 @@ namespace Upgrades
         public UpgradeManager()
         {
             Register();
+            GameLoop.OnAfterReset += ActualizeAllUpgrade;
         }
         
         
@@ -93,9 +94,18 @@ namespace Upgrades
         /// <param name="upgrade"></param>
         private void DispatchLevelUp(Upgrade upgrade)
         {
+            Debug.Log("Applying upgrade " + upgrade?.GetType().Name);
             var type = upgrade.GetType();
             if (_subscribers.TryGetValue(type, out var list))
                 list.Dispatch(upgrade);
+        }
+
+        public void ActualizeAllUpgrade()
+        {
+            foreach (var upgrade in _upgrades)
+            {
+                DispatchLevelUp(upgrade);
+            }
         }
         
 
@@ -162,6 +172,7 @@ namespace Upgrades
         }
         public void Unregister()
         {
+            Debug.Log("Unregistered " + GetType().Name);
             Reference.RemoveManager(this);
         }
 
@@ -180,9 +191,13 @@ namespace Upgrades
 
             public override void Dispatch(Upgrade upgrade)
             {
+                Debug.Log("Subscribers are :\n" + Subscribers.ToString_EasyRead(separator: "\n"));
                 if (upgrade is not T typed) return;
                 foreach (var sub in Subscribers)
+                {
+                    Debug.Log("Upgrading subscriber " + sub);
                     sub.OnUpgraded(typed);
+                }
             }
         }
         
@@ -207,6 +222,16 @@ namespace Upgrades
         }
 
         #endregion
-        
+
+        public void Dispose()
+        {
+            Debug.Log($"Disposing : {GetType().Name} & Clearing All Subscribers" );
+            ClearAllSubscribers();
+        }
+
+        public void SaveUpgrades()
+        {
+            
+        }
     }
 }

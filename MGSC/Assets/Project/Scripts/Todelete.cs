@@ -16,9 +16,6 @@ public class Todelete : MonoBehaviour
     private void Reset(object obj)
     {
         Debug.Log("Try to reset");
-        if (Reference.TryGetManager(out ShiftManager mgr))
-        {
-            mgr.ResetAll();
-        }
+        GameLoop.ResetAll();
     }
 }

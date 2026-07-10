@@ -94,13 +94,14 @@ namespace UI
                 case EDataInfo.WrongOrdersThisShift:            return GetWrongOrdersCount().ToString();
                 case EDataInfo.ClientsKilledThisShift:          return Reference.GetManager<ClientManager>()?.ClientsKilledThisShift.ToString();
                 case EDataInfo.MoneyGainedThisShift:            return Reference.GetManager<MoneyManager>()?.GetMoneyGainedThisShift().ToString();
-                case EDataInfo.MoneyGainedOnPreviousShift:            return Reference.GetManager<MoneyManager>()?.GetMoneyOnPreviousShift().ToString();
+                case EDataInfo.MoneyGainedOnPreviousShift:      return Reference.GetManager<MoneyManager>()?.GetMoneyOnPreviousShift().ToString();
                 case EDataInfo.MoneyAmount:                     return Reference.GetManager<MoneyManager>()?.MoneyInfo.ToString();
                 case EDataInfo.CookingSpeedUpgradeLevel:        return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<CookingSpeedUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.IngredientDropUpgradeLevel:      return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<IngredientDropUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.OvenCountUpgradeLevel:           return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<OvenCountUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.CuttingSpeedUpgradeLevel:        return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<BlenderSpeedUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.TimeLeft:                        return ProcessTimeLeft();
+                case EDataInfo.LastMoneyDelta:                  return ((int)Reference.GetManager<MoneyManager>()?.LastMoneyDelta).ToString() ;
 
             }
             return result;

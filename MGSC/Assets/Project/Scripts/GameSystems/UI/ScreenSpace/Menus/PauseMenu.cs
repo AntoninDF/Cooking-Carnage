@@ -32,10 +32,8 @@ namespace UI
         }
         void OnMainMenu()
         {
-            GameLoop.TryResume(this);
-            var menu = Owner.GetWidget<MainMenu>();
-            menu.Enable();
             Disable();
+            GameLoop.RequestTransition(StateTransitions.OpenMainMenu);
         }
         void OnQuit()
         {

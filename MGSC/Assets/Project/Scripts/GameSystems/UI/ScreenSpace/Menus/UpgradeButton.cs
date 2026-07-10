@@ -20,7 +20,7 @@ namespace UI
         
         public void Setup(UpgradeConfig config)
         {
-            UnityEngine.Debug.Log($"[UpgradeButton] Setup() appelé, config = {config?.name}, B_LevelUp = {(B_LevelUp != null ? B_LevelUp.name : "NULL")}");
+            // UnityEngine.Debug.Log($"[UpgradeButton] Setup() appelé, config = {config?.name}, B_LevelUp = {(B_LevelUp != null ? B_LevelUp.name : "NULL")}");
 
             BindWithUpgrade(config);
             UpdateGraphics();

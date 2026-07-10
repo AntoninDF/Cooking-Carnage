@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -42,18 +43,56 @@ namespace Features
         /// <returns>A single mesh representing all the meshes from the MeshRenderers, with one single submesh</returns>
         public Mesh GetCombinedMeshes(Transform relativeTo=null, bool combineInactiveMeshes=false)
         {
-            if (Controllers.Length == 0) return new();
+            Debug.Log(relativeTo);
+            //if (Controllers.Length == 0) return new();
 
             List<CombineInstance> instances = new ();
 
-            for (int i = 0; i < Controllers.Length; i++)
+            Mesh[] meshes;
+            Transform[] transforms;
+            
+            // Linqzilla
+            if (relativeTo == null)
             {
-                var Controller = Controllers[i];
-                if (!Controller.Renderer.enabled && !combineInactiveMeshes) continue;
-                Mesh mesh = Controller.GetMesh();
-                if (mesh == null) continue;
+                meshes = Controllers
+                        .Where(controller => controller.Renderer.enabled)
+                        .Select(controller => controller.GetMesh())
+                        .ToArray();
+                transforms = Controllers
+                    .Where(controller => controller.Renderer.enabled)
+                    .Select(controller => controller.Renderer.transform)
+                    .ToArray();
+            }
+            else
+            {
+                Debug.Log(relativeTo.name + " : Skinned mesh renderers : " + relativeTo.GetComponentsInChildren<SkinnedMeshRenderer>().Length);
+                meshes = Controllers
+                        .Where(controller => controller.Renderer.enabled)
+                        .Select(controller => controller.GetMesh())
+                        .Concat(
+                            relativeTo.GetComponentsInChildren<SkinnedMeshRenderer>()
+                            .Where(renderer => renderer.enabled)
+                            .Select(renderer => renderer.sharedMesh)
+                            )
+                        .ToArray();
+                transforms = Controllers
+                    .Where(controller => controller.Renderer.enabled)
+                    .Select(controller => controller.Renderer.transform)
+                    .Concat(
+                            relativeTo.GetComponentsInChildren<SkinnedMeshRenderer>()
+                            .Where(renderer => renderer.enabled)
+                            .Select(renderer => renderer.transform)
+                            )
+                    .ToArray();
+            }
 
-                Matrix4x4 child = Controller.Renderer.transform.localToWorldMatrix;
+            for (int i = 0; i < Math.Min(meshes.Length, transforms.Length); i++)
+            {
+                var mesh = meshes[i];
+                var transform = transforms[i];
+                if (mesh == null || transform == null) continue;
+                Debug.Log(mesh.name);
+                Matrix4x4 child = transform.localToWorldMatrix;
                 Matrix4x4 parent = Matrix4x4.identity;
                 if (relativeTo != null)
                     parent = relativeTo.worldToLocalMatrix;
@@ -66,7 +105,7 @@ namespace Features
 
                 if (!newInstance.mesh.isReadable)
                 {
-                    Debug.LogWarning("Tried to combine mesh '" + Controller.GetMesh().name + "', but it is not marked as read/write. Please check the import settings.");
+                    Debug.LogWarning("Tried to combine mesh '" + mesh.name + "', but it is not marked as read/write. Please check the import settings.");
                 }
             }
 

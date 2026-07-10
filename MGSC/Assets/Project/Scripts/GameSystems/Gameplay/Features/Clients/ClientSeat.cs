@@ -18,6 +18,7 @@ namespace Features
         
         public Action<Client> OnClientSitting {get; set; }
         public Action OnClientLeaving {get; set; }
+        public Action OnClientLeavingWithTips {get; set; }
         
         public Action OnMealReady { get; set; }
         public Action OnIngredientDropped { get; set; }
@@ -63,6 +64,15 @@ namespace Features
             _defaultPosition = parentTransform.localPosition;
             ClientManager.Register(this);
             _servingAreaConfig = servingAreaConfig;
+
+            GameLoop.OnReset += Reset;
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            RegisteredClient = null;
+            SittingClient = null;
         }
 
         public bool TryRegister(Client client)
@@ -72,6 +82,7 @@ namespace Features
             
             client.CurrentSeat        =  this;
             client.Behaviour.OnReactionEnd += OnClientLeaving;
+            client.Behaviour.GoodReaction += OnClientLeavingWithTips;
             RegisteredClient          =  client;
             ActualizeSeatPos(client);
             return true;

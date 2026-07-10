@@ -69,6 +69,8 @@ namespace GameSystem
             OnReset -= Init;
             OnReset -= ResetScene;
             OnReset -= SetupScene;
+
+            // REFACTO : To remove
             Reference.GetManager<UpgradeManager>().ClearAllSubscribers();
         }
         /// <summary>
@@ -181,7 +183,6 @@ namespace GameSystem
             }
         }
 
-        
 
         #endregion
     }

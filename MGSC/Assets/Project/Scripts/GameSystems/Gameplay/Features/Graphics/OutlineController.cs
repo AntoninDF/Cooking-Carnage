@@ -116,6 +116,7 @@ namespace Features
             if (OutlineRenderer != null)
                 OutlineRenderer.enabled = visible;
         }
+        /*
         public void SetParent(Transform target)
         {
             if (OutlineObject == null || target == null) return;
@@ -151,6 +152,7 @@ namespace Features
 
             return result;
         }
+        */
 
         public void ApplyOnAllMaterials(Action<Material> action)
         {

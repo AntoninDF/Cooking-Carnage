@@ -10,6 +10,7 @@ public class UpgradeState : MenuState
         switch (transition)
         {
             case StateTransitions.StartShift :
+                GameLoop.ResetAll();
                 return new PreShiftState();
             case StateTransitions.OpenMainMenu:
                 return new MainMenuState();
