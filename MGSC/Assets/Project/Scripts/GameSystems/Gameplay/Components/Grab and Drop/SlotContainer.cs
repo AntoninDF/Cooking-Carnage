@@ -67,21 +67,26 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
         }
     }
     protected void OnInteract(InteractionContext context)
-{
-    if (!context.TryGetFeature(out F_Container container)) return;
-
-    if (Container.RequestGrab(container.HeldItem)) return;
-
-    if (passThrough && container.RequestGrab(Container.HeldItem)) return;
-    
-    var incoming = container.HeldItem;
-    var existing = Container.HeldItem;
-
-    if (incoming != null && existing != null && incoming.Owner is Item incomingItem)
     {
-        incomingItem.SwapWith(existing);
+        if (!context.TryGetFeature(out F_Container container)) return;
+
+        if (Container.RequestGrab(container.HeldItem)) return;
+
+        if (passThrough && container.RequestGrab(Container.HeldItem)) return;
+
+        if (passThrough
+            && container.HeldItem != null
+            && container.HeldItem.TryGetSibling(out F_Container heldContainer)
+            && heldContainer.RequestGrab(Container.HeldItem)) return; 
+    
+        var incoming = container.HeldItem;
+        var existing = Container.HeldItem;
+
+        if (incoming != null && existing != null && incoming.Owner is Item incomingItem)
+        {
+            incomingItem.SwapWith(existing);
+        }
     }
-}
 
     protected void SetupMeshCollider()
     {

@@ -92,6 +92,7 @@ namespace UI
                 case EDataInfo.ShiftCount:                      return Reference.GetManager<ShiftManager>()?.ShiftNumber.ToString();
                 case EDataInfo.CorrectOrdersThisShift:          return GetCorrectOrdersCount().ToString();
                 case EDataInfo.WrongOrdersThisShift:            return GetWrongOrdersCount().ToString();
+                case EDataInfo.MissedOrdersThisShift:           return GetMissedOrdersCount().ToString();
                 case EDataInfo.ClientsKilledThisShift:          return Reference.GetManager<ClientManager>()?.ClientsKilledThisShift.ToString();
                 case EDataInfo.MoneyGainedThisShift:            return Reference.GetManager<MoneyManager>()?.GetMoneyGainedThisShift().ToString();
                 case EDataInfo.MoneyGainedOnPreviousShift:      return Reference.GetManager<MoneyManager>()?.GetMoneyOnPreviousShift().ToString();
@@ -128,7 +129,13 @@ namespace UI
         public int GetWrongOrdersCount()
         {
             if (!Reference.TryGetManager(out ClientManager clientMgr)) return 0;
-            return clientMgr.GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe);
+            return clientMgr.GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe && c.served);
+            //This version consider client leaving without food as wrong order, if u don't want to count them add && c.served (edit : I did)
+        }
+        public int GetMissedOrdersCount()
+        {
+            if (!Reference.TryGetManager(out ClientManager clientMgr)) return 0;
+            return clientMgr.GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe && !c.served);
             //This version consider client leaving without food as wrong order, if u don't want to count them add && c.served
         }
         private string ToString<T>(IEnumerable<T> items)
