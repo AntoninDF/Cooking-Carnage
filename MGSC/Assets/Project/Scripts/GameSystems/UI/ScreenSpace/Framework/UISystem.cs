@@ -107,8 +107,13 @@ namespace UI
         public void AddPrefabs(IEnumerable<FullscreenWidget> widgetPrefabs)
         {
             foreach (var prefab in widgetPrefabs)
+            {
+                if (prefab == null)
+                    Debug.LogWarning("[UISystem] Null prefabs were tried to be added to the UI system. " +
+                        "Please replace or remove null references. (Probably in the game profile)");
                 if (!_widgetPrefabs.Contains(prefab))
                     _widgetPrefabs.Add(prefab);
+            }
             InitPrefabs(widgetPrefabs);
         }
         public void StashWidget(FullscreenWidget widget) => widget?.transform.SetParent(_inactiveFolder);

@@ -10,9 +10,9 @@ namespace Orders
 
         private const float TipMultiplier1Star = 0.2f; // 1 star => + 20% 
         private const float TipMultiplier2Star = 0.5f; // 2 star => + 50%
-        
-        private const float Threshold1Star = 0.5f;  // 1 star => served in the first 50% of the time
-        private const float Threshold2Star = 0.66f; // 2 star => served in the first 33% of the time
+
+        private static float Threshold1Star => 1 - Globals.Gameplay.Threshold1Star;
+        private static float Threshold2Star => 1 - Globals.Gameplay.Threshold2Star;
         
         
         public static OrderRating Evaluate(Order order)

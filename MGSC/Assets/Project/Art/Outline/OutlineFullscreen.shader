@@ -13,40 +13,60 @@ Shader "Hidden/OutlineFullscreen"
     float _DepthMax;
 
     float4 FullScreenPass(Varyings varyings) : SV_Target
+{
+    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(varyings);
+
+    float2 positionSS = varyings.positionCS.xy;
+    float thickness = max(_OutlineThickness, 1);
+
+    uint2 texSize;
+    uint elements;
+    _MaskTexture.GetDimensions(texSize.x, texSize.y, elements); 
+    int2 maxCoord = int2(texSize) - 1;
+
+    float centerDepth = LOAD_TEXTURE2D_X(_MaskTexture, positionSS).r;
+    bool centerIsBackground = centerDepth > 999999.0;
+
+    // Sample up/down/left/right, offset by thickness, and look at how far each neighbor's depth is from the center pixel's depth.
+    // A big jump = either the silhouette's outer edge (neighbor is empty/background, whose depth is the large sentinel value) or an internal seam where one part
+    // of the mesh occludes another.
+    const int _sampleCount = 8;
+    float2 offsets[_sampleCount] = {
+        float2(1, 0), float2(-1, 0), float2(0, 1), float2(0, -1)
+        ,float2(0.7, 0.7), float2(-0.7, 0.7), float2(0.7, -0.7), float2(-0.7, -0.7)
+    };
+
+    float maxDelta = 0;
+    bool nearForeground = false;
+
+    for (int i = 0; i < _sampleCount; i++)
     {
-        UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(varyings);
+        float2 rawSamplePos = positionSS + offsets[i] * thickness;
+        int2 samplePos = clamp(int2(rawSamplePos), int2(0,0), maxCoord);
 
-        float2 positionSS = varyings.positionCS.xy;
-        float thickness = max(_OutlineThickness, 1);
+        float neighborDepth = LOAD_TEXTURE2D_X(_MaskTexture, samplePos).r;
+        bool neighborIsBackground = neighborDepth > 999999.0;
 
-        float centerDepth = LOAD_TEXTURE2D_X(_MaskTexture, positionSS).r;
-        if (centerDepth > 999999.0)
-            return float4(0,0,0,0);
-
-        // Sample up/down/left/right, offset by thickness, and look at how far each neighbor's depth is from the center pixel's depth.
-        // A big jump = either the silhouette's outer edge (neighbor is empty/background, whose depth is the large sentinel value) or an internal seam where one part
-        // of the mesh occludes another.
-        const int _sampleCount = 8;
-        float2 offsets[_sampleCount] = {
-            float2(1, 0), float2(-1, 0), float2(0, 1), float2(0, -1)
-            ,float2(0.7, 0.7), float2(-0.7, 0.7), float2(0.7, -0.7), float2(-0.7, -0.7)
-        };
-
-        float maxDelta = 0;
-        for (int i = 0; i < _sampleCount; i++)
+        if (centerIsBackground)
         {
-            float2 samplePos = positionSS + offsets[i] * thickness;
-            float neighborDepth = LOAD_TEXTURE2D_X(_MaskTexture, samplePos).r;
+            if (!neighborIsBackground)
+                nearForeground = true;
+        }
+        else if (!neighborIsBackground)
+        {
             maxDelta = max(maxDelta, abs(neighborDepth - centerDepth));
         }
-
-        float edge = smoothstep(_DepthMin, _DepthMax, maxDelta);
-
-        if (edge < 0.01)
-            return float4(0, 0, 0, 0); 
-
-        return float4(_OutlineColor.rgb, edge * _OutlineColor.a);
     }
+
+    float edge = centerIsBackground
+        ? (nearForeground ? 1.0 : 0.0)
+        : smoothstep(_DepthMin, _DepthMax, maxDelta);
+
+    if (edge < 0.01)
+        return float4(0, 0, 0, 0);
+
+    return float4(_OutlineColor.rgb, edge * _OutlineColor.a);
+}
 
     ENDHLSL
 
