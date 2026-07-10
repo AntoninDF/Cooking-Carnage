@@ -25,6 +25,7 @@ namespace GameSystem
         public int ShiftNumber { get => Globals.Gameplay.ShiftNumber; set => Globals.Gameplay.ShiftNumber.Value = value; }
         public float ShiftDuration => _shiftDuration;
         public bool IsShiftActive { get; set; }
+        public bool HasFailed { get; set; }
         /// <summary>
         /// Can be null if the timer hasn't been launched yet
         /// </summary>
@@ -60,6 +61,7 @@ namespace GameSystem
 
         void Reset()
         {
+            HasFailed = false;
             IsShiftActive = false;
             ResetTimerUntilEndOfShift();
             ResetTimerUntilFinalWarning();
@@ -122,7 +124,10 @@ namespace GameSystem
             if (validRent)
                 OnShiftSucceeded?.Invoke();
             else
+            {
                 OnShiftFailed?.Invoke();
+                HasFailed = true;
+            }
 
             SaveManager.SaveGameData();
             OnShiftEnded?.Invoke();
