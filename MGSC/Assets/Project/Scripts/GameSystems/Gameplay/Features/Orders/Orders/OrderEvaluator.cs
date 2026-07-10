@@ -8,6 +8,7 @@ namespace Orders
         public  static float OvercookedMealPrice { get; set; }
         public static float PlainJellyPrice { get; set; }
 
+        private const float TipMultiplier0Star = 0f; // 0 star => No tip
         private const float TipMultiplier1Star = 0.2f; // 1 star => + 20% 
         private const float TipMultiplier2Star = 0.5f; // 2 star => + 50%
         
@@ -27,6 +28,10 @@ namespace Orders
             float tip         = CalculateTip(basePrice, stars);
             float totalGained = basePrice + tip;
 
+            Debug.Log($"BasePrice is {basePrice}" +
+                $" stars is {stars}" +
+                $" tip is {tip}" +
+                $" total is {totalGained}");
             return new OrderRating(order, order.ServingInfo.Recipe, stars, totalGained);
         }
         
@@ -37,7 +42,7 @@ namespace Orders
             if (meal == null || meal.Recipe == null)
                 return PlainJellyPrice;
 
-            float basePrice  = RecipePriceTable.GetBasePrice(meal.Recipe);
+            float basePrice  = meal.Recipe.Price;
 
             return basePrice ;
         }
@@ -56,7 +61,8 @@ namespace Orders
         {
             2 => TipMultiplier2Star * basePrice,
             1 => TipMultiplier1Star * basePrice,
-            _ => 0f
+            0 => TipMultiplier0Star * basePrice,
+            _ => 0f * basePrice
         };
         
     }

@@ -27,7 +27,8 @@ namespace Orders
                 image.preserveAspect = true;
             }
         }
-        
+        private void OnEnable() => GameLoop.OnReset += UndisplayOrder;
+        private void OnDisable() => GameLoop.OnReset -= UndisplayOrder;
         public void DisplayOrder(SO_Recipe recipe)
         {
             if(recipe.Ingredients.Count > 4) Debug.Log("What the fuck ??");

@@ -3,6 +3,9 @@ using Cooking;
 
 namespace Orders
 {
+	/// <summary>
+	/// This class isn't used, it could be deleted
+	/// </summary>
 	public static class RecipePriceTable
 	{
 		private const float Price_Single      = 10f; 
@@ -13,7 +16,7 @@ namespace Orders
 
 		public static float GetBasePrice(SO_Recipe recipe)
 		{
-			if (recipe == null || recipe.Ingredients == null || recipe.Ingredients.Count == 0)
+			if (recipe == null)
 				return 0f;
 
 			var counts = new Dictionary<object, int>();

@@ -18,6 +18,7 @@ public static class GameLoop
     }
     public static Action<GameState> OnStateChange;
     public static bool IsRunning { get; private set; } = true;
+    public static bool IsPaused => !IsRunning;
     [GlobalEvent("Gameloop/OnPause")]
     public static Action OnPause { get; set; }
     [GlobalEvent("Gameloop/OnResume")]
