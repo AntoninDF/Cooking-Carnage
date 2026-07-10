@@ -54,6 +54,9 @@ public class OutlineCustomPass : CustomPass
             maskMaterial = CoreUtils.CreateEngineMaterial(maskShader);
 
         mpb = new MaterialPropertyBlock();
+
+        Globals.Bind(value => outlineColor = value, Globals.Rendering.Outline.Color);
+        Globals.Bind(value => outlineThickness = value, Globals.Rendering.Outline.Thickness);
     }
 
     protected override void Execute(CustomPassContext ctx)

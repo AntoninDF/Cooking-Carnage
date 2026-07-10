@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-public static partial class Globals
+public partial class Globals
 {
-    public static class Rendering
+    public class Rendering
     {
         public static class Outline
         {

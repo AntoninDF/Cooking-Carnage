@@ -12,7 +12,7 @@ namespace Features
     public class MultiMeshController : Feature, IFeatureCollection
     {
         public MeshController[] Controllers { get; set; }
-        public MultiMeshController(IFeatureCollection owner, params MeshRenderer[] renderers) : base(owner)
+        public MultiMeshController(IFeatureCollection owner, params Renderer[] renderers) : base(owner)
         {
             Controllers = new MeshController[renderers.Length];
             for (int i = 0; i < renderers.Length; i++)

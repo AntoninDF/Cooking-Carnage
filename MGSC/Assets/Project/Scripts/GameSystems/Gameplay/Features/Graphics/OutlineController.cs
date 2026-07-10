@@ -38,13 +38,13 @@ namespace Features
         public bool Visible { get => visible; set => SetVisibility(value); }
         protected bool visible = Globals.Rendering.Outline.AllowOutlines;
         
-        public MeshRenderer[] Renderers { get; set; }
+        public Renderer[] Renderers { get; set; }
         protected int[] originalLayers;
         #endregion
 
 
         #region Methods
-        public OutlineController(IFeatureCollection owner, Mesh target, Transform targetParent, MeshRenderer[] renderers) : base(owner)
+        public OutlineController(IFeatureCollection owner, Mesh target, Transform targetParent, Renderer[] renderers) : base(owner)
         {
             Mesh = target;
             TargetParent = targetParent;

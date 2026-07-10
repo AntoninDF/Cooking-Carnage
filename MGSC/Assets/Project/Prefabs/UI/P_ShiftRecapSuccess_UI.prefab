@@ -169,12 +169,12 @@ GameObject:
   - component: {fileID: 2026539537231738383}
   - component: {fileID: 3772597453799102733}
   m_Layer: 5
-  m_Name: B_Next shift (1)
+  m_Name: B_MainMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3287560518569787574
 RectTransform:
   m_ObjectHideFlags: 0
@@ -185,14 +185,14 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4644459128857689500}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.46775, y: 0.78300005}
-  m_AnchorMax: {x: 0.6947292, y: 0.88100004}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 337, y: 95.5}
+  m_SizeDelta: {x: 436, y: 105}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3371868414843354910
 CanvasRenderer:
@@ -215,16 +215,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1137255, g: 0.10588236, b: 0.023529414, a: 0.003921569}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 71da140d66661a5499cc483c7f585026, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -262,7 +262,7 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 21300000, guid: c63dc972469a7be48b5bc2543193639d, type: 3}
+    m_PressedSprite: {fileID: 21300000, guid: 682dce36e41ce0d4a85f5101bed26ea8, type: 3}
     m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
@@ -1095,8 +1095,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4644459128857689500}
-  - component: {fileID: 2082202574462367309}
   - component: {fileID: 7982069887486672917}
+  - component: {fileID: 2082202574462367309}
   - component: {fileID: 928469158231379057}
   - component: {fileID: 2135165354611436926}
   m_Layer: 5
@@ -1130,6 +1130,34 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7982069887486672917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2979564130518355977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 713e76d9e9f94824b9831cf155cf4d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.ShiftRecapMenu
+  B_NextShift: {fileID: 7167153269230843286}
+  B_MainMenu: {fileID: 3772597453799102733}
+  L_MoneyGained: {fileID: 7536796440167446958}
+  L_RentPaid: {fileID: 2357173128527152071}
+  L_PreviousTotalMoney: {fileID: 6121897354762856177}
+  L_CurrentTotalMoney: {fileID: 4650956504149171344}
+  ObjectsToEnableUponFailOnly: []
+  ObjectsToEnableUponSuccessOnly: []
+  SpriteSwaps:
+  - Target: {fileID: 7894993839957486090}
+    Default: {fileID: 21300000, guid: f4a909cd023e99a42b60d557c7bd985b, type: 3}
+    Success: {fileID: 21300000, guid: f4a909cd023e99a42b60d557c7bd985b, type: 3}
+    Fail: {fileID: 21300000, guid: fae53914e4244274c911a10cd44e841e, type: 3}
+  OnFail:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!223 &2082202574462367309
 Canvas:
   m_ObjectHideFlags: 0
@@ -1153,24 +1181,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &7982069887486672917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2979564130518355977}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 713e76d9e9f94824b9831cf155cf4d82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI.ShiftRecapMenu
-  B_NextShift: {fileID: 7167153269230843286}
-  B_MainMenu: {fileID: 0}
-  L_MoneyGained: {fileID: 7536796440167446958}
-  L_RentPaid: {fileID: 2357173128527152071}
-  L_PreviousTotalMoney: {fileID: 6121897354762856177}
-  L_CurrentTotalMoney: {fileID: 4650956504149171344}
 --- !u!114 &928469158231379057
 MonoBehaviour:
   m_ObjectHideFlags: 0

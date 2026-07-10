@@ -1,9 +1,9 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public static partial class Globals
+public partial class Globals
 {
-    public static class Gameplay
+    public class Gameplay
     {
         // TIMERS
         public static Param<bool> AllowTimerUpdate { get; set; } = new(true);
@@ -38,6 +38,8 @@ public static partial class Globals
 
         // PRICES
         public static Param<float> WrongMealPrice { get; set; } = new(5f);
+        public static Param<float> Threshold1Star { get; set; } = new(0.5f);
+        public static Param<float> Threshold2Star { get; set; } = new(0.33f);
         
         // UPGRADES
         public static Param<bool> AllowUpgrades { get; set; } = new(true);
