@@ -8,7 +8,7 @@ namespace Features
     public class MeshController : Feature, IFeatureCollection
     {
 		#region Properties
-		public MeshRenderer Renderer { get; set; }
+		public Renderer Renderer { get; set; }
 		public virtual MeshRendererState DefaultState { get; set; }
 
 		public FeatureCollection Collection { get; set; } = new();
@@ -17,7 +17,7 @@ namespace Features
 
 
         #region Methods
-        public MeshController(IFeatureCollection owner, MeshRenderer target) : base(owner)
+        public MeshController(IFeatureCollection owner, Renderer target) : base(owner)
         {
 			Renderer = target;
 			DefaultState = new MeshRendererState(target);
