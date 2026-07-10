@@ -17,12 +17,12 @@ namespace Features
 
 
 		#region Methods
-		public MeshRendererState(MeshRenderer renderer)
+		public MeshRendererState(Renderer renderer)
 		{
 			GetState(renderer);
 		}
 
-		public void GetState(MeshRenderer renderer)
+		public void GetState(Renderer renderer)
 		{
 			enabled = renderer.enabled;
 			transform = renderer.transform;
@@ -39,7 +39,7 @@ namespace Features
 			}
 		}
 
-		public void SetState(MeshRenderer renderer)
+		public void SetState(Renderer renderer)
 		{
 			// Every property isn't set back because it isn't always good (or allowed) to do so (for example, the transform)
 			renderer.enabled = enabled;
