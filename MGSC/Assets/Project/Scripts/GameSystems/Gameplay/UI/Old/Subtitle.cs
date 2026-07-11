@@ -6,9 +6,10 @@ using Localization;
 using GameSystem;
 using FMODUnity;
 
-namespace UI
-{
 
+/// <summary>
+/// This class should be deleted
+/// </summary>
     public class Subtitle : MonoBehaviour
     {
         #region Properties
@@ -117,4 +118,3 @@ namespace UI
         public UnityEvent OnStart;
         public UnityEvent OnEnd;
     }
-}

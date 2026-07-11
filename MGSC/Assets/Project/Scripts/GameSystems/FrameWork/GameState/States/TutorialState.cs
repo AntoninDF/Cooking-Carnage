@@ -1,18 +1,24 @@
+using NUnit.Framework.Constraints;
 using UI;
 public class TutorialState : GameplayState
 {
     HeadsUpDisplay HUD;
+    SubtitleOverlay Subs;
     public override void OnEnter()
     {
         base.OnEnter();
-        if (!Reference.TryGetManager(out UISystem ui)) return;
-        HUD = ui.GetWidget<HeadsUpDisplay>();
-        HUD?.Enable();
+        if (Reference.TryGetManager(out UISystem ui))
+        {
+            HUD = ui.GetWidget<HeadsUpDisplay>();
+            HUD?.Enable();
+            Subs = ui.GetWidget<SubtitleOverlay>();
+            Subs?.Enable();
+        }
 
         //IngredientSpawnPosition.SpawnIngredients(2);
 
         // The tutorial automatically skips for now, but it has to be done
-        GameLoop.RequestTransition();
+        //GameLoop.RequestTransition();
     }
 
     public override void OnExit()
