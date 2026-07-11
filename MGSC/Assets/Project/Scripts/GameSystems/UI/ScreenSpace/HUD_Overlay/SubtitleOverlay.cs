@@ -38,19 +38,19 @@ namespace UI
                 " Lorem ipsum dolor");
             }
 
-        public void PlaySubtitle(string text, float charactersPerSecond=16, float fadeInDuration=0.5f)
+        public void WaitAndDo(float duration, Action OnEnd) => Sub.WaitAndDo(duration, OnEnd);
+        public void EndSubtitle(float duration = 0.5f, Action OnEnd = null) => Sub.FadeOut(duration, OnEnd);
+        public Subtitle PlaySubtitle(string text, float charactersPerSecond=16, float fadeInDuration=0.5f, Action OnEnd=null)
         {
             Sub.FadeIn(
                 fadeInDuration,
                 () => Sub.DisplayText(
                     text, 
                     charactersPerSecond,
-                    () => Sub.WaitAndDo(2f, () => Sub.DisplayText(
-                        Markup.ToColorLerped("Hello there..." + Markup.breakLine + "  General Kenobi  ", Color.skyBlue, Color.deepPink),
-                        10,
-                        () => Sub.FadeOut())))
+                    OnEnd
+                    )
                 );
-            
+            return Sub;
         }
     } 
 }

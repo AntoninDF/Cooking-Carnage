@@ -11,14 +11,8 @@ public class TutorialState : GameplayState
         {
             HUD = ui.GetWidget<HeadsUpDisplay>();
             HUD?.Enable();
-            Subs = ui.GetWidget<SubtitleOverlay>();
-            Subs?.Enable();
         }
-
-        //IngredientSpawnPosition.SpawnIngredients(2);
-
-        // The tutorial automatically skips for now, but it has to be done
-        //GameLoop.RequestTransition();
+        TutorialTimeline.StartTutorial();
     }
 
     public override void OnExit()
