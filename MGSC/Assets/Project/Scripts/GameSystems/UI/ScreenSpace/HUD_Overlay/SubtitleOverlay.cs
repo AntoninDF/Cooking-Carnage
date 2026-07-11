@@ -10,6 +10,7 @@ namespace UI
         public override bool ForceLoadOnUIInitialization => true;
 
         public UIWidget SubtitlePrefab;
+        private Subtitle Sub;
         public override void OnLoad()
         {
             base.OnLoad();
@@ -27,8 +28,29 @@ namespace UI
             rt.sizeDelta = Vector3.zero;
             rt.anchoredPosition = Vector3.zero;
 
-            Subtitle sub = go.GetComponent<Subtitle>();
-            sub.DisplayText("Lorem ipsum dolor sit amet sed constectur (1) Lorem ipsum dolor sit amet sed constectur (2) Lorem ipsum dolor sit amet sed constectur (3)", 16);
+            Sub = go.GetComponent<Subtitle>();
+            Sub.SetVisibility(0f);
+            Sub.DisplayText("");
+
+            PlaySubtitle(
+                "Lorem ipsum dolor" + Markup.breakLine +
+                Markup.ToBold("Lorem ipsum dolor bold") +
+                " Lorem ipsum dolor");
+            }
+
+        public void PlaySubtitle(string text, float charactersPerSecond=16, float fadeInDuration=0.5f)
+        {
+            Sub.FadeIn(
+                fadeInDuration,
+                () => Sub.DisplayText(
+                    text, 
+                    charactersPerSecond,
+                    () => Sub.WaitAndDo(2f, () => Sub.DisplayText(
+                        Markup.ToColorLerped("Hello there..." + Markup.breakLine + "  General Kenobi  ", Color.skyBlue, Color.deepPink),
+                        10,
+                        () => Sub.FadeOut())))
+                );
+            
         }
     } 
 }
