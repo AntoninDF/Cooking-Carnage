@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,7 @@ namespace UI
 
 
 
-		[SerializeField] private Dropdown Dropdown;
+		[SerializeField] private TMP_Dropdown Dropdown;
 		public Action<int> OnValueChanged = value => { };
 		private Dictionary<int, Action> _optionCallbacks = new();
         private void Start()
@@ -36,16 +37,16 @@ namespace UI
 			if (Dropdown == null) return;
 			Dropdown.ClearOptions();
 		}
-		public void AddOption(string name, Sprite sprite)
+		public void AddOption(string name, Sprite sprite, Color color)
 		{
 			if (Dropdown == null) return;
-			Dropdown.options.Add(new Dropdown.OptionData(name, sprite));
+			Dropdown.options.Add(new TMP_Dropdown.OptionData(name, sprite, color));
 		}
 		public void AddOption(string name, Action action = null)
 		{
 			if (Dropdown == null) return;
 			_optionCallbacks[Dropdown.options.Count] = action;
-			Dropdown.options.Add(new Dropdown.OptionData(name));
+			Dropdown.options.Add(new TMP_Dropdown.OptionData(name));
 		}
 		public void SetOptions(params string[] options)
 		{

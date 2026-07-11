@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 3523774054909050862}
   - component: {fileID: 8404580120804066691}
   - component: {fileID: 7180644608300962597}
+  - component: {fileID: 3854555474577726229}
   m_Layer: 5
   m_Name: P_Slider
   m_TagString: Untagged
@@ -180,6 +181,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &3854555474577726229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3038287776161173153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7991693a8bc27ba49a2508df1d8f95b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.SliderOption
+  L_Label: {fileID: 2175037106696472464}
+  Slider: {fileID: 2120687155973126514}
 --- !u!1 &3285680844487882499
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,7 +287,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
