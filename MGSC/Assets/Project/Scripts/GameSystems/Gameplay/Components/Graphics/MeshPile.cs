@@ -24,6 +24,11 @@ public class MeshPile : MonoBehaviour
     private MeshFilter mf;
     private MeshCollider mc;
     private MeshRenderer mr;
+    private int _defaultLayer;
+    
+    public Collider colliderPile;
+    public Action OnPlateCountChanged;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,12 +38,23 @@ public class MeshPile : MonoBehaviour
         TryAssignDefaultMaterial();
         TryAssignDefaultMesh();
         RegenerateIfNull();
+        
+        _defaultLayer = gameObject.layer;
+        OnPlateCountChanged += CheckCollider;
+
     }
     void Reset()
     {
         TryAssignDefaultMaterial();
         TryAssignDefaultMesh();
         Regenerate_Editor();
+    }
+
+    void CheckCollider()
+    {
+        if (colliderPile != null)
+            colliderPile.enabled = count != 0;
+
     }
 #if UNITY_EDITOR
     private void OnEnable()
@@ -78,6 +94,7 @@ public class MeshPile : MonoBehaviour
 
     public void Regenerate(bool applyRandomPresets=true)
     {
+        if (mr == null) TryGetComponent(out mr);
         if (mesh == null) return;
         Mesh newMesh = mf.sharedMesh;
         if (applyRandomPresets)
@@ -89,6 +106,8 @@ public class MeshPile : MonoBehaviour
             mc.sharedMesh = newMesh;
         if (material != null)
             mr.sharedMaterial = material;
+        
+        OnPlateCountChanged?.Invoke();
     }
     [ContextMenu("Regenerate mesh")]
     internal void Regenerate_Editor()
@@ -113,6 +132,16 @@ public class MeshPile : MonoBehaviour
     {
         count = 0;
         Regenerate();
+    }
+    
+    public void SetOutline(bool active)
+    {
+        gameObject.layer = active ? LayerMask.NameToLayer("Outlined") : _defaultLayer;
+    }
+
+    public void OnDestroy()
+    {
+        OnPlateCountChanged -= CheckCollider;
     }
 }
 

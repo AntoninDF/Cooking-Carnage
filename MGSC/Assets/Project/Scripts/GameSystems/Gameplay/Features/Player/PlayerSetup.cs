@@ -1,4 +1,5 @@
 using GameSystem;
+using UnityEditor;
 using UnityEngine;
 
 namespace Controller
@@ -7,19 +8,30 @@ namespace Controller
     public static class PlayerSetup
     {
         public static Player Player;
+
+
+        static PlayerSetup()
+        {
+            GameLoop.OnReset += () => TrySetupPlayer();
+        }
         /// <summary>
         /// Creates a player if none exists, then resets it's position, and adds it to the reference manager
         /// </summary>
         /// <returns></returns>
         public static Player TrySetupPlayer()
         {
-            TrySpawnPlayer(out Player);
+            if (Player == null)
+                TrySpawnPlayer(out Player);
             TryResetPlayer();
 
             return Player;
         }
 
-
+        /// <summary>
+        /// Will try to spawn a new player (even if one already exists)
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
         public static bool TrySpawnPlayer(out Player player)
         {
             player = null;
@@ -70,14 +82,15 @@ namespace Controller
                 "[Player Setup] : The player to be reset was null"))
                 return false;
 
+            //Debug.Log($"[PlayerSetup] Player is '{Player}', pos is '{pos}', rot is '{rot}'");
             ResetPlayer(Player, pos, rot);
             return true;
         }
 
         private static void ResetPlayer(Player player, Vector3 position, Quaternion rotation)
         {
-            player.transform.position = position;
-            player.transform.rotation = rotation;
+            player.PlayerMovement.SetPosition(position);
+            player.PlayerMovement.SetRotation(rotation);
             SetPlayerReferences(player);
         }
 

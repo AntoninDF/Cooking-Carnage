@@ -1,10 +1,5 @@
-using System;
-using Controller;
 using Features;
-using GameSystem;
-using UI;
 using UnityEngine;
-using UnityEngine.Events;
 
 
 namespace Cooking
@@ -28,6 +23,20 @@ namespace Cooking
 
 
         #region Methods
+        private void OnEnable()
+        {
+            GameLoop.OnReset += ResetThis; 
+        }
+        private void OnDisable()
+        {
+            GameLoop.OnReset -= ResetThis;
+        }
+        void ResetThis()
+        {
+            Cutter.RequestStopTransformation();
+            Container?.Empty();
+            Cutter.OnTransformationOver?.Invoke(null);
+        }
         void Awake()
         {
             BindEvents();

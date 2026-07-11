@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-public static partial class Globals
+public partial class Globals
 {
-    public static class Rendering
+    public class Rendering
     {
         public static class Outline
         {
@@ -12,6 +12,7 @@ public static partial class Globals
             public static Param<OutlineMode> Mode = new(OutlineMode.Offset);
             public static Param<OutlineOptions> Options => new(new OutlineOptions(Color, Thickness, Mode));
 
+            /*
             /// <summary>
             /// Creates a new Instance of an outline material setup with the global parameters
             /// </summary>
@@ -36,6 +37,7 @@ public static partial class Globals
                 result.SetFloat("_CullModeForward", 1);
                 return result;
             }
+            */
 
             public enum OutlineMode { Scale, Offset }
 

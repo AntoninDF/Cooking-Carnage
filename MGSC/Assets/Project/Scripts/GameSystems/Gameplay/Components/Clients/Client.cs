@@ -23,13 +23,16 @@ namespace Clients
         public Action<Order>      OnOrderAccepted  { get; set; }
         public Action<ClientSeat> OnSeatRegister   { get; set; }
         public Action<ClientSeat> OnSeatUnregister { get; set; }
+        public Action<float> OnOrderTimeProgress { get; set; }
         public ClientBehaviour    Behaviour        { get; set; }
         public ClientCooked       Cooked           { get; private set; }
         public ClientLook         ClientLook       => _clientLook;
         
         public bool               IsCooked         { get; set; }
+        public bool               IsAngry          { get; set; }
         public int UniqueID { get; set; }
         
+        public Order OrderLog { get;  set; }
         public Order CurrentOrder
         {
             get => _currentOrder;
@@ -38,8 +41,37 @@ namespace Clients
                 if (_currentOrder == value) return;
                 _currentOrder = value;
                 if (value != null)
+                {
                     OnNewOrder?.Invoke(value);
+                }
+
             }
+        }
+        
+        public void BeginOrderTimer()
+        {
+            if (CurrentOrder == null) return;
+            if (_currentOrder != null) _currentOrder.SeatedTimestamp = Time.time;
+            StartOrderTimer(CurrentOrder);
+        }
+        
+        private void StartOrderTimer(Order order)
+        {
+            string timerName = "OrderTimer_" + UniqueID;
+            GameSystem.TimerManager.StartTimer(
+                timerName,
+                order.PatienceDuration,
+                () => OnOrderTimeout(order),
+                elapsed => OnOrderTimeProgress?.Invoke(Mathf.Clamp01(elapsed / order.PatienceDuration))
+            );
+        }
+        
+        private void OnOrderTimeout(Order order)
+        {
+            if (CurrentOrder != order) return;
+            IsAngry = true;
+            order.Cancel();
+            CurrentSeat?.TryUnregister(this);
         }
 
         public ClientSeat CurrentSeat
@@ -89,7 +121,7 @@ namespace Clients
        void Update()
        {
            Collection.Update();
-           //Behaviour.Update();
+           Behaviour.Update();
        }
 
        #endregion
@@ -106,27 +138,38 @@ namespace Clients
        public void CookClient()
        {
            Cooked.Trigger();
+           
        }
 
        public void SpawnIngredients(List<SlotContainer> containers)
        {
            List<SlotContainer> positions = containers;
            int numberToDrop = Random.Range((int)DropRate.x, (int)DropRate.y);
-
+           Debug.Log($"Min Drop Rate :{(int)DropRate.x}, Max Drop rate : {(int)DropRate.y}");
+           Debug.Log($"Decided Number : {numberToDrop}");
            for (int i = 0; i < numberToDrop; i++)
            {
+               Debug.Log($"Spawning {Model.loot.Prefab.name}, ingredient number : {i}");
                Instantiate(Model.loot.Prefab, positions[i].transform);
            }
        }
 
-       #region Seat
-       
-       /// <summary>
-       /// Executed when a new Seat is registered (in general ta the spawn)
-       /// Or when the wait line have a nex seat free
-       /// </summary>
-       /// <param name="seat"></param>
-       public void OnNewSeatRegister(ClientSeat seat)
+
+        internal void Despawn()
+        {
+           // CurrentOrder.Resolve(CurrentOrder.ServingInfo);
+            Destroy(gameObject);
+            Destroy(this);
+        }
+
+        #region Seat
+
+        /// <summary>
+        /// Executed when a new Seat is registered (in general ta the spawn)
+        /// Or when the wait line have a nex seat free
+        /// </summary>
+        /// <param name="seat"></param>
+        public void OnNewSeatRegister(ClientSeat seat)
        {
            if (seat == null) return;
 
@@ -158,7 +201,6 @@ namespace Clients
        /// </summary>
        public void QuitSeat()
        {
-           Debug.Log("[Client] Seat Quited - parent null");
            transform.SetParent(null);
            Behaviour.ClientMovement.GetUp();
            ClientLook.SetClientLeaving(this);
@@ -218,11 +260,12 @@ namespace Clients
            SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
            if (soRecipe == null) return;
 
-           var info = new Orders.ServingInfo(serving);
+           var info = new Orders.ServingInfo(serving); 
+           CurrentOrder.ServingInfo = info;            
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);
-
+           GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);
            CurrentSeat?.TryUnregister(this);
        }
 
@@ -256,8 +299,9 @@ namespace Clients
            
            
        }
+
 #endif
-#endregion
+        #endregion
 
     }
 }

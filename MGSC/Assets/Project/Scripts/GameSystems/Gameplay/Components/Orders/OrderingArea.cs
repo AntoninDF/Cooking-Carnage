@@ -54,6 +54,9 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         ClientSeat.OnClientSitting += AssignOrder;
         ClientSeat.OnClientSitting += (client) =>
         {
+            client.BeginOrderTimer();
+            client.OnOrderTimeProgress += _OrderDisplayer.UpdateTimeSlider;
+            Debug.Log($"[OrderingArea] Ordering Sitting : {client}");
             _OrderDisplayer.DisplayOrder(client.CurrentOrder.Recipe);
         };
         
@@ -65,11 +68,12 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
 
     private void GetDropSlots()
     {
+        if (_slotParent == null) return;
         for (int i = 0; i < _slotParent.childCount; i++)
         {
             if (_slotParent.GetChild(i).TryGetComponent(out SlotContainer slotContainer))
             {
-                ClientSeat.dropSlots.Add(slotContainer);
+               if(slotContainer.gameObject.activeSelf) ClientSeat.dropSlots.Add(slotContainer);
             }
         }
     }
@@ -95,6 +99,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         if (client != null && ClientSeat.SittingClient != null)
         {
             client.Cooked.Trigger();
+            GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
             OnCustomerKilled?.Invoke();
         }
         

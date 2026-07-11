@@ -66,23 +66,22 @@ namespace GameSystem
             return File.Exists(filePath);
         }
 
+        public static GameData GetCurrentData()
+        {
+            if (!SaveFileExists())
+            {
+                ResetSave();
+            }
+            string json = File.ReadAllText(filePath);
+            return JsonUtility.FromJson<GameData>(json);
+        }
         /// <summary>
         /// Load multiple data (money, upgrades, daycount) and reload the game
         /// </summary>
         /// <returns>Wether or not a save file could be loaded</returns>
         public static bool LoadGlobalData()
         {
-            //Debug.Log("Loading global data");
-            
-            if (!SaveFileExists())
-            {
-                //Debug.Log("No save file found");
-                
-                ResetSave();
-                return false;
-            }
-            string json = File.ReadAllText(filePath);
-            Data = JsonUtility.FromJson<GameData>(json);
+            Data = GetCurrentData();
             
             if (Reference.TryGetManager(out MoneyManager moneyMgr))
                 moneyMgr.MoneyInfo = Data.money;
@@ -112,7 +111,7 @@ namespace GameSystem
             for (var index = 0; index < upgradeManager.Upgrades.Count; index++)
             {
                 var upgrade = upgradeManager.Upgrades[index];
-                //Debug.Log(upgrade.GetType().Name + "found, lvl : " + upgrade.Level);
+                Debug.Log(upgrade.GetType().Name + "found, lvl : " + upgrade.Level);
                 result.Add(new UpgradeData());
                 result[index].level = upgrade.Level;
                 result[index].name = upgrade.GetType().Name;
@@ -120,6 +119,8 @@ namespace GameSystem
 
             return result;
         }
+        
+        
 
         static void LoadUpgradeData()
         {
@@ -130,16 +131,35 @@ namespace GameSystem
                 Debug.LogWarning("No Upgrade data found");
                 return;
             }
-            foreach (var upgradeData in Data.upgrades)
+            // foreach (var upgradeData in Data.upgrades)
+            // {
+            //     Type type = Type.GetType("Upgrades."+upgradeData.name);
+            //     Upgrade upgrade = upgradeManager.GetUpgradeByType(type);
+            //     
+            //     for (int i = 0; i < upgradeData.level; i++)
+            //     {
+            //         upgrade.LevelUp();
+            //     }
+            // }
+            
+            if(upgradeManager.Upgrades.Count != Data.upgrades.Count)
+                Debug.Log("the number of saved upgrades is not the same as the current number of upgrades");
+            else
             {
-                Type type = Type.GetType("Upgrades."+upgradeData.name);
-                Upgrade upgrade = upgradeManager.GetUpgradeByType(type);
-                
-                for (int i = 0; i < upgradeData.level; i++)
+                for (int i = 0; i < upgradeManager.Upgrades.Count; i++)
                 {
-                    upgrade.LevelUp();
+                    Upgrade upgrade = upgradeManager.Upgrades[i];
+                    UpgradeData upgradeData = Data.upgrades[i];
+
+                    if (upgradeData.name != upgrade.GetType().Name) 
+                        continue;
+                    
+                    upgrade.SetLevel(upgradeData.level);
                 }
+                upgradeManager.ActualizeAllUpgrade();
+                Debug.Log("All upgrades have been loaded");
             }
+            
         }
 
         static GameData DefaultData()
@@ -155,7 +175,6 @@ namespace GameSystem
         }
 
         
-
         [System.Serializable]
         public class GameData
         {

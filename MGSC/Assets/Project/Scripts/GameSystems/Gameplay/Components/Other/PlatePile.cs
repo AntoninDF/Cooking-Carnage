@@ -1,48 +1,88 @@
+using System.Collections;
 using Features;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshCollider), typeof(SlotContainer), typeof(MeshPile))]
-public class PlatePile : MonoBehaviour
+[RequireComponent(typeof(Collider), typeof(MeshPile))]
+public class PlatePile : MonoBehaviour, IFeatureCollection
 {
-    public SlotContainer Container;
+    public FeatureCollection Collection { get; set; } = new();
+    public F_LookAtTarget LookAtTarget { get; set; }
+    public F_Interactable Interactable { get; set; }
+
     public Item ItemPrefab;
 
     private Transform _target;
     private MeshFilter _mf;
-    private SlotContainer _sc;
     private MeshPile _mp;
+
+    int _defaultPileCount;
+
+    private void Awake()
+    {
+        TryGetComponent(out _mp);
+        _defaultPileCount = _mp.count;
+
+        LookAtTarget = new(this, transform);
+        Interactable = new(this);
+    }
+
+    private void OnEnable()
+    {
+        GameLoop.OnAfterReset += ResetThis;
+    }
+    private void OnDisable()
+    {
+        GameLoop.OnAfterReset -= ResetThis;
+    }
 
     void Start()
     {
-        TryGetComponent(out _mp);
-        TrySpawn();
-        Container.Container.OnDrop += OnPlateDropped;
+        TryGetComponent(out _mf);
+
+        LookAtTarget.OnStartLookAt += () => _mp.SetOutline(true);
+        LookAtTarget.OnStopLookAt  += () => _mp.SetOutline(false);
+        Interactable.OnInteraction += TrySpawnIntoHand;
+
+        Collection.LateSetup();
     }
 
-    private void OnPlateDropped(F_Grabbable plateDropped)
+    void ResetThis()
     {
-        if (_mp.count == 0) return;
-        _mp.RemoveOneElement();
-        TrySpawn();
+        _mp.count = _defaultPileCount;
+        _mp.Regenerate();
     }
-    public void TrySpawn()
+
+    private void TrySpawnIntoHand(InteractionContext context)
     {
-        if (Container == null || ItemPrefab == null)
-        {
-            Debug.LogWarning("[SpawnItemInSlot] Couldn't spawn item because there were missing references on " + name + ".");
-            return;
-        }
-        if (Container.Container.HeldItem != null) return;
+        StartCoroutine(GrabSpawnedItem(context));
+    }
+
+    IEnumerator GrabSpawnedItem(InteractionContext context)
+    {
+        if (_mp.count == 0) yield break;
+        if (!context.TryGetFeature(out F_Container playerContainer)) yield break;
+        if (playerContainer.HeldItem != null) yield break;
 
         SetupTarget();
 
         GameObject go = Instantiate(ItemPrefab.gameObject);
         var item = go.GetComponent<Item>();
-        item.Anim.Enabled = false;
-        Container.Container.RequestGrab(item.Grabbable);
-        go.transform.SetParent(_target);
-        go.transform.localPosition = Vector3.zero;
         item.Anim.Enabled = true;
+
+        yield return null;
+        if (!playerContainer.RequestGrab(item.Grabbable))
+        {
+            Destroy(go);
+            yield break;
+        }
+
+        go.transform.position = _target.position;
+        go.transform.rotation = Quaternion.identity;
+        
+        _mp.RemoveOneElement();
+        
+        
+        
     }
 
     void SetupTarget()
@@ -50,9 +90,7 @@ public class PlatePile : MonoBehaviour
         if (_target == null)
         {
             if (transform.childCount > 0 && transform.GetChild(0).name == "Slot target")
-            {
                 _target = transform.GetChild(0);
-            }
             else
             {
                 _target = new GameObject("Slot target").transform;
@@ -61,22 +99,12 @@ public class PlatePile : MonoBehaviour
         }
 
         _target.localPosition = Vector3.zero;
-        if (TryGetComponent(out _mf))
+        if (_mf != null && _mf.sharedMesh != null)
         {
             float y = _mf.sharedMesh.bounds.max.y;
-            if (TryGetComponent(out _mp) && _mp.count != 0)
+            if (_mp != null && _mp.count != 0)
                 y -= _mp.mesh.bounds.size.y;
             _target.localPosition = new Vector3(0, y, 0);
         }
-
-        if (TryGetComponent(out _sc))
-        {
-            _sc.Container.transform = _target;
-        }
-    }
-
-    void Reset()
-    {
-        Container = GetComponent<SlotContainer>();
     }
 }

@@ -20,6 +20,8 @@ namespace UI
         
         public void Setup(UpgradeConfig config)
         {
+            // UnityEngine.Debug.Log($"[UpgradeButton] Setup() appelé, config = {config?.name}, B_LevelUp = {(B_LevelUp != null ? B_LevelUp.name : "NULL")}");
+
             BindWithUpgrade(config);
             UpdateGraphics();
 
@@ -37,6 +39,8 @@ namespace UI
 
             if (B_LevelUp != null)
                 B_LevelUp.onClick.AddListener(RequestLevelUp);
+            else
+                UnityEngine.Debug.LogWarning($"[UpgradeButton] ({name}) B_LevelUp non assigné — le clic ne fera rien");
         }
 
         public void UpdateGraphics()
@@ -61,8 +65,10 @@ namespace UI
                 L_PriceTag.text = upgrade.GetPrice().ToString() + "$";
         }
 
-        void RequestLevelUp()
+        public void RequestLevelUp()
         {
+            UnityEngine.Debug.Log($"[UpgradeButton] RequestLevelUp() DÉCLENCHÉ pour {_config?.name}");
+
             if (_config == null)
             {
                 OnLevelUpFail?.Invoke();

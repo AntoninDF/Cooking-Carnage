@@ -55,27 +55,19 @@ namespace UI
         void ResetSceneHierarchy()
         {
             // Destroy any existing hierarchy
-            if (_root != null) GameObject.Destroy(_root);
-            if (_HUDFolder != null) GameObject.Destroy(_HUDFolder);
-            if (_HUDOverlayFolder != null) GameObject.Destroy(_HUDOverlayFolder);
-            if (_menusFolder != null) GameObject.Destroy(_menusFolder);
-            if (_menusOverlayFolder != null) GameObject.Destroy(_menusOverlayFolder);
-            if (_inactiveFolder != null) GameObject.Destroy(_inactiveFolder);
+            if (_root != null) GameObject.Destroy(_root.gameObject);
+            if (_HUDFolder != null) GameObject.Destroy(_HUDFolder.gameObject);
+            if (_HUDOverlayFolder != null) GameObject.Destroy(_HUDOverlayFolder.gameObject);
+            if (_menusFolder != null) GameObject.Destroy(_menusFolder.gameObject);
+            if (_menusOverlayFolder != null) GameObject.Destroy(_menusOverlayFolder.gameObject);
+            if (_inactiveFolder != null) GameObject.Destroy(_inactiveFolder.gameObject);
 
             // Create the hierarchy
             _root = new GameObject(
                 "UI_Root",
                 typeof(InputSystemUIInputModule)
-                //typeof(Canvas),
-                //typeof(GraphicRaycaster),
-                //typeof(CanvasScaler)
                 ).transform;
 
-            /*
-            _root.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-            _root.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            _root.GetComponent<CanvasScaler>().referenceResolution = new(1920, 1080);
-            */
 
             _HUDFolder =            MakeMenuFolder("HUD Folder");
             _HUDOverlayFolder =     MakeMenuFolder("HUD Overlay Folder");
@@ -114,7 +106,14 @@ namespace UI
         }
         public void AddPrefabs(IEnumerable<FullscreenWidget> widgetPrefabs)
         {
-            _widgetPrefabs.AddRange(widgetPrefabs);
+            foreach (var prefab in widgetPrefabs)
+            {
+                if (prefab == null)
+                    Debug.LogWarning("[UISystem] Null prefabs were tried to be added to the UI system. " +
+                        "Please replace or remove null references. (Probably in the game profile)");
+                if (!_widgetPrefabs.Contains(prefab))
+                    _widgetPrefabs.Add(prefab);
+            }
             InitPrefabs(widgetPrefabs);
         }
         public void StashWidget(FullscreenWidget widget) => widget?.transform.SetParent(_inactiveFolder);

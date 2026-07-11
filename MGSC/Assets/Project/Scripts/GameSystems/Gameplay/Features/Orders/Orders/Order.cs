@@ -14,10 +14,10 @@ public class Order
     public int ID => _id;
     public bool IsResolved { get; set; } // Wether the order has been served or not
     public bool IsCancelled { get; set; } // Wether the client has been killed or not
-    public Action OnResolve { get => _onResolve; set => _onResolve = value; }
-    public Action OnCancel { get => _onCancel; set => _onCancel = value; }
     public Orders.ServingInfo ServingInfo { get; set; }
     public Orders.OrderRating OrderRating { get; set; }
+    public float PatienceDuration { get; set; } = 60f;
+    public float SeatedTimestamp { get; set; }
 
     #endregion
 
@@ -36,31 +36,22 @@ public class Order
 
     #region Methods
 
-    public Order()
-    {
-    }
+    public Order() { }
+
     public Order(Client owner, SO_Recipe recipe, int id)
     {
-        _owner = owner;
-        _recipe = recipe;
+        _owner     = owner;
+        _recipe    = recipe;
         _timestamp = Time.time;
-        _id = id;
+        _id        = id;
     }
-
-    public void Resolve(Orders.ServingInfo info, Orders.OrderRating rating)
+    
+    public void Resolve(Orders.ServingInfo info)
     {
         ServingInfo = info;
-        OrderRating = rating;
-        _onResolve?.Invoke();
-        IsResolved = true;
-        //_owner.ResolveOrder(info, rating);
-    }
-    public void Resolve(Servable meal)
-    {
         OrderRating = OrderEvaluator.Evaluate(this);
+        IsResolved  = true;
         _onResolve?.Invoke();
-        IsResolved = true;
-        //_owner.ResolveOrder(info, rating);
     }
 
     public void Cancel()

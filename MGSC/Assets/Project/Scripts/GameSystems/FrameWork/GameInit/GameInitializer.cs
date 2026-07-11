@@ -27,12 +27,9 @@ namespace GameSystem
 
         public FeatureCollection Collection { get; set; } = new FeatureCollection();
 
-        // PRIVATE FIELDS
-        
         #endregion
 
         #region Methods
-
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
         {
@@ -43,7 +40,7 @@ namespace GameSystem
             new ShiftManager(); 
             new MoneyManager();
             new UpgradeManager();
-            new CameraManager();
+            //new CameraManager();
             new ItemManager();
             new FeatureManager();
             new AdaptiveClientSpawner();
@@ -58,6 +55,7 @@ namespace GameSystem
         {
             SetupScene();
         }
+        
         /// <summary>
         /// Instantiate all objects specified in the scene preset, and put them all in place
         /// </summary>
@@ -87,7 +85,7 @@ namespace GameSystem
             CursorUtility.Update();
             // Reset the save file
             if (_gameProfile.ResetSaveFile) SaveManager.ResetSave();
-            GameLoop.SetState<MainMenuState>();
+            GameLoop.Init();
             
 
             // Apply the base logic to ensure all managers are setup to work correctly
@@ -167,6 +165,7 @@ namespace GameSystem
                 if (go != gameObject) Destroy(go);
             }
         }
+
 
         #endregion
     }

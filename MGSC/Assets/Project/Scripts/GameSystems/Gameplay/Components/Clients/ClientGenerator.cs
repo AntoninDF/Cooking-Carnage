@@ -59,7 +59,7 @@ namespace Clients
 
             return
                 Client
-                    .New(model.prefab, model.clientType, model.loot, model.dropRate, model.name, position, speed)
+                    .New(model.prefab, model.clientType, model.loot, model.dropRate, model.name, position, model.movementSpeed)
                     .SetModel(model);
             //.TryUseUpgrades();
         }
@@ -94,11 +94,11 @@ namespace Clients
             client
                 .SetType(type)
                 .SetLoot(ingredientDroppedOnKill, dropRate)
-                .SetSpeed(speed);
+                .SetSpeed(speed).SubscribeToUpgrade();
 
             if (name != null)
                 go.name = name;
-
+            
             return client;
         }
         #endregion
@@ -160,6 +160,12 @@ namespace Clients
             _splineComp = splineObject;
             return this;
         }
+
+        public Client SubscribeToUpgrade()
+        {
+            this.TrySubscribe<IngredientDropUpgrade>();
+            return this;
+        }
         #endregion
 
         #region Upgrade
@@ -176,7 +182,7 @@ namespace Clients
 
         public void OnUpgrade(IngredientDropUpgrade upgrade)
         {
-            _dropRateIncrement = upgrade.DropRateIncrement;
+            _dropRateIncrement = upgrade.GetDropRate();
         }
 
         #endregion

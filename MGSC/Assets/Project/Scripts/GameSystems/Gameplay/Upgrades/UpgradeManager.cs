@@ -3,14 +3,14 @@ using GameSystem;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System.Reflection;
 using UnityEngine.Events;
+using Object = System.Object;
 
 
 namespace Upgrades
 {
 
-    public class UpgradeManager : IManager
+    public class UpgradeManager : IManager, IDisposable
     {
         #region Properties
         
@@ -36,6 +36,7 @@ namespace Upgrades
         public UpgradeManager()
         {
             Register();
+            GameLoop.OnAfterReset += ActualizeAllUpgrade;
         }
         
         
@@ -93,9 +94,18 @@ namespace Upgrades
         /// <param name="upgrade"></param>
         private void DispatchLevelUp(Upgrade upgrade)
         {
+            Debug.Log("Applying upgrade " + upgrade?.GetType().Name);
             var type = upgrade.GetType();
             if (_subscribers.TryGetValue(type, out var list))
                 list.Dispatch(upgrade);
+        }
+
+        public void ActualizeAllUpgrade()
+        {
+            foreach (var upgrade in _upgrades)
+            {
+                DispatchLevelUp(upgrade);
+            }
         }
         
 
@@ -142,10 +152,10 @@ namespace Upgrades
             return true;
         }
         
-        public T GetUpgradeByType<T>() where T : Upgrade => _upgrades.OfType<T>().FirstOrDefault();
-        public Upgrade GetUpgradeByType(Type type) => _upgrades.FirstOrDefault(u => u.GetType() == type);
+        public T       GetUpgradeByType<T>() where T : Upgrade  => _upgrades.OfType<T>().FirstOrDefault();
+        public Upgrade GetUpgradeByType(Type            type)   => _upgrades.FirstOrDefault(u => u.GetType() == type);
         public Upgrade GetUpgradeByConfig(UpgradeConfig config) => _upgrades.FirstOrDefault(u => u.Config == config);
-
+        
         public bool HasUpgradeOfType<T>(out T upgrade) where T : Upgrade
         {
             upgrade = GetUpgradeByType<T>();
@@ -162,6 +172,7 @@ namespace Upgrades
         }
         public void Unregister()
         {
+            Debug.Log("Unregistered " + GetType().Name);
             Reference.RemoveManager(this);
         }
 
@@ -180,13 +191,47 @@ namespace Upgrades
 
             public override void Dispatch(Upgrade upgrade)
             {
+                Debug.Log("Subscribers are :\n" + Subscribers.ToString_EasyRead(separator: "\n"));
                 if (upgrade is not T typed) return;
                 foreach (var sub in Subscribers)
+                {
+                    Debug.Log("Upgrading subscriber " + sub);
                     sub.OnUpgraded(typed);
+                }
             }
+        }
+        
+        public void Subscribe<T>(IUpgradable<T> subscriber) where T : Upgrade<T>
+        {
+            if (GetUpgradeByType<T>() is T upgrade)
+                upgrade.Subscribe(subscriber);
+            else
+                this.Log(LogType.Warning, $"[UpgradeManager] Aucune upgrade de type {typeof(T).Name} trouvée pour {subscriber.GetType().Name}");
+        }
+
+        public void UnsubscribeFromAll(object subscriber)
+        {
+            foreach (var upgrade in _upgrades)
+                upgrade.UnsubscribeObject(subscriber);
+        }
+
+        public void ClearAllSubscribers()
+        {
+            foreach (var upgrade in _upgrades)
+                upgrade.ClearSubscribers();
         }
 
         #endregion
-        
+
+        public void Dispose()
+        {
+            Debug.Log($"Disposing : {GetType().Name} & Clearing All Subscribers" );
+            ClearAllSubscribers();
+        }
+
+        public void SaveUpgrades()
+        {
+            
+        }
     }
 }

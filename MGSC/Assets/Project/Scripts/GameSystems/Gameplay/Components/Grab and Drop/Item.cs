@@ -1,5 +1,6 @@
 
 using Features;
+using System;
 using UnityEngine;
 
 
@@ -22,6 +23,8 @@ public class Item : MonoBehaviour, IFeatureCollection
     public F_Interactable Interactable { get; set; }
     public MeshCollider Collider { get; set; }
     public F_BoundsFinder Bounds { get; set; }
+    public static Action<Item> OnItemEnabled;
+    public static Action<Item> OnItemDisabled;
     #endregion
 
     #region Fields
@@ -32,11 +35,21 @@ public class Item : MonoBehaviour, IFeatureCollection
 
     public ModelController ActiveModel => activeModel;
     protected ModelController activeModel;
-
+    
+    public bool IsHeld { get; private set; }
+    public void SetHeld(bool held) => IsHeld = held;
+    
     #endregion
 
     #region Methods
-
+    protected virtual void OnEnable() => OnItemEnabled?.Invoke(this);
+    protected virtual void OnDisable() => OnItemDisabled?.Invoke(this);
+    ~Item()
+    {
+        if (Grabbable.Container != null)
+            Grabbable.Container.RequestDrop(Grabbable);
+    }
+    
     protected virtual void Awake()
     {
         Collider = GetComponent<MeshCollider>();

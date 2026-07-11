@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cooking;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Orders
@@ -14,9 +16,17 @@ namespace Orders
         [SerializeField] private TMP_Text _price;
         [SerializeField] private List<Image> _ingredients;
         [SerializeField] private List<RectTransform> _cookingMethodsPositions;
+        [SerializeField] private Slider _timeSlider;
+
         
         [SerializeField] private AnimationClip _playTV;
         [SerializeField] private AnimationClip _stopTV;
+
+        public UnityEvent On2StarFailed;
+        public UnityEvent On1StarFailed;
+        private bool _hasTriggered1Star;
+        private bool _hasTriggered2Star;
+        
 
         void Start()
         {
@@ -28,6 +38,9 @@ namespace Orders
         
         public void DisplayOrder(SO_Recipe recipe)
         {
+            _hasTriggered1Star = false;
+            _hasTriggered2Star = false;
+            
             if(recipe.Ingredients.Count > 4) Debug.Log("What the fuck ??");
             for (int i = 0; i < _ingredients.Count; i++)
             {
@@ -45,6 +58,26 @@ namespace Orders
             _price.text = recipe.Price.ToString() + " $";
             
             StartDisplay();
+        }
+        
+        public void UpdateTimeSlider(float progress01)
+        {
+            if (_timeSlider != null)
+            {
+                _timeSlider.value = 1f - progress01; 
+                if (!_hasTriggered1Star && progress01 >= Globals.Gameplay.Threshold1Star)
+                {
+                    _hasTriggered1Star = true;
+                    On1StarFailed?.Invoke();
+                }
+                
+                if (!_hasTriggered2Star && progress01 >= Globals.Gameplay.Threshold2Star)
+                {
+                    _hasTriggered2Star = true;
+                    On2StarFailed?.Invoke();
+                }
+            }
+                
         }
 
         public void UndisplayOrder()

@@ -11,6 +11,7 @@ namespace Features
             Conditions.AddCondition(item => item is F_Cuttable);
             Conditions.AddCondition(item => Globals.Gameplay.AllowCutting);
             _baseDuration = SpeedMultiplier;
+            this.TrySubscribe<BlenderSpeedUpgrade>();
         }
         
         

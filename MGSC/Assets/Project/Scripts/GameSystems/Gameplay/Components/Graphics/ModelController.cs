@@ -28,7 +28,7 @@ public class ModelController : MonoBehaviour, IFeatureCollection
 
         MeshController = new(this, DetectControlledRenderers());
 
-        Outline = new(this, MeshController.GetCombinedMeshes(transform), transform);
+        Outline = new(this, MeshController.GetCombinedMeshes(transform), transform, DetectControlledRenderers());
             
         if (!_allowCustomOutlineValues)
         {
@@ -49,13 +49,13 @@ public class ModelController : MonoBehaviour, IFeatureCollection
         if (Outline != null)
             Outline.SetParameters(_outline);
     }
-    private MeshRenderer[] DetectControlledRenderers()
+    private Renderer[] DetectControlledRenderers()
     {
-        MeshRenderer[] result;
+        Renderer[] result;
         if (_propagateChangesToChildren)
-            result = GetComponentsInChildren<MeshRenderer>();
+            result = GetComponentsInChildren<Renderer>();
         else
-            result = new MeshRenderer[1] { GetComponent<MeshRenderer>() };
+            result = new Renderer[1] { GetComponent<Renderer>() };
         return result;
     }
 
@@ -71,6 +71,8 @@ public class ModelController : MonoBehaviour, IFeatureCollection
     {
         Outline.CanShowOutline = allow;
     }
+    
+    
 
     #region Forwarded
     public virtual Mesh GetCombinedMeshes(Transform relativeTo=null) => MeshController.GetCombinedMeshes(relativeTo);

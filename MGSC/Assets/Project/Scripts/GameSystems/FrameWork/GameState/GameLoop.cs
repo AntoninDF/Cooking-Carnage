@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public static class GameLoop
 {
+    public static GameState DefaultState => new MainMenuState();
     public static bool StateNotNull => _currentState != null;
     public static GameState CurrentState
     {
@@ -21,6 +22,11 @@ public static class GameLoop
     public static Action OnPause { get; set; }
     [GlobalEvent("Gameloop/OnResume")]
     public static Action OnResume { get; set; }
+
+    public static Action OnBeforeReset;
+    [GlobalEvent("Gameloop/OnReset")]
+    public static Action OnReset;
+    public static Action OnAfterReset;
 
     private static List<object> _objectsRequiringPause = new();
     private static GameState _currentState;
@@ -80,6 +86,21 @@ public static class GameLoop
     }
     #endregion
 
+
+    public static void Init()
+    {
+        SetState(DefaultState);
+    }
+    /// <summary>
+    /// Will invoke <see cref="OnReset"/>. All systems that must be reset should subscribe to <see cref="OnReset"/>.
+    /// </summary>
+    public static void ResetAll()
+    {
+        UnityEngine.Debug.Log("Resetting the game");
+        OnBeforeReset?.Invoke();
+        OnReset?.Invoke();
+        OnAfterReset?.Invoke();
+    }
     public static void SetState<T>() where T : GameState, new() => SetState(new T());
     private static void SetState(GameState newState)
     {

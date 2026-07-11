@@ -40,7 +40,7 @@ namespace Features
             if (duration == 0f)
                 SetPos(1);
             else
-                TimerManager.StartTimer("GoToAnimation " + endPos + Time.time.ToString(), duration, null, false, (elapsed) => SetPos(elapsed / duration));
+                TimerManager.StartTimer("GoToAnimation " + endPos + Time.time.ToString(), duration, null, (elapsed) => SetPos(elapsed / duration));
         }
         public void GoTo(Transform dest, Vector3 worldPos, float duration=0.1f, bool setAsParent=true)
         {
@@ -83,7 +83,7 @@ namespace Features
                 SetPos(1f);
             else
             {
-                TimerManager.StartTimer("GoToAnimation " + dest.name + Time.time.ToString(), duration, EndAnimation, false, (elapsed) => SetPos(elapsed / duration));
+                TimerManager.StartTimer("GoToAnimation " + dest.name + Time.time.ToString(), duration, EndAnimation, (elapsed) => SetPos(elapsed / duration));
             }
         }
         public void GoTo(Transform dest, float duration=0.1f, bool setAsParent=true)
