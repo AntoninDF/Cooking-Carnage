@@ -40,8 +40,7 @@ namespace UI
         }
         void OnSettings()
         {
-            if (Reference.TryGetManager(out UISystem ui))
-                ui.GetWidget<SettingsMenu>().Enable();
+            Owner.GetWidget<SettingsMenu>().Enable();
         }
         void OnQuit()
         {
@@ -70,7 +69,8 @@ namespace UI
             }
             else
             {
-                GameLoop.TryResume(this);
+                if (Owner.GetShownWidgets<UIMenuOverlay>().Count == 0)
+                    GameLoop.TryResume(this);
             }
         }
     }

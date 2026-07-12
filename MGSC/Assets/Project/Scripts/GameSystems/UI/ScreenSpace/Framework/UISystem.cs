@@ -30,6 +30,7 @@ namespace UI
 
         List<FullscreenWidget> _widgetPrefabs = new();
         List<FullscreenWidget> _loadedWidgets = new();
+        List<FullscreenWidget> _shownWidgets = new();
 
         #endregion
 
@@ -116,7 +117,20 @@ namespace UI
             }
             InitPrefabs(widgetPrefabs);
         }
-        public void StashWidget(FullscreenWidget widget) => widget?.transform.SetParent(_inactiveFolder);
+        public List<T> GetShownWidgets<T>() where T : FullscreenWidget
+        {
+            List<T> result = new();
+            foreach (var widget in _shownWidgets)
+                if (widget is T validWidget)
+                    result.Add(validWidget);
+            return result;
+        }
+        public void StashWidget(FullscreenWidget widget)
+        {
+            if (widget == null) return;
+            widget.transform.SetParent(_inactiveFolder);
+            _shownWidgets.Remove(widget);
+        }
         public void ShowWidget(FullscreenWidget widget)
         {
             if (widget == null) return;
@@ -142,6 +156,8 @@ namespace UI
                 return;
             }
             widget.transform.SetParent(parent);
+            if (!_shownWidgets.Contains(widget))
+                _shownWidgets.Add(widget);
             //Debug.Log($"[UISystem] Showing widget '{widget.name}'");
         }
         public bool HasLoadedWidget<T>()
