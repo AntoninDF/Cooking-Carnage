@@ -12,6 +12,10 @@ public class PreShiftState : GameplayState
             HUD?.Enable();
         }
         IngredientSpawnPosition.SpawnIngredients(6);
+        
+        AudioSystem.PlayAudio(AudioSystem.Database.beforeShiftMusic,true);
+        AudioSystem.PlayAudio(AudioSystem.Database.fliesAmbience);
+        AudioSystem.PlayAudio(AudioSystem.Database.kitchenAmbience);
     }
 
     public override void OnExit()

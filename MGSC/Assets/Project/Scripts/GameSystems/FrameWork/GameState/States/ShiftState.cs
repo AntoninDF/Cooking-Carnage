@@ -18,6 +18,9 @@ public class ShiftState : GameplayState
         }
 
         mgr.RequestShiftTimer();
+        
+        AudioSystem.StopAudio(AudioSystem.Database.beforeShiftMusic);
+        AudioSystem.PlayAudio(AudioSystem.Database.ingameMusic);
     }
 
     public override void OnExit()
