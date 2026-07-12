@@ -16,8 +16,9 @@ public static class AudioSystem
     
     private static Bus masterBus;
     private static Bus musicBus;
+    private static Bus ambienceBus;
     private static Bus sfxBus;
-    private static Bus voiceBus;
+    private static Bus dialogBus;
 
     private static bool isInitialized = false;
     
@@ -33,15 +34,13 @@ public static class AudioSystem
     {
         if (isInitialized) return;
         
-        FMODUnity.RuntimeManager.LoadBank("Master");
-        FMODUnity.RuntimeManager.LoadBank("Master.strings");
-        
-        try  
+        try
         {
             masterBus = FMODUnity.RuntimeManager.GetBus("bus:/");
-            musicBus = FMODUnity.RuntimeManager.GetBus("bus:/"); // TODO : a remplacer lorsque bus FMOD
-            sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/"); // TODO : a remplacer lorsque bus FMOD
-            voiceBus = FMODUnity.RuntimeManager.GetBus("bus:/"); // TODO : a remplacer lorsque bus FMOD
+            musicBus = FMODUnity.RuntimeManager.GetBus("bus:/MusicBus"); 
+            sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/AmbienceBus"); 
+            ambienceBus = FMODUnity.RuntimeManager.GetBus("bus:/SFXBus"); 
+            dialogBus = FMODUnity.RuntimeManager.GetBus("bus:/DialogBus"); 
         
             isInitialized = true;
         }
@@ -62,8 +61,9 @@ public static class AudioSystem
     
     public static void SetMasterVolume(float volume) => masterBus.setVolume(Mathf.Clamp01(volume));
     public static void SetMusicVolume(float volume) => musicBus.setVolume(Mathf.Clamp01(volume));
+    public static void SetAmbienceVolume(float volume) => ambienceBus.setVolume(Mathf.Clamp01(volume));
     public static void SetSFXVolume(float volume) => sfxBus.setVolume(Mathf.Clamp01(volume));
-    public static void SetVoiceVolume(float volume) => voiceBus.setVolume(Mathf.Clamp01(volume));
+    public static void SetVoiceVolume(float volume) => dialogBus.setVolume(Mathf.Clamp01(volume));
     
     public static void PlayAudio(EventReference audioEvent)
     {
