@@ -24,6 +24,8 @@ namespace GameSystem
         MoneyGainedOnPreviousShift,
         LastMoneyDelta,
         MissedOrdersThisShift,
+        TotalAvailableUpgrades,
+        TotalBoughtUpgrades,
 
         // Data dependent on a specific object should be 50 or more
         ClientName = 50,

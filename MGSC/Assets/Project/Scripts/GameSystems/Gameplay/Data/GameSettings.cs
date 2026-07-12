@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GameSettings", menuName = "Scriptable Objects/GameSettings")]
@@ -31,6 +32,11 @@ public class GameSettings : ScriptableObject
 
         Globals.Rendering.Outline.Thickness.Value = Instance.GraphicsSettings.OutlineWidth;
         Globals.Rendering.Outline.Color.Value = Instance.GraphicsSettings.OutlineColor;
+
+        /*
+        Globals.Application.AllowWindowResizing.OnValueChange += value => PlayerSettings.resizableWindow = value;
+        Globals.Application.AllowWindowResizing.Value = Instance.ApplicationSettings.AllowWindowResizing;
+        */
     }
 
     void OnValidate() => Apply();
@@ -83,5 +89,13 @@ public class GameSettings : ScriptableObject
         public float OutlineWidth;
         public Color OutlineColor;
     }
-
+    
+    /*
+    public S_ApplicationSettings ApplicationSettings;
+    [Serializable]
+    public struct S_ApplicationSettings
+    {
+        public bool AllowWindowResizing;
+    }
+    */
 }

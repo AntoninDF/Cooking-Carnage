@@ -12,7 +12,9 @@ public class TutorialState : GameplayState
             HUD = ui.GetWidget<HeadsUpDisplay>();
             HUD?.Enable();
         }
-        TutorialTimeline.StartTutorial();
+        GameLoop.RequestTransition(StateTransitions.StartShift);
+        
+            //TutorialTimeline.StartTutorial();
     }
 
     public override void OnExit()
