@@ -18,6 +18,7 @@ public static class AudioSystem
     private static Bus musicBus;
     private static Bus sfxBus;
     private static Bus voiceBus;
+    private static Bus ambienceBus;
 
     private static bool isInitialized = false;
     
@@ -42,6 +43,7 @@ public static class AudioSystem
             musicBus = FMODUnity.RuntimeManager.GetBus("bus:/"); // TODO : a remplacer lorsque bus FMOD
             sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/"); // TODO : a remplacer lorsque bus FMOD
             voiceBus = FMODUnity.RuntimeManager.GetBus("bus:/"); // TODO : a remplacer lorsque bus FMOD
+            ambienceBus = FMODUnity.RuntimeManager.GetBus("bus:/"); // TODO : a remplacer lorsque bus FMOD
         
             isInitialized = true;
         }
@@ -64,6 +66,7 @@ public static class AudioSystem
     public static void SetMusicVolume(float volume) => musicBus.setVolume(Mathf.Clamp01(volume));
     public static void SetSFXVolume(float volume) => sfxBus.setVolume(Mathf.Clamp01(volume));
     public static void SetVoiceVolume(float volume) => voiceBus.setVolume(Mathf.Clamp01(volume));
+    public static void SetAmbienceVolume(float volume) => ambienceBus.setVolume(Mathf.Clamp01(volume));
     
     public static void PlayAudio(EventReference audioEvent)
     {
