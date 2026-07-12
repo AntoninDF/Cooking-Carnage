@@ -158,6 +158,9 @@
         },
         {
             "m_Id": "254c5a840fbc4022a0b72afb03b723ac"
+        },
+        {
+            "m_Id": "61064387ec0543659177d0449b74140c"
         }
     ],
     "m_GroupDatas": [
@@ -910,6 +913,9 @@
             },
             {
                 "m_Id": "551f6154efe34542b97d302ae531f3a0"
+            },
+            {
+                "m_Id": "61064387ec0543659177d0449b74140c"
             }
         ]
     },
@@ -1525,7 +1531,7 @@
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.Rendering.HighDefinition.ShaderGraph.SystemData",
     "m_ObjectId": "17696726cb0a45fd956584e615815acd",
-    "m_MaterialNeedsUpdateHash": 0,
+    "m_MaterialNeedsUpdateHash": 1,
     "m_SurfaceType": 1,
     "m_RenderingPass": 4,
     "m_BlendMode": 0,
@@ -1534,7 +1540,7 @@
     "m_TransparentCullMode": 2,
     "m_OpaqueCullMode": 2,
     "m_SortPriority": 0,
-    "m_AlphaTest": false,
+    "m_AlphaTest": true,
     "m_ExcludeFromTUAndAA": false,
     "m_TransparentDepthPrepass": false,
     "m_TransparentDepthPostpass": false,
@@ -1641,6 +1647,22 @@
     "m_StageCapability": 3,
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
+    "m_Labels": [],
+    "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "1ef82dedb80845b69d2cf327653e87dd",
+    "m_Id": 0,
+    "m_DisplayName": "Alpha Clip Threshold",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "AlphaClipThreshold",
+    "m_StageCapability": 2,
+    "m_Value": 0.5,
+    "m_DefaultValue": 0.5,
     "m_Labels": [],
     "m_LiteralMode": false
 }
@@ -2027,8 +2049,8 @@
     "m_ObjectId": "2ec3027b98994ff7a97e079cdd2c9357",
     "m_Title": "Gradient Mask",
     "m_Position": {
-        "x": -1399.0,
-        "y": 646.0
+        "x": -1399.000244140625,
+        "y": 646.0001220703125
     }
 }
 
@@ -3126,6 +3148,40 @@
         "w": 0.0
     },
     "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
+    "m_ObjectId": "61064387ec0543659177d0449b74140c",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "SurfaceDescription.AlphaClipThreshold",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "1ef82dedb80845b69d2cf327653e87dd"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_SerializedDescriptor": "SurfaceDescription.AlphaClipThreshold"
 }
 
 {
@@ -5206,7 +5262,7 @@
     "m_ObjectId": "bc76ea94561c4423a37aca3885254220",
     "m_Title": "Gradient",
     "m_Position": {
-        "x": -3151.0,
+        "x": -3151.00048828125,
         "y": -481.0
     }
 }
@@ -5670,8 +5726,8 @@
     "m_ObjectId": "d053b8b03b60488dbe87efa7655bd8e9",
     "m_Title": "Is use Gradient Mask",
     "m_Position": {
-        "x": -405.0,
-        "y": 438.0
+        "x": -404.99969482421877,
+        "y": 438.0001220703125
     }
 }
 
@@ -5714,8 +5770,8 @@
     "m_ObjectId": "d4b4b34f333d45818aa8f19cb029af40",
     "m_Title": "G= Gradient mask ; B= smoothstep ; A= soft particle",
     "m_Position": {
-        "x": -1608.0,
-        "y": -1199.0
+        "x": -1608.000244140625,
+        "y": -1199.0001220703125
     }
 }
 

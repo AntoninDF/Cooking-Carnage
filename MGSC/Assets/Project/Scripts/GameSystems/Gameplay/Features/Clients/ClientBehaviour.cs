@@ -63,6 +63,7 @@ namespace Features
 
         public override void Update()
         {
+            if (GameLoop.IsPaused) return;
             if (ClientMovement == null) return;
             Collection.Update();
             ClientMovement.Update();

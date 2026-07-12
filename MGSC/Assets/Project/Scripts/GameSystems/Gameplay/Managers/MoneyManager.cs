@@ -79,6 +79,7 @@ namespace GameSystem
 
         public void AddMoney(float amount)
         {
+            Debug.Log("Money gained : " + amount);
             MoneyInfo += amount;
             if (!_moneyGainedPerShift.ContainsKey(shiftNumber))
                 _moneyGainedPerShift[shiftNumber] = 0f;

@@ -35,7 +35,8 @@ namespace Orders
                 image.preserveAspect = true;
             }
         }
-        
+        private void OnEnable() => GameLoop.OnReset += UndisplayOrder;
+        private void OnDisable() => GameLoop.OnReset -= UndisplayOrder;
         public void DisplayOrder(SO_Recipe recipe)
         {
             _hasTriggered1Star = false;

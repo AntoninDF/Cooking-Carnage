@@ -58,12 +58,13 @@ namespace Clients
         private void StartOrderTimer(Order order)
         {
             string timerName = "OrderTimer_" + UniqueID;
-            GameSystem.TimerManager.StartTimer(
+            var patienceTimer = GameSystem.TimerManager.StartTimer(
                 timerName,
                 order.PatienceDuration,
                 () => OnOrderTimeout(order),
                 elapsed => OnOrderTimeProgress?.Invoke(Mathf.Clamp01(elapsed / order.PatienceDuration))
             );
+            GameLoop.BindTimerToGamePause(patienceTimer);
         }
         
         private void OnOrderTimeout(Order order)
@@ -218,7 +219,7 @@ namespace Clients
            Vector3 startPos = transform.localPosition;
            while (elapsed < duration)
            {
-               elapsed += Time.deltaTime;
+               elapsed += GameLoop.IsRunning ? Time.deltaTime : 0;
                transform.localRotation = Quaternion.Lerp(startRot, Quaternion.Euler(0, 0, 0), elapsed/duration);
                transform.localPosition = Vector3.Lerp(startPos, Vector3.zero, elapsed/duration);
 

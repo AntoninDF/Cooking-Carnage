@@ -1,10 +1,6 @@
-using Clients;
-using Cooking;
-using Features;
 using GameSystem;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -103,6 +99,8 @@ namespace UI
                 case EDataInfo.CuttingSpeedUpgradeLevel:        return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<BlenderSpeedUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.TimeLeft:                        return ProcessTimeLeft();
                 case EDataInfo.LastMoneyDelta:                  return ((int)Reference.GetManager<MoneyManager>()?.LastMoneyDelta).ToString() ;
+                case EDataInfo.TotalAvailableUpgrades:          return Reference.GetManager<UpgradeManager>()?.Upgrades.Select(up => up.Config.MaxLevel).Sum().ToString();
+                case EDataInfo.TotalBoughtUpgrades:             return Reference.GetManager<UpgradeManager>()?.Upgrades.Select(up => up.Level).Sum().ToString();
 
             }
             return result;
