@@ -29,7 +29,7 @@ namespace UI
         public int GetValue() => Dropdown != null ? Dropdown.value : -1;
 		public void SetValue(int value)
 		{
-			if (Dropdown = null) return;
+			if (Dropdown == null) return;
 			Dropdown.value = value;
 		}
 		public void ClearOptions()

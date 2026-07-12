@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,13 +51,17 @@ namespace UI
 			int i = 0;
 			foreach (var rez in Screen.resolutions)
 			{
-				resolutionOptions[i] = (rez.width + " x " + rez.height, () => Screen.SetResolution(rez.width, rez.height, Screen.fullScreen));
+				(string, Action) newValue = (rez.width + " x " + rez.height, () => Screen.SetResolution(rez.width, rez.height, Screen.fullScreen));
+
+				if (resolutionOptions.Contains(newValue))
+					continue;
+				resolutionOptions[i] = newValue;
 				i++;
 			}
 
             AddGroup("Graphics")
-				.AddDropdown<FullScreenMode>("Window mode", value => Screen.fullScreenMode = (FullScreenMode)value)
-				.AddDropdown("Resolution", resolutionOptions)
+				.AddDropdown<FullScreenMode>("Window mode", value => Screen.fullScreenMode = (FullScreenMode)value, FullScreenMode.ExclusiveFullScreen)
+				.AddDropdown("Resolution", resolutionOptions, 999) // Set value to the maximum
 				;
 
 			if (_availableGroups.Count > 0 && _currentActiveGroup == null)
@@ -199,13 +204,15 @@ namespace UI
 				return option;
             }
 
-			public SettingsGroup AddDropdown(string name, params (string name, Action onOptionSelected)[] options)
+			public SettingsGroup AddDropdown(string name, (string name, Action onOptionSelected)[] options, int defaultValue = 0)
 			{
 				var prefab = DropdownPrefab;
 				var option = AddOption(prefab, name);
 				if (option == null) return this;
+                option.ClearOptions();
 
-				option.SetOptions(options);
+                option.SetOptions(options);
+				option.SetValue(Math.Min(defaultValue, options.Length - 1));
 
 				return this;
 			}
@@ -214,6 +221,7 @@ namespace UI
                 var prefab = DropdownPrefab;
                 var option = AddOption(prefab, name);
 				if (option == null) return this;
+				option.ClearOptions();
 
 				string[] names = Enum.GetNames(typeof(EnumType));
 
@@ -227,19 +235,21 @@ namespace UI
 
 				return this;
 			}
-			public SettingsGroup AddDropdown<EnumType>(string name, Action<int> onChange) where EnumType : Enum
+			public SettingsGroup AddDropdown<EnumType>(string name, Action<int> onChange, EnumType defaultValue=default) where EnumType : Enum
             {
                 var prefab = DropdownPrefab;
                 var option = AddOption(prefab, name);
 				if (option == null) return this;
+                option.ClearOptions();
 
-				string[] names = Enum.GetNames(typeof(EnumType));
+                string[] names = Enum.GetNames(typeof(EnumType));
 
                 for (int i = 0; i < names.Length; i++)
 				{
 					option.AddOption(names[i]);
 				}
 				option.OnValueChanged += onChange;
+				option.SetValue(defaultValue.GetHashCode());
 
 				return this;
 			}
