@@ -10,8 +10,12 @@ namespace UI
 		{
 			OnEnable += OnMenuOpen;
 			OnDisable += OnMenuClose;
-		}
-		protected virtual void OnMenuOpen()
+        }
+        protected override void OnReset()
+        {
+            GetComponent<Canvas>().sortingOrder = 20;
+        }
+        protected virtual void OnMenuOpen()
 		{
             CursorUtility.RequestCursor(this);
 			GameLoop.RequestPause(this);

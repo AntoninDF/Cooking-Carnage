@@ -14,7 +14,7 @@ namespace UI
         private bool _debugFieldScan = false;
         #region Methods
         [Button("Auto assign fields")]
-        protected virtual void Reset()
+        protected void Reset()
         {
             BindAllFields();
             if (TryGetComponent(out Canvas canvas))
@@ -24,7 +24,9 @@ namespace UI
                 scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 scaler.referenceResolution = new(1920, 1080);
             }
+            OnReset();
         }
+        protected virtual void OnReset() {}
 
         private void BindAllFields()
         {
