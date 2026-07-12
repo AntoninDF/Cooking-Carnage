@@ -81,7 +81,9 @@ public static class AudioSystem
         newTrack.start();
         newTrack.release();
         
+#if UNITY_EDITOR
         UnityEngine.Debug.Log("[AudioSystem] is playing "+ audioEvent.Path);
+#endif
         
         activeAudios.Add(id, newTrack);
     }
@@ -96,7 +98,9 @@ public static class AudioSystem
             track.stop(stopMode);
             track.clearHandle();
             activeAudios.Remove(id);
+#if UNITY_EDITOR
             UnityEngine.Debug.Log("[AudioSystem] stopped "+ audioEvent.Path);
+#endif
         }
     }
     
