@@ -25,9 +25,11 @@ namespace Upgrades
 
         #region Fields
         
-        private List<Upgrade>                    _upgrades = new();
-        private MoneyManager                     _moneyManager;
-        private Dictionary<Type, SubscriberList> _subscribers = new();
+        private List<Upgrade> _upgrades = new();
+        private MoneyManager  _moneyManager;
+
+        private bool          _isInitialized = false;
+        private readonly List<Action> _pendingSubscriptions = new();
         
         #endregion
 
@@ -52,8 +54,7 @@ namespace Upgrades
                 return;
             }
 
-            _upgrades    = new List<Upgrade>();
-            _subscribers = new Dictionary<Type, SubscriberList>();
+            _upgrades = new List<Upgrade>();
 
             var concreteTypes = AppDomain.CurrentDomain.GetAssemblies()
                                          .SelectMany(a => a.GetTypes())
@@ -77,8 +78,6 @@ namespace Upgrades
                 var upgrade = (Upgrade)Activator.CreateInstance(type);
                 upgrade.SetConfig(entry.Config);
 
-                upgrade.OnLevelUpInternal += DispatchLevelUp;
-
                 _upgrades.Add(upgrade);
             }
 
@@ -86,26 +85,26 @@ namespace Upgrades
                 this.Log(LogType.Warning, "No MoneyManager found");
             else
                 this.Log(LogType.Log, "UpgradeManager correctly initialized");
+            
+            _isInitialized = true;
+            FlushPendingSubscriptions();
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="upgrade"></param>
-        private void DispatchLevelUp(Upgrade upgrade)
+
+        private void FlushPendingSubscriptions()
         {
-            Debug.Log("Applying upgrade " + upgrade?.GetType().Name);
-            var type = upgrade.GetType();
-            if (_subscribers.TryGetValue(type, out var list))
-                list.Dispatch(upgrade);
+            if (_pendingSubscriptions.Count == 0) return;
+
+            var pending = _pendingSubscriptions.ToList();
+            _pendingSubscriptions.Clear();
+
+            foreach (var subscribeAction in pending)
+                subscribeAction.Invoke();
         }
 
         public void ActualizeAllUpgrade()
         {
             foreach (var upgrade in _upgrades)
-            {
-                DispatchLevelUp(upgrade);
-            }
+                upgrade.NotifyAllSubscribers();
         }
         
 
@@ -178,31 +177,17 @@ namespace Upgrades
 
         #endregion
         
-        #region Subscriber Wrapper
+        #region Subscription
 
-        private abstract class SubscriberList
-        {
-            public abstract void Dispatch(Upgrade upgrade);
-        }
-
-        private class SubscriberList<T> : SubscriberList where T : Upgrade
-        {
-            public List<IUpgradable<T>> Subscribers = new();
-
-            public override void Dispatch(Upgrade upgrade)
-            {
-                Debug.Log("Subscribers are :\n" + Subscribers.ToString_EasyRead(separator: "\n"));
-                if (upgrade is not T typed) return;
-                foreach (var sub in Subscribers)
-                {
-                    Debug.Log("Upgrading subscriber " + sub);
-                    sub.OnUpgraded(typed);
-                }
-            }
-        }
-        
+     
         public void Subscribe<T>(IUpgradable<T> subscriber) where T : Upgrade<T>
         {
+            if (!_isInitialized)
+            {
+                _pendingSubscriptions.Add(() => Subscribe(subscriber));
+                return;
+            }
+
             if (GetUpgradeByType<T>() is T upgrade)
                 upgrade.Subscribe(subscriber);
             else
@@ -213,6 +198,8 @@ namespace Upgrades
         {
             foreach (var upgrade in _upgrades)
                 upgrade.UnsubscribeObject(subscriber);
+            
+            _pendingSubscriptions.RemoveAll(_ => false); 
         }
 
         public void ClearAllSubscribers()
@@ -227,11 +214,9 @@ namespace Upgrades
         {
             Debug.Log($"Disposing : {GetType().Name} & Clearing All Subscribers" );
             ClearAllSubscribers();
+            _pendingSubscriptions.Clear();
         }
 
-        public void SaveUpgrades()
-        {
-            
-        }
+        
     }
 }

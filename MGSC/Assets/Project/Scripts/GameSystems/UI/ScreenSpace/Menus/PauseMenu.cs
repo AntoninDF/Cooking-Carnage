@@ -8,6 +8,7 @@ namespace UI
         public override bool ForceLoadOnUIInitialization => true;
         public Button B_Resume;
         public Button B_MainMenu;
+        public Button B_Settings;
         public Button B_Quit;
 
         public override void OnLoad()
@@ -23,6 +24,8 @@ namespace UI
                 B_Resume.onClick.AddListener(OnResume);
             if (B_MainMenu != null)
                 B_MainMenu.onClick.AddListener(OnMainMenu);
+            if (B_Settings != null)
+                B_Settings.onClick.AddListener(OnSettings);
             if (B_Quit != null)
                 B_Quit.onClick.AddListener(OnQuit);
         }
@@ -34,6 +37,10 @@ namespace UI
         {
             Disable();
             GameLoop.RequestTransition(StateTransitions.OpenMainMenu);
+        }
+        void OnSettings()
+        {
+            Owner.GetWidget<SettingsMenu>().Enable();
         }
         void OnQuit()
         {
@@ -62,7 +69,8 @@ namespace UI
             }
             else
             {
-                GameLoop.TryResume(this);
+                if (Owner.GetShownWidgets<UIMenuOverlay>().Count == 0)
+                    GameLoop.TryResume(this);
             }
         }
     }
