@@ -24,6 +24,9 @@ namespace UI
         [SerializeField] private Color _failureColor = Color.firebrick;
         [SerializeField] private Color _successColor = Color.seaGreen;
 
+        [SerializeField] private Action onTotalMoneyBegin;
+        [SerializeField] private Action onTotalMoneyEnd;
+
         public Transform G_ReceiptLines;
         public ShiftRecapLine ReceiptLinePrefab;
 
@@ -77,7 +80,11 @@ namespace UI
                 SetContentMode(ContentMode.Fail);
             else
                 SetContentMode(ContentMode.Success);
-            AnimateReceipt();
+
+            AnimateReceipt(
+                UpdateTotalMoney
+                );
+
         }
         void SetContentMode(ContentMode mode = ContentMode.Default)
         {
@@ -104,7 +111,7 @@ namespace UI
                     };
         }
         [Button("Animate Receipt")]
-        void AnimateReceipt()
+        void AnimateReceipt(Action onEnd=null)
         {
             if (!Reference.TryGetManager(out MoneyManager mm)) return;
             if (!Reference.TryGetManager(out ShiftManager sm)) return;
@@ -121,11 +128,12 @@ namespace UI
             onEnd:
             () => AnimateRecipeLine(
                 "Upgrades",
-                -999,
+                -(mm.GetMoneyLostThisShift() + sm.GetCurrentRentPrice()),
             onEnd:
             () => AnimateRecipeLine(
                 "Salary",
-                mm.GetMoneyGainedThisShift()
+                mm.GetMoneyGainedThisShift(),
+                onEnd
                 )
                 )
                 )
@@ -140,7 +148,6 @@ namespace UI
             line.OnValueChange += UpdateMoneyDelta;
             line.Animate(targetValue, onEnd);
         }
-
         private void UpdateMoneyDelta()
         {
             if (L_MoneyDelta == null) return;
@@ -149,7 +156,7 @@ namespace UI
             {
                 value += line.Value;
             }
-            L_MoneyDelta.text = value > 0 ? "+" : "" + value + "$";
+            L_MoneyDelta.text = (value > 0 ? "+" : "") + value + "$";
             if (value > 0)
                 L_MoneyDelta.color = _successColor;
             else if (value < 0)
@@ -159,7 +166,46 @@ namespace UI
 
 
             if (!Reference.TryGetManager(out MoneyManager mm)) return;
-            Debug.Log("Money delta - Real : " + (mm.GetMoneyOnPreviousShift() - mm.MoneyInfo) + " ; Displayed : " + value);
+            Debug.Log("Money delta - Real : " + (mm.MoneyInfo - mm.GetMoneyOnPreviousShift()) + " ; Displayed : " + value);
+        }
+        [Button("Animate Money")]
+        void UpdateTotalMoney()
+        {
+            onTotalMoneyBegin?.Invoke();
+            if (!Reference.TryGetManager(out MoneyManager mm)) return;
+            if (!Reference.TryGetManager(out ShiftManager sm)) return;
+            Debug.Log("Money movements this shift : " + mm.GetMoneyTransactionsThisShift().ToString_Detailed());
+
+            string timerName = "Animate total money";
+            float startValue = mm.GetMoneyOnPreviousShift();
+            float endValue = mm.MoneyInfo;
+
+            L_CurrentTotalMoney.color = _defaultColor;
+
+            Action onEnd =
+                () =>
+                {
+                    L_CurrentTotalMoney.color =
+                        endValue > startValue ? _successColor :
+                        endValue > 0 ? _defaultColor :
+                        _failureColor;
+                    TimerManager.RemoveTimer(timerName);
+                    L_CurrentTotalMoney.text = endValue + "$";
+                    onTotalMoneyEnd?.Invoke();
+                };
+            Action<float> onUpdate =
+                t =>
+                {
+                    float lerpedValue = Mathf.Round(Mathf.Lerp(startValue, endValue, t));
+                    L_CurrentTotalMoney.text = lerpedValue + "$";
+                };
+
+            float duration = 1f;
+            TimerManager.StartTimer(
+                timerName,
+                duration,
+                onEnd,
+                elapsed => onUpdate(elapsed / duration));
         }
 
         void SetText(ref TMP_Text txt, float value)
