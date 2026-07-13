@@ -4,6 +4,14 @@ using UI;
 public class MainMenuState : MenuState
 {
     protected override System.Type DefaultMenuType => typeof(MainMenu);
+
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        
+        AudioSystem.PlayAudio(AudioSystem.Database.mainMenuMusic,true);
+    }
+
     public override GameState FindNext(StateTransitions transition = StateTransitions.None)
     {
         switch(transition)

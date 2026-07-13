@@ -16,9 +16,9 @@ public static class AudioSystem
     
     private static Bus masterBus;
     private static Bus musicBus;
-    private static Bus sfxBus;
-    private static Bus voiceBus;
     private static Bus ambienceBus;
+    private static Bus sfxBus;
+    private static Bus dialogBus;
 
     private static bool isInitialized = false;
     
@@ -34,16 +34,13 @@ public static class AudioSystem
     {
         if (isInitialized) return;
         
-        FMODUnity.RuntimeManager.LoadBank("Master");
-        FMODUnity.RuntimeManager.LoadBank("Master.strings");
-        
-        try  
+        try
         {
             masterBus = FMODUnity.RuntimeManager.GetBus("bus:/");
-            musicBus = FMODUnity.RuntimeManager.GetBus("bus:/"); // TODO : a remplacer lorsque bus FMOD
-            sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/"); // TODO : a remplacer lorsque bus FMOD
-            voiceBus = FMODUnity.RuntimeManager.GetBus("bus:/"); // TODO : a remplacer lorsque bus FMOD
-            ambienceBus = FMODUnity.RuntimeManager.GetBus("bus:/"); // TODO : a remplacer lorsque bus FMOD
+            musicBus = FMODUnity.RuntimeManager.GetBus("bus:/MusicBus"); 
+            sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/AmbienceBus"); 
+            ambienceBus = FMODUnity.RuntimeManager.GetBus("bus:/SFXBus"); 
+            dialogBus = FMODUnity.RuntimeManager.GetBus("bus:/DialogBus"); 
         
             isInitialized = true;
         }
@@ -58,18 +55,29 @@ public static class AudioSystem
         {
             UnityEngine.Debug.LogWarning("[AudioSystem] AudioDatabase not found");
         }
+        
+        SetMasterVolume(1);
+        SetMusicVolume(1);
+        SetAmbienceVolume(1);
+        SetSFXVolume(1);
+        SetVoiceVolume(1);
 
         isInitialized = true;
     }
     
     public static void SetMasterVolume(float volume) => masterBus.setVolume(Mathf.Clamp01(volume));
     public static void SetMusicVolume(float volume) => musicBus.setVolume(Mathf.Clamp01(volume));
-    public static void SetSFXVolume(float volume) => sfxBus.setVolume(Mathf.Clamp01(volume));
-    public static void SetVoiceVolume(float volume) => voiceBus.setVolume(Mathf.Clamp01(volume));
     public static void SetAmbienceVolume(float volume) => ambienceBus.setVolume(Mathf.Clamp01(volume));
+    public static void SetSFXVolume(float volume) => sfxBus.setVolume(Mathf.Clamp01(volume));
+    public static void SetVoiceVolume(float volume) => dialogBus.setVolume(Mathf.Clamp01(volume));
     
-    public static void PlayAudio(EventReference audioEvent)
+    public static void PlayAudio(EventReference audioEvent, bool stopOtherAudios = false)
     {
+        if (stopOtherAudios)
+        {
+            StopOtherAudios(audioEvent);
+        }
+        
         if (audioEvent.IsNull)
         {
             UnityEngine.Debug.LogWarning("[AudioSystem] An audio can't be played because it is null");
@@ -83,11 +91,24 @@ public static class AudioSystem
         EventInstance newTrack = RuntimeManager.CreateInstance(audioEvent);
         newTrack.start();
         newTrack.release();
-
+        
 #if UNITY_EDITOR
         UnityEngine.Debug.Log("[AudioSystem] is playing "+ audioEvent.Path);
 #endif
+        
         activeAudios.Add(id, newTrack);
+    }
+
+    public static void StopOtherAudios(EventReference audioEvent, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.ALLOWFADEOUT)
+    {
+        foreach (var track in activeAudios)
+        {
+            if (track.Key != audioEvent.Guid.ToString())
+            {
+                track.Value.stop(stopMode);
+                track.Value.clearHandle();
+            }
+        }
     }
     
     public static void StopAudio(EventReference audioEvent,FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.ALLOWFADEOUT)
@@ -108,11 +129,15 @@ public static class AudioSystem
     
     public static void SetGlobalParameter(string parameterName, float value)
     {
-        RESULT result = RuntimeManager.StudioSystem.setParameterByName(parameterName, value);
+        RESULT result = RuntimeManager.StudioSystem.setParameterByName(parameterName, Mathf.Clamp01(value));
         
         if (result != RESULT.OK)
         {
             UnityEngine.Debug.LogError("[AudioSystem] "+ parameterName + " not found and can't be modified.");
+        }
+        else
+        {
+            UnityEngine.Debug.Log("[AudioSystem] "+ parameterName + " changed successfully to "+ value);
         }
     }
     
