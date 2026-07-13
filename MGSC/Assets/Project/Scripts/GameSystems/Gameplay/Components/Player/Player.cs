@@ -53,6 +53,7 @@ public class Player : MonoBehaviour, IFeatureCollection
         if (hand != null)
         {
             Container = hand.Container;
+            hand.Container.SetOwner(this);
             Collection.Add(Container);
         }
         else
