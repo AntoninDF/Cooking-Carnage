@@ -12,6 +12,7 @@ namespace Orders
         private const float TipMultiplier1Star = 0.2f; // 1 star => + 20% 
         private const float TipMultiplier2Star = 0.5f; // 2 star => + 50%
 
+        private const int failedPrice = 5;
         private static float Threshold1Star => 1 - Globals.Gameplay.Threshold1Star;
         private static float Threshold2Star => 1 - Globals.Gameplay.Threshold2Star;
         
@@ -25,7 +26,7 @@ namespace Orders
 
             float basePrice   = CalculateBasePrice(order);
             int   stars       = CalculateStars(order);
-            float tip         = CalculateTip(basePrice, stars);
+            float tip = order.ServingInfo.Recipe == order.Recipe ? CalculateTip(basePrice, stars) : 0;
             float totalGained = basePrice + tip;
 
             Debug.Log($"BasePrice is {basePrice}" +
@@ -44,7 +45,7 @@ namespace Orders
 
             float basePrice  = meal.Recipe.Price;
 
-            return basePrice ;
+            return meal.Recipe == order.Recipe ? basePrice : failedPrice;
         }
 
         private static int CalculateStars(Order order)
