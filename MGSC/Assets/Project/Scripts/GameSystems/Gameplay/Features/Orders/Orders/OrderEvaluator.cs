@@ -11,11 +11,11 @@ namespace Orders
         private const float TipMultiplier0Star = 0f; // 0 star => No tip
         private const float TipMultiplier1Star = 0.2f; // 1 star => + 20% 
         private const float TipMultiplier2Star = 0.5f; // 2 star => + 50%
-
+        
         private static float Threshold1Star => 1 - Globals.Gameplay.Threshold1Star;
         private static float Threshold2Star => 1 - Globals.Gameplay.Threshold2Star;
-        
-        
+
+
         public static OrderRating Evaluate(Order order)
         {
             if (!order.ServingInfo.HasBeenServed)
@@ -23,28 +23,38 @@ namespace Orders
                 return new OrderRating(order, order.Recipe, 0);
             }
 
-            float basePrice   = CalculateBasePrice(order);
-            int   stars       = CalculateStars(order);
-            float tip         = CalculateTip(basePrice, stars);
-            float totalGained = basePrice + tip;
+            bool  isCorrectRecipe = IsCorrectRecipe(order);
+            float basePrice       = CalculateBasePrice(order, isCorrectRecipe);
+            
+            int   stars           = isCorrectRecipe ? CalculateStars(order) : 0;
+            float tip             = isCorrectRecipe ? CalculateTip(basePrice, stars) : 0f;
+            float totalGained     = basePrice + tip;
 
             Debug.Log($"BasePrice is {basePrice}" +
-                $" stars is {stars}" +
-                $" tip is {tip}" +
-                $" total is {totalGained}");
+                      $" stars is {stars}" +
+                      $" tip is {tip}" +
+                      $" total is {totalGained}" +
+                      $" isCorrectRecipe is {isCorrectRecipe}");
+
             return new OrderRating(order, order.ServingInfo.Recipe, stars, totalGained);
         }
-        
-        private static float CalculateBasePrice(Order order)
+
+        private static bool IsCorrectRecipe(Order order)
+        {
+            return order.Recipe != null && order.Recipe == order.ServingInfo.Recipe;
+        }
+
+        private static float CalculateBasePrice(Order order, bool isCorrectRecipe)
         {
             Servable meal = order.ServingInfo.Meal;
 
             if (meal == null || meal.Recipe == null)
                 return PlainJellyPrice;
 
-            float basePrice  = meal.Recipe.Price;
+            if (!isCorrectRecipe)
+                return OvercookedMealPrice;
 
-            return basePrice ;
+            return meal.Recipe.Price;
         }
 
         private static int CalculateStars(Order order)
@@ -64,6 +74,7 @@ namespace Orders
             0 => TipMultiplier0Star * basePrice,
             _ => 0f * basePrice
         };
-        
+
+    
     }
 }

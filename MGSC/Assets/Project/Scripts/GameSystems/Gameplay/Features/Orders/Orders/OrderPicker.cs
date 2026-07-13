@@ -34,12 +34,13 @@ namespace Orders
                 throw new NullReferenceException("[OrderPicker] : client manager not found");
 
             Dictionary<EClientType, int> clientCount = clientManager.GetSeenClientTypesCount();
-            IEnumerable<SO_Recipe> recipes = book.Recipes
-                                                 .Where(IsBaseRecipe)
-                                                 .Where(r => RecipeUnlockChecker.IsUnlocked(r));
+            IEnumerable<SO_Recipe> recipes = book.Recipes.Where(IsBaseRecipe).Where(r => RecipeUnlockChecker.IsUnlocked(r));
 
             if (!recipes.Any())
-                throw new NullReferenceException("[OrderPicker] : Aucune recette de base débloquée pour ce shift");
+            {
+                Debug.LogError($"[OrderPicker] Aucune recette de base débloquée (shift {Reference.GetManager<ShiftManager>().ShiftNumber}).");
+                return book.FailedRecipe;
+            }
 
             List<SO_Client> clientModels = Reference.AssetReferences.clientList;
             EnforceSeenClientsCountTypes(ref clientCount, clientModels.Select(model => model.clientType));

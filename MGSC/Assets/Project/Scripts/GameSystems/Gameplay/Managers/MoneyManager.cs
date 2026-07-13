@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GameSystem
@@ -19,7 +20,7 @@ namespace GameSystem
 
         #region Fields
         private OrderManager _orderManager;
-        private Dictionary<int, float> _moneyGainedPerShift = new();
+        private Dictionary<int, List<float>> _moneyTransactionsPerShift = new();
         private int shiftNumber => Globals.Gameplay.ShiftNumber;
         #endregion
 
@@ -67,8 +68,21 @@ namespace GameSystem
             AddMoney(order.OrderRating.MoneyGained);
         }
 
-        public float GetMoneyGainedOnShift(int shiftCount) => _moneyGainedPerShift.ContainsKey(shiftCount) ? _moneyGainedPerShift[shiftCount] : 0f;
+        public float GetMoneyGainedOnShift(int shiftNumber)
+            => _moneyTransactionsPerShift.ContainsKey(shiftNumber) ?
+            _moneyTransactionsPerShift[shiftNumber].Where(value => value > 0).Sum() :
+            0f;
+        public float GetMoneyLostOnShift(int shiftNumber)
+            => _moneyTransactionsPerShift.ContainsKey(shiftNumber) ?
+            _moneyTransactionsPerShift[shiftNumber].Where(value => value < 0).Sum() :
+            0f;
+        public List<float> GetMoneyTransactionsOnShift(int shiftNumber)
+            => _moneyTransactionsPerShift.ContainsKey(shiftNumber) ?
+            _moneyTransactionsPerShift[shiftNumber] :
+            new();
         public float GetMoneyGainedThisShift() => GetMoneyGainedOnShift(shiftNumber);
+        public float GetMoneyLostThisShift() => GetMoneyLostOnShift(shiftNumber);
+        public List<float> GetMoneyTransactionsThisShift() => GetMoneyTransactionsOnShift(shiftNumber);
         public float GetMoneyOnPreviousShift()
         {
             if (shiftNumber <= 0) 
@@ -80,11 +94,12 @@ namespace GameSystem
         public void AddMoney(float amount)
         {
             Debug.Log("Money gained : " + amount);
+            MoneyInfo = Mathf.Max(0f, MoneyInfo + amount);
             MoneyInfo += amount;
-            if (!_moneyGainedPerShift.ContainsKey(shiftNumber))
-                _moneyGainedPerShift[shiftNumber] = 0f;
+            if (!_moneyTransactionsPerShift.ContainsKey(shiftNumber))
+                _moneyTransactionsPerShift[shiftNumber] = new();
             
-            if(amount>=0) _moneyGainedPerShift[shiftNumber] += amount;
+            _moneyTransactionsPerShift[shiftNumber].Add(amount);
             
             OnMoneyChange?.Invoke(amount);
 
