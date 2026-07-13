@@ -39,7 +39,10 @@ namespace Orders
                                                  .Where(r => RecipeUnlockChecker.IsUnlocked(r));
 
             if (!recipes.Any())
-                throw new NullReferenceException("[OrderPicker] : Aucune recette de base débloquée pour ce shift");
+            {
+                Debug.LogError($"[OrderPicker] Aucune recette de base débloquée (shift {Reference.GetManager<ShiftManager>().ShiftNumber}). Selection de la recette la moins chère.");
+                return book.Recipes.Where(IsBaseRecipe).OrderBy(r => r.Price).FirstOrDefault();
+            }
 
             List<SO_Client> clientModels = Reference.AssetReferences.clientList;
             EnforceSeenClientsCountTypes(ref clientCount, clientModels.Select(model => model.clientType));
