@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Features.Path;
+using GameSystem;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Splines;
@@ -14,6 +16,9 @@ namespace Features
         public Transform ControlledTransform { get; set;}
         public SplineContainer SplineComponent { get; set; }
         public Spline Spline => SplineComponent?.Spline;
+        
+        private List<Vector3> _checkedPositions { get; set; } = new();
+        private NavMeshAgent  _navmeshAgent     { get; set; }
         
         public Action OnDestinationReached { get; set; }
         public Action OnStartMoving { get; set; }
@@ -40,9 +45,15 @@ namespace Features
         #endregion
         
         #region Fields
-
-        private List<Vector3> _checkedPositions { get; set; } = new();
-        private NavMeshAgent  _navmeshAgent            { get; set; }
+        
+        private float _minSplineSpacing        = 1.2f; 
+        private float _blockedToleranceBeforeDodge = 0.75f;
+        private float _dodgeLateralOffset       = 1f;
+        private float _dodgeForwardOffset       = 1.5f;
+        
+        private float _blockedTimer;
+        private bool  _isDodging;
+        
         private bool          _validSetup;
         private bool          _isMoving;
 
@@ -91,12 +102,21 @@ namespace Features
         /// </summary>
         public void MoveAlongSpline()
         {
-            if (!_validSetup)
+            if (!_validSetup || _isDodging) return;
+
+            float length = Spline.GetLength();
+            float newT   = SplinePosition + Speed * Time.deltaTime / length;
+
+            if (IsBlockedAhead(newT, length, out var blocker))
             {
-                return;
+                _blockedTimer += Time.deltaTime;
+                if (_blockedTimer >= _blockedToleranceBeforeDodge)
+                    BeginDodge(blocker);
+                return; 
             }
-            float lenght = Spline.GetLength();
-            SetSplinePos(SplinePosition + Speed * Time.deltaTime/lenght);
+
+            _blockedTimer = 0f;
+            SetSplinePos(newT);
         }
         
         /// <summary>
@@ -148,6 +168,58 @@ namespace Features
             return t;
         }
         
+        public Vector3 GetSplineTangent(float t)
+        {
+            if (!_validSetup) return Vector3.forward;
+            Spline.Evaluate(t, out _, out Unity.Mathematics.float3 tangent, out _);
+            return ((Vector3)tangent).normalized;
+        }
+        
+        #region Traffic Avoidance
+        
+        private bool IsBlockedAhead(float candidateT, float splineLength, out ClientMovement blocker)
+        {
+            var traffic = Reference.GetManager<PathManager>().SplineTrafficManager;
+            if (traffic.TryGetNearestAhead(this, out blocker, out float tGap))
+            {
+                float worldGap = tGap * splineLength;
+                return worldGap < _minSplineSpacing;
+            }
+            blocker = null;
+            return false;
+        }
+        
+        private void BeginDodge(ClientMovement blocker)
+        {
+            _isDodging    = true;
+            _blockedTimer = 0f;
+
+            Vector3 tangent = GetSplineTangent(SplinePosition);
+            Vector3 lateral = Vector3.Cross(tangent, Vector3.up).normalized;
+
+            // Choisit le côté en fonction d'un offset stable (évite que deux clients dodge dans le même sens et se re-bloquent)
+            float side = (GetInstanceIDHash() % 2 == 0) ? 1f : -1f;
+
+            Vector3 dodgeTarget = ControlledTransform.position
+                                  + tangent * _dodgeForwardOffset
+                                  + lateral * (_dodgeLateralOffset * side);
+
+            OnDestinationReached += EndDodge;
+            SwitchToNavMesh(dodgeTarget);
+        }
+
+        private void EndDodge()
+        {
+            OnDestinationReached -= EndDodge;
+            float reentryT = FindNearestSplinePoint();
+            SwitchToSpline(reentryT);
+            _isDodging = false;
+        }
+
+        private int GetInstanceIDHash() => ControlledTransform.GetInstanceID() & 0xFFFF;
+
+        #endregion
+        
         #endregion
         
         #region NavMesh Methods
@@ -162,9 +234,9 @@ namespace Features
         {
             IsOnSpline            = false;
             _navmeshAgent.enabled = true;
-    
+            Reference.GetManager<PathManager>().SplineTrafficManager.Unregister(this);
+
             bool warped = _navmeshAgent.Warp(ControlledTransform.position);
-    
             SetNavDestination(worldPosition);
         }
 
@@ -174,9 +246,10 @@ namespace Features
         /// <param name="startTime"></param>
         public void SwitchToSpline(float startTime)
         {
-            IsOnSpline     = true;
+            IsOnSpline            = true;
             _navmeshAgent.enabled = false;
             SetSplinePos(startTime);
+            Reference.GetManager<PathManager>().SplineTrafficManager.Register(this);
         }
 
         /// <summary>
