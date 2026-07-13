@@ -65,24 +65,18 @@ public class PlatePile : MonoBehaviour, IFeatureCollection
 
         SetupTarget();
 
-        GameObject go = Instantiate(ItemPrefab.gameObject);
+        GameObject go = Instantiate(ItemPrefab.gameObject, _target.position, _target.rotation);
         var item = go.GetComponent<Item>();
         item.Anim.Enabled = true;
 
-        yield return null;
+        yield return null; //The plate need a frame to setup the features
         if (!playerContainer.RequestGrab(item.Grabbable))
         {
             Destroy(go);
             yield break;
         }
 
-        go.transform.position = _target.position;
-        go.transform.rotation = Quaternion.identity;
-        
         _mp.RemoveOneElement();
-        
-        
-        
     }
 
     void SetupTarget()

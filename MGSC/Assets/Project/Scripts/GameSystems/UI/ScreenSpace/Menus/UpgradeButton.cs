@@ -8,6 +8,7 @@ namespace UI
     public class UpgradeButton : UIWidget
     {
         public Image I_Icon;
+        public Image I_Icon2;
         public TMP_Text L_Title;
         public TMP_Text L_Subtitle;
         public TMP_Text L_PriceTag;
@@ -49,6 +50,9 @@ namespace UI
 
             if (I_Icon != null)
                 I_Icon.sprite = _config.Icon;
+
+            if (I_Icon2 != null)
+                I_Icon2.sprite = _config.Icon;
 
             var upgrade = _config.GetUpgrade();
             if (upgrade == null)
