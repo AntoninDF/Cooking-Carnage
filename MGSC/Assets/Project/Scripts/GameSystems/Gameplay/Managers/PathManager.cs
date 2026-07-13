@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Features.Path;
 using Orders;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -11,6 +12,8 @@ namespace GameSystem
         public SplineContainer SplineComponent => _splineComponent;
         
         public SO_RecipeUnlockConfig _recipeUnlockCongig;
+
+        public SplineTrafficManager SplineTrafficManager = new ();
         
         [SerializeField] private SplineContainer _splineComponent;
 
