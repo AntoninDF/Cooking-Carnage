@@ -201,8 +201,7 @@ public class Plate : Item
         }
 
         // Setup
-        GameObject go = Instantiate(mc.gameObject);
-        go.transform.SetParent(defaultModel.transform.parent);
+        GameObject go = Instantiate(mc.gameObject, defaultModel.transform.parent, true);
         go.transform.localPosition = Vector3.zero;
         go.transform.localScale = Vector3.one;
         go.transform.localRotation = Quaternion.identity;
