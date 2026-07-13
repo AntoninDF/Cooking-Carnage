@@ -7,6 +7,9 @@ namespace UI
 {
     public class ShiftRecapLine : UIWidget
     {
+        public Action OnValueChange;
+        public float Value;
+
         [SerializeField] private TMP_Text L_Label;
         [SerializeField] private TMP_Text L_Value;
         [SerializeField] private Color _defaultColor = Color.gray2;
@@ -21,7 +24,9 @@ namespace UI
 
         private float _defaultHeight;
         private float _targetValue;
+        private Timer _currentTimer;
 
+        ~ShiftRecapLine() => ClearTimer();
         public void SetLabel(string name)
         {
             if (L_Label != null)
@@ -29,6 +34,7 @@ namespace UI
         }
         public void SetValue(float value, float opacity=1f)
         {
+            Value = value;
             if (L_Value != null)
             {
                 L_Value.text = value > 0 ? "+" : "" + value.ToString() + "$";
@@ -58,6 +64,7 @@ namespace UI
                 var c = L_Label.color;
                 L_Label.color = new Color(c.r, c.g, c.b, c.a * opacity);
             }
+            OnValueChange?.Invoke();
         }
 
 
@@ -66,12 +73,23 @@ namespace UI
             _targetValue = targetValue;
             _defaultHeight = GetComponent<RectTransform>().sizeDelta.y;
             onEnd += () => Animate(1);
-            TimerManager.StartTimer(
+            ClearTimer();
+            _currentTimer = TimerManager.StartTimer(
                 "Animate receipt line " + Time.time,
                 _duration,
                 onEnd,
                 elapsed => Animate(elapsed / _duration, true));
         }
+
+        private void ClearTimer()
+        {
+            if (_currentTimer != null)
+            {
+                _currentTimer.Pause();
+                TimerManager.RemoveTimer(_currentTimer.Name);
+            }
+        }
+
         /// <summary>
         /// t is between 0 and 1
         /// </summary>
