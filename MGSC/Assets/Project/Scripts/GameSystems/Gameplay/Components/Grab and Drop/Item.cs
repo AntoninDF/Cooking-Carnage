@@ -75,7 +75,8 @@ public class Item : MonoBehaviour, IFeatureCollection
     /// </summary>
     protected virtual void BindEvents()
     {
-        Grabbable.OnGrab += TriggerAnim;
+        Grabbable.OnGrab += TriggerAnim; 
+        Grabbable.OnPlayerGrab += TriggerAnim;
         Grabbable.OnLock += () => Collider.enabled = false;
         Grabbable.OnUnlock += () => Collider.enabled = true;
         Interactable.OnInteraction += TryInteract;
