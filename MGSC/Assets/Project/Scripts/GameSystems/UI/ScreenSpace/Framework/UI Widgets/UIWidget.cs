@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
+    [RequireComponent(typeof(RectTransform))]
     [HideScriptField]
     [HelpBox("If you name your GameObjects exactly the same as the variable names, you can click 'Auto assign fields' and it will work the magic for you :)")]
     public class UIWidget : MonoBehaviour

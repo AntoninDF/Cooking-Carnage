@@ -1,5 +1,5 @@
 using GameSystem;
-using NUnit.Framework;
+using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -17,8 +17,12 @@ namespace UI
 
         public TMP_Text L_MoneyGained;
         public TMP_Text L_RentPaid;
-        public TMP_Text L_PreviousTotalMoney;
+        //public TMP_Text L_PreviousTotalMoney;
         public TMP_Text L_CurrentTotalMoney;
+        public TMP_Text L_MoneyDelta;
+
+        public Transform G_ReceiptLines;
+        public ShiftRecapLine ReceiptLinePrefab;
 
         [Tooltip("The gameobjects listed here will be enabled when the shift has failed, and disabled otherwise")]
         public List<GameObject> ObjectsToEnableUponFailOnly = new();
@@ -62,12 +66,13 @@ namespace UI
             if (!Reference.TryGetManager(out ShiftManager sm)) return;
             SetMoneyGained(mm.GetMoneyGainedThisShift());
             SetCurrentTotalMoney(mm.MoneyInfo);
-            SetPreviousTotalMoney(mm.GetMoneyOnPreviousShift());
+            //SetPreviousTotalMoney(mm.GetMoneyOnPreviousShift());
 
             if (sm.HasFailed)
                 SetContentMode(ContentMode.Fail);
             else
                 SetContentMode(ContentMode.Success);
+            AnimateReceipt();
         }
         void SetContentMode(ContentMode mode = ContentMode.Default)
         {
@@ -93,6 +98,38 @@ namespace UI
                         _                   => ss.Default
                     };
         }
+        [Button("Animate Receipt")]
+        void AnimateReceipt()
+        {
+            if (!Reference.TryGetManager(out MoneyManager mm)) return;
+            if (!Reference.TryGetManager(out ShiftManager sm)) return;
+            if (G_ReceiptLines == null) return;
+            for (int i = 0; i < G_ReceiptLines.childCount; i++)
+                GameObject.Destroy(G_ReceiptLines.GetChild(i).gameObject);
+
+            AnimateRecipeLine(
+                "Rent payed",
+                -sm.GetCurrentRentPrice(),
+            onEnd:
+            () => AnimateRecipeLine(
+                "Upgrades",
+                -999,
+            onEnd:
+            () => AnimateRecipeLine(
+                "Salary",
+                mm.GetMoneyGainedThisShift()
+                )
+                )
+                )
+                ;
+        }
+        void AnimateRecipeLine(string name, float targetValue, Action onEnd=null)
+        {
+            var go = Instantiate(ReceiptLinePrefab.gameObject, G_ReceiptLines);
+            ShiftRecapLine line = go.GetComponent<ShiftRecapLine>();
+            line.SetLabel(name);
+            line.Animate(targetValue, onEnd);
+        }
 
         void SetText(ref TMP_Text txt, float value)
         {
@@ -101,7 +138,7 @@ namespace UI
         }
         void SetMoneyGained(float value)    => SetText(ref L_MoneyGained, value);
         void SetRentPaid(float value)       => SetText(ref L_RentPaid, value);
-        void SetPreviousTotalMoney(float value)   => SetText(ref L_PreviousTotalMoney, value);
+        //void SetPreviousTotalMoney(float value)   => SetText(ref L_PreviousTotalMoney, value);
         void SetCurrentTotalMoney(float value)   => SetText(ref L_CurrentTotalMoney, value);
 
         [System.Serializable]
