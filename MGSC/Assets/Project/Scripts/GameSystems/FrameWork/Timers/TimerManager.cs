@@ -193,24 +193,26 @@ namespace GameSystem
         
         public void Update(float deltaTime=0)
         {
-            if (paused || IsComplete)
-                return;
+            if (paused || IsComplete) return;
 
-            onUpdate?.Invoke(Elapsed);
             if (!FrameBased)
             {
-
                 Elapsed += deltaTime;
                 if (Elapsed >= Duration)
                 {
+                    Elapsed = Duration;
+                    onUpdate?.Invoke(Elapsed); 
                     IsComplete = true;
                     onComplete?.Invoke();
+                    return;
                 }
             }
-            else
-            {
-                Elapsed+=1;
 
+            onUpdate?.Invoke(Elapsed);
+
+            if (FrameBased)
+            {
+                Elapsed += 1;
                 if (Elapsed >= Duration)
                 {
                     IsComplete = true;
