@@ -12,7 +12,6 @@ namespace Upgrades
         public int               Level     => _level;
         public UpgradeConfig     Config    => _config;
         
-        internal event Action<Upgrade> OnLevelUpInternal;
         [GlobalEvent("Upgrades/OnUpgradeSuccessfullyBought")]
         public static Action OnUpgradeSuccess;
         #endregion
@@ -45,7 +44,6 @@ namespace Upgrades
             _level++;
             Debug.Log($"[{GetType().Name}] Level {_level}/{_config?.MaxLevel}");
             OnUpgradeSuccess?.Invoke();
-            OnLevelUpInternal?.Invoke(this);
         }
         
         public virtual float GetPrice()   => _config.PriceCurve.Evaluate(_level);
@@ -58,6 +56,11 @@ namespace Upgrades
         
         internal abstract void UnsubscribeObject(object subscriber);
         internal abstract void ClearSubscribers();
+
+        /// <summary>
+        /// Permet de notifier tous les abonnés sans augmenter de niveau
+        /// </summary>
+        internal abstract void NotifyAllSubscribers();
         
         #endregion
     }
@@ -91,6 +94,11 @@ namespace Upgrades
         public override void LevelUp()
         {
             base.LevelUp();
+            NotifyAllSubscribers();
+        }
+
+        internal override void NotifyAllSubscribers()
+        {
             for (int i = _subscribers.Count - 1; i >= 0; i--)
             {
                 var sub = _subscribers[i];
