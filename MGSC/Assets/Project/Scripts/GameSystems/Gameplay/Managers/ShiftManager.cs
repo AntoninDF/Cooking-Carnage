@@ -106,6 +106,7 @@ namespace GameSystem
             ResetTimerUntilFinalWarning();
             this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
             OnShiftFinalWarning?.Invoke();
+            AudioSystem.PlayAudio(AudioSystem.Database.shiftNoonSFX);
         }
 
         /// <summary>
@@ -131,6 +132,7 @@ namespace GameSystem
 
             SaveManager.SaveGameData();
             OnShiftEnded?.Invoke();
+            AudioSystem.PlayAudio(AudioSystem.Database.shiftEndSFX);
             GameLoop.RequestTransition(StateTransitions.ShowShiftRecap);
         }
 

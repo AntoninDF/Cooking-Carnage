@@ -25,8 +25,6 @@ namespace GameSystem
 
         #region Methods
 
-
-
         /// <summary>
         /// Insert the static update method in the player loop right between the PreUpdate and Update
         /// </summary>

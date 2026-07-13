@@ -5,6 +5,13 @@ public class RecapState : MenuState
     // To Do : Change the menu according to wether the player has succeeded or failed
     protected override System.Type DefaultMenuType => typeof(ShiftRecapMenu);
 
+    public override void OnEnter()
+    {
+        base.OnEnter();
+        
+        AudioSystem.PlayAudio(AudioSystem.Database.upgradeMusic,true);
+    }
+
     public override GameState FindNext(StateTransitions transition = StateTransitions.None)
     {
         switch (transition)
