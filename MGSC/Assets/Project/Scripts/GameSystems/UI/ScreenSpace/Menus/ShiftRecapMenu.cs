@@ -166,7 +166,6 @@ namespace UI
 
 
             if (!Reference.TryGetManager(out MoneyManager mm)) return;
-            Debug.Log("Money delta - Real : " + (mm.MoneyInfo - mm.GetMoneyOnPreviousShift()) + " ; Displayed : " + value);
         }
         [Button("Animate Money")]
         void UpdateTotalMoney()
@@ -174,7 +173,6 @@ namespace UI
             onTotalMoneyBegin?.Invoke();
             if (!Reference.TryGetManager(out MoneyManager mm)) return;
             if (!Reference.TryGetManager(out ShiftManager sm)) return;
-            Debug.Log("Money movements this shift : " + mm.GetMoneyTransactionsThisShift().ToString_Detailed());
 
             string timerName = "Animate total money";
             float startValue = mm.GetMoneyOnPreviousShift();
