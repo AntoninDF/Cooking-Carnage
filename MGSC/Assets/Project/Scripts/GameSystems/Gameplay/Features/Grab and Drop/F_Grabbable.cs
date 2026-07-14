@@ -40,10 +40,7 @@ namespace Features
             {
                 OnPlayerGrab?.Invoke();
             }
-            else
-            {
-                OnGrab?.Invoke();
-            }
+            OnGrab?.Invoke();
         }
     }
 
