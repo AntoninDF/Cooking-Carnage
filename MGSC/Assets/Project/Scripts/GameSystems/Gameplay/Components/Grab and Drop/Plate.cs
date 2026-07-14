@@ -107,6 +107,7 @@ public class Plate : Item
     {
         F_Grabbable grabbable = (F_Grabbable)item;
         if (grabbable == null) return false;
+        if(!Cookable.CanBeTransformed) return false;
         if (!grabbable.TryGetSibling(out F_Cuttable cuttable)) return false;
         if (!cuttable.Transformed) return false;
         return true;
