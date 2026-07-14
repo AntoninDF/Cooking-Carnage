@@ -101,6 +101,7 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
             }
             col = transform.AddComponent<MeshCollider>();
         }
+        
         col.sharedMesh = Model.GetCombinedMeshes(transform);
     }
 }

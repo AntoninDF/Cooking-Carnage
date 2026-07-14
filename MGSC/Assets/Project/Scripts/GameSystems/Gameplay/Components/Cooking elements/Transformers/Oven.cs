@@ -138,6 +138,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
 
         bool success = Cooker.RequestStartTransformation(cookable);
     }
+    
     private void OnStartCooking(TransformableAfterTimer target)
     {
         if (target is F_Cookable)
