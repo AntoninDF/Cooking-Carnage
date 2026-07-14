@@ -22,7 +22,9 @@ namespace Features
         public Action OnUnlock { get; set; }
         public Action OnGrab {  get; set; }
         
-        public Action OnPlayerGrab {  get; set; }
+        public Action OnPlayerGrabSFX {  get; set; }
+        public Action OnDropSFX {  get; set; }
+        public Action OnJellyGrabSFX {  get; set; }
 
         public F_Grabbable(IFeatureCollection owner) : base(owner)
         {
@@ -38,8 +40,13 @@ namespace Features
 
             if (container.Owner is Player)
             {
-                OnPlayerGrab?.Invoke();
+                OnPlayerGrabSFX?.Invoke();
             }
+            else
+            {
+                OnDropSFX?.Invoke();
+            }
+            
             OnGrab?.Invoke();
         }
     }

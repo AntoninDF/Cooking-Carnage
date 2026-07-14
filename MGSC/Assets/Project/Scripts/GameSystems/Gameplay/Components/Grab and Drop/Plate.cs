@@ -137,6 +137,11 @@ public class Plate : Item
                 {
                     playerContainer.RequestGrab(Grabbable);
                 }
+
+                if (cookedVariant != null)
+                {
+                    Grabbable.OnJellyGrabSFX?.Invoke(); // son de gelée 
+                }
             }
         }
 
@@ -211,8 +216,6 @@ public class Plate : Item
         go.transform.localRotation = Quaternion.identity;
         cookedVariant = go.GetComponent<ModelController>();
         SetActiveModel(cookedVariant);
-
-
     }
 
     List<F_Ingredient> GetContainedIngredients()
