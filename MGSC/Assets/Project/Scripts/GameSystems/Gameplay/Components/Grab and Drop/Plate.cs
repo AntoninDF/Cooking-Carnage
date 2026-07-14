@@ -137,11 +137,7 @@ public class Plate : Item
                     playerContainer.RequestGrab(Grabbable);
                 }
 
-                if (cookedVariant == null)
-                {
-                    Grabbable.OnPlayerGrabSFX?.Invoke(); // son d'assiette
-                }
-                else
+                if (cookedVariant != null)
                 {
                     Grabbable.OnJellyGrabSFX?.Invoke(); // son de gelée 
                 }

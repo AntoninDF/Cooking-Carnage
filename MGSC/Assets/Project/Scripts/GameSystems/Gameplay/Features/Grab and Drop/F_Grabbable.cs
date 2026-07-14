@@ -38,9 +38,13 @@ namespace Features
             Container?.RequestDrop(this);
             Container = container;
 
-            if (container.Owner is not Player)
+            if (container.Owner is Player)
             {
-                OnDropSFX?.Invoke(); // son d'assiette posée
+                OnPlayerGrabSFX?.Invoke();
+            }
+            else
+            {
+                OnDropSFX?.Invoke();
             }
             
             OnGrab?.Invoke();
