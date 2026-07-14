@@ -132,7 +132,7 @@ public static class ExtensionMethods
 
             if (elm is IFormattable formattable)
                 result += formattable.ToString();
-            if (elm is object obj)
+            else if (elm is object obj)
                 result += obj.ToString();
             else
                 result += typeof(T).Name;

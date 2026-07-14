@@ -37,7 +37,7 @@ namespace UI
             Value = value;
             if (L_Value != null)
             {
-                L_Value.text = value > 0 ? "+" : "" + value.ToString() + "$";
+                L_Value.text = (value > 0 ? "+" : "") + value.ToString() + "$";
 
                 if (value > 0)
                     L_Value.color = _successColor;
