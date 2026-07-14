@@ -107,6 +107,7 @@ public class Plate : Item
     {
         F_Grabbable grabbable = (F_Grabbable)item;
         if (grabbable == null) return false;
+        if(!Cookable.CanBeTransformed) return false;
         if (!grabbable.TryGetSibling(out F_Cuttable cuttable)) return false;
         if (!cuttable.Transformed) return false;
         return true;
@@ -153,6 +154,8 @@ public class Plate : Item
             var feature = recipeComponent.RecipeFeature;
             feature.Recipe = recipe;
         }
+        DeleteContent();
+        Container.IsLocked = true;
     }
     private void OnCook()
     {
@@ -161,6 +164,7 @@ public class Plate : Item
         DetectRecipe(out var recipe);
         EnableRecipeModel(recipe);
         DeleteContent();
+        Container.IsLocked = true;
     }
 
     private void DeleteContent()
