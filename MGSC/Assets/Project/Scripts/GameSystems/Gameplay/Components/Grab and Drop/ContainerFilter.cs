@@ -26,9 +26,7 @@ public class ContainerFilter : MonoBehaviour
                 {
                     int index = i;
                     target.Filter.AddCondition(
-                        obj => obj is Feature f &&
-                        f.HasSibling(Types[index].SystemType) == (Filters[index] == Filter.HasFeature)
-                        );
+                        obj => obj is Feature f && f.HasSibling(Types[index].SystemType) == (Filters[index] == Filter.HasFeature));
                 }
             }
         }
