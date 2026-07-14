@@ -206,20 +206,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 8836106895385022411}
-          m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
-          m_MethodName: Play
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
   - ActionPath:
-      ActionVariableName: OnPlayerGrab
+      ActionVariableName: OnPlayerGrabSFX
       SerializedType:
         m_Name: Action
         m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
@@ -238,8 +226,8 @@ MonoBehaviour:
     Event:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8859683979251061410}
-          m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+        - m_Target: {fileID: 3701519548638378819}
+          m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
           m_MethodName: Play
           m_Mode: 1
           m_Arguments:
@@ -250,9 +238,29 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 1857627047578693840}
-          m_TargetAssemblyTypeName: Plate, Assembly-CSharp
-          m_MethodName: PlayAnimation
+  - ActionPath:
+      ActionVariableName: OnGrabSFX
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Grabbable
+        SerializedType:
+          m_Name: F_Grabbable
+          m_AssemblyQualifiedName: Features.F_Grabbable, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 1857627047578693840}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8836106895385022411}
+          m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+          m_MethodName: Play
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -262,7 +270,59 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 3701519548638378819}
+  - ActionPath:
+      ActionVariableName: OnJellyGrabSFX
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Grabbable
+        SerializedType:
+          m_Name: F_Grabbable
+          m_AssemblyQualifiedName: Features.F_Grabbable, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 1857627047578693840}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6716951652302156022}
+          m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnDropSFX
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Grabbable
+        SerializedType:
+          m_Name: F_Grabbable
+          m_AssemblyQualifiedName: Features.F_Grabbable, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 1857627047578693840}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8836106895385022411}
           m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
           m_MethodName: Play
           m_Mode: 1
@@ -277,6 +337,69 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
+--- !u!1 &3901090733705673004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4540249948898288109}
+  - component: {fileID: 6824452485971628227}
+  m_Layer: 0
+  m_Name: Overcooked
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4540249948898288109
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3901090733705673004}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8135125640445294393}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6824452485971628227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3901090733705673004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1807367193
+      Data2: 1119105669
+      Data3: 2098652092
+      Data4: -904786579
+    Path: event:/SFX/Cuisine/PlateBurned
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &4272652045390626046
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,8 +432,73 @@ Transform:
   - {fileID: 3134121855727753553}
   - {fileID: 7794656847616477951}
   - {fileID: 3672709425614632896}
+  - {fileID: 4540249948898288109}
+  - {fileID: 5108380276605457436}
   m_Father: {fileID: 4354789624662396304}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5393193595526113215
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5108380276605457436}
+  - component: {fileID: 6716951652302156022}
+  m_Layer: 0
+  m_Name: JellyJiggle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5108380276605457436
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5393193595526113215}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8135125640445294393}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6716951652302156022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5393193595526113215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -515084558
+      Data2: 1251561099
+      Data3: -739382127
+      Data4: 139492430
+    Path: event:/SFX/Controller/JellyJiggle
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &5455638146099090410
 GameObject:
   m_ObjectHideFlags: 0
