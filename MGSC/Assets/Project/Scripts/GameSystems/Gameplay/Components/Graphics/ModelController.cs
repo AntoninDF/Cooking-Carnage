@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Features;
@@ -53,9 +55,14 @@ public class ModelController : MonoBehaviour, IFeatureCollection
     {
         Renderer[] result;
         if (_propagateChangesToChildren)
-            result = GetComponentsInChildren<Renderer>();
+            result = GetComponentsInChildren<Renderer>()
+                .Where(r => r is MeshRenderer || r is SkinnedMeshRenderer) //Doesn't take the other renderer like ParticleSystemRenderer
+                .ToArray();
         else
-            result = new Renderer[1] { GetComponent<Renderer>() };
+        {
+            var r = GetComponent<Renderer>();
+            result = (r is MeshRenderer || r is SkinnedMeshRenderer) ? new Renderer[1] { r } : Array.Empty<Renderer>();
+        }
         return result;
     }
 
