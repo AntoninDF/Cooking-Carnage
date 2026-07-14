@@ -2,6 +2,7 @@ using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,7 @@ namespace UI
 		[SerializeField] private Button B_Close;
 		[SerializeField] private Transform G_Options;
 		[SerializeField] private Transform G_MenuNames;
+		[SerializeField] private TMP_Text L_CurrentMenu;
 
 		private List<SettingsGroup> _availableGroups = new();
 		private SettingsGroup _currentActiveGroup;
@@ -97,7 +99,10 @@ namespace UI
 					curr.Disable();
 			}
 			_currentActiveGroup = group;
-		}
+			if (L_CurrentMenu != null)
+				L_CurrentMenu.text = group.Name;
+
+        }
 		void EnableGroup(string name)
 		{
 			foreach (var group in _availableGroups)
