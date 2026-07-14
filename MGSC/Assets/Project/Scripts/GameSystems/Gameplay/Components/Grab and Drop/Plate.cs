@@ -153,6 +153,8 @@ public class Plate : Item
             var feature = recipeComponent.RecipeFeature;
             feature.Recipe = recipe;
         }
+        DeleteContent();
+        Container.IsLocked = true;
     }
     private void OnCook()
     {
@@ -161,6 +163,7 @@ public class Plate : Item
         DetectRecipe(out var recipe);
         EnableRecipeModel(recipe);
         DeleteContent();
+        Container.IsLocked = true;
     }
 
     private void DeleteContent()
