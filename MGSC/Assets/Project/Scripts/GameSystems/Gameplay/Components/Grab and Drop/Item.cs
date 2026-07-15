@@ -32,6 +32,8 @@ public class Item : MonoBehaviour, IFeatureCollection
     [SerializeField] protected ModelController defaultModel;
     protected Bounds bounds;
     private int _originalLayer;
+    private int? _currentAppliedLayer;
+    public int? CurrentAppliedLayer => _currentAppliedLayer;
 
     public ModelController ActiveModel => activeModel;
     protected ModelController activeModel;
@@ -198,12 +200,14 @@ public class Item : MonoBehaviour, IFeatureCollection
 
     public virtual void RestoreLayerRecursive()
     {
+        _currentAppliedLayer = null;
         if (ActiveModel != null)
             ActiveModel.SetLayer(_originalLayer);
     }
     
     public virtual void SetLayerRecursive(int layer)
     {
+        _currentAppliedLayer = layer;
         if (ActiveModel != null)
             ActiveModel.SetLayer(layer);
     }
