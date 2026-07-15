@@ -84,7 +84,7 @@ namespace GameSystem
             Data = GetCurrentData();
             
             if (Reference.TryGetManager(out MoneyManager moneyMgr))
-                moneyMgr.MoneyInfo = Data.money;
+                moneyMgr.SetCurrentMoney(Data.money);
             
             if (Reference.TryGetManager(out ShiftManager shiftMgr))
                 shiftMgr.ShiftNumber = Data.shiftNumber;
