@@ -91,6 +91,13 @@ public class Plate : Item
         {
             LookAtTarget.OnStartLookAt += item.ActiveModel.Outline.EnableOutline;
             LookAtTarget.OnStopLookAt  += item.ActiveModel.Outline.DisableOutline;
+
+            if (CurrentAppliedLayer.HasValue)
+            {
+                item.SetLayerRecursive(CurrentAppliedLayer.Value);
+                item.SetHeld(true);
+            }
+                
         }
     }
     private void UnbindIngredient(F_Grabbable grabbable)
@@ -107,6 +114,7 @@ public class Plate : Item
     {
         F_Grabbable grabbable = (F_Grabbable)item;
         if (grabbable == null) return false;
+        if(!Cookable.CanBeTransformed) return false;
         if (!grabbable.TryGetSibling(out F_Cuttable cuttable)) return false;
         if (!cuttable.Transformed) return false;
         return true;
@@ -136,6 +144,11 @@ public class Plate : Item
                 {
                     playerContainer.RequestGrab(Grabbable);
                 }
+
+                if (cookedVariant != null)
+                {
+                    Grabbable.OnJellyGrabSFX?.Invoke(); // son de gelée 
+                }
             }
         }
 
@@ -153,6 +166,8 @@ public class Plate : Item
             var feature = recipeComponent.RecipeFeature;
             feature.Recipe = recipe;
         }
+        DeleteContent();
+        Container.IsLocked = true;
     }
     private void OnCook()
     {
@@ -161,6 +176,7 @@ public class Plate : Item
         DetectRecipe(out var recipe);
         EnableRecipeModel(recipe);
         DeleteContent();
+        Container.IsLocked = true;
     }
 
     private void DeleteContent()
@@ -207,8 +223,6 @@ public class Plate : Item
         go.transform.localRotation = Quaternion.identity;
         cookedVariant = go.GetComponent<ModelController>();
         SetActiveModel(cookedVariant);
-
-
     }
 
     List<F_Ingredient> GetContainedIngredients()
@@ -232,7 +246,11 @@ public class Plate : Item
         {
             if (slot?.HeldItem == null) continue;
             if (slot.HeldItem.Owner is Item item)
+            {
                 item.SetLayerRecursive(layer);
+                item.SetHeld(true);
+            }
+                
         }
     }
     
@@ -242,7 +260,11 @@ public class Plate : Item
         foreach (var slot in Container.SoloContainers)
         {
             if (slot?.HeldItem?.Owner is Item item)
+            {
                 item.StoreLayerRecursive();
+                
+            }
+                
         }
     }
 
@@ -252,7 +274,12 @@ public class Plate : Item
         foreach (var slot in Container.SoloContainers)
         {
             if (slot?.HeldItem?.Owner is Item item)
+            {
                 item.RestoreLayerRecursive();
+                item.SetHeld(false);
+            }
+                
+            
         }
     }
     #endregion

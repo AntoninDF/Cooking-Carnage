@@ -79,28 +79,32 @@ namespace UI
         public string GetDataAsString(EDataInfo info)
         {
             string result = "";
+            var mm = Reference.GetManager<MoneyManager>();
+            var um = Reference.GetManager<UpgradeManager>();
+            var sm = Reference.GetManager<ShiftManager>();
 
             switch (info)
             {
                 case EDataInfo.TimeElapsedSinceStartup:         return Time.time.ToString();
-                case EDataInfo.ShiftDuration:                   return Reference.GetManager<ShiftManager>()?.ShiftDuration.ToString();
-                case EDataInfo.RentPayedThisShift:              return Reference.GetManager<ShiftManager>()?.GetCurrentRentPrice().ToString();
-                case EDataInfo.ShiftCount:                      return Reference.GetManager<ShiftManager>()?.ShiftNumber.ToString();
+                case EDataInfo.ShiftDuration:                   return sm?.ShiftDuration.ToString();
+                case EDataInfo.RentPayedThisShift:              return sm?.GetCurrentRentPrice().ToString();
+                case EDataInfo.ShiftCount:                      return sm?.ShiftNumber.ToString();
                 case EDataInfo.CorrectOrdersThisShift:          return GetCorrectOrdersCount().ToString();
                 case EDataInfo.WrongOrdersThisShift:            return GetWrongOrdersCount().ToString();
                 case EDataInfo.MissedOrdersThisShift:           return GetMissedOrdersCount().ToString();
                 case EDataInfo.ClientsKilledThisShift:          return Reference.GetManager<ClientManager>()?.ClientsKilledThisShift.ToString();
-                case EDataInfo.MoneyGainedThisShift:            return Reference.GetManager<MoneyManager>()?.GetMoneyGainedThisShift().ToString();
-                case EDataInfo.MoneyGainedOnPreviousShift:      return Reference.GetManager<MoneyManager>()?.GetMoneyOnPreviousShift().ToString();
-                case EDataInfo.MoneyAmount:                     return Reference.GetManager<MoneyManager>()?.MoneyInfo.ToString();
-                case EDataInfo.CookingSpeedUpgradeLevel:        return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<CookingSpeedUpgrade>()?.Level + 1).ToString();
-                case EDataInfo.IngredientDropUpgradeLevel:      return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<IngredientDropUpgrade>()?.Level + 1).ToString();
-                case EDataInfo.OvenCountUpgradeLevel:           return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<OvenCountUpgrade>()?.Level + 1).ToString();
-                case EDataInfo.CuttingSpeedUpgradeLevel:        return (Reference.GetManager<UpgradeManager>()?.GetUpgradeByType<BlenderSpeedUpgrade>()?.Level + 1).ToString();
+                case EDataInfo.MoneyGainedThisShift:            return mm?.GetMoneyGainedThisShift().ToString();
+                case EDataInfo.MoneyGainedOnPreviousShift:      return mm?.GetMoneyOnPreviousShift().ToString();
+                case EDataInfo.MoneyAmount:                     return mm?.MoneyInfo.ToString();
+                case EDataInfo.CookingSpeedUpgradeLevel:        return (um?.GetUpgradeByType<CookingSpeedUpgrade>()?.Level + 1).ToString();
+                case EDataInfo.IngredientDropUpgradeLevel:      return (um?.GetUpgradeByType<IngredientDropUpgrade>()?.Level + 1).ToString();
+                case EDataInfo.OvenCountUpgradeLevel:           return (um?.GetUpgradeByType<OvenCountUpgrade>()?.Level + 1).ToString();
+                case EDataInfo.CuttingSpeedUpgradeLevel:        return (um?.GetUpgradeByType<BlenderSpeedUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.TimeLeft:                        return ProcessTimeLeft();
-                case EDataInfo.LastMoneyDelta:                  return ((int)Reference.GetManager<MoneyManager>()?.LastMoneyDelta).ToString() ;
-                case EDataInfo.TotalAvailableUpgrades:          return Reference.GetManager<UpgradeManager>()?.Upgrades.Select(up => up.Config.MaxLevel).Sum().ToString();
-                case EDataInfo.TotalBoughtUpgrades:             return Reference.GetManager<UpgradeManager>()?.Upgrades.Select(up => up.Level).Sum().ToString();
+                case EDataInfo.LastMoneyDelta:                  return ((int)mm?.LastMoneyDelta).ToString() ;
+                case EDataInfo.TotalAvailableUpgrades:          return um?.Upgrades.Select(up => up.Config.MaxLevel).Sum().ToString();
+                case EDataInfo.TotalBoughtUpgrades:             return um?.Upgrades.Select(up => up.Level).Sum().ToString();
+                case EDataInfo.MoneyAtTheBeginningOfTheShift:   return (mm?.MoneyInfo - mm?.GetMoneyTransactionsThisShift().Sum()).ToString();
 
             }
             return result;

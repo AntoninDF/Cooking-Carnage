@@ -59,8 +59,9 @@ namespace UI
                 return;
 
             // upgrade.GetType().Name can be replaced by _config.name to get the scriptable object's name instead of the type name
+            // (And vice versa)
             if (L_Title != null)
-                L_Title.text = NicifyName(upgrade.GetType().Name);
+                L_Title.text = NicifyName(_config.name);
 
             if (L_Subtitle != null)
                 L_Subtitle.text = "" + upgrade.Level + "/" + _config.MaxLevel;

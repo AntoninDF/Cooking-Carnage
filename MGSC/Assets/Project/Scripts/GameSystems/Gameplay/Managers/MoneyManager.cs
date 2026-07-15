@@ -9,7 +9,7 @@ namespace GameSystem
     public class MoneyManager : IManager
     {
         #region Properties
-        public float MoneyInfo { get; set; }
+        public float MoneyInfo { get; private set; }
         public float LastMoneyDelta { get; set; }
         public Action<float> OnMoneyChange { get; set; }
         [GlobalEvent("Money/Money Gained")]
@@ -95,7 +95,6 @@ namespace GameSystem
         {
             Debug.Log("Money gained : " + amount);
             MoneyInfo = Mathf.Max(0f, MoneyInfo + amount);
-            MoneyInfo += amount;
             if (!_moneyTransactionsPerShift.ContainsKey(shiftNumber))
                 _moneyTransactionsPerShift[shiftNumber] = new();
             
@@ -109,6 +108,11 @@ namespace GameSystem
             LastMoneyDelta = amount;
             
             this.Log(LogType.Log, $"{amount}€ update");
+        }
+
+        internal void SetCurrentMoney(float money)
+        {
+            MoneyInfo = money;
         }
         #endregion
     }
