@@ -82,6 +82,7 @@ namespace GameSystem
         public static bool LoadGlobalData()
         {
             Data = GetCurrentData();
+            Debug.Log("Loading save data : " + Data.ToString());
             
             if (Reference.TryGetManager(out MoneyManager moneyMgr))
                 moneyMgr.SetCurrentMoney(Data.money);
@@ -98,6 +99,7 @@ namespace GameSystem
 
         public static void ResetSave()
         {
+            Debug.Log("Resetting save file");
             Data = DefaultData();
             SaveGameData(Data);
         }
@@ -183,6 +185,14 @@ namespace GameSystem
 
             public int shiftNumber = -1;
             // REFACTO : Player Settings
+
+            public override string ToString()
+            {
+                string result = 
+                    $"GameData(money={money}, upgrades={upgrades.ToString_EasyRead()}, shiftNumber={shiftNumber})";
+
+                return result;
+            }
         }
         
         [Serializable]

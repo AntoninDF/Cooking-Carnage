@@ -28,6 +28,8 @@ public class TutorialState : GameplayState
 
     public override GameState FindNext(StateTransitions transition = StateTransitions.None)
     {
+        if (Globals.Gameplay.ShiftNumber != 0)
+            return new UpgradeState();
         return new PreShiftState();
     }
 }
