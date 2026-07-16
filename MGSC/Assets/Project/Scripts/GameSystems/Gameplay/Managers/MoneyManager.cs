@@ -83,6 +83,8 @@ namespace GameSystem
         public float GetMoneyGainedThisShift() => GetMoneyGainedOnShift(shiftNumber);
         public float GetMoneyLostThisShift() => GetMoneyLostOnShift(shiftNumber);
         public List<float> GetMoneyTransactionsThisShift() => GetMoneyTransactionsOnShift(shiftNumber);
+        public float GetMoneyAtTheBeginningOfThisShift()
+            => MoneyInfo - GetMoneyTransactionsThisShift().Sum();
         public float GetMoneyOnPreviousShift()
         {
             if (shiftNumber <= 0) 

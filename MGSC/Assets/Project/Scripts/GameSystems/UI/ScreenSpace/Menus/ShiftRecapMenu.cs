@@ -74,12 +74,16 @@ namespace UI
             if (!Reference.TryGetManager(out ShiftManager sm)) return;
             SetMoneyGained(mm.GetMoneyGainedThisShift());
             SetCurrentTotalMoney(mm.MoneyInfo);
+            
             //SetPreviousTotalMoney(mm.GetMoneyOnPreviousShift());
 
             if (sm.HasFailed)
                 SetContentMode(ContentMode.Fail);
             else
                 SetContentMode(ContentMode.Success);
+
+            if (L_CurrentTotalMoney != null)
+                L_CurrentTotalMoney.text = "...";
 
             AnimateReceipt(
                 UpdateTotalMoney
@@ -175,7 +179,7 @@ namespace UI
             if (!Reference.TryGetManager(out ShiftManager sm)) return;
 
             string timerName = "Animate total money";
-            float startValue = mm.GetMoneyOnPreviousShift();
+            float startValue = mm.GetMoneyAtTheBeginningOfThisShift();
             float endValue = mm.MoneyInfo;
 
             L_CurrentTotalMoney.color = _defaultColor;
