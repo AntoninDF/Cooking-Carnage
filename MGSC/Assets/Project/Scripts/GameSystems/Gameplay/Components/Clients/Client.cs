@@ -139,7 +139,6 @@ namespace Clients
        public void CookClient()
        {
            Cooked.Trigger();
-           
        }
 
        public void SpawnIngredients(List<SlotContainer> containers)
