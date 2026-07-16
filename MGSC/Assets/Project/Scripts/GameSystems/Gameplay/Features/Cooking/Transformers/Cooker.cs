@@ -5,8 +5,9 @@ namespace Features
 {
     public class Cooker : TransformAfterTimer, IUpgradable<CookingSpeedUpgrade>
     {
-        private float _baseDuration;
         private TransformableAfterTimer _currentTarget;
+        private CookingSpeedUpgrade _cookingSpeedUpgrade;
+
         public Action FailedLaunchCooking { get; set; }
         
         public Action OnCookingStart { get; set; }
@@ -22,7 +23,6 @@ namespace Features
         {
             Conditions.AddCondition(item => item is F_Cookable || item is F_OverCookable);
             Conditions.AddCondition(item => Globals.Gameplay.AllowCooking);
-            _baseDuration = SpeedMultiplier;
             
             OnTransformationStart += HandleStart;
             OnTransformationProgress += HandleProgress;
@@ -52,22 +52,24 @@ namespace Features
             _currentTarget = null;
         }
         #endregion
-        
+
+        public override float GetTransformationDuration(TransformableAfterTimer target)
+        {
+            if (target is F_Cookable && _cookingSpeedUpgrade != null)
+                return _cookingSpeedUpgrade.GetFinalDuration(target.TransformationDuration);
+
+            return target.TransformationDuration;
+        }
         
         #region Upgrade
 
         public void OnUpgradeInit(CookingSpeedUpgrade upgrade)
         { 
-            OnLevelUp(upgrade);
+            _cookingSpeedUpgrade = upgrade;
         }
         public void OnUpgraded(CookingSpeedUpgrade upgrade)
         {
-            OnLevelUp(upgrade);
-        }
-
-        public void OnLevelUp(CookingSpeedUpgrade upgrade)
-        {
-            SpeedMultiplier = upgrade.GetFinalDuration(_baseDuration);
+            _cookingSpeedUpgrade = upgrade;
         }
 
         #endregion

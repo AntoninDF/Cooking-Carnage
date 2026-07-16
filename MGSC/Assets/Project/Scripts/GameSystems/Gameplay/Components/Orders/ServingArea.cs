@@ -1,5 +1,6 @@
 using Features;
 using System;
+using System.Runtime.CompilerServices;
 using Cooking;
 using UnityEngine;
 
@@ -47,9 +48,10 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
 
     public void Initialize(ClientSeat clientSeat)
     {
-        ClientSeat = clientSeat;
-        ClientSeat.OnClientRegister += _ => StartWatchingSlot();
+        ClientSeat                    =  clientSeat;
+        ClientSeat.OnClientRegister   += _ => StartWatchingSlot();
         ClientSeat.OnClientUnregister += _ => StopWatchingSlot();
+        ClientSeat.OnClientLeaving    += () => MealSlot.Container.IsLocked = false;
 
     }
 
@@ -59,7 +61,8 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         var current = MealSlot?.Container?.HeldItem;
         if (current != null && current != _lastHeldItem)
         {
-            _lastHeldItem = current;
+            _lastHeldItem               = current;
+            MealSlot.Container.IsLocked = true;
             Debug.Log("[ServingArea] New item detected in slot, invoking OnMealReady");
             ClientSeat.OnMealReady?.Invoke();
         }
