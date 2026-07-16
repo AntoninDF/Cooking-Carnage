@@ -70,7 +70,7 @@ namespace Features
             OnSplineUpdate?.Invoke();
         }
 
-        #region Behavior Logic
+        #region Behaviour Logic
 
         public void Begin()
         {
