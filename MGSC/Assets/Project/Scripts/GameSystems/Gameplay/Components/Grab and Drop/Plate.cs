@@ -86,7 +86,6 @@ public class Plate : Item
 
     private void BindIngredient(F_Grabbable grabbable)
     {
-        Debug.Log("Bind ingredient");
         if (grabbable.Owner is Item item)
         {
             LookAtTarget.OnStartLookAt += item.ActiveModel.Outline.EnableOutline;
@@ -102,7 +101,6 @@ public class Plate : Item
     }
     private void UnbindIngredient(F_Grabbable grabbable)
     {
-        Debug.Log("Unbind ingredient");
         if (grabbable.Owner is Item item)
         {
             LookAtTarget.OnStartLookAt -= item.ActiveModel.Outline.EnableOutline;

@@ -104,7 +104,11 @@ namespace GameSystem
             
             OnMoneyChange?.Invoke(amount);
 
-            if (amount > 0) OnMoneyGain?.Invoke();
+            if (amount > 0)
+            {
+                OnMoneyGain?.Invoke();
+                Debug.Log("OnMoneyGain called");
+            }
             if (amount < 0) OnMoneyLoss?.Invoke();
 
             LastMoneyDelta = amount;
