@@ -14,51 +14,32 @@ namespace UI
 
 		#region Methods
 
-		public Action BindTask(string label)
+		/// <summary>
+		/// This generates a task to show up
+		/// </summary>
+		/// <param name="label"></param>
+		/// <param name="subscribe"></param>
+		/// <param name="unsubscribe"></param>
+		public TaskItem BindTask(string label, Action<Action> subscribe, Action<Action> unsubscribe, Action onResolve = null)
 		{
 			var task = MakeNewTask(label);
-
-			return task.RequestResolve;
+			Debug.Log("Binding task");
+			subscribe(task.RequestResolve);
+			task.OnResolve += () => unsubscribe(task.OnResolve);
+			task.OnResolve += onResolve;
+			return task;
 		}
-
 		[Button("Make test task")]
 		public void Test01()
-			=> ShiftManager.OnShiftBegin +=
-				BindTask("Start the shift by pulling on the rope (Lorem ipsum dolor sit amet)");
+			=> BindTask(
+				"Earn some money by serving a client", 
+				e => MoneyManager.OnMoneyGain += e, 
+				e => MoneyManager.OnMoneyGain -= e,
+				() => Debug.Log("Task resolved"));
+
 		public TaskItem MakeNewTask(string label) => _taskPrefab?.MakeTaskBySelfCopy(label, G_TaskList);
 
-        [ContextMenu("Refresh layouts")]
-        public void RefreshContentFitters() => RefreshContentFitters(transform as RectTransform);
-        public static void RefreshContentFitters(RectTransform transform)
-        {
-            RefreshContentFitter(transform);
-        }
-
-        private static void RefreshContentFitter(RectTransform transform)
-        {
-            if (transform == null || !transform.gameObject.activeSelf)
-            {
-                return;
-            }
-
-            foreach (RectTransform child in transform)
-            {
-                RefreshContentFitter(child);
-            }
-
-            var layoutGroup = transform.GetComponent<LayoutGroup>();
-            var contentSizeFitter = transform.GetComponent<ContentSizeFitter>();
-            if (layoutGroup != null)
-            {
-                layoutGroup.SetLayoutHorizontal();
-                layoutGroup.SetLayoutVertical();
-            }
-
-            if (contentSizeFitter != null)
-            {
-                LayoutRebuilder.ForceRebuildLayoutImmediate(transform);
-            }
-        }
+        
         #endregion
     }
 
