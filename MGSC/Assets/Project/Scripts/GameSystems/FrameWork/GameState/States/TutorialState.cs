@@ -16,7 +16,7 @@ public class TutorialState : GameplayState
         AudioSystem.PlayAudio(AudioSystem.Database.beforeShiftMusic,true);
         AudioSystem.PlayAudio(AudioSystem.Database.fliesAmbience);
         AudioSystem.PlayAudio(AudioSystem.Database.kitchenAmbience);
-        //TutorialTimeline.StartTutorial();
+        TutorialTimeline.StartTutorial();
     }
 
     public override void OnExit()

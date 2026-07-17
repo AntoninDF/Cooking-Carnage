@@ -310,7 +310,7 @@ namespace FMODUnity
 #if UNITY_EDITOR
         private static string pluginBasePath;
 
-        public const string BaseFolderGUID = "06ae579381df01a4a87bb149dec89954";
+        public const string BaseFolderGUID = "35ec79b82491ff045b290a88320d28c4";
         public const string PluginBasePathDefault = "Assets/Plugins/FMOD";
 
         public static string PluginBasePath
