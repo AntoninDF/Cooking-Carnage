@@ -30,10 +30,12 @@ namespace Features
 
         #endregion
 
-        
+
 
         public ClientWaitingQueue(IFeatureCollection owner) : base(owner)
-        { }
+        {
+            GameLoop.OnReset += Clear;
+        }
 
         public float Enqueue(Client client)
         {
@@ -96,9 +98,13 @@ namespace Features
         /// <returns></returns>
         public bool IsQueueFull()
         {
-            return _queue.Count == _maxQueueSize;
+            return _queue.Count >= _maxQueueSize;
         }
         
+        public void Clear() 
+        {
+            _queue.Clear();
+        }
         
     }
 }

@@ -24,6 +24,7 @@ namespace GameSystem
                 this.Log(LogType.Error, "Please reference a spline component in the path manager's inspector :)");
             }
             Register();
+            GameLoop.OnReset += SplineTrafficManager.ClearAll; 
 
         }
 

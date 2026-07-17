@@ -271,6 +271,7 @@ namespace GameSystem
                 currentClients.RemoveAt(i);
                 client.Despawn();
             }
+            WaitingQueue?.Clear();
         }
 
         #endregion

@@ -46,12 +46,14 @@ namespace Features
         
         #region Fields
         
-        private float _minSplineSpacing        = 1.2f; 
+        private float _minSplineSpacing            = 1.2f; 
         private float _blockedToleranceBeforeDodge = 0.75f;
-        private float _dodgeLateralOffset       = 1f;
-        private float _dodgeForwardOffset       = 1.5f;
+        private float _dodgeLateralOffset          = 1f;
+        private float _dodgeForwardOffset          = 1.5f;
+        private float _dodgeCooldown               = 1f; 
         
         private float _blockedTimer;
+        private float _dodgeCooldownTimer;   
         private bool  _isDodging;
         
         private bool          _validSetup;
@@ -103,6 +105,9 @@ namespace Features
         public void MoveAlongSpline()
         {
             if (!_validSetup || _isDodging) return;
+            
+            if (_dodgeCooldownTimer > 0f) 
+                _dodgeCooldownTimer -= Time.deltaTime;
 
             float length = Spline.GetLength();
             float newT   = SplinePosition + Speed * Time.deltaTime / length;
@@ -180,9 +185,8 @@ namespace Features
         private bool IsBlockedAhead(float candidateT, float splineLength, out ClientMovement blocker)
         {
             var traffic = Reference.GetManager<PathManager>().SplineTrafficManager;
-            if (traffic.TryGetNearestAhead(this, out blocker, out float tGap))
+            if (traffic.TryGetNearestAhead(this, out blocker, out float worldGap))
             {
-                float worldGap = tGap * splineLength;
                 return worldGap < _minSplineSpacing;
             }
             blocker = null;
@@ -197,23 +201,49 @@ namespace Features
             Vector3 tangent = GetSplineTangent(SplinePosition);
             Vector3 lateral = Vector3.Cross(tangent, Vector3.up).normalized;
 
-            // Choisit le côté en fonction d'un offset stable (évite que deux clients dodge dans le même sens et se re-bloquent)
-            float side = (GetInstanceIDHash() % 2 == 0) ? 1f : -1f;
+            float side = ChooseDodgeSide(blocker, lateral);
 
             Vector3 dodgeTarget = ControlledTransform.position
                                   + tangent * _dodgeForwardOffset
                                   + lateral * (_dodgeLateralOffset * side);
 
+            if (UnityEngine.AI.NavMesh.SamplePosition(dodgeTarget, out var hit, _dodgeLateralOffset + _dodgeForwardOffset, UnityEngine.AI.NavMesh.AllAreas))
+            {
+                dodgeTarget = hit.position;
+            }
+            else
+            {
+                _isDodging = false;
+                return;
+            }
+
             OnDestinationReached += EndDodge;
             SwitchToNavMesh(dodgeTarget);
+        }
+
+
+        private float ChooseDodgeSide(ClientMovement blocker, Vector3 lateral)
+        {
+            Vector3 toBlocker = blocker.ControlledTransform.position - ControlledTransform.position;
+            float   dot       = Vector3.Dot(toBlocker, lateral);
+            if (Mathf.Abs(dot) < 0.01f)
+                return (GetInstanceIDHash() % 2 == 0) ? 1f : -1f;
+            return dot > 0f ? -1f : 1f;
         }
 
         private void EndDodge()
         {
             OnDestinationReached -= EndDodge;
+
             float reentryT = FindNearestSplinePoint();
+            var   traffic     = Reference.GetManager<PathManager>().SplineTrafficManager;
+            float length      = Spline.GetLength();
+            float minAdvanceT = _minSplineSpacing / Mathf.Max(length, 0.01f);
+            reentryT = Mathf.Clamp01(reentryT);
+
             SwitchToSpline(reentryT);
-            _isDodging = false;
+            _isDodging          = false;
+            _dodgeCooldownTimer = _dodgeCooldown; 
         }
 
         private int GetInstanceIDHash() => ControlledTransform.GetInstanceID() & 0xFFFF;
@@ -237,6 +267,10 @@ namespace Features
             Reference.GetManager<PathManager>().SplineTrafficManager.Unregister(this);
 
             bool warped = _navmeshAgent.Warp(ControlledTransform.position);
+            if (!warped)
+            {
+                Debug.LogWarning($"[ClientMovement] Warp failed for {ControlledTransform.name}, the position is invalid.");
+            }
             SetNavDestination(worldPosition);
         }
 
