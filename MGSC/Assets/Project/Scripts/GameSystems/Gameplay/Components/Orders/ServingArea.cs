@@ -63,7 +63,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         {
             _lastHeldItem               = current;
             MealSlot.Container.IsLocked = true;
-            Debug.Log("[ServingArea] New item detected in slot, invoking OnMealReady");
+            //Debug.Log("[ServingArea] New item detected in slot, invoking OnMealReady");
             ClientSeat.OnMealReady?.Invoke();
         }
         if (current == null)

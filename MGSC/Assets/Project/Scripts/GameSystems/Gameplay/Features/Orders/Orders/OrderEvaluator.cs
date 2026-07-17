@@ -5,8 +5,8 @@ namespace Orders
 {
     public static class OrderEvaluator
     {
-        public  static float OvercookedMealPrice { get; set; }
-        public static float PlainJellyPrice { get; set; }
+        public static float OvercookedMealPrice { get; set; } = 5f;
+        public static float PlainJellyPrice { get; set; } = 1f;
 
         private const float TipMultiplier0Star = 0f; // 0 star => No tip
         private const float TipMultiplier1Star = 0.2f; // 1 star => + 20% 
