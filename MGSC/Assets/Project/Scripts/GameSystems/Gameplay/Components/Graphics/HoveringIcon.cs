@@ -8,17 +8,19 @@ public class HoveringIcon : MonoBehaviour
     #region Static part
     public enum IconCategory
     {
-        IngredientPointer,
-        PlatePointer,
-        RecipePointer,
-        BlenderPointer,
-        OvenPointer,
-        ShiftStartTriggerPointer,
-        ServingAreaPointer,
-        KillButtonPointer,
-        SlushMachinePointer,
-        ______________________,
-        OvenWarning
+        None =                          0, // None has to be 0
+        ________Pointers________ =      1000, // "Folders" start from 1000
+        IngredientPointer =             1, // Items of a folder are layed out hundred by hundred (10 folders max)
+        PlatePointer =                  2,
+        RecipePointer =                 3,
+        BlenderPointer =                4,
+        OvenPointer =                   5,
+        ShiftStartTriggerPointer =      6,
+        ServingAreaPointer =            7,
+        KillButtonPointer =             8,
+        SlushMachinePointer =           9,
+        ________Warnings________ =      1001,
+        OvenWarning =                   101
     }
     private static List<HoveringIcon> _icons = new();
 
@@ -65,8 +67,8 @@ public class HoveringIcon : MonoBehaviour
             return;
 
         _animatedObject.position =
-            _defaultPosition +
-            _animatedObject.forward * _hoveringRange * Mathf.Sin(Time.time / 6.28f / _hoveringDuration);
+            _defaultPosition -
+            _animatedObject.forward * _hoveringRange * (Mathf.Sin(Time.time * 6.28f / _hoveringDuration) * 0.5f + 0.5f);
     }
     private void Start()
     {
@@ -77,6 +79,7 @@ public class HoveringIcon : MonoBehaviour
             this.enabled = false;
         }
         _defaultPosition = _animatedObject.position;
+        Hide();
     }
     private void Display()
     {

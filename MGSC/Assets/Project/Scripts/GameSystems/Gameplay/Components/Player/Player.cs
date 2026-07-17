@@ -62,7 +62,7 @@ public class Player : MonoBehaviour, IFeatureCollection
 
         Container.OnGrab += SetHeldLayer;
         Container.OnDrop += ResetHeldLayer;
-        
+        Container.Filter.AddCondition(() => Globals.Gameplay.Player.AllowPlayerGrab);
 
     }
 

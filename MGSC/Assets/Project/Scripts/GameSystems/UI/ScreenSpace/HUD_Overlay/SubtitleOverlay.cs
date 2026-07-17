@@ -31,11 +31,6 @@ namespace UI
             Sub = go.GetComponent<Subtitle>();
             Sub.SetVisibility(0f);
             Sub.DisplayText("");
-
-            PlaySubtitle(
-                "Lorem ipsum dolor" + Markup.breakLine +
-                Markup.ToBold("Lorem ipsum dolor bold") +
-                " Lorem ipsum dolor");
             }
 
         public void WaitAndDo(float duration, Action OnEnd) => Sub.WaitAndDo(duration, OnEnd);

@@ -37,7 +37,7 @@ namespace UI
 				e => MoneyManager.OnMoneyGain -= e,
 				() => Debug.Log("Task resolved"));
 
-		public TaskItem MakeNewTask(string label) => _taskPrefab?.MakeTaskBySelfCopy(label, G_TaskList);
+		private TaskItem MakeNewTask(string label) => _taskPrefab?.MakeTaskBySelfCopy(label, G_TaskList);
 
         
         #endregion
