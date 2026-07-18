@@ -17,7 +17,8 @@ public class ShiftRequester : MonoBehaviour
 
     void RequestShiftLaunch()
     {
-        //        Debug.Log("TryRequestShiftLaunch");
+        if (!Globals.Gameplay.AllowShiftStart)
+            return;
         GameLoop.RequestTransition(StateTransitions.StartShiftCountdown);
     }
 }

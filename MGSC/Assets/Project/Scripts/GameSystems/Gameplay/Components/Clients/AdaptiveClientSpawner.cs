@@ -116,7 +116,7 @@ namespace GameSystem
             if(TimerManager.IsTimerRunning(timerName))
             {
                 TimerManager.StopTimer(timerName);
-                TimerManager.RemoveTimer(timerName);
+                //TimerManager.RemoveTimer(timerName);
             }
         }
         

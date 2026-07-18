@@ -167,6 +167,7 @@ namespace UI
                     return true;
             return false;
         }
+        public void GetWidget<T>(out T widget) where T : FullscreenWidget => widget = GetWidget<T>();
         public T GetWidget<T>() where T : FullscreenWidget
         {
             return GetWidget(typeof(T)) as T;

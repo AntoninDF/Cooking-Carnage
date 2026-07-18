@@ -28,6 +28,7 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
         "on the slot's collider as well as the ingredient, instead of just the ingredient")]
     [SerializeField] protected bool passThrough = true;
     [SerializeField] protected ModelController Model;
+    [SerializeField] protected EventVariable OnGrabEventVar;
     #endregion
 
     void Awake()
@@ -70,21 +71,38 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
     {
         if (!context.TryGetFeature(out F_Container container)) return;
 
-        if (Container.RequestGrab(container.HeldItem)) return;
+        if (Container.RequestGrab(container.HeldItem))
+        {
+            if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+            return;
+        }
 
-        if (passThrough && container.RequestGrab(Container.HeldItem)) return;
+        if (passThrough && container.RequestGrab(Container.HeldItem))
+        {
+            if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+            return;
+        }
 
         if (passThrough
             && container.HeldItem != null
             && container.HeldItem.TryGetSibling(out F_Container heldContainer)
-            && heldContainer.RequestGrab(Container.HeldItem)) return; 
-    
+            && heldContainer.RequestGrab(Container.HeldItem))
+        {
+            if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+            return;
+        }
+
         var incoming = container.HeldItem;
         var existing = Container.HeldItem;
 
         if (incoming != null && existing != null && incoming.Owner is Item incomingItem)
         {
-            incomingItem.SwapWith(existing);
+            if (incomingItem.SwapWith(existing))
+            {
+                if (OnGrabEventVar != null)
+                    OnGrabEventVar.Raise();
+                return;
+            }
         }
     }
 

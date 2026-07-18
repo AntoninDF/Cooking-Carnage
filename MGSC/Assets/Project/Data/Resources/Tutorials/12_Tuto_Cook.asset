@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1280f6172088ce947b78cd0f77c2952d, type: 3}
+  m_Name: 12_Tuto_Cook
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
+  Steps:
+  - ActionsBeforeDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 32
+      DisplayArrows: 2
+      RaiseEvent: {fileID: 0}
+      AddTasks:
+      - Name: Prepare a plate
+        ResolutionEvent: {fileID: 11400000, guid: 18e4fb5fb6324e243bae30e121d0a2c5, type: 2}
+    VoiceLine:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    SubtitleText: "Once it\u2019s chopped you can take a plate anywhere in the kitchen
+      and place the ingredient in it."
+    ActionsAfterDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    DelayBeforeNextSubStep: 2
+  - ActionsBeforeDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 2
+      DisplayArrows: 5
+      RaiseEvent: {fileID: 0}
+      AddTasks:
+      - Name: Put the plate in the oven
+        ResolutionEvent: {fileID: 11400000, guid: f01ae145892a6fe4990b18f75a6462f0, type: 2}
+      - Name: Start the oven
+        ResolutionEvent: {fileID: 11400000, guid: de86d62ab9b0c204088e374eedd7347f, type: 2}
+      - Name: Get a cooked meal !
+        ResolutionEvent: {fileID: 11400000, guid: 0e1e1be8d37d48144855e6b6b2ef2e72, type: 2}
+    VoiceLine:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    SubtitleText: When you're done with the preparation, you can put the plate directly
+      in the oven and start it.
+    ActionsAfterDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    DelayBeforeNextSubStep: 2

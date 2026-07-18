@@ -1,8 +1,6 @@
-using UI;
 using UnityEngine;
 using Cooking;
 using Features;
-using System.Runtime.InteropServices.WindowsRuntime;
 /// <summary>
 /// Implements the base behaviour for every ingredient
 /// </summary>
@@ -22,6 +20,7 @@ public class Ingredient : Item
     [SerializeField] protected SO_Ingredient data;
     [Tooltip("The collider that serves as viewing target for the player")]
     [SerializeField] protected ModelController cutModel;
+    [SerializeField] protected EventVariable OnItemCut;
 
     #endregion
 
@@ -36,6 +35,8 @@ public class Ingredient : Item
 
         if (cutModel != null)
             Cuttable.OnTransformation += () => SetActiveModel(cutModel);
+        if (OnItemCut != null)
+            Cuttable.OnTransformation += OnItemCut.Raise;
 
 
         //if (data == null)

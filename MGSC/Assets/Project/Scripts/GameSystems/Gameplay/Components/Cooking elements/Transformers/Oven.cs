@@ -22,6 +22,10 @@ public class Oven : MonoBehaviour, IFeatureCollection
     [SerializeField] private SlotContainer _itemSlot;
     [SerializeField] private InteractionButton _button;
     [SerializeField] private ModelController _graphics;
+    [SerializeField] private EventVariable _onPlatePutInOven;
+    [SerializeField] private EventVariable _onPlateTakenFromOven;
+    [SerializeField] private EventVariable _onStartCooking;
+    [SerializeField] private EventVariable _onPlateCooked;
     [SerializeField] private Feedbacks ProgressFeedbacks;
     
 
@@ -88,6 +92,10 @@ public class Oven : MonoBehaviour, IFeatureCollection
             Container.OnGrab += _ => ShowRecipeSprites();
             Container.OnDrop += _ => ResetDisplayedSprites();
             Container.OnDrop += _ => OnStopCooking();
+            if (_onPlatePutInOven != null)
+                Container.OnGrab += _onPlatePutInOven.Raise;
+            if (_onPlateTakenFromOven != null)
+            Container.OnDrop += _onPlateTakenFromOven.Raise;
             
             Container.IsLocked = !_isOvenActive;
         }
@@ -124,6 +132,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
         if (Container.HeldItem.TryGetSibling(out F_Cookable cookable, true) && cookable.CanBeTransformed)
         {
             Cooker.RequestStartTransformation(cookable);
+            if (_onStartCooking != null) _onStartCooking.Raise();
         }
         else
         {
@@ -149,6 +158,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
         Container.IsLocked = false;
         _button.gameObject.SetActive(true);
         UpdateFeedbacks(0f, false);
+        _onPlateCooked?.Raise();
         Cooker.RequestStopTransformation();
     }
 

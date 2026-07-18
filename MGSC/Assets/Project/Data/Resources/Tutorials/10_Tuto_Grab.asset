@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1280f6172088ce947b78cd0f77c2952d, type: 3}
+  m_Name: 10_Tuto_Grab
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
+  Steps:
+  - ActionsBeforeDialogue:
+      LockFeatures: -1
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    VoiceLine:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    SubtitleText: 
+    ActionsAfterDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    DelayBeforeNextSubStep: 3
+  - ActionsBeforeDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    VoiceLine:
+      Guid:
+        Data1: 1585710177
+        Data2: 1316441555
+        Data3: -2138380875
+        Data4: 1790445670
+      Path: event:/Tutorial/#1/TutorialVoice_1 Part1
+    SubtitleText: Hey, how's it going ?
+    ActionsAfterDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    DelayBeforeNextSubStep: 1
+  - ActionsBeforeDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    VoiceLine:
+      Guid:
+        Data1: 886099936
+        Data2: 1093125245
+        Data3: -1599958651
+        Data4: -1990286204
+      Path: event:/Tutorial/#1/TutorialVoice_1 Part2
+    SubtitleText: Alright! I recorded this little message for ya since I know it's
+      your first day.
+    ActionsAfterDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    DelayBeforeNextSubStep: 0
+  - ActionsBeforeDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    VoiceLine:
+      Guid:
+        Data1: 77164438
+        Data2: 1134474459
+        Data3: -2034265210
+        Data4: 426063320
+      Path: event:/Tutorial/#1/TutorialVoice_1 Part3
+    SubtitleText: Bet you're a bit lost, but don't worry. I'm here to help ya.
+    ActionsAfterDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    DelayBeforeNextSubStep: 2
+  - ActionsBeforeDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 1
+      DisplayArrows: 1
+      RaiseEvent: {fileID: 0}
+      AddTasks:
+      - Name: Grab an ingredient
+        ResolutionEvent: {fileID: 11400000, guid: 7bfe63f3ecb6e6343ba985c1a9991dbc, type: 2}
+    VoiceLine:
+      Guid:
+        Data1: 77164438
+        Data2: 1134474459
+        Data3: -2034265210
+        Data4: 426063320
+      Path: event:/Tutorial/#1/TutorialVoice_1 Part3
+    SubtitleText: For starters, just grab an ingredient.
+    ActionsAfterDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 1
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    DelayBeforeNextSubStep: 0

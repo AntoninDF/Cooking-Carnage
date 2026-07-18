@@ -94,7 +94,7 @@ namespace GameSystem
             Debug.Log( $"Launching new shift for {duration}s");
             TimerUntilEndOfShift = TimerManager.StartTimer("shiftDuration", duration, EndShift);
             TimerUntilFinalWarning = TimerManager.StartTimer("shiftDurationWithoutNoon", duration - _noonDuration, InvokeFinalWarning);
-            // Subscribe to the GameLoop in case the game pauses
+            // AddListener to the GameLoop in case the game pauses
             GameLoop.BindTimerToGamePause(TimerUntilEndOfShift);
             GameLoop.BindTimerToGamePause(TimerUntilFinalWarning);
             OnShiftTimerStart?.Invoke();

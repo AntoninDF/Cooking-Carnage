@@ -161,7 +161,7 @@ namespace Features
                 OnEatEnd?.Invoke();
                 Perform(BuildReact());
                 //TimerManager.StartTimer($"{_client.UniqueID} Wait For finishing the order ", _reactionTime, WaitForFinishingDownAnim);
-                WaitForFinishingDownAnim(); //Play instant because they just left, they had no food Madge
+                WaitForFinishingDownAnim(); //PlayUnique instant because they just left, they had no food Madge
             }
         }
 

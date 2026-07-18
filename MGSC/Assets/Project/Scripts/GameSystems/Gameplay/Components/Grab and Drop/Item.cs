@@ -30,6 +30,7 @@ public class Item : MonoBehaviour, IFeatureCollection
     #region Fields
 
     [SerializeField] protected ModelController defaultModel;
+    [SerializeField] protected EventVariable OnItemGrabbed;
     protected Bounds bounds;
     private int _originalLayer;
     private int? _currentAppliedLayer;
@@ -78,6 +79,8 @@ public class Item : MonoBehaviour, IFeatureCollection
     protected virtual void BindEvents()
     {
         Grabbable.OnGrab += TriggerAnim; 
+        if (OnItemGrabbed != null)
+            Grabbable.OnGrab += () => OnItemGrabbed.Raise(Grabbable); 
         Grabbable.OnLock += () => Collider.enabled = false;
         Grabbable.OnUnlock += () => Collider.enabled = true;
         Interactable.OnInteraction += TryInteract;
@@ -124,14 +127,14 @@ public class Item : MonoBehaviour, IFeatureCollection
         return container.RequestGrab(Grabbable);
     }
 
-    public void SwapWith(F_Grabbable other)
+    public bool SwapWith(F_Grabbable other)
     {
-        if (other == null) return;
+        if (other == null) return false;
         var otherContainer = other.Container;
         var currentContainer = Grabbable.Container;
         
-        if (!CanSwapInto(otherContainer, Grabbable)) return ;
-        if (!CanSwapInto(currentContainer, other)) return ;
+        if (!CanSwapInto(otherContainer, Grabbable)) return false;
+        if (!CanSwapInto(currentContainer, other)) return false;
         
         
         var targetPos = transform.position;
@@ -152,7 +155,7 @@ public class Item : MonoBehaviour, IFeatureCollection
                 anim.GoTo(parent, targetPos);
             }
         }
-
+        return true;
     }
     
     /// <summary>

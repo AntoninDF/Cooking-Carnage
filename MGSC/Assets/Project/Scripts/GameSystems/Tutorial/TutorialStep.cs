@@ -1,0 +1,246 @@
+using FMODUnity;
+using NaughtyAttributes;
+using System;
+using System.Collections.Generic;
+using UI;
+using UnityEngine;
+using UnityEngine.UIElements;
+using GameSystem;
+
+[CreateAssetMenu(fileName = "Tutorial step", menuName = "New tutorial step")]
+[HelpBox("You can customize your text's appearance using https://namestyler.app/ " +
+    "- Variable text size is also supported using '<size=50>' and '</size> for example (which yields a 50px font size)")]
+public class TutorialStep : ScriptableObject
+{
+    public List<SubStep> Steps = new();
+
+    [NonSerialized] protected UISystem UI;
+    [NonSerialized] protected TaskPanel Tasks;
+    [NonSerialized] protected SubtitleOverlay Subtitles;
+    [NonSerialized] protected int CurrentSubStep;
+
+    [NonSerialized] private Action _playCallback;
+    [NonSerialized] private Timer _currentTimer;
+    [NonSerialized] private EventReference _currentAudio;
+
+    #region Methods
+
+    protected bool LoadDependencies()
+    {
+        if (!Reference.TryGetManager(out UI))
+            return false;
+
+        UI.GetWidget(out Tasks);
+        UI.GetWidget(out Subtitles);
+
+        if (Tasks == null || Subtitles == null)
+            return false;
+
+        return true;
+    }
+
+    public virtual void PlayWhenConditionIsMet(EventVariable startCondition, Action onEnd = null)
+    {
+        if (startCondition == null)
+        {
+            Debug.Log("Play without condition");
+            Play(onEnd);
+        }
+        else
+        {
+            Debug.Log("Play with condition '" + startCondition.name + "'");
+            _playCallback = () =>
+            {
+                Play(onEnd);
+                startCondition.RemoveListener(_playCallback);
+            };
+            startCondition.AddListener(_playCallback);
+        }
+    }
+    //public virtual void PlayUnique() => Play(null);
+    public virtual void Play(Action onEnd = null)
+    {
+        Debug.Log("[TutorialStep] Starting step '" + name + "' (substep count = " + Steps.Count + ")");
+        if (!LoadDependencies())
+        {
+            Debug.LogWarning("[TutorialStep] Couldn't start a tutorial step because it's dependencies couldn't be loaded");
+            return;
+        }
+
+        onEnd += () => Debug.Log("onEnd invoked at the end of tutorial step");
+        _playCallback = null;
+        Action sequence = BuildSequence(0, onEnd);
+        sequence();
+    }
+
+    private Action BuildSequence(int startIndex = 0, Action onEnd = null)
+    {
+        if (startIndex >= Steps.Count)
+        {
+            Debug.Log("Return onEnd, index is " + startIndex);
+            return onEnd;
+        }
+        return () => PlaySubStep(startIndex, BuildSequence(startIndex + 1, onEnd));
+    }
+
+    protected void PlaySubStep(int index, Action onEnd=null)
+    {
+        if (index >= Steps.Count) return;
+        SubStep current = Steps[index];
+
+        Debug.Log("[TutorialStep] Playing substep of '" + name +
+            "' with a duration of " + GetMinimumDurationForSubstep(current) + "s.");
+        
+        // Try to play the voiceline
+        if (!current.VoiceLine.IsNull)
+        {
+            AudioSystem.PlayAudio(current.VoiceLine);
+            _currentAudio = current.VoiceLine;
+        }
+
+        // Try to display the subtitle
+        if (!string.IsNullOrEmpty(current.SubtitleText))
+            Subtitles.PlaySubtitle(current.SubtitleText);
+
+        HandleActions(current.ActionsBeforeDialogue);
+        onEnd += () =>
+        {
+            HandleActions(current.ActionsAfterDialogue);
+            if (_currentAudio.Equals(current.VoiceLine))
+                _currentAudio = default;
+        };
+        _currentTimer = TimerManager.StartTimer(
+            "Playing tutorial : '" + current.SubtitleText + "' (" + Time.time + ")",
+            GetMinimumDurationForSubstep(current),
+            () => {
+                // TODO : Don't invoke 'onEnd' directly, but check if the requested action was performed before
+                onEnd?.Invoke();
+            }
+            );
+    }
+
+    void HandleActions(SubStepInstantActions actions)
+    {
+        HandleFeatureLock(actions.LockFeatures, actions.UnlockFeatures);
+        DisplayArrowsFor(actions.DisplayArrows);
+        if (actions.RaiseEvent != null) actions.RaiseEvent.Raise();
+        HandleTaskRequests(actions.AddTasks);
+    }
+    private void HandleFeatureLock(LockableFeature lockFeatures, LockableFeature unlockFeatures)
+    {
+        // Priority is given to unlocking a feature if it is set as both lock and unlock
+        // If it's neither specified to lock or unlock, the parameter should stay untouched
+
+        void LockOrUnlock(LockableFeature feature, Param<bool> param)
+        {
+            bool _lock = 0 != (lockFeatures & feature);
+            bool _unlock = 0 != (unlockFeatures & feature);
+            if (_lock || _unlock)
+                param.Value = _unlock || !_lock;
+        }
+
+        LockOrUnlock(LockableFeature.Grab, Globals.Gameplay.Player.AllowPlayerGrab);
+        LockOrUnlock(LockableFeature.Cut, Globals.Gameplay.AllowCutting);
+        LockOrUnlock(LockableFeature.Cook, Globals.Gameplay.AllowCooking);
+        LockOrUnlock(LockableFeature.Kill, Globals.Gameplay.AllowClientKilling);
+        LockOrUnlock(LockableFeature.StartShift, Globals.Gameplay.AllowShiftStart);
+        LockOrUnlock(LockableFeature.PutIngredientsInPlates, Globals.Gameplay.AllowPuttingIngredientsInPlates);
+    }
+
+
+    float GetMinimumDurationForSubstep(SubStep step)
+    {
+        // Get audio duration
+        float audioDuration = 0;
+        if (!step.VoiceLine.IsNull)
+        {
+            FMOD.RESULT res = RuntimeManager.GetEventDescription(step.VoiceLine).getLength(out int eventDurationInMs);
+            if (res == FMOD.RESULT.OK)
+                audioDuration = eventDurationInMs / 1000f;
+        }
+
+        // Get text display duration
+        float textDuration = 0;
+        float cps = 16f; // Characters per second
+        textDuration = step.SubtitleText.Length / cps;
+
+        // Get maximum value
+        float result = Mathf.Max(audioDuration, textDuration);
+        result += step.DelayBeforeNextSubStep;
+
+        return result;
+    }
+
+    private void HandleTaskRequests(List<PlayerTask> tasks)
+    {
+        foreach (PlayerTask task in tasks)
+        {
+            if (string.IsNullOrEmpty(task.Name) || task.ResolutionEvent == null)
+                return;
+
+            Tasks.BindTask(
+                task.Name,
+                e => task.ResolutionEvent.AddListener(e),
+                e => task.ResolutionEvent.RemoveListener(e)
+                );
+        }
+    }
+
+    private void DisplayArrowsFor(HoveringIcon.IconCategory category)
+    {
+        HoveringIcon.HideAll();
+        foreach (var enumFlag in Enum.GetValues(typeof(HoveringIcon.IconCategory)))
+        {
+            bool isValid = ((HoveringIcon.IconCategory)enumFlag & category) != 0;
+            Debug.Log("Enum flag is " + enumFlag + "(" + (int)enumFlag + "). Is it valid against " + (HoveringIcon.IconCategory)category + "(" + category + ") : " + isValid);
+            if (isValid)
+                HoveringIcon.DisplayObjectsOfType(category);
+        }
+    }
+
+    internal void Stop()
+    {
+        TimerManager.RemoveTimer(_currentTimer?.Name);
+        AudioSystem.StopAudio(_currentAudio);
+    }
+    #endregion
+
+
+    #region Types
+    [System.Serializable]
+    public struct SubStep
+    {
+        public SubStepInstantActions ActionsBeforeDialogue;
+        public EventReference VoiceLine;
+        [ResizableTextArea] public string SubtitleText;
+        public SubStepInstantActions ActionsAfterDialogue;
+        public float DelayBeforeNextSubStep;
+    }
+    [System.Serializable]
+    public struct SubStepInstantActions
+    {
+        [EnumFlags] public LockableFeature LockFeatures;
+        [EnumFlags] public LockableFeature UnlockFeatures;
+        [EnumFlags] public HoveringIcon.IconCategory DisplayArrows;
+        public EventVariable RaiseEvent;
+        public List<PlayerTask> AddTasks;
+
+    }
+    [Serializable]
+    public struct PlayerTask
+    {
+        public string Name;
+        public EventVariable ResolutionEvent;
+    }
+    public enum LockableFeature
+    {
+        Grab =                      1 << 0,
+        Cook =                      1 << 1,
+        Cut =                       1 << 2,
+        Kill =                      1 << 3,
+        StartShift =                1 << 4,
+        PutIngredientsInPlates =    1 << 5
+    }
+
+    #endregion
+}

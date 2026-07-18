@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Splines;
 
 namespace Features.Path
@@ -25,29 +26,53 @@ namespace Features.Path
 				list.Remove(movement);
 		}
 
-	
-		public bool TryGetNearestAhead(ClientMovement self, out ClientMovement nearest, out float tGap)
+		public bool TryGetNearestAhead(ClientMovement self, out ClientMovement nearest, out float worldGap)
 		{
-			nearest = null;
-			tGap    = float.MaxValue;
+			nearest  = null;
+			worldGap = float.MaxValue;
 
 			if (!_occupants.TryGetValue(self.SplineComponent, out var list)) return false;
 
-			foreach (var other in list)
+			bool    isClosed = self.Spline.Closed;
+			Vector3 selfPos  = self.GetSplinePos(self.SplinePosition);
+
+			for (int i = list.Count - 1; i >= 0; i--)
 			{
+				var other = list[i];
+				
+				if (other == null || other.ControlledTransform == null)
+				{
+					list.RemoveAt(i);
+					continue;
+				}
+
 				if (other == self || !other.IsOnSpline) continue;
 
 				float diff = other.SplinePosition - self.SplinePosition;
-				if (diff <= 0f) continue; 
-
-				if (diff < tGap)
+				
+				if (diff <= 0f)
 				{
-					tGap    = diff;
-					nearest = other;
+					if (!isClosed) continue;
+					diff += 1f;
+					if (diff <= 0f) continue;
+				}
+				
+				Vector3 otherPos = other.GetSplinePos(other.SplinePosition);
+				float   dist     = Vector3.Distance(selfPos, otherPos);
+
+				if (dist < worldGap)
+				{
+					worldGap = dist;
+					nearest  = other;
 				}
 			}
 
 			return nearest != null;
+		}
+		
+		public void ClearAll() 
+		{
+			_occupants.Clear();
 		}
 	}
 }
