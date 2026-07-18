@@ -8,19 +8,20 @@ public class HoveringIcon : MonoBehaviour
     #region Static part
     public enum IconCategory
     {
-        None =                          0, // None has to be 0
-        ________Pointers________ =      1000, // "Folders" start from 1000
-        IngredientPointer =             1, // Items of a folder are layed out hundred by hundred (10 folders max)
-        PlatePointer =                  2,
-        RecipePointer =                 3,
-        BlenderPointer =                4,
-        OvenPointer =                   5,
-        ShiftStartTriggerPointer =      6,
-        ServingAreaPointer =            7,
-        KillButtonPointer =             8,
-        SlushMachinePointer =           9,
-        ________Warnings________ =      1001,
-        OvenWarning =                   101
+        None =                          0,
+        ________Pointers________ =      1 << 28, // "Folders" start from 28
+        IngredientPointer =             1 << 0,
+        PlatePointer =                  1 << 1,
+        RecipePointer =                 1 << 2,
+        BlenderPointer =                1 << 3,
+        OvenPointer =                   1 << 4,
+        ShiftStartTriggerPointer =      1 << 5,
+        ServingAreaPointer =            1 << 6,
+        KillButtonPointer =             1 << 7,
+        SlushMachinePointer =           1 << 8,
+        ________Warnings________ =      1 << 29,
+        OvenWarning =                   1 << 14,
+        SlushWarning =                   1 << 15,
     }
     private static List<HoveringIcon> _icons = new();
 

@@ -18,6 +18,9 @@ public partial class Globals
 
         }
 
+        // PLATES
+        public static Param<bool> AllowPuttingIngredientsInPlates { get; set; } = new(true);
+
         // CUTTING
         public static Param<bool> AllowCutting { get; set; } = new(true);
         public static Param<float> CuttingDuration { get; set; } = new(3f);

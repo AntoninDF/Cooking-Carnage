@@ -24,6 +24,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
     [SerializeField] private ModelController _graphics;
     [SerializeField] private EventVariable _onPlatePutInOven;
     [SerializeField] private EventVariable _onPlateTakenFromOven;
+    [SerializeField] private EventVariable _onStartCooking;
     [SerializeField] private EventVariable _onPlateCooked;
     [SerializeField] private Feedbacks ProgressFeedbacks;
     
@@ -131,6 +132,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
         if (Container.HeldItem.TryGetSibling(out F_Cookable cookable, true) && cookable.CanBeTransformed)
         {
             Cooker.RequestStartTransformation(cookable);
+            if (_onStartCooking != null) _onStartCooking.Raise();
         }
         else
         {

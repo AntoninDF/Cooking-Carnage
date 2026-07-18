@@ -26,6 +26,7 @@ public class Plate : Item
     [Tooltip("The recipe book should contain every possible recipe for this object.")]
     [SerializeField] private SO_RecipeBook _recipeBook;
     [SerializeField] MultiSlotContainer ContainerComponent;
+    [SerializeField] EventVariable _onIngredientAdded;
     
     [Header("Feedback")]
     [SerializeField] private Animation _animation;
@@ -71,8 +72,10 @@ public class Plate : Item
         if (ContainerComponent.TryGetFeature(out Container))
         {
             Container.OnGrab += TryLock;
+            if (_onIngredientAdded != null) Container.OnGrab += _onIngredientAdded.Raise;
             // Make sure only cut ingredients can be put in the plate
             Container.Filter.AddCondition(GrabbableCondition);
+            Container.Filter.AddCondition(_ => Globals.Gameplay.AllowPuttingIngredientsInPlates);
             Collection.Add(Container);
         }
         if (ContainerComponent.TryGetFeature(out F_Interactable interactable))

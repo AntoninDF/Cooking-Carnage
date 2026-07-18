@@ -33,6 +33,7 @@ public class GameSettings : ScriptableObject
         Globals.Rendering.Outline.Thickness.Value = Instance.GraphicsSettings.OutlineWidth;
         Globals.Rendering.Outline.Color.Value = Instance.GraphicsSettings.OutlineColor;
 
+        Globals.Statistics.TutorialHasBeenPlayed.Value = Instance.ShiftSettings.SkipTutorial;
         /*
         Globals.Application.AllowWindowResizing.OnValueChange += value => PlayerSettings.resizableWindow = value;
         Globals.Application.AllowWindowResizing.Value = Instance.ApplicationSettings.AllowWindowResizing;
@@ -49,6 +50,7 @@ public class GameSettings : ScriptableObject
         public int ShiftDuration;
         [Min(0), Tooltip("In seconds")]
         public int ShiftFinalWarningDuration;
+        public bool SkipTutorial;
     }
 
     public S_PriceSettings PriceSettings;

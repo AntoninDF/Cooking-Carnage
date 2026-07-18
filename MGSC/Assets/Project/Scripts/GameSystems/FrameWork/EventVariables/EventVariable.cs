@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "EventVariable", menuName = "Scriptable Objects/EventVariable")]
@@ -9,6 +10,8 @@ public class EventVariable : ScriptableObject
 
     public void AddListener(Action callback)
     {
+        if (_event != null && _event.GetInvocationList().Contains(callback))
+            return;
         _event += callback;
         Debug.Log("EventVariable " + name + " got a new subscriber (sub count = " + (_event?.GetInvocationList().Length ?? 0f) + ")");
     }

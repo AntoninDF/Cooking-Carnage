@@ -1,5 +1,6 @@
 using Features;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 namespace Cooking
@@ -18,6 +19,8 @@ namespace Cooking
         #region Fields
         [SerializeField] private SlotContainer _slotContainer;
         [SerializeField] private InteractionButton _cuttingTrigger;
+        [SerializeField] private EventVariable OnCutStart;
+        [SerializeField] private EventVariable OnCutStop;
         #endregion
 
 
@@ -45,6 +48,7 @@ namespace Cooking
         private void BindEvents()
         {
             Cutter = new(this);
+            if (OnCutStop != null) Cutter.OnTransformationOver += OnCutStop.Raise;
         }
 
         void Start()
@@ -81,6 +85,7 @@ namespace Cooking
             if (!Container.HeldItem.TryGetSibling(out F_Cuttable cuttable, true) || !cuttable.CanBeTransformed) return; // Ensure it is cuttable and not already cut
             if (!Cutter.CanStartTransformation(cuttable)) return;
             Cutter.RequestStartTransformation(cuttable);
+            if (OnCutStart != null) OnCutStart.Raise();
             //Debug.Log("Cutting");
         }
         #endregion

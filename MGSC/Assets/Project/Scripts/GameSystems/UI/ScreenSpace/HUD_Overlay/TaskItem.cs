@@ -25,6 +25,7 @@ namespace UI
         [SerializeField] private UnityEvent OnSetup;
         [SerializeField] private UnityEvent OnResolutionFeedbacks;
         public Action OnResolve;
+        public Action OnResolveFeedbacksOver;
         private Action _unbindCallback;
 
         List<Timer> _timers = new();
@@ -89,11 +90,12 @@ namespace UI
         {
             foreach (var timer in _timers)
                 TimerManager.RemoveTimer(timer.Name);
+            OnResolveFeedbacksOver?.Invoke();
             Destroy(gameObject);
         }
 
         private void CallDelayedResolve(float delay)
-            => _timers.Add(TimerManager.StartTimer("Resolve task " + Time.time, delay, Resolve));
+            => _timers.Add(TimerManager.StartTimer("Resolve task " + Time.time, delay, Resolve, elapsed => Debug.Log("Resolving task... " + elapsed + "/" + delay + "s")));
 
         private void RefreshLayout()
         {

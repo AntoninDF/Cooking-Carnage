@@ -14,13 +14,17 @@ public class TutorialStep : ScriptableObject
 {
     public List<SubStep> Steps = new();
 
-    public EventVariable StartCondition;
     [NonSerialized] protected UISystem UI;
     [NonSerialized] protected TaskPanel Tasks;
     [NonSerialized] protected SubtitleOverlay Subtitles;
     [NonSerialized] protected int CurrentSubStep;
 
-    private Action _playCallback;
+    [NonSerialized] private Action _playCallback;
+    [NonSerialized] private Timer _currentTimer;
+    [NonSerialized] private EventReference _currentAudio;
+
+    #region Methods
+
     protected bool LoadDependencies()
     {
         if (!Reference.TryGetManager(out UI))
@@ -35,22 +39,26 @@ public class TutorialStep : ScriptableObject
         return true;
     }
 
-    public virtual void PlayWhenConditionIsMet(Action onEnd = null)
+    public virtual void PlayWhenConditionIsMet(EventVariable startCondition, Action onEnd = null)
     {
-        if (StartCondition == null)
+        if (startCondition == null)
         {
             Debug.Log("Play without condition");
             Play(onEnd);
         }
         else
         {
-            Debug.Log("Play with condition '" + StartCondition.name + "'");
-            _playCallback = () => Play(onEnd);
-            StartCondition.AddListener(_playCallback);
+            Debug.Log("Play with condition '" + startCondition.name + "'");
+            _playCallback = () =>
+            {
+                Play(onEnd);
+                startCondition.RemoveListener(_playCallback);
+            };
+            startCondition.AddListener(_playCallback);
         }
     }
     //public virtual void PlayUnique() => Play(null);
-    public virtual void Play(Action onEnd = null, bool fadeOut = true)
+    public virtual void Play(Action onEnd = null)
     {
         Debug.Log("[TutorialStep] Starting step '" + name + "' (substep count = " + Steps.Count + ")");
         if (!LoadDependencies())
@@ -59,10 +67,7 @@ public class TutorialStep : ScriptableObject
             return;
         }
 
-        if (fadeOut)
-            onEnd += () => Subtitles.EndSubtitle();
         onEnd += () => Debug.Log("onEnd invoked at the end of tutorial step");
-        StartCondition?.RemoveListener(_playCallback);
         _playCallback = null;
         Action sequence = BuildSequence(0, onEnd);
         sequence();
@@ -75,7 +80,7 @@ public class TutorialStep : ScriptableObject
             Debug.Log("Return onEnd, index is " + startIndex);
             return onEnd;
         }
-        return () => PlaySubStep(startIndex, BuildSequence(startIndex + 1));
+        return () => PlaySubStep(startIndex, BuildSequence(startIndex + 1, onEnd));
     }
 
     protected void PlaySubStep(int index, Action onEnd=null)
@@ -86,17 +91,25 @@ public class TutorialStep : ScriptableObject
         Debug.Log("[TutorialStep] Playing substep of '" + name +
             "' with a duration of " + GetMinimumDurationForSubstep(current) + "s.");
         
+        // Try to play the voiceline
         if (!current.VoiceLine.IsNull)
+        {
             AudioSystem.PlayAudio(current.VoiceLine);
+            _currentAudio = current.VoiceLine;
+        }
 
+        // Try to display the subtitle
         if (!string.IsNullOrEmpty(current.SubtitleText))
             Subtitles.PlaySubtitle(current.SubtitleText);
 
-        HandleTaskRequest(current.AddTask);
-        DisplayArrowsFor(current.DisplayArrowsOn);
-        HandleFeatureLock(current.LockFeatures, current.UnlockFeatures);
-
-        TimerManager.StartTimer(
+        HandleActions(current.ActionsBeforeDialogue);
+        onEnd += () =>
+        {
+            HandleActions(current.ActionsAfterDialogue);
+            if (_currentAudio.Equals(current.VoiceLine))
+                _currentAudio = default;
+        };
+        _currentTimer = TimerManager.StartTimer(
             "Playing tutorial : '" + current.SubtitleText + "' (" + Time.time + ")",
             GetMinimumDurationForSubstep(current),
             () => {
@@ -106,6 +119,13 @@ public class TutorialStep : ScriptableObject
             );
     }
 
+    void HandleActions(SubStepInstantActions actions)
+    {
+        HandleFeatureLock(actions.LockFeatures, actions.UnlockFeatures);
+        DisplayArrowsFor(actions.DisplayArrows);
+        if (actions.RaiseEvent != null) actions.RaiseEvent.Raise();
+        HandleTaskRequests(actions.AddTasks);
+    }
     private void HandleFeatureLock(LockableFeature lockFeatures, LockableFeature unlockFeatures)
     {
         // Priority is given to unlocking a feature if it is set as both lock and unlock
@@ -124,7 +144,9 @@ public class TutorialStep : ScriptableObject
         LockOrUnlock(LockableFeature.Cook, Globals.Gameplay.AllowCooking);
         LockOrUnlock(LockableFeature.Kill, Globals.Gameplay.AllowClientKilling);
         LockOrUnlock(LockableFeature.StartShift, Globals.Gameplay.AllowShiftStart);
+        LockOrUnlock(LockableFeature.PutIngredientsInPlates, Globals.Gameplay.AllowPuttingIngredientsInPlates);
     }
+
 
     float GetMinimumDurationForSubstep(SubStep step)
     {
@@ -149,35 +171,60 @@ public class TutorialStep : ScriptableObject
         return result;
     }
 
-    private void HandleTaskRequest(PlayerTask requestedAction)
+    private void HandleTaskRequests(List<PlayerTask> tasks)
     {
-        if (!string.IsNullOrEmpty(requestedAction.Name) && requestedAction.ResolutionEvent != null)
-        Tasks.BindTask(
-            requestedAction.Name,
-            e => requestedAction.ResolutionEvent.AddListener(e),
-            e => requestedAction.ResolutionEvent.RemoveListener(e)
-            );
+        foreach (PlayerTask task in tasks)
+        {
+            if (string.IsNullOrEmpty(task.Name) || task.ResolutionEvent == null)
+                return;
+
+            Tasks.BindTask(
+                task.Name,
+                e => task.ResolutionEvent.AddListener(e),
+                e => task.ResolutionEvent.RemoveListener(e)
+                );
+        }
     }
 
     private void DisplayArrowsFor(HoveringIcon.IconCategory category)
     {
         HoveringIcon.HideAll();
-        HoveringIcon.DisplayObjectsOfType(category);
+        foreach (var enumFlag in Enum.GetValues(typeof(HoveringIcon.IconCategory)))
+        {
+            bool isValid = ((HoveringIcon.IconCategory)enumFlag & category) != 0;
+            Debug.Log("Enum flag is " + enumFlag + "(" + (int)enumFlag + "). Is it valid against " + (HoveringIcon.IconCategory)category + "(" + category + ") : " + isValid);
+            if (isValid)
+                HoveringIcon.DisplayObjectsOfType(category);
+        }
     }
 
+    internal void Stop()
+    {
+        TimerManager.RemoveTimer(_currentTimer?.Name);
+        AudioSystem.StopAudio(_currentAudio);
+    }
+    #endregion
 
 
     #region Types
     [System.Serializable]
     public struct SubStep
     {
+        public SubStepInstantActions ActionsBeforeDialogue;
         public EventReference VoiceLine;
         [ResizableTextArea] public string SubtitleText;
-        public PlayerTask AddTask;
-        public HoveringIcon.IconCategory DisplayArrowsOn;
+        public SubStepInstantActions ActionsAfterDialogue;
+        public float DelayBeforeNextSubStep;
+    }
+    [System.Serializable]
+    public struct SubStepInstantActions
+    {
         [EnumFlags] public LockableFeature LockFeatures;
         [EnumFlags] public LockableFeature UnlockFeatures;
-        public float DelayBeforeNextSubStep;
+        [EnumFlags] public HoveringIcon.IconCategory DisplayArrows;
+        public EventVariable RaiseEvent;
+        public List<PlayerTask> AddTasks;
+
     }
     [Serializable]
     public struct PlayerTask
@@ -187,11 +234,12 @@ public class TutorialStep : ScriptableObject
     }
     public enum LockableFeature
     {
-        Grab =          1 << 0,
-        Cook =          1 << 1,
-        Cut =           1 << 2,
-        Kill =          1 << 3,
-        StartShift =    1 << 4
+        Grab =                      1 << 0,
+        Cook =                      1 << 1,
+        Cut =                       1 << 2,
+        Kill =                      1 << 3,
+        StartShift =                1 << 4,
+        PutIngredientsInPlates =    1 << 5
     }
 
     #endregion

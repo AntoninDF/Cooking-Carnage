@@ -15,7 +15,7 @@ namespace UI
 			get => _activeTasks;
 		}
 		[SerializeField, Required] private TaskItem _taskPrefab;
-		[SerializeField, Required] private Transform G_TaskList;
+		[SerializeField, Required] private RectTransform G_TaskList;
 
 		private List<TaskItem> _activeTasks = new();
 		#region Methods
@@ -33,7 +33,7 @@ namespace UI
 			EnableIfActiveTask();
             Debug.Log("Binding task");
 			subscribe(task.RequestResolve);
-			task.OnResolve += () =>
+			task.OnResolveFeedbacksOver += () =>
 			{
 				unsubscribe(task.RequestResolve);
 				_activeTasks.Remove(task);
