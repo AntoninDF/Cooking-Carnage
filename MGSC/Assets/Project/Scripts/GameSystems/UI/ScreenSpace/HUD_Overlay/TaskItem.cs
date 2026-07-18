@@ -1,6 +1,8 @@
 using GameSystem;
 using NaughtyAttributes;
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -25,6 +27,7 @@ namespace UI
         public Action OnResolve;
         private Action _unbindCallback;
 
+        List<Timer> _timers = new();
         #region Methods
 
         private void OnEnable()
@@ -84,17 +87,26 @@ namespace UI
         void PlayResolutionFeedbacks() => OnResolutionFeedbacks?.Invoke();
         private void Resolve()
         {
+            foreach (var timer in _timers)
+                TimerManager.RemoveTimer(timer.Name);
             Destroy(gameObject);
         }
 
         private void CallDelayedResolve(float delay)
-            => TimerManager.StartTimer("Resolve task " + Time.time, delay, Resolve);
+            => _timers.Add(TimerManager.StartTimer("Resolve task " + Time.time, delay, Resolve));
 
         private void RefreshLayout()
         {
-            if (L_Label == null) return;
             var layout = GetComponent<LayoutElement>();
+            if (L_Label == null) return;
             layout.preferredHeight = L_Label.preferredHeight;
+
+            foreach (var child in transform)
+            {
+                RectTransform rt = child as RectTransform;
+                layout.preferredHeight = Mathf.Max(layout.preferredHeight, rt.sizeDelta.y);
+            }
+
             if (transform.parent != null && transform.parent.TryGetComponent(out LayoutGroup parent))
                 parent.SetLayoutVertical();
         }
@@ -103,13 +115,13 @@ namespace UI
         {
             var canvas = GetComponent<CanvasGroup>();
             var c = AnimationCurve.EaseInOut(0, 0, 1, 1);
-            TimerManager.StartTimer("Fade in taskitem " + Time.time + GetHashCode(), duration, null, elapsed => canvas.alpha = c.Evaluate(elapsed / duration));
+            _timers.Add(TimerManager.StartTimer("Fade in taskitem " + Time.time + GetHashCode(), duration, null, elapsed => canvas.alpha = c.Evaluate(elapsed / duration)));
         }
         public void FadeOut(float duration)
         {
             var canvas = GetComponent<CanvasGroup>();
             var c = AnimationCurve.EaseInOut(0, 0, 1, 1);
-            TimerManager.StartTimer("Fade out taskitem " + Time.time + GetHashCode(), duration, null, elapsed => canvas.alpha = 1 - c.Evaluate(elapsed / duration));
+            _timers.Add(TimerManager.StartTimer("Fade out taskitem " + Time.time + GetHashCode(), duration, null, elapsed => canvas.alpha = 1 - c.Evaluate(elapsed / duration)));
         }
         #endregion
     }

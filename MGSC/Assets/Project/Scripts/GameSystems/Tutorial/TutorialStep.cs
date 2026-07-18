@@ -12,9 +12,9 @@ using GameSystem;
     "- Variable text size is also supported using '<size=50>' and '</size> for example (which yields a 50px font size)")]
 public class TutorialStep : ScriptableObject
 {
-    public EventVariable StartCondition;
     public List<SubStep> Steps = new();
 
+    public EventVariable StartCondition;
     [NonSerialized] protected UISystem UI;
     [NonSerialized] protected TaskPanel Tasks;
     [NonSerialized] protected SubtitleOverlay Subtitles;
@@ -38,13 +38,18 @@ public class TutorialStep : ScriptableObject
     public virtual void PlayWhenConditionIsMet(Action onEnd = null)
     {
         if (StartCondition == null)
+        {
+            Debug.Log("Play without condition");
             Play(onEnd);
+        }
         else
         {
+            Debug.Log("Play with condition '" + StartCondition.name + "'");
             _playCallback = () => Play(onEnd);
-            StartCondition.Subscribe(_playCallback);
+            StartCondition.AddListener(_playCallback);
         }
     }
+    //public virtual void PlayUnique() => Play(null);
     public virtual void Play(Action onEnd = null, bool fadeOut = true)
     {
         Debug.Log("[TutorialStep] Starting step '" + name + "' (substep count = " + Steps.Count + ")");
@@ -56,7 +61,8 @@ public class TutorialStep : ScriptableObject
 
         if (fadeOut)
             onEnd += () => Subtitles.EndSubtitle();
-        StartCondition?.Unsubscribe(_playCallback);
+        onEnd += () => Debug.Log("onEnd invoked at the end of tutorial step");
+        StartCondition?.RemoveListener(_playCallback);
         _playCallback = null;
         Action sequence = BuildSequence(0, onEnd);
         sequence();
@@ -64,7 +70,11 @@ public class TutorialStep : ScriptableObject
 
     private Action BuildSequence(int startIndex = 0, Action onEnd = null)
     {
-        if (startIndex >= Steps.Count) return onEnd;
+        if (startIndex >= Steps.Count)
+        {
+            Debug.Log("Return onEnd, index is " + startIndex);
+            return onEnd;
+        }
         return () => PlaySubStep(startIndex, BuildSequence(startIndex + 1));
     }
 
@@ -98,33 +108,22 @@ public class TutorialStep : ScriptableObject
 
     private void HandleFeatureLock(LockableFeature lockFeatures, LockableFeature unlockFeatures)
     {
-        LockableFeature feature;
         // Priority is given to unlocking a feature if it is set as both lock and unlock
+        // If it's neither specified to lock or unlock, the parameter should stay untouched
 
-        feature = LockableFeature.Grab;
-        Globals.Gameplay.Player.AllowPlayerGrab.Value =
-            0 ==   (lockFeatures & feature) ||
-            0 != (unlockFeatures & feature);
+        void LockOrUnlock(LockableFeature feature, Param<bool> param)
+        {
+            bool _lock = 0 != (lockFeatures & feature);
+            bool _unlock = 0 != (unlockFeatures & feature);
+            if (_lock || _unlock)
+                param.Value = _unlock || !_lock;
+        }
 
-        feature = LockableFeature.Cut;
-        Globals.Gameplay.AllowCutting.Value =
-            0 ==   (lockFeatures & feature) ||
-            0 != (unlockFeatures & feature);
-
-        feature = LockableFeature.Cook;
-        Globals.Gameplay.AllowCooking.Value =
-            0 ==   (lockFeatures & feature) ||
-            0 != (unlockFeatures & feature);
-
-        feature = LockableFeature.Kill;
-        Globals.Gameplay.AllowClientKilling.Value =
-            0 ==   (lockFeatures & feature) ||
-            0 != (unlockFeatures & feature);
-
-        feature = LockableFeature.StartShift;
-        Globals.Gameplay.AllowShiftStart.Value =
-            0 ==   (lockFeatures & feature) ||
-            0 != (unlockFeatures & feature);
+        LockOrUnlock(LockableFeature.Grab, Globals.Gameplay.Player.AllowPlayerGrab);
+        LockOrUnlock(LockableFeature.Cut, Globals.Gameplay.AllowCutting);
+        LockOrUnlock(LockableFeature.Cook, Globals.Gameplay.AllowCooking);
+        LockOrUnlock(LockableFeature.Kill, Globals.Gameplay.AllowClientKilling);
+        LockOrUnlock(LockableFeature.StartShift, Globals.Gameplay.AllowShiftStart);
     }
 
     float GetMinimumDurationForSubstep(SubStep step)
@@ -155,8 +154,8 @@ public class TutorialStep : ScriptableObject
         if (!string.IsNullOrEmpty(requestedAction.Name) && requestedAction.ResolutionEvent != null)
         Tasks.BindTask(
             requestedAction.Name,
-            e => requestedAction.ResolutionEvent.Subscribe(e),
-            e => requestedAction.ResolutionEvent.Unsubscribe(e)
+            e => requestedAction.ResolutionEvent.AddListener(e),
+            e => requestedAction.ResolutionEvent.RemoveListener(e)
             );
     }
 

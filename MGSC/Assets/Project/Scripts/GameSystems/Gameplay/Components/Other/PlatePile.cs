@@ -62,6 +62,7 @@ public class PlatePile : MonoBehaviour, IFeatureCollection
         if (_mp.count == 0) yield break;
         if (!context.TryGetFeature(out F_Container playerContainer)) yield break;
         if (playerContainer.HeldItem != null) yield break;
+        if (playerContainer.CanGrab(ItemPrefab.Grabbable)) yield break;
 
         SetupTarget();
 

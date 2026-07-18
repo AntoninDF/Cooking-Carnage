@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1280f6172088ce947b78cd0f77c2952d, type: 3}
   m_Name: Tuto_Intro
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
+  StartCondition: {fileID: 0}
   Steps:
   - VoiceLine:
       Guid:
@@ -21,8 +22,12 @@ MonoBehaviour:
         Data4: 0
       Path: 
     SubtitleText: 
-    RequestedAction: 0
+    AddTask:
+      Name: 
+      ResolutionEvent: {fileID: 0}
     DisplayArrowsOn: 1
+    LockFeatures: -1
+    UnlockFeatures: 0
     DelayBeforeNextSubStep: 3
   - VoiceLine:
       Guid:
@@ -32,8 +37,12 @@ MonoBehaviour:
         Data4: 1790445670
       Path: event:/Tutorial/#1/TutorialVoice_1 Part1
     SubtitleText: Hey, how's it going ?
-    RequestedAction: 0
+    AddTask:
+      Name: 
+      ResolutionEvent: {fileID: 0}
     DisplayArrowsOn: 0
+    LockFeatures: 0
+    UnlockFeatures: 0
     DelayBeforeNextSubStep: 1
   - VoiceLine:
       Guid:
@@ -44,8 +53,12 @@ MonoBehaviour:
       Path: event:/Tutorial/#1/TutorialVoice_1 Part2
     SubtitleText: Alright! I recorded this little message for ya since I know it's
       your first day.
-    RequestedAction: 0
+    AddTask:
+      Name: 
+      ResolutionEvent: {fileID: 0}
     DisplayArrowsOn: 0
+    LockFeatures: 0
+    UnlockFeatures: 0
     DelayBeforeNextSubStep: 0
   - VoiceLine:
       Guid:
@@ -55,6 +68,10 @@ MonoBehaviour:
         Data4: 426063320
       Path: event:/Tutorial/#1/TutorialVoice_1 Part3
     SubtitleText: Bet you're a bit lost, but don't worry. I'm here to help ya.
-    RequestedAction: 0
+    AddTask:
+      Name: Grab an ingredient
+      ResolutionEvent: {fileID: 11400000, guid: 7bfe63f3ecb6e6343ba985c1a9991dbc, type: 2}
     DisplayArrowsOn: 1
+    LockFeatures: 0
+    UnlockFeatures: 1
     DelayBeforeNextSubStep: 1

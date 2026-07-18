@@ -50,7 +50,7 @@ public class TutorialTimeline : ScriptableObject
         Debug.Log("[TutorialTimeline] Building sequence");
         if (steps == null || steps.Count == 0) return onEnd;
         List<TutorialStep> nextSequence = steps.GetRange(1, steps.Count - 1);
-        var step = steps[0];
+        Debug.Log("NextSequence " + nextSequence.Count);
         return () => steps[0].PlayWhenConditionIsMet(BuildSequence(nextSequence));
     }
 

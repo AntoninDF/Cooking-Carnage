@@ -66,9 +66,12 @@ public class HoveringIcon : MonoBehaviour
         if (!_controlAnimatedObject || _animatedObject == null)
             return;
 
-        _animatedObject.position =
+        _animatedObject.localPosition =
             _defaultPosition -
-            _animatedObject.forward * _hoveringRange * (Mathf.Sin(Time.time * 6.28f / _hoveringDuration) * 0.5f + 0.5f);
+            Quaternion.Inverse(_animatedObject.parent.rotation) *  _animatedObject.forward * (_hoveringRange * (Mathf.Sin(Time.time * 6.28f / _hoveringDuration) * 0.5f + 0.5f));
+
+        if (Camera.main != null)
+            _animatedObject.rotation = Quaternion.LookRotation(_animatedObject.transform.forward, Camera.main.transform.position - _animatedObject.position);
     }
     private void Start()
     {
@@ -78,7 +81,7 @@ public class HoveringIcon : MonoBehaviour
                 "' was disabled because it didn't have a reference to an animated object");
             this.enabled = false;
         }
-        _defaultPosition = _animatedObject.position;
+        _defaultPosition = _animatedObject.localPosition;
         Hide();
     }
     private void Display()
