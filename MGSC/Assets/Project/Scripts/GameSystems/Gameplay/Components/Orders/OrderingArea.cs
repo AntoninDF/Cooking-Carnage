@@ -60,10 +60,6 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
             _OrderDisplayer.DisplayOrder(client.CurrentOrder.Recipe);
         };
         
-        // ClientSeat.OnClientLeaving += () =>
-        // {
-        //     _OrderDisplayer.UndisplayOrder();
-        // };
     }
 
     private void GetDropSlots()

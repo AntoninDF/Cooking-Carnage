@@ -79,11 +79,13 @@ public static class GameLoop
 
     public static void BindTimerToGamePause(Timer timer)
     {
+        if (timer == null) return;
         OnPause += timer.Pause;
         OnResume += timer.Resume;
     }
     public static void UnbindTimerFromGamePause(Timer timer)
     {
+        if (timer == null) return;
         OnPause -= timer.Pause;
         OnResume -= timer.Resume;
     }

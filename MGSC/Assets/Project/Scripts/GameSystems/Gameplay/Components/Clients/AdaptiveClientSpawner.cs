@@ -126,7 +126,7 @@ namespace GameSystem
         void Launch(float delay = 2)
         {
             //            Debug.Log("START SPAWN ROUTINE");
-            TimerManager.StartTimer(timerName, delay, () => TrySpawnClient());
+            TimerManager.StartGameplayTimer(timerName, delay, () => TrySpawnClient());
         }
 
         bool TrySpawnClient()

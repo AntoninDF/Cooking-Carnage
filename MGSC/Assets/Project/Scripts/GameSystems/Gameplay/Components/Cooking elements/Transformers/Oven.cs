@@ -22,11 +22,8 @@ public class Oven : MonoBehaviour, IFeatureCollection
     [SerializeField] private SlotContainer _itemSlot;
     [SerializeField] private InteractionButton _button;
     [SerializeField] private ModelController _graphics;
-    [SerializeField] private EventVariable _onPlatePutInOven;
-    [SerializeField] private EventVariable _onPlateTakenFromOven;
-    [SerializeField] private EventVariable _onStartCooking;
-    [SerializeField] private EventVariable _onPlateCooked;
     [SerializeField] private Feedbacks ProgressFeedbacks;
+    [SerializeField] private S_EventVariables EventVariables;
     
 
     #endregion
@@ -75,6 +72,8 @@ public class Oven : MonoBehaviour, IFeatureCollection
         //Cooker.OnTransformationProgress += OnCookingProgress;
         Cooker.OnCookingProgress += p => UpdateFeedbacks(p, false);
         Cooker.OnOvercookingProgress += p => UpdateFeedbacks(p, true);
+
+        Cooker.OnTransformationOver += obj => RaiseEventVarIfCookedOrOvercooked(obj, EventVariables.OnPlateCooked, EventVariables.OnPlateOverCooked);
     }
     private void BindExternalEvents()
     {
@@ -86,18 +85,20 @@ public class Oven : MonoBehaviour, IFeatureCollection
                 {
                     if (item is not Feature feature) return false;
                     if (!feature.TryGetSibling<F_Cookable>(out var temp)) return false;
+                    if (!Globals.Gameplay.AllowPuttingPlatesInOvens) return false;
                     return true;
                 }
                 );
             Container.OnGrab += _ => ShowRecipeSprites();
             Container.OnDrop += _ => ResetDisplayedSprites();
             Container.OnDrop += _ => OnStopCooking();
-            if (_onPlatePutInOven != null)
-                Container.OnGrab += _onPlatePutInOven.Raise;
-            if (_onPlateTakenFromOven != null)
-            Container.OnDrop += _onPlateTakenFromOven.Raise;
+            if (EventVariables.OnPlatePutInOven != null)
+                Container.OnGrab += EventVariables.OnPlatePutInOven.Raise;
+            if (EventVariables.OnPlateTakenFromOven != null)
+                Container.OnDrop += EventVariables.OnPlateTakenFromOven.Raise;
             
             Container.IsLocked = !_isOvenActive;
+            Container.OnDrop += obj => RaiseEventVarIfCookedOrOvercooked(obj, EventVariables.OnPlateCookedTaken, EventVariables.OnPlateOverCookedTaken);
         }
         if (_button != null)
         {
@@ -107,7 +108,19 @@ public class Oven : MonoBehaviour, IFeatureCollection
             }
         }
     }
-
+    void RaiseEventVarIfCookedOrOvercooked(Feature plate, EventVariable cookedEvent, EventVariable overCookedEvent)
+    {
+        if (plate == null) return;
+        bool cooked = false, overCooked = false;
+        if (plate.TryGetSibling(out F_Cookable cookable) && cookable.Transformed)
+            cooked = true;
+        if (plate.TryGetSibling(out F_OverCookable overCookable) && overCookable.Transformed)
+            overCooked = true;
+        if (cooked && !overCooked)
+            cookedEvent?.Raise();
+        if (cooked && overCooked)
+            overCookedEvent?.Raise();
+    }
 
 
     private void TryInteract(InteractionContext context)
@@ -132,7 +145,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
         if (Container.HeldItem.TryGetSibling(out F_Cookable cookable, true) && cookable.CanBeTransformed)
         {
             Cooker.RequestStartTransformation(cookable);
-            if (_onStartCooking != null) _onStartCooking.Raise();
+            if (EventVariables.OnStartCooking != null) EventVariables.OnStartCooking.Raise();
         }
         else
         {
@@ -158,7 +171,6 @@ public class Oven : MonoBehaviour, IFeatureCollection
         Container.IsLocked = false;
         _button.gameObject.SetActive(true);
         UpdateFeedbacks(0f, false);
-        _onPlateCooked?.Raise();
         Cooker.RequestStopTransformation();
     }
 
@@ -279,5 +291,16 @@ public class Oven : MonoBehaviour, IFeatureCollection
         public Transform Transform;
         public Quaternion StartRotation;
         public Quaternion EndRotation;
+    }
+    [Serializable]
+    public struct S_EventVariables
+    {
+        [SerializeField] public EventVariable OnPlatePutInOven;
+        [SerializeField] public EventVariable OnPlateTakenFromOven;
+        [SerializeField] public EventVariable OnStartCooking;
+        [SerializeField] public EventVariable OnPlateCooked;
+        [SerializeField] public EventVariable OnPlateOverCooked;
+        [SerializeField] public EventVariable OnPlateOverCookedTaken;
+        [SerializeField] public EventVariable OnPlateCookedTaken;
     }
 }

@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1280f6172088ce947b78cd0f77c2952d, type: 3}
+  m_Name: 16_Tuto_ClientServe
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
+  Steps:
+  - ActionsBeforeDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    VoiceLine:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    SubtitleText: When a customer's hungry, they'll go sit down on their own.
+    ActionsAfterDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    DelayBeforeNextSubStep: 3
+  - ActionsBeforeDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 512
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    VoiceLine:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    SubtitleText: Their order'll show up on the screen right above 'em!
+    ActionsAfterDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    DelayBeforeNextSubStep: 5
+  - ActionsBeforeDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 64
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    VoiceLine:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    SubtitleText: All ya gotta do is serve 'em!
+    ActionsAfterDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 0
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    DelayBeforeNextSubStep: 3
+  - ActionsBeforeDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 128
+      DisplayArrows: 64
+      RaiseEvent: {fileID: 0}
+      AddTasks:
+      - Name: Serve a cooked meal
+        ResolutionEvent: {fileID: 11400000, guid: 93d675bd0ee20db45bf698f073879b44, type: 2}
+    VoiceLine:
+      Guid:
+        Data1: 0
+        Data2: 0
+        Data3: 0
+        Data4: 0
+      Path: 
+    SubtitleText: Go on, take the meal ya made and serve it to 'em!
+    ActionsAfterDialogue:
+      LockFeatures: 0
+      UnlockFeatures: 0
+      DisplayArrows: 64
+      RaiseEvent: {fileID: 0}
+      AddTasks: []
+    DelayBeforeNextSubStep: 3

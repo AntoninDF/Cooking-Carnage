@@ -45,7 +45,7 @@ namespace Features
         {
             string timerName = "Transforming (" + UnityEngine.Time.frameCount.ToString("X") + ")";
             var duration = GetTransformationDuration(target);
-            currentProcess = TimerManager.StartTimer(timerName, duration, () => RequestTransformation(target), (elapsed) => Progress(elapsed, duration));
+            currentProcess = TimerManager.StartGameplayTimer(timerName, duration, () => RequestTransformation(target), (elapsed) => Progress(elapsed, duration));
             GameLoop.BindTimerToGamePause(currentProcess);
             OnTransformationStart?.Invoke(target);
             target.BeginTransformation();

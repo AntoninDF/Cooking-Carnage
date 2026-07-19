@@ -37,10 +37,11 @@ namespace UI
         public void EndSubtitle(float duration = 0.5f, Action OnEnd = null)
         {
             Sub.FadeOut(duration, OnEnd);
-            Debug.Log("Fade out");
+            //Debug.Log("Fade out");
         }
         public Subtitle PlaySubtitle(string text, float charactersPerSecond=16, float fadeInDuration=0.5f, Action OnEnd=null)
         {
+            Sub.DisplayText("");
             Sub.FadeIn(
                 fadeInDuration,
                 () => Sub.DisplayText(
@@ -51,5 +52,7 @@ namespace UI
                 );
             return Sub;
         }
+        public void FadeIn(float duration = 0.5f, Action OnEnd = null) => Sub.FadeIn(duration, OnEnd);
+        public void FadeOut(float duration = 0.5f, Action onEnd = null) => Sub.FadeOut(duration, onEnd);
     } 
 }

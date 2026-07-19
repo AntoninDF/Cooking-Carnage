@@ -58,13 +58,12 @@ namespace Clients
         private void StartOrderTimer(Order order)
         {
             string timerName = "OrderTimer_" + UniqueID;
-            var patienceTimer = GameSystem.TimerManager.StartTimer(
+            var patienceTimer = GameSystem.TimerManager.StartGameplayTimer(
                 timerName,
                 order.PatienceDuration,
                 () => OnOrderTimeout(order),
                 elapsed => OnOrderTimeProgress?.Invoke(Mathf.Clamp01(elapsed / order.PatienceDuration))
             );
-            GameLoop.BindTimerToGamePause(patienceTimer);
         }
         
         private void OnOrderTimeout(Order order)

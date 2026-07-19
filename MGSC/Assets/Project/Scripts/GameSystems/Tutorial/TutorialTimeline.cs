@@ -29,25 +29,32 @@ public class TutorialTimeline : ScriptableObject
     void Start()
     {
         Debug.Log("[TutorialTimeline] Starting the introduction sequence");
-        if (Reference.TryGetManager(out UISystem ui))
-        {
-            Subs = ui.GetWidget<SubtitleOverlay>();
-            Subs.Enable();
-            Play(DefaultTutorialStep);
-            BindTutorialStepsToEvents(TutorialStepsToBindToEvents);
-        }
+        BindTutorialStepsToEvents(TutorialStepsToBindToEvents);
+        Play(DefaultTutorialStep);
+        Globals.Statistics.TutorialHasBeenPlayed.Value = true;
     }
 
-    void Play(TutorialStep step)
+    void Play(TutorialStep step, Action onEnd = null)
     {
+        // Stop the previous tutorial step
         if (_currentPlayingTutorial != null)
         {
             _currentPlayingTutorial.Stop();
         }
         _currentPlayingTutorial = step;
+
+        // Get the subtitle UI widget
+        if (Reference.TryGetManager(out UISystem ui))
+        {
+            Subs = ui.GetWidget<SubtitleOverlay>();
+            Subs?.Enable();
+        }
+
         if (step == null)
             return;
-        step.Play();
+
+        // Play the given tutorial step (if not null)
+        step.Play(onEnd);
     }
     void BindTutorialStepsToEvents(List<BindTutorialStepToEvent> items)
     {
@@ -65,6 +72,7 @@ public class TutorialTimeline : ScriptableObject
             }
         }
     }
+    /*
     private void PlayTutorialSequence(List<TutorialStep> steps)
     {
         Action builtSequence = BuildSequence(steps);
@@ -86,10 +94,10 @@ public class TutorialTimeline : ScriptableObject
         Debug.Log("Current is " + steps[0].name + ", NextSequence is of length " + nextSequence.Count);
         return () => steps[0].Play(BuildSequence(nextSequence, onEnd));
     }
-
+    */
     private void End()
     {
-        Subs.Disable();
+        Subs?.FadeOut(onEnd:Subs.Disable);
         Subs = null;
     }
 

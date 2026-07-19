@@ -6,6 +6,9 @@ public class HoveringIcon : MonoBehaviour
 {
 
     #region Static part
+    /// <summary>
+    /// IconCategory is setup to work with enum flags. It can have 32 members at most
+    /// </summary>
     public enum IconCategory
     {
         None =                          0,
@@ -19,9 +22,10 @@ public class HoveringIcon : MonoBehaviour
         ServingAreaPointer =            1 << 6,
         KillButtonPointer =             1 << 7,
         SlushMachinePointer =           1 << 8,
+        OrderTV =                       1 << 9,
         ________Warnings________ =      1 << 29,
         OvenWarning =                   1 << 14,
-        SlushWarning =                   1 << 15,
+        SlushWarning =                  1 << 15,
     }
     private static List<HoveringIcon> _icons = new();
 
@@ -57,6 +61,7 @@ public class HoveringIcon : MonoBehaviour
     [SerializeField] private IconCategory _category; 
     [SerializeField] private Transform _animatedObject;
     [SerializeField] private bool _controlAnimatedObject;
+    [SerializeField] private bool _faceCamera = true;
     [SerializeField] private float _hoveringDuration = 3;
     [SerializeField] private float _hoveringRange = 0.3f;
 
@@ -69,9 +74,9 @@ public class HoveringIcon : MonoBehaviour
 
         _animatedObject.localPosition =
             _defaultPosition -
-            Quaternion.Inverse(_animatedObject.parent.rotation) *  _animatedObject.forward * (_hoveringRange * (Mathf.Sin(Time.time * 6.28f / _hoveringDuration) * 0.5f + 0.5f));
+            Quaternion.Inverse(_animatedObject.parent.rotation) *  _animatedObject.forward * (_hoveringRange * (Mathf.Sin(Time.time * 6.28f / (_hoveringDuration == 0f ? 0.0001f : _hoveringDuration)) * 0.5f + 0.5f));
 
-        if (Camera.main != null)
+        if (Camera.main != null && _faceCamera)
             _animatedObject.rotation = Quaternion.LookRotation(_animatedObject.transform.forward, Camera.main.transform.position - _animatedObject.position);
     }
     private void Start()

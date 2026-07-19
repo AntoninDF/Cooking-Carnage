@@ -205,7 +205,7 @@ namespace Features
         {
             OnReactionStart?.Invoke();
             Perform(BuildReact());
-            TimerManager.StartTimer($"{_client.UniqueID} Wait For finishing the order ", _reactionTime, WaitForFinishingDownAnim);
+            TimerManager.StartGameplayTimer($"{_client.UniqueID} Wait For finishing the order ", _reactionTime, WaitForFinishingDownAnim);
         }
 
         private void WaitForFinishingDownAnim()

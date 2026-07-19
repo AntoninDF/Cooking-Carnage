@@ -103,17 +103,18 @@ public class TutorialStep : ScriptableObject
             Subtitles.PlaySubtitle(current.SubtitleText);
 
         HandleActions(current.ActionsBeforeDialogue);
-        onEnd += () =>
+        Action onPreEnd = () =>
         {
             HandleActions(current.ActionsAfterDialogue);
             if (_currentAudio.Equals(current.VoiceLine))
                 _currentAudio = default;
+            Subtitles.EndSubtitle();
         };
-        _currentTimer = TimerManager.StartTimer(
+        _currentTimer = TimerManager.StartGameplayTimer(
             "Playing tutorial : '" + current.SubtitleText + "' (" + Time.time + ")",
             GetMinimumDurationForSubstep(current),
             () => {
-                // TODO : Don't invoke 'onEnd' directly, but check if the requested action was performed before
+                onPreEnd?.Invoke();
                 onEnd?.Invoke();
             }
             );
@@ -145,6 +146,8 @@ public class TutorialStep : ScriptableObject
         LockOrUnlock(LockableFeature.Kill, Globals.Gameplay.AllowClientKilling);
         LockOrUnlock(LockableFeature.StartShift, Globals.Gameplay.AllowShiftStart);
         LockOrUnlock(LockableFeature.PutIngredientsInPlates, Globals.Gameplay.AllowPuttingIngredientsInPlates);
+        LockOrUnlock(LockableFeature.PutPlatesInOvens, Globals.Gameplay.AllowPuttingPlatesInOvens);
+        LockOrUnlock(LockableFeature.Serve, Globals.Gameplay.AllowClientServing);
     }
 
 
@@ -192,7 +195,6 @@ public class TutorialStep : ScriptableObject
         foreach (var enumFlag in Enum.GetValues(typeof(HoveringIcon.IconCategory)))
         {
             bool isValid = ((HoveringIcon.IconCategory)enumFlag & category) != 0;
-            Debug.Log("Enum flag is " + enumFlag + "(" + (int)enumFlag + "). Is it valid against " + (HoveringIcon.IconCategory)category + "(" + category + ") : " + isValid);
             if (isValid)
                 HoveringIcon.DisplayObjectsOfType(category);
         }
@@ -239,7 +241,9 @@ public class TutorialStep : ScriptableObject
         Cut =                       1 << 2,
         Kill =                      1 << 3,
         StartShift =                1 << 4,
-        PutIngredientsInPlates =    1 << 5
+        PutIngredientsInPlates =    1 << 5,
+        PutPlatesInOvens =          1 << 6,
+        Serve =                     1 << 7
     }
 
     #endregion

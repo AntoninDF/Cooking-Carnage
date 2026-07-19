@@ -27,10 +27,12 @@ public partial class Globals
 
         // CLIENTS
         public static Param<bool> AllowClientKilling { get; set; } = new(true);
+        public static Param<bool> AllowClientServing { get; set; } = new(true);
         public static Param<bool> AllowClientSpawning { get; set; } = new(true);
 
         // COOKING
         public static Param<bool> AllowCooking { get; set; } = new(true);
+        public static Param<bool> AllowPuttingPlatesInOvens { get; set; } = new(true);
         public static Param<float> CookingDuration { get; set; } = new(3f);
         public static Param<float> OvercookingDuration { get; set; } = new(5f);
 

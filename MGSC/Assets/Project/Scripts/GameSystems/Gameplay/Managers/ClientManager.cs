@@ -80,7 +80,7 @@ namespace GameSystem
         private void MakeSureClientEat(Client client, ClientSeat seat)
         {
             
-            TimerManager.StartTimer($"{client.UniqueID}Wait For Quit the seat", client.IsCooked ? 1f : _timeBeforeGoSeating, (() => WaitingQueue.OnSeatFreed(seat)));
+            TimerManager.StartGameplayTimer($"{client.UniqueID}Wait For Quit the seat", client.IsCooked ? 1f : _timeBeforeGoSeating, (() => WaitingQueue.OnSeatFreed(seat)));
         }
 
         private void Reset()

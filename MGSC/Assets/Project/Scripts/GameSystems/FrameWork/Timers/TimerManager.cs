@@ -41,6 +41,7 @@ namespace GameSystem
             for (int i = 0; i < keys.Count; i++)
             {
                 var key = keys[i];
+                if (!timers.ContainsKey(key) || timers[key] == null) continue;
                 if (!timers[key].FrameBased)
                 {
                     timers[key].Update(Time.deltaTime);
@@ -75,6 +76,12 @@ namespace GameSystem
 //            Debug.Log("[TimerManager] TIMER STARTED");
             //this.Log(LogType.Log, "Timer " + name + " has been launched");
             
+            return t;
+        }
+        public static Timer StartGameplayTimer(string name, float duration, Action onComplete, Action<float> onUpdate = null)
+        {
+            var t = StartTimer(name, duration, onComplete, onUpdate);
+            GameLoop.BindTimerToGamePause(t);
             return t;
         }
         
@@ -137,6 +144,7 @@ namespace GameSystem
         {
             if (string.IsNullOrEmpty(name)) return;
             if (!timers.ContainsKey(name)) return;
+            GameLoop.UnbindTimerFromGamePause(timers[name]);
             timers.Remove(name);
             
             //this.Log(LogType.Log, "Timer " + name + " has been erased");

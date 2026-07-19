@@ -95,7 +95,7 @@ namespace UI
         }
 
         private void CallDelayedResolve(float delay)
-            => _timers.Add(TimerManager.StartTimer("Resolve task " + Time.time, delay, Resolve, elapsed => Debug.Log("Resolving task... " + elapsed + "/" + delay + "s")));
+            => _timers.Add(TimerManager.StartGameplayTimer("Resolve task " + Time.time, delay, Resolve /*, elapsed => Debug.Log("Resolving task... " + elapsed + "/" + delay + "s")*/));
 
         private void RefreshLayout()
         {
@@ -117,13 +117,13 @@ namespace UI
         {
             var canvas = GetComponent<CanvasGroup>();
             var c = AnimationCurve.EaseInOut(0, 0, 1, 1);
-            _timers.Add(TimerManager.StartTimer("Fade in taskitem " + Time.time + GetHashCode(), duration, null, elapsed => canvas.alpha = c.Evaluate(elapsed / duration)));
+            _timers.Add(TimerManager.StartGameplayTimer("Fade in taskitem " + Time.time + GetHashCode(), duration, null, elapsed => canvas.alpha = c.Evaluate(elapsed / duration)));
         }
         public void FadeOut(float duration)
         {
             var canvas = GetComponent<CanvasGroup>();
             var c = AnimationCurve.EaseInOut(0, 0, 1, 1);
-            _timers.Add(TimerManager.StartTimer("Fade out taskitem " + Time.time + GetHashCode(), duration, null, elapsed => canvas.alpha = 1 - c.Evaluate(elapsed / duration)));
+            _timers.Add(TimerManager.StartGameplayTimer("Fade out taskitem " + Time.time + GetHashCode(), duration, null, elapsed => canvas.alpha = 1 - c.Evaluate(elapsed / duration)));
         }
         #endregion
     }

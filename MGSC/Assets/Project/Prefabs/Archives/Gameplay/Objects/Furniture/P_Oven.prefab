@@ -2626,10 +2626,6 @@ MonoBehaviour:
   _itemSlot: {fileID: 4820131973737151873}
   _button: {fileID: 7929391311183339527}
   _graphics: {fileID: 2326839042123090242}
-  _onPlatePutInOven: {fileID: 11400000, guid: f01ae145892a6fe4990b18f75a6462f0, type: 2}
-  _onPlateTakenFromOven: {fileID: 0}
-  _onStartCooking: {fileID: 11400000, guid: de86d62ab9b0c204088e374eedd7347f, type: 2}
-  _onPlateCooked: {fileID: 11400000, guid: 0e1e1be8d37d48144855e6b6b2ef2e72, type: 2}
   ProgressFeedbacks:
     MaterialProperty:
       Name: _Fade
@@ -2643,6 +2639,14 @@ MonoBehaviour:
     - {fileID: 885096864005664793}
     - {fileID: 3901059833229521834}
     - {fileID: 3627208796412773535}
+  EventVariables:
+    OnPlatePutInOven: {fileID: 11400000, guid: f01ae145892a6fe4990b18f75a6462f0, type: 2}
+    OnPlateTakenFromOven: {fileID: 11400000, guid: 552628c6ab77911469b362485596b30e, type: 2}
+    OnStartCooking: {fileID: 11400000, guid: de86d62ab9b0c204088e374eedd7347f, type: 2}
+    OnPlateCooked: {fileID: 11400000, guid: 0e1e1be8d37d48144855e6b6b2ef2e72, type: 2}
+    OnPlateOverCooked: {fileID: 11400000, guid: 986b4abde29272842892d40c2100cead, type: 2}
+    OnPlateOverCookedTaken: {fileID: 11400000, guid: f2518824964167945b39196d2bacd88d, type: 2}
+    OnPlateCookedTaken: {fileID: 11400000, guid: 62a2bce6f6b82824ab7cd1213c49c0da, type: 2}
   _isOvenActive: 1
 --- !u!1 &8991466077180281026
 GameObject:
@@ -4519,7 +4523,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5475974010025140018, guid: 2e938f6e269fb89468ab7b2ce9dcb07c, type: 3}
       propertyPath: _category
-      value: 5
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 5475974010025140018, guid: 2e938f6e269fb89468ab7b2ce9dcb07c, type: 3}
       propertyPath: _hoveringRange
@@ -4732,7 +4736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5475974010025140018, guid: 2e938f6e269fb89468ab7b2ce9dcb07c, type: 3}
       propertyPath: _category
-      value: 5
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 5475974010025140018, guid: 2e938f6e269fb89468ab7b2ce9dcb07c, type: 3}
       propertyPath: _hoveringRange

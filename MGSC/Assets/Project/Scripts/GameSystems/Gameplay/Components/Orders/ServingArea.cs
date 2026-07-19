@@ -42,7 +42,10 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
 
         MealSlot.Container.Filter += (obj) =>
         {
-            return obj is F_Grabbable grab && grab.TryGetSibling(out Servable temp, true && ClientSeat.SittingClient != null);
+            if (obj is not F_Grabbable grab) return false;
+            if (!grab.TryGetSibling(out Servable temp, true && ClientSeat.SittingClient != null)) return false;
+            if (!Globals.Gameplay.AllowClientServing) return false;
+            return true;
         };
     }
 
@@ -65,6 +68,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
             MealSlot.Container.IsLocked = true;
             //Debug.Log("[ServingArea] New item detected in slot, invoking OnMealReady");
             ClientSeat.OnMealReady?.Invoke();
+            Debug.Log("CLIENTSEAT.ONMEALREADY INVOKED");
         }
         if (current == null)
             _lastHeldItem = null;

@@ -51,7 +51,7 @@ namespace UI
 
 		public void WaitAndDo(float waitDuration, Action action)
 		{
-			TimerManager.StartTimer("Subtitle WaitAndDo", waitDuration, action);
+			TimerManager.StartGameplayTimer("Subtitle WaitAndDo", waitDuration, action);
 		}
 
 		#region Visibility
@@ -70,12 +70,12 @@ namespace UI
 			OnFadeEnd += () => Visibility = endVisibility;
 			OnFadeEnd += () => GameLoop.UnbindTimerFromGamePause(FadeInOutTimer);
 
-			FadeInOutTimer = TimerManager.StartTimer(
+			if (FadeInOutTimer != null) FadeInOutTimer.Pause();
+			FadeInOutTimer = TimerManager.StartGameplayTimer(
 				"Subtitle opacity fade",
 				duration,
 				OnFadeEnd,
 				elapsed => Visibility = Mathf.Lerp(startVisibility, endVisibility, elapsed / duration));
-			GameLoop.BindTimerToGamePause(FadeInOutTimer);
 		} 
 		#endregion
 
@@ -86,7 +86,7 @@ namespace UI
 			float duration = characterCount / charactersPerSecond;
 			OnTextEnd += () => DisplayText(text);
 			OnTextEnd += () => GameLoop.UnbindTimerFromGamePause(TextDisplayTimer);
-            TextDisplayTimer = TimerManager.StartTimer("Display subtitle text", duration, OnTextEnd, elapsed => DisplayPartialText(text, elapsed / duration));
+            TextDisplayTimer = TimerManager.StartGameplayTimer("Display subtitle text", duration, OnTextEnd, elapsed => DisplayPartialText(text, elapsed / duration));
 			GameLoop.BindTimerToGamePause(TextDisplayTimer);
 		}
 		public void DisplayText(string text)
