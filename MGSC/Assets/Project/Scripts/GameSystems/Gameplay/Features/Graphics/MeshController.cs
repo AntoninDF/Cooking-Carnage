@@ -87,8 +87,13 @@ namespace Features
         }
 		public Mesh GetMesh()
 		{
+			
 			if (Renderer.TryGetComponent(out MeshFilter filter))
 				return filter.sharedMesh;
+			else if((Renderer as SkinnedMeshRenderer).sharedMesh != null)
+			{
+				return (Renderer as SkinnedMeshRenderer).sharedMesh;
+			}
 			return new();
         }
 

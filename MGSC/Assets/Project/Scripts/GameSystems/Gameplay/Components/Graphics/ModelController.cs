@@ -63,6 +63,7 @@ public class ModelController : MonoBehaviour, IFeatureCollection
             var r = GetComponent<Renderer>();
             result = (r is MeshRenderer || r is SkinnedMeshRenderer) ? new Renderer[1] { r } : Array.Empty<Renderer>();
         }
+        
         return result;
     }
 
