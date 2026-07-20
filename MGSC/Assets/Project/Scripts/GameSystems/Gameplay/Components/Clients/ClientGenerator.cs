@@ -94,7 +94,7 @@ namespace Clients
             client
                 .SetType(type)
                 .SetLoot(ingredientDroppedOnKill, dropRate)
-                .SetSpeed(speed).SubscribeToUpgrade();
+                .SetSpeed(speed);
 
             if (name != null)
                 go.name = name;

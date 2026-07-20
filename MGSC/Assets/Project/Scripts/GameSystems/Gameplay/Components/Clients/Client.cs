@@ -107,6 +107,7 @@ namespace Clients
 
        private void Awake()
        {
+           SubscribeToUpgrade();
            NavMeshAgent agent = GetComponent<NavMeshAgent>();
            Behaviour = new ClientBehaviour(this, transform, agent, _splineComp, _speed);
            
