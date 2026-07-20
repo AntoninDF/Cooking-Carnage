@@ -6,6 +6,7 @@ using Cooking;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
+using UnityEditor;
 
 namespace Clients
 {
@@ -24,6 +25,8 @@ namespace Clients
         public Action<ClientSeat> OnSeatRegister   { get; set; }
         public Action<ClientSeat> OnSeatUnregister { get; set; }
         public Action<float> OnOrderTimeProgress { get; set; }
+        [GlobalEvent("Clients/On Client Enters The Cafeteria")]
+        public static Action OnEnterCafeteria;
         public ClientBehaviour    Behaviour        { get; set; }
         public ClientCooked       Cooked           { get; private set; }
         public ClientLook         ClientLook       => _clientLook;
@@ -185,6 +188,7 @@ namespace Clients
                if (CurrentOrder == null)
                {
                    orderingCounter.OnNewOrder += TryAcceptOrder;
+                   OnEnterCafeteria?.Invoke();
                    return;
                }
            }

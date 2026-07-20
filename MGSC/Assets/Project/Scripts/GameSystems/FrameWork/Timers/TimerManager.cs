@@ -31,6 +31,10 @@ namespace GameSystem
         [RuntimeInitializeOnLoadMethod] static void AddToPlayerLoop() => 
             PlayerLoopUtility.InsertMethodCallInPlayerLoopAfter<PreUpdate, TimerManager>(Update);
         
+        public TimerManager()
+        {
+            GameLoop.OnReset += RemoveFinishedTimers;
+        }
         /// <summary>
         /// Updates all active timers
         /// </summary>
@@ -152,7 +156,8 @@ namespace GameSystem
 
         public static void RemoveFinishedTimers()
         {
-            foreach (var name in timers.Keys)
+            string[] names = timers.Keys.ToArray();
+            foreach (var name in names)
             {
                 RemoveTimer(name);
             }
