@@ -105,6 +105,7 @@ namespace UI
                 case EDataInfo.TotalAvailableUpgrades:          return um?.Upgrades.Select(up => up.Config.MaxLevel).Sum().ToString();
                 case EDataInfo.TotalBoughtUpgrades:             return um?.Upgrades.Select(up => up.Level).Sum().ToString();
                 case EDataInfo.MoneyAtTheBeginningOfTheShift:   return (mm?.GetMoneyAtTheBeginningOfThisShift()).ToString();
+                case EDataInfo.CurrentProjectVersion:           return (Application.version).ToString();
 
             }
             return result;

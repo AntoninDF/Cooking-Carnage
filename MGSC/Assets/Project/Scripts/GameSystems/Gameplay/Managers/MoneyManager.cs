@@ -96,7 +96,7 @@ namespace GameSystem
         public void AddMoney(float amount)
         {
             Debug.Log("Money gained : " + amount);
-            MoneyInfo = Mathf.Max(0f, MoneyInfo + amount);
+            MoneyInfo += amount;
             if (!_moneyTransactionsPerShift.ContainsKey(shiftNumber))
                 _moneyTransactionsPerShift[shiftNumber] = new();
             

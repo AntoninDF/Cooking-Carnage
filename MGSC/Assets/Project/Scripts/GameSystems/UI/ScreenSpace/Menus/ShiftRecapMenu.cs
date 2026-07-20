@@ -83,7 +83,10 @@ namespace UI
                 SetContentMode(ContentMode.Success);
 
             if (L_CurrentTotalMoney != null)
+            {
+                L_CurrentTotalMoney.color = _defaultColor;
                 L_CurrentTotalMoney.text = "...";
+            }
 
             AnimateReceipt(
                 UpdateTotalMoney

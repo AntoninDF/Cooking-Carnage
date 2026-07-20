@@ -49,11 +49,29 @@ namespace UI
 				.AddSlider("Voice volume", AudioSystem.SetVoiceVolume, 1f, SliderOption.DisplayMode.Percentage)
 				;
 
-			var resolutionOptions = new (string, Action)[Screen.resolutions.Length];
-			int i = 0;
-			foreach (var rez in Screen.resolutions)
+			// Only 16:9 resolution options
+			var resolutions = new (string name, int width, int height, FullScreenMode screenMode)[]
 			{
-				(string, Action) newValue = (rez.width + " x " + rez.height, () => Screen.SetResolution(rez.width, rez.height, Screen.fullScreen));
+				("4K", 3840, 2160, FullScreenMode.ExclusiveFullScreen),
+				("QHD", 2560, 1440, FullScreenMode.ExclusiveFullScreen),
+				("Full HD", 1920, 1080, FullScreenMode.ExclusiveFullScreen),
+				("", 1600, 900, FullScreenMode.ExclusiveFullScreen),
+				("", 1536, 864, FullScreenMode.ExclusiveFullScreen),
+				("", 1366, 768, FullScreenMode.ExclusiveFullScreen),
+				("HD", 1280, 720, FullScreenMode.ExclusiveFullScreen),
+				("Full HD (windowed)", 1920, 1080, FullScreenMode.MaximizedWindow),
+				("Windowed", 1067, 600, FullScreenMode.Windowed),
+				("Windowed", 800, 450, FullScreenMode.Windowed)
+			};
+
+            var resolutionOptions = new (string, Action)[resolutions.Length];
+			int i = 0;
+			foreach (var rez in resolutions)
+			{
+				string name = rez.width + " x " + rez.height;
+				if (!string.IsNullOrEmpty(rez.name))
+					name = rez.name + " - " + name;
+                (string, Action) newValue = (name, () => Screen.SetResolution(rez.width, rez.height, rez.screenMode));
 
 				if (resolutionOptions.Contains(newValue))
 					continue;
@@ -73,6 +91,8 @@ namespace UI
 			if (_availableGroups.Count > 0 && _currentActiveGroup == null)
 				EnableGroup(_availableGroups[0]);
 
+			GetGroup("Graphics")?.GetOption<DropdownOption>("Window mode")?.SetValue((int)Screen.fullScreenMode);
+			//Debug.Log("Fullscreen mode is " + Enum.GetName(typeof(FullScreenMode), Screen.fullScreenMode) + ", value is " + (int)Screen.fullScreenMode);
 		}
 
 		void ClearContent()
@@ -120,7 +140,13 @@ namespace UI
 			return group;
 		}
 
-		
+		SettingsGroup GetGroup(string name)
+		{
+			foreach (var group in _availableGroups)
+				if (group.Name == name)
+					return group;
+			return null;
+		}
     }
 
 }

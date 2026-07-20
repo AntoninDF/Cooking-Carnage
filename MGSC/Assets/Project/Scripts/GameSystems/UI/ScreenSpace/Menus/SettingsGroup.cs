@@ -97,6 +97,8 @@ namespace UI
             T option = go.GetComponent<T>();
             option.Name = name;
 
+            Options.Add(option);
+
             return option;
         }
 
