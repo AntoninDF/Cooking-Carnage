@@ -28,10 +28,14 @@ namespace GameSystem
         {
             var result = new GameData()
             {
-                money =  Reference.GetManager<MoneyManager>()?.MoneyInfo ?? 0f,
+                money = Reference.GetManager<MoneyManager>()?.MoneyInfo ?? 0f,
                 upgrades = ConvertUpgradeData(),
-                shiftNumber = Globals.Gameplay.ShiftNumber
+                shiftNumber = Globals.Gameplay.ShiftNumber,
+                TutorialHasBeenPlayed = Globals.Statistics.TutorialHasBeenPlayed,
+
+                SecondsPlayed = Globals.Statistics.SecondsPlayed
             };
+
             return result;
         }
         /// <summary>
@@ -66,11 +70,17 @@ namespace GameSystem
             return File.Exists(filePath);
         }
 
+        /// <summary>
+        /// Should never return null
+        /// </summary>
+        /// <returns></returns>
         public static GameData GetCurrentData()
         {
             if (!SaveFileExists())
             {
-                ResetSave();
+                Data = DefaultData();
+                SaveGameData(Data);
+                return Data;
             }
             string json = File.ReadAllText(filePath);
             return JsonUtility.FromJson<GameData>(json);
@@ -84,13 +94,24 @@ namespace GameSystem
             Data = GetCurrentData();
             Debug.Log("Loading save data : " + Data.ToString());
             
+            // Apply money
             if (Reference.TryGetManager(out MoneyManager moneyMgr))
                 moneyMgr.SetCurrentMoney(Data.money);
             
+            // Apply shift number
             if (Reference.TryGetManager(out ShiftManager shiftMgr))
                 shiftMgr.ShiftNumber = Data.shiftNumber;
 
+            // Apply upgrades
             LoadUpgradeData();
+
+            // Apply tutorial being played
+            // (we don't override it if it's false because maybe the GameSettings force it to true)
+            if (Data.TutorialHasBeenPlayed)
+                Globals.Statistics.TutorialHasBeenPlayed.Value = true;
+
+            // Apply seconds played
+            Globals.Statistics.SecondsPlayed.Value = Data.SecondsPlayed;
 
             //Debug.Log($"Save loaded successfully, shift : {Data.shiftNumber},  money : {Data.money}");
             OnSaveLoaded?.Invoke();
@@ -100,7 +121,13 @@ namespace GameSystem
         public static void ResetSave()
         {
             Debug.Log("Resetting save file");
-            Data = DefaultData();
+
+            Data = GetCurrentData();
+            GameData temp = DefaultData();
+            
+            // Some stats are too precious to be overriden
+            temp.SecondsPlayed = Data.SecondsPlayed;
+
             SaveGameData(Data);
         }
 
@@ -133,17 +160,7 @@ namespace GameSystem
                 Debug.LogWarning("No Upgrade data found");
                 return;
             }
-            // foreach (var upgradeData in Data.upgrades)
-            // {
-            //     Type type = Type.GetType("Upgrades."+upgradeData.name);
-            //     Upgrade upgrade = upgradeManager.GetUpgradeByType(type);
-            //     
-            //     for (int i = 0; i < upgradeData.level; i++)
-            //     {
-            //         upgrade.LevelUp();
-            //     }
-            // }
-            
+
             if(upgradeManager.Upgrades.Count != Data.upgrades.Count)
                 Debug.Log("the number of saved upgrades is not the same as the current number of upgrades");
             else
@@ -164,27 +181,22 @@ namespace GameSystem
             
         }
 
-        static GameData DefaultData()
-        {
-            return new GameData
-            {
-                money = 0,
-                upgrades = new List<UpgradeData> { },
-                shiftNumber = 0
-            };
+        static GameData DefaultData() => new GameData();
 
-            #endregion
-        }
+        #endregion
 
         
         [System.Serializable]
         public class GameData
         {
-            public float money;
-            public List<UpgradeData> upgrades;
+            public float money = 0;
+            public List<UpgradeData> upgrades = new List<UpgradeData> { };
+            public int shiftNumber = 0;
+            public bool TutorialHasBeenPlayed;
 
-            public int shiftNumber = -1;
-            // REFACTO : Player Settings
+            // Stats that should not be reset
+            public int SecondsPlayed = 0;
+
 
             public override string ToString()
             {

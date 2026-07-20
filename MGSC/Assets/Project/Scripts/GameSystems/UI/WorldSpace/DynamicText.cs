@@ -106,9 +106,28 @@ namespace UI
                 case EDataInfo.TotalBoughtUpgrades:             return um?.Upgrades.Select(up => up.Level).Sum().ToString();
                 case EDataInfo.MoneyAtTheBeginningOfTheShift:   return (mm?.GetMoneyAtTheBeginningOfThisShift()).ToString();
                 case EDataInfo.CurrentProjectVersion:           return (Application.version).ToString();
+                case EDataInfo.TimePlayed:                      return SecondsAsDuration(Globals.Statistics.SecondsPlayed);
 
             }
             return result;
+        }
+        string SecondsAsDuration(int seconds)
+        {
+            int secondsUsed = 0;
+            int secondsInADay = 3600 * 24;
+
+            int d = seconds / secondsInADay;
+            secondsUsed += d * secondsInADay;
+
+            int h = (seconds - secondsUsed) / 3600;
+            secondsUsed += h * 3600;
+
+            int mn = (seconds - secondsUsed) / 60;
+            secondsUsed += mn * 60;
+            
+            int s = (seconds - secondsUsed);
+
+            return $"{d}d {h}h {mn}mn {s}s";
         }
         string ProcessTimeLeft()
         {
