@@ -81,7 +81,6 @@ namespace GameSystem
             if (IsShiftActive) return;
             // Eventually check if the request should be granted or not
             IsShiftActive = true;
-            ShiftNumber++;
             OnShiftBegin?.Invoke();
         }
 
@@ -121,7 +120,10 @@ namespace GameSystem
             bool validRent = TryPayRent();
 
             if (validRent)
+            {
                 OnShiftSucceeded?.Invoke();
+                ShiftNumber++;
+            }
             else
             {
                 OnShiftFailed?.Invoke();
@@ -192,15 +194,6 @@ namespace GameSystem
             SaveManager.LoadGlobalData();
 
             //ResetAll();
-        }
-
-        public void SkipTutorialShift()
-        {
-            if (ShiftNumber == 0)
-            {
-                ShiftNumber = 1;
-                SaveManager.SaveGameData();
-            }
         }
 
         public void Init() { }
