@@ -47,6 +47,7 @@ namespace Features
         private Vector2 _lastLookOffset;
         private float _verticalRotation; // In degrees, from -90 to 90
         private bool isMoving;
+        float _defaultYPosition;
         #endregion
 
         #region Methods
@@ -56,6 +57,7 @@ namespace Features
             CharacterController = characterController;
             ControlledTransform = controlledTransform;
             HeadTransform = headTransform;
+            _defaultYPosition = controlledTransform.position.y;
 
             GameLoop.OnReset += ResetThis;
         }
@@ -107,6 +109,7 @@ namespace Features
             Vector3 worldDirection = CalculateWorldDirection();
 
             _currentMovement.x = worldDirection.x * WalkSpeed;
+            _currentMovement.y = - ControlledTransform.position.y + _defaultYPosition;
             _currentMovement.z = worldDirection.z * WalkSpeed;
 
             CharacterController.Move(_currentMovement * Time.deltaTime);
