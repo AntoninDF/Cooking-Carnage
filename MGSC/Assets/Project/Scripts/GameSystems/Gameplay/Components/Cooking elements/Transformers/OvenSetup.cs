@@ -101,7 +101,7 @@ namespace Cooking
 
         public void OnUpgraded(OvenCountUpgrade upgrade)
         {
-            Debug.Log("OvenSetup upgraded");
+            //Debug.Log("OvenSetup upgraded");
             ActualizeOvenCount(upgrade);
         }
 
