@@ -72,6 +72,7 @@ namespace GameSystem
             => _moneyTransactionsPerShift.ContainsKey(shiftNumber) ?
             _moneyTransactionsPerShift[shiftNumber].Where(value => value > 0).Sum() :
             0f;
+        /// <summary> Will return a negative value </summary>
         public float GetMoneyLostOnShift(int shiftNumber)
             => _moneyTransactionsPerShift.ContainsKey(shiftNumber) ?
             _moneyTransactionsPerShift[shiftNumber].Where(value => value < 0).Sum() :
@@ -81,6 +82,7 @@ namespace GameSystem
             _moneyTransactionsPerShift[shiftNumber] :
             new();
         public float GetMoneyGainedThisShift() => GetMoneyGainedOnShift(shiftNumber);
+        /// <summary> Will return a negative value </summary>
         public float GetMoneyLostThisShift() => GetMoneyLostOnShift(shiftNumber);
         public List<float> GetMoneyTransactionsThisShift() => GetMoneyTransactionsOnShift(shiftNumber);
         public float GetMoneyAtTheBeginningOfThisShift()

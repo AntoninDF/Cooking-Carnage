@@ -56,6 +56,13 @@ namespace Features
             CharacterController = characterController;
             ControlledTransform = controlledTransform;
             HeadTransform = headTransform;
+
+            GameLoop.OnReset += ResetThis;
+        }
+
+        private void ResetThis()
+        {
+            MovementDirection = Vector2.zero;
         }
 
         public void SetPosition(Vector3 pos)
