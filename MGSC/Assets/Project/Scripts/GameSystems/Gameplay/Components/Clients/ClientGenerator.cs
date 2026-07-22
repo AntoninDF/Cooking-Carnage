@@ -21,7 +21,15 @@ namespace Clients
         public EClientType Type { get; private set; }
         public SO_Client Model { get; private set; }
         public SO_Ingredient IngredientToDrop { get; private set; }
-        public Vector2 DropRate { get; private set; }
+        /// <summary>
+        /// Very confusing because you're never sure that what you get is what you've set
+        /// (But it works for now I think)
+        /// </summary>
+        public Vector2 DropRate
+        {
+            get => _defaultDropRate + new Vector2(_dropRateIncrement, _dropRateIncrement);
+            private set => _defaultDropRate = value;
+        }
 
         public SplineContainer SplineComp => _splineComp;
         public float           Speed      => _speed;
@@ -35,6 +43,7 @@ namespace Clients
         private float _speed         = 1f;
         private float _reachDistance = 1f;
         private SplineContainer _splineComp;
+        public Vector2 _defaultDropRate = Vector2.one;
         private float _dropRateIncrement = 0f;
         //private ClientMovement _movement;
 
@@ -94,7 +103,7 @@ namespace Clients
             client
                 .SetType(type)
                 .SetLoot(ingredientDroppedOnKill, dropRate)
-                .SetSpeed(speed).SubscribeToUpgrade();
+                .SetSpeed(speed);
 
             if (name != null)
                 go.name = name;
@@ -129,10 +138,8 @@ namespace Clients
 
         public Client SetLoot(SO_Ingredient loot, Vector2 dropRate)
         {
-            IngredientToDrop = loot;
-            Vector2 finalDropRate = new Vector2(dropRate.x +  _dropRateIncrement, dropRate.y +  _dropRateIncrement);
-           
-            DropRate = finalDropRate;
+            IngredientToDrop = loot;           
+            DropRate = dropRate;
             return this;
         }
 

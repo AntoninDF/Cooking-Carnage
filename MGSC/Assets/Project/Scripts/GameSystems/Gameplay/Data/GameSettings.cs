@@ -33,11 +33,13 @@ public class GameSettings : ScriptableObject
         Globals.Rendering.Outline.Thickness.Value = Instance.GraphicsSettings.OutlineWidth;
         Globals.Rendering.Outline.Color.Value = Instance.GraphicsSettings.OutlineColor;
 
-        Globals.Statistics.TutorialHasBeenPlayed.Value = Instance.ShiftSettings.SkipTutorial;
-        /*
-        Globals.Application.AllowWindowResizing.OnValueChange += value => PlayerSettings.resizableWindow = value;
-        Globals.Application.AllowWindowResizing.Value = Instance.ApplicationSettings.AllowWindowResizing;
-        */
+        // We don't override the value if it's false, because there are other parameters that might
+        // force the game to skip the tutorial, and we don't want to bypass them
+        if (Instance.ShiftSettings.SkipTutorial)
+            Globals.Statistics.TutorialHasBeenPlayed.Value = true;
+
+        Screen.fullScreenMode = Instance.ApplicationSettings.FullScreenMode;
+		//Debug.Log("Game settings : Fullscreen mode is " + Enum.GetName(typeof(FullScreenMode), Instance.ApplicationSettings.FullScreenMode) + ", value is " + (int)Instance.ApplicationSettings.FullScreenMode);
     }
 
     void OnValidate() => Apply();
@@ -92,12 +94,12 @@ public class GameSettings : ScriptableObject
         public Color OutlineColor;
     }
     
-    /*
+    
     public S_ApplicationSettings ApplicationSettings;
     [Serializable]
     public struct S_ApplicationSettings
     {
-        public bool AllowWindowResizing;
+        public FullScreenMode FullScreenMode;
     }
-    */
+    
 }

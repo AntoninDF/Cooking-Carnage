@@ -33,6 +33,10 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     
     private void Start()
     {
+        MealSlot.Container.IsLocked = true;
+        
+        ClientSeat.OnClientSitting += (_)=> MealSlot.Container.IsLocked = false; 
+        ClientSeat.OnClientLeaving += ()=> MealSlot.Container.IsLocked = true;
 
         if (MealSlot == null)
         {

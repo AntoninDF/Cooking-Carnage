@@ -138,6 +138,7 @@ MonoBehaviour:
   isInteractable: 1
   passThrough: 1
   Model: {fileID: 0}
+  OnGrabEventVar: {fileID: 0}
 --- !u!135 &2455500898832782184
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -307,7 +308,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4650989589209113625}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -687,7 +688,7 @@ MonoBehaviour:
           m_Bits: 1024
         fullscreenOutlineMaterial: {fileID: 2100000, guid: 93e7c1207ffbb00439bcce1231f2771c, type: 2}
         outlineColor: {r: 1, g: 1, b: 1, a: 1}
-        outlineThickness: 8
+        outlineThickness: 7
         depthMin: 0.05
         depthMax: 2
 --- !u!1 &6331963460517924519
@@ -746,8 +747,8 @@ CharacterController:
   serializedVersion: 3
   m_Height: 2
   m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.1
+  m_SlopeLimit: 0
+  m_StepOffset: 0
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}

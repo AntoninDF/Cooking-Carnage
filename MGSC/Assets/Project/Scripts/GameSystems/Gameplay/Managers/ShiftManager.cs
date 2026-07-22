@@ -122,7 +122,6 @@ namespace GameSystem
             if (validRent)
             {
                 OnShiftSucceeded?.Invoke();
-                ShiftNumber++;
             }
             else
             {

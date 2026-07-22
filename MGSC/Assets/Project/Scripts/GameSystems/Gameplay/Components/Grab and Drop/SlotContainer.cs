@@ -69,30 +69,30 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
     }
     protected void OnInteract(InteractionContext context)
     {
-        if (!context.TryGetFeature(out F_Container container)) return;
+        if (!context.TryGetFeature(out F_Container otherContainer)) return;
 
-        if (Container.RequestGrab(container.HeldItem))
+        if (Container.RequestGrab(otherContainer.HeldItem))
         {
             if (OnGrabEventVar != null) OnGrabEventVar.Raise();
             return;
         }
 
-        if (passThrough && container.RequestGrab(Container.HeldItem))
+        if (passThrough && otherContainer.RequestGrab(Container.HeldItem))
         {
             if (OnGrabEventVar != null) OnGrabEventVar.Raise();
             return;
         }
 
         if (passThrough
-            && container.HeldItem != null
-            && container.HeldItem.TryGetSibling(out F_Container heldContainer)
+            && otherContainer.HeldItem != null
+            && otherContainer.HeldItem.TryGetSibling(out F_Container heldContainer)
             && heldContainer.RequestGrab(Container.HeldItem))
         {
             if (OnGrabEventVar != null) OnGrabEventVar.Raise();
             return;
         }
 
-        var incoming = container.HeldItem;
+        var incoming = otherContainer.HeldItem;
         var existing = Container.HeldItem;
 
         if (incoming != null && existing != null && incoming.Owner is Item incomingItem)

@@ -27,6 +27,8 @@ namespace GameSystem
         TotalAvailableUpgrades,
         TotalBoughtUpgrades,
         MoneyAtTheBeginningOfTheShift,
+        CurrentProjectVersion,
+        TimePlayed,
 
         // Data dependent on a specific object should be 50 or more
         ClientName = 50,

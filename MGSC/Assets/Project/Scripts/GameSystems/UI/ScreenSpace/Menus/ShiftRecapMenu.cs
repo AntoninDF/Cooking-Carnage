@@ -83,7 +83,10 @@ namespace UI
                 SetContentMode(ContentMode.Success);
 
             if (L_CurrentTotalMoney != null)
+            {
+                L_CurrentTotalMoney.color = _defaultColor;
                 L_CurrentTotalMoney.text = "...";
+            }
 
             AnimateReceipt(
                 UpdateTotalMoney
@@ -132,7 +135,7 @@ namespace UI
             onEnd:
             () => AnimateRecipeLine(
                 "Upgrades",
-                -(mm.GetMoneyLostThisShift() + sm.GetCurrentRentPrice()),
+                mm.GetMoneyLostThisShift() + sm.GetCurrentRentPrice(),
             onEnd:
             () => AnimateRecipeLine(
                 "Salary",

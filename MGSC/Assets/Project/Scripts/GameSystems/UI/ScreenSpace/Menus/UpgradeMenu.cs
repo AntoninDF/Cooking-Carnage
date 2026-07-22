@@ -1,4 +1,5 @@
 using GameSystem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,7 +16,9 @@ namespace UI
         [Header("Upgrade buttons")]
         public Transform G_UpgradeButtonList;
         public UpgradeButton UpgradeButtonPrefab;
+        public ScrollRect ScrollRect;
 
+        private List<UpgradeButton> _upgradeLines = new();
  
         public override void OnLoad()
         {
@@ -26,6 +29,14 @@ namespace UI
                 B_MainMenu.onClick.AddListener(OnMainMenu);
 
             PopulateUpgradeList();
+
+            OnEnable += UpdateGraphicsForEveryUpgrade;
+        }
+
+        private void UpdateGraphicsForEveryUpgrade()
+        {
+            foreach (var line in _upgradeLines)
+                line.UpdateGraphics();
         }
 
         void OnMainMenu()
@@ -60,6 +71,7 @@ namespace UI
                 temp.SetParent(null);
                 GameObject.Destroy(temp.gameObject);
             }
+            _upgradeLines.Clear();
         }
         void PopulateUpgradeList()
         {
@@ -72,9 +84,7 @@ namespace UI
             {
                 MakeNewUpgradeButton(config);
             }
-
         }
-
         /// <summary>
         ///  Returns the list of all the update configs available
         /// </summary>
@@ -95,7 +105,8 @@ namespace UI
             result.Setup(config);
 
             rt.localScale = Vector3.one;
-
+            _upgradeLines.Add(result);
+            result.OnLevelUpSuccess.AddListener(UpdateGraphicsForEveryUpgrade);
 
             return result;
         }

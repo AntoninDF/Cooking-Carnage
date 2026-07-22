@@ -1,15 +1,17 @@
 using GameSystem;
+using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using Upgrades;
 
 
 namespace UI
 {
-
+    [ExecuteAlways]
     public class DynamicText : MonoBehaviour
     {
         #region Fields
@@ -17,7 +19,7 @@ namespace UI
         [Header("References")]
         [Tooltip("The target text object's to update")]
         [SerializeField] private TMP_Text _textObject;
-        [Tooltip("This is the text that will be displayed. Place the markups in it for them to get replaced by actual data")]
+        [ReadOnly, Tooltip("This is the text that will be displayed. Place the markups in it for them to get replaced by actual data")]
         [SerializeField] private string _baseText;
         [Tooltip("Optional gameobject that can provide data")]
         [SerializeField] private GameObject _dataSource;
@@ -33,8 +35,22 @@ namespace UI
         }
         private void Update()
         {
+            if (!Application.isPlaying) return;
             UpdateUI();
         }
+
+        /*
+#if UNITY_EDITOR
+        private void OnEnable()
+        {
+            if (!Application.isPlaying) EditorApplication.update += ReplicateReferenceTextFromTextComponent;
+        }
+        private void OnDisable()
+        {
+            if (!Application.isPlaying) EditorApplication.update -= ReplicateReferenceTextFromTextComponent;
+        }
+
+#endif */
 
         public void UpdateUI()
         {
@@ -105,9 +121,29 @@ namespace UI
                 case EDataInfo.TotalAvailableUpgrades:          return um?.Upgrades.Select(up => up.Config.MaxLevel).Sum().ToString();
                 case EDataInfo.TotalBoughtUpgrades:             return um?.Upgrades.Select(up => up.Level).Sum().ToString();
                 case EDataInfo.MoneyAtTheBeginningOfTheShift:   return (mm?.GetMoneyAtTheBeginningOfThisShift()).ToString();
+                case EDataInfo.CurrentProjectVersion:           return (Application.version).ToString();
+                case EDataInfo.TimePlayed:                      return SecondsAsDuration(Globals.Statistics.SecondsPlayed);
 
             }
             return result;
+        }
+        string SecondsAsDuration(int seconds)
+        {
+            int secondsUsed = 0;
+            int secondsInADay = 3600 * 24;
+
+            int d = seconds / secondsInADay;
+            secondsUsed += d * secondsInADay;
+
+            int h = (seconds - secondsUsed) / 3600;
+            secondsUsed += h * 3600;
+
+            int mn = (seconds - secondsUsed) / 60;
+            secondsUsed += mn * 60;
+            
+            int s = (seconds - secondsUsed);
+
+            return $"{d}d {h}h {mn}mn {s}s";
         }
         string ProcessTimeLeft()
         {
@@ -167,6 +203,12 @@ namespace UI
             }
         }
 
+
+        private void ReplicateReferenceTextFromTextComponent()
+        {
+            if (_textObject != null)
+                _baseText = _textObject.text;
+        }
     }
 
 }

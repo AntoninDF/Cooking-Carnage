@@ -5,7 +5,7 @@ namespace Orders
 {
     public static class OrderEvaluator
     {
-        public static float OvercookedMealPrice { get; set; } = 5f;
+        public static float WrongRecipePrice { get; set; } = 5f;
         public static float PlainJellyPrice { get; set; } = 1f;
 
         private const float TipMultiplier0Star = 0f; // 0 star => No tip
@@ -51,9 +51,11 @@ namespace Orders
             if (meal == null || meal.Recipe == null)
                 return PlainJellyPrice;
 
-            if (!isCorrectRecipe)
-                return OvercookedMealPrice;
-
+            // NOTE : Les recettes vides et brûlées ont déjà leur prix de vente dans le ppté Price
+            
+            if (!isCorrectRecipe && meal.Recipe.name != "Failed recipe" && meal.Recipe.name != "Empty recipe")
+                return WrongRecipePrice;
+            
             return meal.Recipe.Price;
         }
 

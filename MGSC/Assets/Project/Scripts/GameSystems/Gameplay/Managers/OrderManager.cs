@@ -58,7 +58,6 @@ namespace GameSystem
                                   + "', received '" + info.Recipe?.Name + "'.");
 
             OnOrderResolved?.Invoke(order);
-            //Reference.GetManager<MoneyManager>().AddMoney(order.OrderRating.MoneyGained);
             StashOrder(order);
         }
 

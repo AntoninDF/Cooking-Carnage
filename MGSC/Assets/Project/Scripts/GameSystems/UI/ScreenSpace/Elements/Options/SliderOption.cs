@@ -8,7 +8,8 @@ namespace UI
     public class SliderOption : UIOption
     {
         public float Value { get => GetValue(); set => SetValue(value);}
-        public Vector2 Range = new Vector2(0f, 1f);
+        public Vector2 DisplayRange = new Vector2(0f, 1f);
+        public Vector2 ValueRange = new Vector2(0f, 1f);
         public enum DisplayMode {Decimal, Integer, Percentage }
         public DisplayMode CurrentDisplayMode;
         [SerializeField] private Slider Slider;
@@ -27,10 +28,15 @@ namespace UI
         public float GetValue()
         {
             float t = Slider != null ? Slider.value : 0f;
-            float lerpedValue = Mathf.Lerp(Range.x, Range.y, t);
+            float lerpedValue = Mathf.Lerp(ValueRange.x, ValueRange.y, t);
+            return lerpedValue;
+        }public float GetDisplayValue()
+        {
+            float t = Slider != null ? Slider.value : 0f;
+            float lerpedValue = Mathf.Lerp(DisplayRange.x, DisplayRange.y, t);
             return lerpedValue;
         }
-        public int GetValueAsInt() => (int)GetValue();
+        public int GetDisplayValueAsInt() => (int)GetDisplayValue();
         /// <summary>
         /// The given value should always be a float between 0 and 1
         /// </summary>
@@ -54,13 +60,13 @@ namespace UI
             {
                 default:
                 case DisplayMode.Decimal:
-                    L_Value.text = GetValue().ToString();
+                    L_Value.text = (Mathf.Round(GetDisplayValue()*100f) /100f).ToString();
                     break;
                 case DisplayMode.Integer:
-                    L_Value.text = GetValueAsInt().ToString();
+                    L_Value.text = GetDisplayValueAsInt().ToString();
                     break;
                 case DisplayMode.Percentage:
-                    L_Value.text = ((int)(GetValue() * 100)).ToString() + "%";
+                    L_Value.text = ((int)(GetDisplayValue() * 100)).ToString() + "%";
                     break;
             }
         }

@@ -123,12 +123,13 @@ namespace Features
         {
             transform = null;
             if (obj == null) return false;
-            if (obj is GameObject go)
+            // Recheck for null in case it has been destroyed and is not system-nuul but Unity-null
+            if (obj is GameObject go && go != null)
             {
                 transform = go.transform;
                 return true;
             }
-            if (obj is Component component)
+            if (obj is Component component && component != null)
             {
                 transform = component.transform;
                 return true;

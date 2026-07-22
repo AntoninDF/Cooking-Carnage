@@ -12,6 +12,12 @@ public class RecapState : MenuState
         AudioSystem.PlayAudio(AudioSystem.Database.upgradeMusic,true);
     }
 
+    public override void OnExit()
+    {
+        base.OnExit();
+        Globals.Gameplay.ShiftNumber.Value++;
+    }
+
     public override GameState FindNext(StateTransitions transition = StateTransitions.None)
     {
         switch (transition)

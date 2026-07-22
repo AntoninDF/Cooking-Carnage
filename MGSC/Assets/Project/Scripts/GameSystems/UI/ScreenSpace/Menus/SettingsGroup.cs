@@ -97,6 +97,8 @@ namespace UI
             T option = go.GetComponent<T>();
             option.Name = name;
 
+            Options.Add(option);
+
             return option;
         }
 
@@ -150,7 +152,16 @@ namespace UI
             return this;
         }
 
-        public SettingsGroup AddSlider(string name, Action<float> onValueChange, float defaultValue = 0f, SliderOption.DisplayMode displayMode=default, Vector2 range=default)
+        /// <summary>
+        /// Adds a slider to this group after all the previously added sliders
+        /// </summary>
+        /// <param name="name">The name will be displayed in the menu</param>
+        /// <param name="onValueChange">Invoked whenever the slider's value is changed. The float parameter is in the range specified by <paramref name="displayRange"/></param>
+        /// <param name="defaultValue">Should be a float between 0 and 1</param>
+        /// <param name="displayMode"></param>
+        /// <param name="displayRange"></param>
+        /// <returns></returns>
+        public SettingsGroup AddSlider(string name, Action<float> onValueChange, float defaultValue = 0f, SliderOption.DisplayMode displayMode=default, Vector2 displayRange=default, Vector2 valueRange = default)
         {
             var prefab = SliderPrefab;
             var option = AddOption(prefab, name);
@@ -158,7 +169,8 @@ namespace UI
 
             option.Setup(name, onValueChange);
             option.CurrentDisplayMode = displayMode;
-            option.Range = range == default ? new Vector2(0f, 1f) : range;
+            option.DisplayRange = displayRange == default ? new Vector2(0f, 1f) : displayRange;
+            option.ValueRange = valueRange == default ? new Vector2(0f, 1f) : valueRange;
             option.SetValue(defaultValue);
             option.OnValueChangedCallback(option.GetValue());
             return this;
