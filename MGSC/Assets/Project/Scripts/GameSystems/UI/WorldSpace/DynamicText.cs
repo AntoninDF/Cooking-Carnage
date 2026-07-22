@@ -1,15 +1,17 @@
 using GameSystem;
+using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using Upgrades;
 
 
 namespace UI
 {
-
+    [ExecuteAlways]
     public class DynamicText : MonoBehaviour
     {
         #region Fields
@@ -17,7 +19,7 @@ namespace UI
         [Header("References")]
         [Tooltip("The target text object's to update")]
         [SerializeField] private TMP_Text _textObject;
-        [Tooltip("This is the text that will be displayed. Place the markups in it for them to get replaced by actual data")]
+        [ReadOnly, Tooltip("This is the text that will be displayed. Place the markups in it for them to get replaced by actual data")]
         [SerializeField] private string _baseText;
         [Tooltip("Optional gameobject that can provide data")]
         [SerializeField] private GameObject _dataSource;
@@ -33,8 +35,22 @@ namespace UI
         }
         private void Update()
         {
+            if (!Application.isPlaying) return;
             UpdateUI();
         }
+
+        /*
+#if UNITY_EDITOR
+        private void OnEnable()
+        {
+            if (!Application.isPlaying) EditorApplication.update += ReplicateReferenceTextFromTextComponent;
+        }
+        private void OnDisable()
+        {
+            if (!Application.isPlaying) EditorApplication.update -= ReplicateReferenceTextFromTextComponent;
+        }
+
+#endif */
 
         public void UpdateUI()
         {
@@ -187,6 +203,12 @@ namespace UI
             }
         }
 
+
+        private void ReplicateReferenceTextFromTextComponent()
+        {
+            if (_textObject != null)
+                _baseText = _textObject.text;
+        }
     }
 
 }

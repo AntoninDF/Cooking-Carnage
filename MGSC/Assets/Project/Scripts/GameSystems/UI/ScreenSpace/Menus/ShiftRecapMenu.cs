@@ -135,7 +135,7 @@ namespace UI
             onEnd:
             () => AnimateRecipeLine(
                 "Upgrades",
-                -(mm.GetMoneyLostThisShift() + sm.GetCurrentRentPrice()),
+                mm.GetMoneyLostThisShift() + sm.GetCurrentRentPrice(),
             onEnd:
             () => AnimateRecipeLine(
                 "Salary",

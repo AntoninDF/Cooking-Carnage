@@ -50,6 +50,7 @@ namespace UI
             LoadNecessaryWidgets();
         }
 
+        #region Setup
         /// <summary>
         /// Deletes any existing (referenced) UI-related gameobjects, and recreates an empty folder list for UI menus instantiated in the future.
         /// </summary>
@@ -83,6 +84,8 @@ namespace UI
             _inactiveFolder.SetParent(_root);
 
             _inactiveFolder.gameObject.SetActive(false);
+
+            BindGlobalCallbacks();
         }
         Transform MakeMenuFolder(string name)
         {
@@ -117,6 +120,17 @@ namespace UI
             }
             InitPrefabs(widgetPrefabs);
         }
+
+        void BindGlobalCallbacks()
+        {
+            if (_root != null)
+            {
+                if (_root.TryGetComponent(out InputSystemUIInputModule input))
+                    Globals.Gameplay.Player.ScrollSensitivity.OnValueChange += value => input.scrollDeltaPerTick = value;
+            }
+        }
+        #endregion
+        #region Widgets
         public List<T> GetShownWidgets<T>() where T : FullscreenWidget
         {
             List<T> result = new();
@@ -265,13 +279,15 @@ namespace UI
             result.OnLoad();
             return result;
         }
-
+        #endregion
+        #region Other
         // Not interesting methods
         // Utility method to compare types
         bool IsSameOrSubclass(Type potentialBase, Type potentialDescendant) =>
             potentialDescendant.IsSubclassOf(potentialBase) || potentialDescendant == potentialBase;
         public void Register() => Reference.SetManager(this);
         public void Unregister() => Reference.RemoveManager(this);
+        #endregion
         #endregion
     }
 
