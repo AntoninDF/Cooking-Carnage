@@ -15,6 +15,7 @@ namespace UI
         [Header("Upgrade buttons")]
         public Transform G_UpgradeButtonList;
         public UpgradeButton UpgradeButtonPrefab;
+        public ScrollRect ScrollRect;
 
  
         public override void OnLoad()
@@ -72,9 +73,7 @@ namespace UI
             {
                 MakeNewUpgradeButton(config);
             }
-
         }
-
         /// <summary>
         ///  Returns the list of all the update configs available
         /// </summary>

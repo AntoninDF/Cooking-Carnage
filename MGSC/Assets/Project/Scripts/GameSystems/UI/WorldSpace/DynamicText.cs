@@ -42,11 +42,11 @@ namespace UI
 #if UNITY_EDITOR
         private void OnEnable()
         {
-            EditorApplication.update += ReplicateReferenceTextFromTextComponent;
+            if (!Application.isPlaying) EditorApplication.update += ReplicateReferenceTextFromTextComponent;
         }
         private void OnDisable()
         {
-            EditorApplication.update -= ReplicateReferenceTextFromTextComponent;
+            if (!Application.isPlaying) EditorApplication.update -= ReplicateReferenceTextFromTextComponent;
         }
 
 #endif
