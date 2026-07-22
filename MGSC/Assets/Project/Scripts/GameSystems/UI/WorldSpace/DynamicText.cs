@@ -39,6 +39,7 @@ namespace UI
             UpdateUI();
         }
 
+        /*
 #if UNITY_EDITOR
         private void OnEnable()
         {
@@ -49,7 +50,7 @@ namespace UI
             if (!Application.isPlaying) EditorApplication.update -= ReplicateReferenceTextFromTextComponent;
         }
 
-#endif
+#endif */
 
         public void UpdateUI()
         {
