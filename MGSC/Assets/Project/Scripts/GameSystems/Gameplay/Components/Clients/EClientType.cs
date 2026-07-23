@@ -6,8 +6,8 @@ namespace Clients
     public enum EClientType
     {
         None = 0,
-        A = 1,
-        B = 2,
-        C = 3
+        A = 1, // EYES
+        B = 2, // ASS
+        C = 3 // TOOTH
     }
 }
