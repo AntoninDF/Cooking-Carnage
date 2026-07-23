@@ -9,6 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8763964459011285543}
+  - component: {fileID: 8627801518499449022}
+  - component: {fileID: 8137777756022277260}
+  - component: {fileID: 6981149806751807148}
   m_Layer: 0
   m_Name: P_Drink_Eye
   m_TagString: Untagged
@@ -35,6 +38,59 @@ Transform:
   - {fileID: 4403295864576525349}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8627801518499449022
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6427651013289206968}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.25, y: 0.35, z: 0.25}
+  m_Center: {x: 0, y: 0.15, z: 0}
+--- !u!114 &8137777756022277260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6427651013289206968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73d2525679cf86409b974e13c3960d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionButton
+  Model: {fileID: 6981149806751807148}
+--- !u!114 &6981149806751807148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6427651013289206968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModelController
+  _propagateChangesToChildren: 1
+  _disableShadowsIfSmallerThan: 0.5
+  _allowCustomOutlineValues: 0
+  _outline:
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Thickness: 7
+    Mode: 1
 --- !u!1001 &2849010806369162514
 PrefabInstance:
   m_ObjectHideFlags: 0

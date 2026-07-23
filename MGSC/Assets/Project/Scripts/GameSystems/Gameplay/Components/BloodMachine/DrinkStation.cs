@@ -1,56 +1,61 @@
 using System;
-using System.Collections.Generic;
 using Clients;
 using Features;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Project.Scripts.GameSystems.Gameplay.Components.BloodMachine
 {
-	public class DrinkStation : MonoBehaviour, IFeatureCollection
+	[Serializable]
+	public class DrinkStation : IFeatureCollection
 	{
 		public FeatureCollection Collection { get; }
 
-		[SerializeField] private float _bloodPerDrinks = 10f;
+		[SerializeField] private EClientType       Type;
+		[SerializeField] private InteractionButton DrinkButton;
+		[SerializeField] private InteractionButton Valve;
 
-		[SerializeField] private float _timeToRefillDrink      = 2f;
-		[SerializeField] private float _timeBeforeLoosingBlood = 2f;
-		[SerializeField] private float _bloodLostedPerSeconds  = 1f;
-		
-		[SerializeField] private InteractionButton _assValve;
-		[SerializeField] private InteractionButton _toothValve;
-		[SerializeField] private InteractionButton _eyeValeve;
+		[SerializeField] private Renderer _drinkRenderer;
+		[SerializeField] private int      _drinkMaterialIndex;
+		[SerializeField] private Renderer _reserveRenderer;
+		[SerializeField] private int      _reserveMaterialIndex;
 
-		private F_BloodReserve                   _reserve;
-		private Dictionary<EClientType, F_Valve> _valves;
+		private MaterialPropertyBlock _drinkBlock;
+		private MaterialPropertyBlock _reserveBlock;
 
-		private void Start()
+		public F_Valve ValveFeature;
+
+		public void Initialize(
+			IFeatureCollection owner,
+			GlobalDrinkStation globalDrinkStation,
+			F_BloodReserve     reserve, 
+			float              firstTimerTime, 
+			float              secondTimerTime, 
+			float              bloodDecreaseOverTime)
 		{
-			CreateFeatures();
-			BindEvents();
+			_drinkBlock   = new MaterialPropertyBlock();
+			_reserveBlock = new MaterialPropertyBlock();
+
+			ValveFeature = new F_Valve(owner, this, globalDrinkStation, reserve, Type, firstTimerTime, secondTimerTime, bloodDecreaseOverTime);
 		}
 
-		public void CreateFeatures()
+		public void ActualizeDrinkValue(float targetValue)
 		{
-			_reserve = new F_BloodReserve(this, _bloodPerDrinks);
-			
-			_valves  = new();
-			foreach (EClientType clientType in Enum.GetValues(typeof(EClientType)))
-			{
-				F_Valve valve = new F_Valve(this, _reserve, clientType, _timeToRefillDrink, _timeBeforeLoosingBlood, _bloodLostedPerSeconds);
-				_valves.Add(clientType, valve);
-				Collection.Add(valve);
-			}
-			
-			Collection.Add(_reserve);
-			
+			_drinkRenderer.GetPropertyBlock(_drinkBlock, _drinkMaterialIndex);
+			_drinkBlock.SetFloat("_LiquidLevel", targetValue);
+			_drinkRenderer.SetPropertyBlock(_drinkBlock, _drinkMaterialIndex);
+		}
+	
+		public void ActualizeReserveValue(float targetValue)
+		{
+			_reserveRenderer.GetPropertyBlock(_reserveBlock, _reserveMaterialIndex);
+			_reserveBlock.SetFloat("_LiquidLevel", targetValue);
+			_reserveRenderer.SetPropertyBlock(_reserveBlock, _reserveMaterialIndex);
 		}
 
 		public void BindEvents()
 		{
-			_eyeValeve.OnInteraction += _ => _valves[EClientType.A].TryServeDrink();
-			_assValve.OnInteraction  += _ => _valves[EClientType.B].TryServeDrink();
-			_toothValve.OnInteraction += _ => _valves[EClientType.C].TryServeDrink();
+			Valve.OnInteraction       += _ => ValveFeature.TryServeDrink();
+			DrinkButton.OnInteraction += _ => ValveFeature.TryGrabbDrink();
 		}
 	}
 }

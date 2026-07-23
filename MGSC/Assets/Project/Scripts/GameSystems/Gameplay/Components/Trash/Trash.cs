@@ -106,10 +106,6 @@ namespace Trash
             Debug.Log($"[Trash] Destroy : {go.name}");
             Destroy(go);
         }
-
-        private void Update()
-        {
-            Debug.Log($"[Trash] Update : {Container}");
-        }
+        
     }
 }

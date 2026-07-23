@@ -6,78 +6,98 @@ using UnityEngine;
 
 namespace Project.Scripts.GameSystems.Gameplay.Components.BloodMachine
 {
-	public class F_BloodReserve : Feature
-	{
-		#region Properties
-		
-		public float  MaxBloodQaunity => _maxBloodQuantity;
-		public Action OnBloodAdded    { get; set; }
-		public Action OnBloodRemoved  { get; set; }
-		
-		#endregion
-		
-		#region Fields
-		
-		private float                          _maxBloodQuantity;
-		private float                          _bloodPerDrink;
-		private Dictionary<EClientType, float> _quantityPerClient;
-		
-		#endregion
+    public class F_BloodReserve : Feature
+    {
+       #region Properties
+       
+       public float  MaxBloodQaunity => _maxBloodQuantity;
+       public float  BloodPerDrink   => _bloodPerDrink;
+       public Action OnBloodAdded    { get; set; }
+       public Action OnBloodRemoved  { get; set; }
+       
+       #endregion
+       
+       #region Fields
+       
+       private float                          _maxBloodQuantity;
+       private float                          _bloodPerDrink;
+       private Dictionary<EClientType, float> _quantityPerClient;
+       
+       #endregion
 
-		public F_BloodReserve(IFeatureCollection owner, float bloodPerDrink) : base(owner)
-		{
-			_bloodPerDrink     = bloodPerDrink;
-			_quantityPerClient = new();
-			
-			foreach (EClientType clientType in Enum.GetValues(typeof(EClientType)))
-			{
-				if (!_quantityPerClient.ContainsKey(clientType))
-				{
-					_quantityPerClient.Add(clientType, 0);
-				}
-			}
-		}
+       public F_BloodReserve(IFeatureCollection owner, float bloodPerDrink, float maxBloodQuantity) : base(owner)
+       {
+          _bloodPerDrink     = bloodPerDrink;
+          _maxBloodQuantity  = maxBloodQuantity;
+          _quantityPerClient = new();
+          
+          foreach (EClientType clientType in Enum.GetValues(typeof(EClientType)))
+          {
+             if (!_quantityPerClient.ContainsKey(clientType))
+             {
+                _quantityPerClient.Add(clientType, 0);
+             }
+          }
+       }
 
-		public void TryAddBlood(EClientType clientType,
-			float                        quantity)
-		{
-			if (!_quantityPerClient.ContainsKey(clientType))
-			{
-				Debug.Log($"[F_BloodReserve] this client type {clientType} is not registered");
-				return;
-			}
-			
-			float addedBlood = _quantityPerClient[clientType] + quantity;
-			_quantityPerClient[clientType] = Mathf.Clamp(addedBlood, 0, MaxBloodQaunity);
-		}
+       public void TryAddBlood(EClientType clientType,
+          float                        quantity)
+       {
+          if (!_quantityPerClient.ContainsKey(clientType))
+          {
+             Debug.Log($"[F_BloodReserve] this client type {clientType} is not registered");
+             return;
+          }
+          
+          float addedBlood = _quantityPerClient[clientType] + quantity;
+          _quantityPerClient[clientType] = Mathf.Clamp(addedBlood, 0, MaxBloodQaunity);
+          OnBloodAdded?.Invoke();
+       }
 
-		public void RemoveBlood(EClientType clientType, float specificQuantity = 0)
-		{
-			float finalReserveQuantity = _quantityPerClient[clientType] -
-			                             (specificQuantity == 0 ? _bloodPerDrink : specificQuantity);
-			_quantityPerClient[clientType] = Mathf.Clamp(finalReserveQuantity, 0, MaxBloodQaunity);
-		}
+       public void RemoveBlood(EClientType clientType, float specificQuantity = 0)
+       {
+          float finalReserveQuantity = _quantityPerClient[clientType] -
+                                       (specificQuantity == 0 ? _bloodPerDrink : specificQuantity);
+          _quantityPerClient[clientType] = Mathf.Clamp(finalReserveQuantity, 0, MaxBloodQaunity);
+          OnBloodRemoved?.Invoke();
+       }
 
-		public bool CanServeDrink(EClientType clientType)
-		{
-			if (!_quantityPerClient.ContainsKey(clientType))
-			{
-				Debug.Log($"[F_BloodReserve] this client type {clientType} is not registered");
-				return false;
-			}
+       public bool CanServeDrink(EClientType clientType)
+       {
+          if (!_quantityPerClient.ContainsKey(clientType))
+          {
+             Debug.Log($"[F_BloodReserve] this client type {clientType} is not registered");
+             return false;
+          }
 
-			if (_quantityPerClient[clientType] >= _bloodPerDrink)
-			{
-				return true;
-			}
+          if (_quantityPerClient[clientType] >= _bloodPerDrink)
+          {
+             return true;
+          }
 
-			return false;
-		}
+          return false;
+       }
 
-		public float GetDrinkQuantity(EClientType clientYpe)
-		{
-			return _quantityPerClient[clientYpe];
-		}
-		
-	}
+       public float GetDrinkQuantity(EClientType clientYpe)
+       {
+          return _quantityPerClient[clientYpe];
+       }
+
+       public float GetReserveRatio(EClientType clientType)
+       {
+          if (MaxBloodQaunity <= 0) return 0f;
+          return Mathf.Clamp01(GetDrinkQuantity(clientType) / MaxBloodQaunity);
+       }
+
+       [ContextMenu("Remplir toutes les réserves au maximum")]
+       public void FillAllToMax()
+       {
+          foreach (EClientType clientType in new List<EClientType>(_quantityPerClient.Keys))
+          {
+             _quantityPerClient[clientType] = _maxBloodQuantity;
+          }
+          OnBloodAdded?.Invoke();
+       }
+       
+    }
 }
