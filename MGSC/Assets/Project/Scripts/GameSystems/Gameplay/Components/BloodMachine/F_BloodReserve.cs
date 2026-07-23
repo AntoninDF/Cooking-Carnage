@@ -4,7 +4,7 @@ using Clients;
 using Features;
 using UnityEngine;
 
-namespace Project.Scripts.GameSystems.Gameplay.Components.BloodMachine
+namespace Project.Scripts.BloodMachine
 {
     public class F_BloodReserve : Feature
     {
@@ -12,8 +12,8 @@ namespace Project.Scripts.GameSystems.Gameplay.Components.BloodMachine
        
        public float  MaxBloodQaunity => _maxBloodQuantity;
        public float  BloodPerDrink   => _bloodPerDrink;
-       public Action OnBloodAdded    { get; set; }
-       public Action OnBloodRemoved  { get; set; }
+       public Action<EClientType, float> OnBloodAdded    { get; set; }
+       public Action<EClientType, float> OnBloodRemoved  { get; set; }
        
        #endregion
        
@@ -51,15 +51,15 @@ namespace Project.Scripts.GameSystems.Gameplay.Components.BloodMachine
           
           float addedBlood = _quantityPerClient[clientType] + quantity;
           _quantityPerClient[clientType] = Mathf.Clamp(addedBlood, 0, MaxBloodQaunity);
-          OnBloodAdded?.Invoke();
+          OnBloodAdded?.Invoke(clientType, _quantityPerClient[clientType]);
        }
 
        public void RemoveBlood(EClientType clientType, float specificQuantity = 0)
        {
-          float finalReserveQuantity = _quantityPerClient[clientType] -
-                                       (specificQuantity == 0 ? _bloodPerDrink : specificQuantity);
+          float removedBlood = (specificQuantity == 0 ? _bloodPerDrink : specificQuantity);
+          float finalReserveQuantity = _quantityPerClient[clientType] - removedBlood;
           _quantityPerClient[clientType] = Mathf.Clamp(finalReserveQuantity, 0, MaxBloodQaunity);
-          OnBloodRemoved?.Invoke();
+          OnBloodRemoved?.Invoke(clientType, _quantityPerClient[clientType]);
        }
 
        public bool CanServeDrink(EClientType clientType)
@@ -89,14 +89,22 @@ namespace Project.Scripts.GameSystems.Gameplay.Components.BloodMachine
           return Mathf.Clamp01(GetDrinkQuantity(clientType) / MaxBloodQaunity);
        }
 
-       [ContextMenu("Remplir toutes les réserves au maximum")]
        public void FillAllToMax()
        {
           foreach (EClientType clientType in new List<EClientType>(_quantityPerClient.Keys))
           {
              _quantityPerClient[clientType] = _maxBloodQuantity;
+             OnBloodAdded?.Invoke(clientType, _quantityPerClient[clientType]);
           }
-          OnBloodAdded?.Invoke();
+       }
+       
+       public void FillAllToMin()
+       {
+          foreach (EClientType clientType in new List<EClientType>(_quantityPerClient.Keys))
+          {
+             _quantityPerClient[clientType] = 0;
+             OnBloodAdded?.Invoke(clientType, _quantityPerClient[clientType]);
+          }
        }
        
     }

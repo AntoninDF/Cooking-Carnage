@@ -5,7 +5,7 @@ using Features;
 using GameSystem;
 using UnityEngine;
 
-namespace Project.Scripts.GameSystems.Gameplay.Components.BloodMachine
+namespace Project.Scripts.BloodMachine
 {
     public class F_Valve : Feature
     {

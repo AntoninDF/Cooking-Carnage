@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5284729841080385667}
+  - component: {fileID: 5205320392351629891}
   m_Layer: 0
   m_Name: P_SlushStation
   m_TagString: Untagged
@@ -38,6 +39,47 @@ Transform:
   - {fileID: 8330354204955531723}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5205320392351629891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567189697456514083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31ba94a06db74eac9ca95f06db219783, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.GameSystems.Gameplay.Components.BloodMachine.GlobalDrinkStation
+  _maxBloodQuantity: 100
+  _bloodPerDrinks: 10
+  _timeToRefillDrink: 2
+  _timeBeforeLoosingBlood: 2
+  _bloodLostedPerSeconds: 1
+  _assStation:
+    Type: 0
+    DrinkButton: {fileID: 0}
+    Valve: {fileID: 0}
+    _drinkRenderer: {fileID: 0}
+    _drinkMaterialIndex: 0
+    _reserveRenderer: {fileID: 0}
+    _reserveMaterialIndex: 0
+  _eyesStattion:
+    Type: 0
+    DrinkButton: {fileID: 0}
+    Valve: {fileID: 0}
+    _drinkRenderer: {fileID: 0}
+    _drinkMaterialIndex: 0
+    _reserveRenderer: {fileID: 0}
+    _reserveMaterialIndex: 0
+  _toothStation:
+    Type: 0
+    DrinkButton: {fileID: 0}
+    Valve: {fileID: 0}
+    _drinkRenderer: {fileID: 0}
+    _drinkMaterialIndex: 0
+    _reserveRenderer: {fileID: 0}
+    _reserveMaterialIndex: 0
 --- !u!1 &4695916213408921290
 GameObject:
   m_ObjectHideFlags: 0

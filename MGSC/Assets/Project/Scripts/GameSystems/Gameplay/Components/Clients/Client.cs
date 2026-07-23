@@ -28,7 +28,8 @@ namespace Clients
         [GlobalEvent("Clients/On Client Enters The Cafeteria")]
         public static Action OnEnterCafeteria;
         public ClientBehaviour    Behaviour        { get; set; }
-        public ClientCooked       Cooked           { get; private set; }
+        public F_ClientCooked       Cooked           { get; private set; }
+        public F_ClientBlending    ClientBlending    { get; set; }
         public ClientLook         ClientLook       => _clientLook;
         
         public bool               IsCooked         { get; set; }
@@ -133,16 +134,13 @@ namespace Clients
        public void InitFeatures(ClientMovement movement)
        {
            _clientLook = new ClientLook(this, transform, movement);
-           Cooked      = new ClientCooked(this, _cookingDelay);
-           Collection.Add(_clientLook);
-           Collection.Add(Cooked);
+           Cooked      = new F_ClientCooked(this, _cookingDelay);
+           ClientBlending = new F_ClientBlending(this, _cookingDelay);
+           // Collection.Add(_clientLook);
+           // Collection.Add(Cooked);
+           // Collection.Add(ClientBlending);
        }
-
- 
-       public void CookClient()
-       {
-           Cooked.Trigger();
-       }
+       
 
        public void SpawnIngredients(List<SlotContainer> containers)
        {
