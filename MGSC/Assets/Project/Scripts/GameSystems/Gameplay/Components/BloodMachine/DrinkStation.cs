@@ -16,6 +16,7 @@ namespace Project.Scripts.BloodMachine
 		[Header("Drink")]
 		[SerializeField] private InteractionButton DrinkButton;
 		[SerializeField] private GameObject Drink;
+		
 
 		[Header("Liquid")]
 		[SerializeField] private Renderer _drinkRenderer;
@@ -51,6 +52,7 @@ namespace Project.Scripts.BloodMachine
 
 		public void ActualizeDrinkValue(float targetValue)
 		{
+			float clampedValue = targetValue / 10; ///10 = valeur théorique d'un verre
 			_drinkRenderer.GetPropertyBlock(_drinkBlock, _drinkMaterialIndex);
 			_drinkBlock.SetFloat("_LiquidLevel", targetValue);
 			_drinkRenderer.SetPropertyBlock(_drinkBlock, _drinkMaterialIndex);
@@ -58,8 +60,8 @@ namespace Project.Scripts.BloodMachine
 	
 		public void ActualizeReserveValue(float targetValue)
 		{
-			///HARD CODE
-			float clampedValue = targetValue / 100;
+			
+			float clampedValue = targetValue / 100; //100 = valeur max du reservoir
 			_reserveRenderer.GetPropertyBlock(_reserveBlock, _reserveMaterialIndex);
 			_reserveBlock.SetFloat("_LiquidLevel", clampedValue);
 			_reserveRenderer.SetPropertyBlock(_reserveBlock, _reserveMaterialIndex);

@@ -60,7 +60,6 @@ namespace Project.Scripts.BloodMachine
           }
        }
 
-       // Chrono 1 : le verre se remplit progressivement pendant que la réserve baisse en parallèle
        private IEnumerator PourDrinkRoutine()
        {
           float elapsed        = 0f;
