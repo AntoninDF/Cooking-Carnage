@@ -54,18 +54,15 @@ public class FeaturePath
 
     public bool TryGetInstance(out Feature feature)
     {
-        Debug.Log("0");
         feature = null;
         if (OwningObject == null) return false;
 
-        Debug.Log("1");
         if (Path == null || Path.Count == 0)
         {
             return TryGetInstance(out feature, OwningObject as IFeatureCollection);
         }
         else
         {
-            Debug.Log("2");
             IFeatureCollection temp = OwningObject as IFeatureCollection;
             for (int i = 0; i < Path.Count; i++)
             {
@@ -73,11 +70,9 @@ public class FeaturePath
                     return false;
                 temp = feature as IFeatureCollection;
             }
-        Debug.Log("3");
             TryGetInstance(out feature, temp);
         }
         if (feature  == null) return false;
-        Debug.Log("4");
         return true;
     }
     private bool TryGetInstance(out Feature feature, IFeatureCollection parent)

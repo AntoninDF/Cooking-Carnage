@@ -84,6 +84,7 @@ public class Item : MonoBehaviour, IFeatureCollection
         Grabbable.OnLock += () => Collider.enabled = false;
         Grabbable.OnUnlock += () => Collider.enabled = true;
         Interactable.OnInteraction += TryInteract;
+        Interactable.AddCondition(CanInteract);
     }
 
     protected void TriggerAnim()
@@ -115,6 +116,17 @@ public class Item : MonoBehaviour, IFeatureCollection
             Anim.GoTo(containerTransform);
         }
     }
+    bool CanInteract(InteractionContext context)
+    {
+        if (!Globals.Gameplay.Player.AllowPlayerGrab) return false;
+        return CanBeGrabbed(context);
+    }
+
+    private bool CanBeGrabbed(InteractionContext context)
+    {
+        if (!context.TryGetFeature(out F_Container container)) return false;
+        return true;
+    }
 
     protected virtual void TryInteract(InteractionContext context)
     {
@@ -122,8 +134,8 @@ public class Item : MonoBehaviour, IFeatureCollection
     }
     protected virtual bool TryGetGrabbed(InteractionContext context)
     {
-        if (!context.TryGetFeature(out F_Container container)) return false;
-
+        if (!CanBeGrabbed(context)) return false;
+        context.TryGetFeature(out F_Container container);
         return container.RequestGrab(Grabbable);
     }
 
