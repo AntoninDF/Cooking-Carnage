@@ -5,13 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Orders
 {
     public static class OrderPicker
     {
         private const float UpgradeProbability = 1f / 3f; 
-        private const int ForcedFullRecipeInterval = 15;   
+        private const int ForcedFullRecipeInterval = 15;
+
+        private const float DrinkProbability = 1f / 3f; //Hard code -> need to change for the wanted probability
 
         private static int _selectionCount = 0; 
 
@@ -48,6 +51,18 @@ namespace Orders
 
             SO_Recipe picked = PickRandomRecipe(weights);
             return ApplyUpgrade(picked, book, SO_RecipeUnlockConfig.Instance);
+        }
+
+        public static EClientType? PickDrink(Client client)
+        {
+
+            if (!RecipeUnlockChecker.IsUnlocked(RecipeCategory.DoubleSupplement))
+                return null;
+
+            if (Random.value >= DrinkProbability)
+                return null;
+
+            return client.Type;
         }
         
         private static bool IsBaseRecipe(SO_Recipe recipe)
