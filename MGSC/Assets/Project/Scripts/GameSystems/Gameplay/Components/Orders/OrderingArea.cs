@@ -59,7 +59,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
             //Debug.Log($"[OrderingArea] Ordering Sitting : {client}");
             _OrderDisplayer.DisplayOrder(client.CurrentOrder.Recipe);
         };
-        
+         
     }
 
     private void GetDropSlots()
@@ -96,6 +96,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         {
             client.Cooked.Trigger();
             GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
+            ClientSeat.OnClientKilled?.Invoke();
             OnCustomerKilled?.Invoke();
         }
     }

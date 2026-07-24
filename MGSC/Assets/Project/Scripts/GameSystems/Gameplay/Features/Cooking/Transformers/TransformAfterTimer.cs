@@ -30,7 +30,7 @@ namespace Features
         {
             if (currentProcess == null)
                 return false;
-            currentProcess.Pause();
+            TimerManager.RemoveTimer(currentProcess.Name);
             currentProcess = null;
             return true;
         }
