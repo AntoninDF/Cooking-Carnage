@@ -1,3 +1,5 @@
+using Features;
+using JetBrains.Annotations;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,7 +7,7 @@ using UnityEngine.UI;
 namespace UI
 {
     [RequireComponent(typeof(Canvas), typeof(CanvasScaler))]
-    public class FullscreenWidget : UIWidget
+    public class FullscreenWidget : UIWidget, IFeatureCollection
     {
         #region Properties
         public bool Enabled
@@ -24,13 +26,20 @@ namespace UI
         public UISystem Owner { get; set; }
         public virtual bool ForceLoadOnUIInitialization => false;
 
+        public FeatureCollection Collection { get; set; } = new();
+        public F_FullscreenWidgetActions Actions;
         #endregion
 
 
         /// <summary>
         /// OnLoad gets called when the widget is instantiated into the scene
         /// </summary>
-        public virtual void OnLoad() { }
+        public virtual void OnLoad() 
+        {
+            Actions = new(this);
+            OnEnable += () => Actions.OnWidgetAppears?.Invoke();
+            OnDisable += () => Actions.OnWidgetDisappears?.Invoke();
+        }
         /// <summary>
         /// Init is called when the widget's prefab gets added to the UI System database (at the beginning of the game)
         /// </summary>
@@ -64,6 +73,13 @@ namespace UI
             //Debug.Log($"[UIWidget] '{name}' has been disabled.");
         }
 
+        public class F_FullscreenWidgetActions : Feature
+        {
+            public F_FullscreenWidgetActions(IFeatureCollection owner) : base(owner){}
+
+            public Action OnWidgetAppears;
+            public Action OnWidgetDisappears;
+        }
     }
 
 }

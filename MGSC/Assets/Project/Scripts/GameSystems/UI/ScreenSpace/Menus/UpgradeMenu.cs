@@ -22,6 +22,7 @@ namespace UI
  
         public override void OnLoad()
         {
+            base.OnLoad();
             if (B_NextShift != null)
                 B_NextShift.onClick.AddListener(TriggerGameStart);
 
