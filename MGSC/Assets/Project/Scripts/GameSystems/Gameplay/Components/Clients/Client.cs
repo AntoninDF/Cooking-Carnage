@@ -258,7 +258,7 @@ namespace Clients
        /// and evaluate it if he can
        /// </summary>
        /// <param name="serving"></param>
-       public void TryAcceptServing(Servable serving)
+       public void TryAcceptServing(Servable serving, EClientType? servedDrinkType, GameObject servedDrinkObject = null)
        {
            if (serving == null || !serving.Enabled) return;
            if (CurrentOrder == null) return;
@@ -269,13 +269,16 @@ namespace Clients
            SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
            if (soRecipe == null) return;
 
-           var info = new Orders.ServingInfo(serving); 
-           CurrentOrder.ServingInfo = info;            
+           var info = new Orders.ServingInfo(serving, servedDrinkType);
+           CurrentOrder.ServingInfo = info;
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);
            GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);
            CurrentSeat?.TryUnregister(this);
+
+           if (servedDrinkObject != null)
+               Destroy(servedDrinkObject);
        }
 
         #endregion

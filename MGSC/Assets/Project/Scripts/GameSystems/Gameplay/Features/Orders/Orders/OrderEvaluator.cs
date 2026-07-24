@@ -1,13 +1,17 @@
-﻿using Cooking;
+﻿using Clients;
+using Cooking;
 using UnityEngine;
 
 namespace Orders
 {
     public static class OrderEvaluator
     {
-        public static float WrongRecipePrice { get; set; } = 5f;
-        public static float PlainJellyPrice { get; set; } = 1f;
-
+        public static float WrongRecipePrice  { get; set; } = 5f;
+        public static float PlainJellyPrice   { get; set; } = 1f;
+        public static float DrinkServedBonus  { get; set; } // arbitraire, à changer
+        public static float DrinkCorrectBonus { get; set; } // arbitraire, à changer
+        
+        
         private const float TipMultiplier0Star = 0f; // 0 star => No tip
         private const float TipMultiplier1Star = 0.2f; // 1 star => + 20% 
         private const float TipMultiplier2Star = 0.5f; // 2 star => + 50%
@@ -26,9 +30,10 @@ namespace Orders
             bool  isCorrectRecipe = IsCorrectRecipe(order);
             float basePrice       = CalculateBasePrice(order, isCorrectRecipe);
             
-            int   stars           = isCorrectRecipe ? CalculateStars(order) : 0;
-            float tip             = isCorrectRecipe ? CalculateTip(basePrice, stars) : 0f;
-            float totalGained     = basePrice + tip;
+            int   stars       = isCorrectRecipe ? CalculateStars(order) : 0;
+            float tip         = isCorrectRecipe ? CalculateTip(basePrice, stars) : 0f;
+            float drinkBonus  = CalculateDrinkBonus(order);
+            float totalGained = basePrice + tip +  drinkBonus;
 
             Debug.Log($"BasePrice is {basePrice}" +
                       $" stars is {stars}" +
@@ -37,6 +42,18 @@ namespace Orders
                       $" isCorrectRecipe is {isCorrectRecipe}");
 
             return new OrderRating(order, order.ServingInfo.Recipe, stars, totalGained);
+        }
+
+        private static float CalculateDrinkBonus(Order order)
+        {
+            EClientType? served = order.ServingInfo.ServedDrink;
+            if (!served.HasValue) return 0f;
+
+            float bonus = DrinkServedBonus;
+            if (order.Drink.HasValue && order.Drink.Value == served.Value)
+                bonus += DrinkCorrectBonus;
+
+            return bonus;
         }
 
         private static bool IsCorrectRecipe(Order order)
