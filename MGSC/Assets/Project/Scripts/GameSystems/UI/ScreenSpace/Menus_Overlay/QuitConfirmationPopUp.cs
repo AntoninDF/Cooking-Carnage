@@ -14,6 +14,7 @@ namespace UI
 
         public override void OnLoad()
         {
+            base.OnLoad();
             BindAll();
         }
 

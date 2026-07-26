@@ -37,6 +37,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         
         ClientSeat.OnClientSitting += (_)=> MealSlot.Container.IsLocked = false; 
         ClientSeat.OnClientLeaving += ()=> MealSlot.Container.IsLocked = true;
+        
 
         if (MealSlot == null)
         {
@@ -59,6 +60,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         ClientSeat.OnClientRegister   += _ => StartWatchingSlot();
         ClientSeat.OnClientUnregister += _ => StopWatchingSlot();
         ClientSeat.OnClientLeaving    += () => MealSlot.Container.IsLocked = false;
+        ClientSeat.OnClientKilled += () => MealSlot.Container.IsLocked = true;
 
     }
 
@@ -77,6 +79,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         if (current == null)
             _lastHeldItem = null;
     }
+    
     
 
     private void OnDrawGizmos()

@@ -9,7 +9,7 @@ public class MainMenuState : MenuState
     {
         base.OnEnter();
         
-        AudioSystem.PlayAudio(AudioSystem.Database.mainMenuMusic,true);
+        AudioSystem.PlayAudio(AudioSystem.Database.mainMenuMusic,true, false);
     }
 
     public override GameState FindNext(StateTransitions transition = StateTransitions.None)

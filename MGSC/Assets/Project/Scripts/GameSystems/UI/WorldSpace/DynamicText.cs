@@ -203,7 +203,9 @@ namespace UI
             }
         }
 
+        private void OnValidate() => ReplicateReferenceTextFromTextComponent();
 
+        [Button("Apply text from text component")]
         private void ReplicateReferenceTextFromTextComponent()
         {
             if (_textObject != null)
