@@ -45,7 +45,7 @@ namespace Features
 				return;
 
 			orderingArea.ServingArea.MealSlot.Container.RequestDrop(heldItem);
-			_client.TryAcceptServing(servable);
+			_client.TryAcceptServing(servable, orderingArea.ServingArea.ClientSeat.SittingClient.Type);
 
 			if (heldItem.Owner is Component plateComp)
 			{
