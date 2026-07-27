@@ -45,6 +45,7 @@ public class Player : MonoBehaviour, IFeatureCollection
         BindPlayerActions();
         GameLoop.OnPause += UnbindPlayerActions;
         GameLoop.OnResume += BindPlayerActions;
+        GameLoop.OnBeforeReset += ResetThis;
         AddInteractions();
     }
     void Start()
@@ -66,6 +67,12 @@ public class Player : MonoBehaviour, IFeatureCollection
 
     }
 
+    void ResetThis()
+    {
+        Container.IsLocked = false;
+        if (Container.HeldItem != null) Container.HeldItem.IsLocked = false;
+        Container.RequestDrop();
+    }
     void SetHeldLayer(F_Grabbable item)
     {
         if (item == null) return;
