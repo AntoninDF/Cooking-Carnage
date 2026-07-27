@@ -2,14 +2,16 @@ using System;
 using System.Collections;
 using Features;
 using UnityEngine;
+using UnityEngine.Events;
 
-namespace Project.Scripts.GameSystems.Gameplay.Components.Trash
+namespace Trash
 {
     public class Trash : MonoBehaviour, IFeatureCollection
     {
         #region Properties
-        public Action OnStartEating { get; set; }
-        public Action OnFinishEating { get; set; }
+
+        public UnityEvent OnStartEating;
+        public UnityEvent OnFinishEating;
         public FeatureCollection Collection { get; }
         public F_SoloContainer Container { get; set; }
         
@@ -17,14 +19,15 @@ namespace Project.Scripts.GameSystems.Gameplay.Components.Trash
         
         #region Fields
         [SerializeField] private float eatTime;
-        [SerializeField] private SlotContainer _slotContainer;
+        [SerializeField] private float _animationDuration;
+        [SerializeField] private CustomSlot _slotContainer;
         private F_GoToAnimation _objectAnimation;
         private bool _canEat;
         #endregion
         
         private void OnEnable()
         {
-            GameLoop.OnReset += ResetThis; 
+           GameLoop.OnReset += ResetThis; 
         }
         private void OnDisable()
         {
@@ -36,10 +39,11 @@ namespace Project.Scripts.GameSystems.Gameplay.Components.Trash
             _objectAnimation = null;
             _canEat = true;
         }
+
         
         void Start()
         {
-            _canEat = true;
+            _canEat = true; 
             Container = _slotContainer.Container;
             AddContainerCondition();
             BindExternalEvents();
@@ -89,17 +93,23 @@ namespace Project.Scripts.GameSystems.Gameplay.Components.Trash
             Container.IsLocked = true;
             _canEat = false;
             yield return new WaitForSeconds(eatTime);
-            Container.IsLocked = false;
             DestroyItem(obj);
+            yield return new WaitForSeconds(_animationDuration);
+            Container.IsLocked = false;
+            OnFinishEating?.Invoke();
+            ResetThis();
+
         }
         
         private void DestroyItem(GameObject go)
         {
             Debug.Log($"[Trash] Destroy : {go.name}");
             Destroy(go);
-            OnFinishEating?.Invoke();
-            ResetThis();
         }
-        
+
+        private void Update()
+        {
+            Debug.Log($"[Trash] Update : {Container}");
+        }
     }
 }
