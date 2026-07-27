@@ -171,6 +171,9 @@ public class TutorialStep : ScriptableObject
         float result = Mathf.Max(audioDuration, textDuration);
         result += step.DelayBeforeNextSubStep;
 
+        Debug.Log("Duration for '" + step.SubtitleText + "' : audio is " + audioDuration + "s ; text is " + "s ; delay is " +
+            step.DelayBeforeNextSubStep + "s ; total is " + result + "s, using " + (Mathf.Max(audioDuration, textDuration) == audioDuration ? "audio" : "text") + " as max duration");
+
         return result;
     }
 

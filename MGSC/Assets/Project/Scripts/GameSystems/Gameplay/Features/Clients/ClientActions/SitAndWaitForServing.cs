@@ -44,7 +44,11 @@ namespace Features
 			if (!heldItem.TryGetSibling(out Servable servable, true))
 				return;
 
+			orderingArea.ServingArea.MealSlot.Container.IsLocked = false;
 			orderingArea.ServingArea.MealSlot.Container.RequestDrop(heldItem);
+			heldItem.IsLocked = true;
+			orderingArea.ServingArea.MealSlot.Container.IsLocked = true;
+			
 			_client.TryAcceptServing(servable, orderingArea.ServingArea.ClientSeat.SittingClient.Type);
 
 			if (heldItem.Owner is Component plateComp)
@@ -60,6 +64,7 @@ namespace Features
 				else
 				{
 					_client.Behaviour.OnEatEnd += () => UnityEngine.Object.Destroy(plateComp.gameObject);
+					
 				}
 			}
 		}

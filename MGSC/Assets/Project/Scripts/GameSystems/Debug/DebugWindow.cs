@@ -33,11 +33,15 @@ public class DebugWindow : MonoBehaviour
     #region Methods
     private void OnEnable()
     {
+#if DEVELOPMENT_BUILD
         Reference.AssetReferences.InputActions.FindAction("ShowDebugWindow").performed += ToggleWindow;
+#endif
     }
     private void OnDisable()
     {
+#if DEVELOPMENT_BUILD
         Reference.AssetReferences.InputActions.FindAction("ShowDebugWindow").performed -= ToggleWindow;
+#endif
     }
     private void Update()
     {
@@ -50,16 +54,11 @@ public class DebugWindow : MonoBehaviour
     {
         if (!_visible)
         {
-            _previousMouseVisibility = Cursor.visible;
-            _previousMouseLockMode = Cursor.lockState;
-
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            CursorUtility.RequestCursor(this);
         }
         else
         {
-            Cursor.lockState = _previousMouseLockMode;
-            Cursor.visible = _previousMouseVisibility;
+            CursorUtility.TryFreeCursor(this);
         }
         _visible = !_visible;
     }
@@ -122,7 +121,7 @@ public class DebugWindow : MonoBehaviour
         GUI.DragWindow(new Rect(0, 0, 10000, 20));
     }
     
-    #endregion
+#endregion
     
     #region Tabs
     private void DrawGeneralTab()
