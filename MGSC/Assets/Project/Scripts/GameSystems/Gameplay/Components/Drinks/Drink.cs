@@ -21,8 +21,8 @@ namespace Project.Scripts.GameSystems.Gameplay.Components.Drinks
 		protected override void BindEvents()
 		{
 			base.BindEvents();
-			OnItemGrabbed.AddListener( (() => _animation.Play(_grabbedAnimation.name)));
-			Grabbable.OnDropSFX += (() => _animation.Play(_droppedAnimation.name));
+			OnItemGrabbed.AddListener( (() => _animation.Play(_grabbedAnimation?.name)));
+			Grabbable.OnDropSFX += (() => _animation.Play(_droppedAnimation?.name));
 		}
 	}
 }
