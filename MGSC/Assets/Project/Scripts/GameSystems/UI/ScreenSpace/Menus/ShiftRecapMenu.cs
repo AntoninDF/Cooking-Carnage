@@ -42,6 +42,7 @@ namespace UI
 
         public override void OnLoad()
         {
+            base.OnLoad();
             if (Reference.TryGetManager(out MoneyManager mgr))
             {
                 mgr.OnMoneyChange += SetMoneyGained;

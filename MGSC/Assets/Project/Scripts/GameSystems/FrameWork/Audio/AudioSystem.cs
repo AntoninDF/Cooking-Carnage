@@ -71,11 +71,15 @@ public static class AudioSystem
     public static void SetSFXVolume(float volume) => sfxBus.setVolume(Mathf.Clamp01(volume));
     public static void SetVoiceVolume(float volume) => dialogBus.setVolume(Mathf.Clamp01(volume));
     
-    public static void PlayAudio(EventReference audioEvent, bool stopOtherAudios = false)
+    public static void PlayAudio(EventReference audioEvent, bool stopOtherAudios = false, bool forceRestart = true)
     {
         if (stopOtherAudios)
         {
             StopOtherAudios(audioEvent);
+        }
+        if (forceRestart)
+        {
+            StopAudio(audioEvent);
         }
         
         if (audioEvent.IsNull)

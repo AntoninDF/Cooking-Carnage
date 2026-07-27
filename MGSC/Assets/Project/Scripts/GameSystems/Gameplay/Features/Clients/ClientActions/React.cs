@@ -23,12 +23,12 @@ namespace Features
         public override void Perform()
         {
             base.Perform();
-
+            
             if (_client.IsAngry || !_order.OrderRating.IsCorrectRecipe)
             {
                 BadReaction?.Invoke();
             }
-            else if ( _order.OrderRating.Stars == 2)
+            else 
             {
                 GoodReaction?.Invoke();
             }

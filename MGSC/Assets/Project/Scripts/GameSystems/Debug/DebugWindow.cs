@@ -50,16 +50,11 @@ public class DebugWindow : MonoBehaviour
     {
         if (!_visible)
         {
-            _previousMouseVisibility = Cursor.visible;
-            _previousMouseLockMode = Cursor.lockState;
-
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            CursorUtility.RequestCursor(this);
         }
         else
         {
-            Cursor.lockState = _previousMouseLockMode;
-            Cursor.visible = _previousMouseVisibility;
+            CursorUtility.TryFreeCursor(this);
         }
         _visible = !_visible;
     }

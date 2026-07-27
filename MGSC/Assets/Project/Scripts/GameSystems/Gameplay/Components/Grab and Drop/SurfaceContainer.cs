@@ -42,6 +42,7 @@ public class SurfaceContainer : MonoBehaviour, IFeatureCollection
     private void BindEvents()
     {
         Interactable.OnInteraction += TryGrabObject;
+        Interactable.AddCondition(CanInteract);
     }
 
     private void TryGrabObject(InteractionContext context)
@@ -56,11 +57,28 @@ public class SurfaceContainer : MonoBehaviour, IFeatureCollection
             col.Get(out container);
         }
 
-        if (container != null)
+        if (container == null) return;
+
+        Container.RequestGrab(container.HeldItem);
+    }
+
+    bool CanInteract(InteractionContext context)
+    {
+        F_Container container = null;
+        if (context.Interactor is F_Container)
         {
-            if (Container.RequestGrab(container.HeldItem))
-                return;
+            container = (F_Container)context.Interactor;
         }
+        else if (context.Interactor is IFeatureCollection col)
+        {
+            col.Get(out container);
+        }
+
+        if (container == null) return false;
+        if (container.HeldItem == null) return false;
+        if (!Container.CanGrab(container.HeldItem)) return false;
+
+        return true;
     }
 
     void Update()
