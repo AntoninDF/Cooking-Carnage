@@ -340,6 +340,7 @@ GameObject:
   - component: {fileID: 7881158119222261455}
   - component: {fileID: 4634534638675822066}
   - component: {fileID: 7183716225768568495}
+  - component: {fileID: 5502508144064722227}
   m_Layer: 5
   m_Name: I_GoldStar
   m_TagString: Untagged
@@ -357,7 +358,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 862798652020857812}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -404,6 +405,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &5502508144064722227
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 891097482181478811}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 5f0d2b1bc0521d243a2ab1f5cfad0228, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e12d4ce559d814b468c4f1e15336f652, type: 2}
+  - {fileID: 7400000, guid: 5f0d2b1bc0521d243a2ab1f5cfad0228, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &976670800583600960
 GameObject:
   m_ObjectHideFlags: 0
@@ -584,7 +603,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 0.824
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -1058,7 +1077,7 @@ RectTransform:
   m_Father: {fileID: 4123531466458417207}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1166,6 +1185,7 @@ GameObject:
   - component: {fileID: 523696076639683985}
   - component: {fileID: 1360769985432942304}
   - component: {fileID: 3535198728205415550}
+  - component: {fileID: 2207457051525450484}
   m_Layer: 5
   m_Name: I_BronzeStar
   m_TagString: Untagged
@@ -1230,6 +1250,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &2207457051525450484
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3785159227366421870}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 5f0d2b1bc0521d243a2ab1f5cfad0228, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e12d4ce559d814b468c4f1e15336f652, type: 2}
+  - {fileID: 7400000, guid: 5f0d2b1bc0521d243a2ab1f5cfad0228, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &3866426001966936473
 GameObject:
   m_ObjectHideFlags: 0
@@ -1891,13 +1929,115 @@ MonoBehaviour:
   - {fileID: 7380095604543933387}
   - {fileID: 6749100889006115565}
   - {fileID: 1237442470427396980}
-  _timeSlider: {fileID: 5257342158608706574}
+  _timeSlider: {fileID: 7946045318043724110}
   _playTV: {fileID: 7400000, guid: a4827e52111442646a23d3ff756c7421, type: 2}
   _stopTV: {fileID: 7400000, guid: b25cab00a8a878a4d878b9c589eb41e0, type: 2}
+  OnStartDisplay:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5502508144064722227}
+        m_TargetAssemblyTypeName: UnityEngine.Animation, UnityEngine
+        m_MethodName: set_clip
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 7400000, guid: 5f0d2b1bc0521d243a2ab1f5cfad0228, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AnimationClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2421536434623371812}
+        m_TargetAssemblyTypeName: UnityEngine.Animation, UnityEngine
+        m_MethodName: set_clip
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 7400000, guid: 5f0d2b1bc0521d243a2ab1f5cfad0228, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AnimationClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 6659143525447040510}
+        m_TargetAssemblyTypeName: Orders.OrderDisplayer, Assembly-CSharp
+        m_MethodName: PlayAnimation
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 5502508144064722227}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Animation, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 6659143525447040510}
+        m_TargetAssemblyTypeName: Orders.OrderDisplayer, Assembly-CSharp
+        m_MethodName: PlayAnimation
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2421536434623371812}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Animation, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   On2StarFailed:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5502508144064722227}
+        m_TargetAssemblyTypeName: UnityEngine.Animation, UnityEngine
+        m_MethodName: set_clip
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 7400000, guid: e12d4ce559d814b468c4f1e15336f652, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AnimationClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6659143525447040510}
+        m_TargetAssemblyTypeName: Orders.OrderDisplayer, Assembly-CSharp
+        m_MethodName: PlayAnimation
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 5502508144064722227}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Animation, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   On1StarFailed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2421536434623371812}
+        m_TargetAssemblyTypeName: UnityEngine.Animation, UnityEngine
+        m_MethodName: set_clip
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 7400000, guid: e12d4ce559d814b468c4f1e15336f652, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AnimationClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6659143525447040510}
+        m_TargetAssemblyTypeName: Orders.OrderDisplayer, Assembly-CSharp
+        m_MethodName: PlayAnimation
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2421536434623371812}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Animation, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnStopDisplay:
     m_PersistentCalls:
       m_Calls: []
 --- !u!111 &1554817792483807664
@@ -2880,6 +3020,7 @@ GameObject:
   - component: {fileID: 6775436229523729019}
   - component: {fileID: 8877548964604200177}
   - component: {fileID: 1784632438447221230}
+  - component: {fileID: 2421536434623371812}
   m_Layer: 5
   m_Name: I_SilverStar
   m_TagString: Untagged
@@ -2944,6 +3085,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &2421536434623371812
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7302774971991230953}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 5f0d2b1bc0521d243a2ab1f5cfad0228, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e12d4ce559d814b468c4f1e15336f652, type: 2}
+  - {fileID: 7400000, guid: 5f0d2b1bc0521d243a2ab1f5cfad0228, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &7314529010345090396
 GameObject:
   m_ObjectHideFlags: 0
@@ -3446,7 +3605,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4965538314232958720
 RectTransform:
   m_ObjectHideFlags: 0

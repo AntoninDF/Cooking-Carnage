@@ -15,14 +15,17 @@ namespace Orders
         [SerializeField] private TMP_Text _price;
         [SerializeField] private List<Image> _ingredients;
         [SerializeField] private List<RectTransform> _cookingMethodsPositions;
-        [SerializeField] private Slider _timeSlider;
+        [SerializeField] private Image _timeSlider;
 
         
         [SerializeField] private AnimationClip _playTV;
         [SerializeField] private AnimationClip _stopTV;
 
+        public UnityEvent OnStartDisplay;
         public UnityEvent On2StarFailed;
         public UnityEvent On1StarFailed;
+        public UnityEvent OnStopDisplay;
+        
         private bool _hasTriggered1Star;
         private bool _hasTriggered2Star;
         
@@ -64,7 +67,7 @@ namespace Orders
         {
             if (_timeSlider != null)
             {
-                _timeSlider.value = 1f - progress01; 
+                _timeSlider.fillAmount = 1f - progress01; 
                 if (!_hasTriggered1Star && progress01 >= Globals.Gameplay.Threshold1Star)
                 {
                     _hasTriggered1Star = true;
@@ -98,13 +101,20 @@ namespace Orders
         private void StartDisplay()
         {
             _animation.Play(_playTV?.name);
+            OnStartDisplay?.Invoke();
         }
         
         
         private void StopDisplay()
         {
             _animation.Play(_stopTV?.name);
+            OnStopDisplay?.Invoke();
         }
+        
+        public void PlayAnimation(Animation animationComponent)
+        {
+            animationComponent.Play();
+        } 
 
     }
 }
