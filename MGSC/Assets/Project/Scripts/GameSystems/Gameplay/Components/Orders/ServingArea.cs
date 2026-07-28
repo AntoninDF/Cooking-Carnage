@@ -23,7 +23,12 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     public SlotContainer DrinkSlot;
     
     private bool _watching = false;
-    private void StartWatchingSlot() => _watching = true;
+    private void StartWatchingSlot()
+    {
+        Debug.LogWarning("[ServingArea] StartWatchingSlot() appelé — watching = true");
+        _watching = true;
+    }
+
     private void StopWatchingSlot()
     {
         _lastHeldItem = null; 
@@ -55,21 +60,11 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
             return;
         }
 
-        MealSlot.Container.Filter += (obj) =>
-        {
-            if (obj is not F_Grabbable grab) return false;
-            if (!grab.TryGetSibling(out Servable temp, true && ClientSeat.SittingClient != null)) return false;
-            if (!Globals.Gameplay.AllowClientServing) return false;
-            return true;
-        };
-
-        DrinkSlot.Container.Filter += obj =>
-                                      {
-                                          if (obj is not F_Grabbable grab) return false;
-                                          if (grab.Owner is not Drink) return false;
-                                          if (!Globals.Gameplay.AllowClientServing) return false;
-                                          return true;
-                                      };
+        MealSlot.Container.Filter  += BuildSlotFilter(MealSlot);
+        DrinkSlot.Container.Filter += BuildSlotFilter(DrinkSlot);
+        
+        // if (ReferenceEquals(MealSlot.Container.Filter, DrinkSlot.Container.Filter))
+        //     Debug.LogError("BUG: MealSlot et DrinkSlot partagent le même objet Filter !");
     }
 
     private void OnClientSitting(Client obj)
@@ -99,7 +94,8 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     public void Update()
     {
         if (!_watching) return;
-
+        Debug.Log($"[ServingArea] MealSlot.Container instance hash {MealSlot?.Container?.GetHashCode()}, transform '{MealSlot?.Container?.transform?.name}'");
+        
         if (!DrinkExpected)
         {
             var current = MealSlot?.Container?.HeldItem;
@@ -116,18 +112,35 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
 
         if (MealSlot.Container.IsLocked) return; 
 
-        var meal  = MealSlot?.Container?.HeldItem;
-        var drink = DrinkSlot?.Container?.HeldItem;
+        var  meal     = MealSlot?.Container?.HeldItem;
+        var  drink    = DrinkSlot?.Container?.HeldItem;
 
         if (meal != null && drink != null)
         {
+
             MealSlot.Container.IsLocked  = true;
             DrinkSlot.Container.IsLocked = true;
             ClientSeat.OnMealReady?.Invoke();
-        }
+        } 
+        
     }
     
-    
+    private bool ItemTypeMatchesSlot(SlotContainer slot, F_Grabbable grab)
+    {
+        if (slot == MealSlot)  return grab.Owner is Plate;
+        if (slot == DrinkSlot) return grab.Owner is Drink;
+        return false;
+    }
+
+    private Func<object, bool> BuildSlotFilter(SlotContainer slot)
+    {
+        return obj =>
+               {
+                   if (obj is not F_Grabbable grab) return false;
+                   if (!Globals.Gameplay.AllowClientServing) return false;
+                   return ItemTypeMatchesSlot(slot, grab);
+               };
+    }
 
     private void OnDrawGizmos()
     {

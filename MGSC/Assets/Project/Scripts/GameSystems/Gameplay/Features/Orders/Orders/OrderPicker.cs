@@ -56,7 +56,7 @@ namespace Orders
         public static EClientType? PickDrink(Client client)
         {
 
-            if (!RecipeUnlockChecker.IsUnlocked(RecipeCategory.DoubleSupplement))
+            if (!RecipeUnlockChecker.IsUnlocked(RecipeCategory.Simple))
                 return null;
 
             if (Random.value >= DrinkProbability)

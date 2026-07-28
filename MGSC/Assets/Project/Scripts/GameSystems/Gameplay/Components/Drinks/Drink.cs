@@ -1,4 +1,5 @@
 using Clients;
+using Features;
 using UnityEngine;
 
 namespace Project.Scripts.GameSystems.Gameplay.Components.Drinks
@@ -17,12 +18,13 @@ namespace Project.Scripts.GameSystems.Gameplay.Components.Drinks
 		[SerializeField] private AnimationClip _droppedAnimation;
 		#endregion
 		
-		
 		protected override void BindEvents()
 		{
 			base.BindEvents();
-			OnItemGrabbed.AddListener( (() => _animation.Play(_grabbedAnimation?.name)));
+		//	OnItemGrabbed.AddListener( (() => _animation.Play(_grabbedAnimation?.name)));
 			Grabbable.OnDropSFX += (() => _animation.Play(_droppedAnimation?.name));
+			Grabbable.OnPlayerGrabSFX    += (() => _animation.Play(_grabbedAnimation?.name));
 		}
+
 	}
 }

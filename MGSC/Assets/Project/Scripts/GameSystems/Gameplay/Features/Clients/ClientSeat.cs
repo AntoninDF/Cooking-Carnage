@@ -31,23 +31,24 @@ namespace Features
             set
             {
                 if (_registeredClient == value) return;
+                _registeredClient = value;
                 if (value != null)
                     OnClientRegister?.Invoke(value);
-                _registeredClient = value;
             }
         }
+
         public Client SittingClient
         {
             get => _sittingClient;
             set
             {
                 if (_sittingClient == value) return;
+                _sittingClient = value;
                 if (value != null)
                     OnClientSitting?.Invoke(value);
-                _sittingClient = value;
             }
         }
-
+        
         public Transform transform;
         public Transform parentTransform;
         public  List<SlotContainer> dropSlots = new List<SlotContainer>();

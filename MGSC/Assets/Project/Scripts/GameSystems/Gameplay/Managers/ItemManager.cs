@@ -133,7 +133,7 @@ public class ItemManager : IManager
         for (var index = _activeItems.Count-1; index >= 0; index--)
         {
             var item = _activeItems[index];
-            GameObject.Destroy(item.gameObject);
+            //GameObject.Destroy(item.gameObject);
         }
         _activeItems.Clear();
     }

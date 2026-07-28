@@ -22,5 +22,6 @@ namespace Clients
         public SO_Ingredient loot;
         [Tooltip("How much ingredients will be spawned ? (generates a random value between min and max, rounded to the nearest whole number.")]
         public Vector2 dropRate;
+   
     }
 }

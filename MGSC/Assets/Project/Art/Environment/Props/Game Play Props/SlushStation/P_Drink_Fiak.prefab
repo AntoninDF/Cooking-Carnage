@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5947660161565427497}
-  - component: {fileID: 1779842761570537619}
-  - component: {fileID: 2539164299827516661}
-  - component: {fileID: 2962714781414024682}
+  - component: {fileID: 7193842254544859968}
+  - component: {fileID: 734612582608944226}
+  - component: {fileID: 4584758770301598728}
   m_Layer: 0
   m_Name: P_Drink_Fiak
   m_TagString: Untagged
@@ -35,8 +35,8 @@ Transform:
   - {fileID: 1295089976213699363}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1779842761570537619
-BoxCollider:
+--- !u!64 &7193842254544859968
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -53,10 +53,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.35, z: 0.25}
-  m_Center: {x: 0, y: 0.15, z: 0}
---- !u!114 &2539164299827516661
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!114 &734612582608944226
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65,29 +66,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 222866882189378175}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
+  m_Script: {fileID: 11500000, guid: fcde3e00e2b04beda575db231c486325, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ModelController
-  _propagateChangesToChildren: 1
-  _disableShadowsIfSmallerThan: 0.5
-  _allowCustomOutlineValues: 0
-  _outline:
-    Color: {r: 1, g: 1, b: 1, a: 1}
-    Thickness: 7
-    Mode: 1
---- !u!114 &2962714781414024682
-MonoBehaviour:
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.GameSystems.Gameplay.Components.Drinks.Drink
+  defaultModel: {fileID: 8676727856049086016}
+  OnItemGrabbed: {fileID: 11400000, guid: 7bfe63f3ecb6e6343ba985c1a9991dbc, type: 2}
+  drinkType: 2
+  _animation: {fileID: 4584758770301598728}
+  _grabbedAnimation: {fileID: 7400000, guid: db399dda2328f5841a43eeaaddedfe4b, type: 2}
+  _droppedAnimation: {fileID: 7400000, guid: 40b1b8e89afb6f44c87dc49d5513e1b6, type: 2}
+--- !u!111 &4584758770301598728
+Animation:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 222866882189378175}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f73d2525679cf86409b974e13c3960d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteractionButton
-  Model: {fileID: 2539164299827516661}
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: db399dda2328f5841a43eeaaddedfe4b, type: 2}
+  - {fileID: 7400000, guid: 40b1b8e89afb6f44c87dc49d5513e1b6, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1001 &1617825831833279688
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -191,10 +196,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 00fc2251f327a184ca2833c8bee24508, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8676727856049086016}
   m_SourcePrefab: {fileID: 100100000, guid: 00fc2251f327a184ca2833c8bee24508, type: 3}
 --- !u!4 &1295089976213699363 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 00fc2251f327a184ca2833c8bee24508, type: 3}
   m_PrefabInstance: {fileID: 1617825831833279688}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1923817506688115097 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 00fc2251f327a184ca2833c8bee24508, type: 3}
+  m_PrefabInstance: {fileID: 1617825831833279688}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8676727856049086016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923817506688115097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModelController
+  _propagateChangesToChildren: 1
+  _disableShadowsIfSmallerThan: 0.5
+  _allowCustomOutlineValues: 0
+  _outline:
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Thickness: 7
+    Mode: 1

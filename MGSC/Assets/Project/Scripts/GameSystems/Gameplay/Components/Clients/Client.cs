@@ -260,6 +260,12 @@ namespace Clients
        /// <param name="serving"></param>
        public void TryAcceptServing(Servable serving, EClientType? servedDrinkType, GameObject servedDrinkObject = null)
        {
+           if (serving == null) { Debug.Log("[TryAcceptServing] serving == null"); return; }
+           if (!serving.Enabled) { Debug.Log("[TryAcceptServing] serving.Enabled == false"); return; }
+           if (CurrentOrder == null) { Debug.Log("[TryAcceptServing] CurrentOrder == null"); return; }
+
+           
+           
            if (serving == null || !serving.Enabled) return;
            if (CurrentOrder == null) return;
 
@@ -269,6 +275,9 @@ namespace Clients
            SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
            if (soRecipe == null) return;
 
+           if (recipeComponent == null) { Debug.Log("[TryAcceptServing] serving.Owner n'est pas un Recipe"); return; }
+           if (soRecipe == null) { Debug.Log("[TryAcceptServing] soRecipe == null (ingrédients ne matchent aucune recette)"); return; }
+           
            var info = new Orders.ServingInfo(serving, servedDrinkType);
            CurrentOrder.ServingInfo = info;
 

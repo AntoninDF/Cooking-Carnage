@@ -57,7 +57,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
             client.BeginOrderTimer();
             client.OnOrderTimeProgress += _OrderDisplayer.UpdateTimeSlider;
             //Debug.Log($"[OrderingArea] Ordering Sitting : {client}");
-            _OrderDisplayer.DisplayOrder(client.CurrentOrder.Recipe);
+            _OrderDisplayer.DisplayOrder(client.CurrentOrder);
         };
          
     }

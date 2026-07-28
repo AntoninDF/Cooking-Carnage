@@ -678,14 +678,6 @@ PrefabInstance:
       value: P_Drink_Tooth
       objectReference: {fileID: 0}
     - target: {fileID: 9094713275349182645, guid: af7e7183782284149bee92983aad0b58, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.99999976
-      objectReference: {fileID: 0}
-    - target: {fileID: 9094713275349182645, guid: af7e7183782284149bee92983aad0b58, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.99999976
-      objectReference: {fileID: 0}
-    - target: {fileID: 9094713275349182645, guid: af7e7183782284149bee92983aad0b58, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.7582682
       objectReference: {fileID: 0}
@@ -715,11 +707,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9094713275349182645, guid: af7e7183782284149bee92983aad0b58, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -4.4399967
       objectReference: {fileID: 0}
     - target: {fileID: 9094713275349182645, guid: af7e7183782284149bee92983aad0b58, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 0.2870102
       objectReference: {fileID: 0}
     - target: {fileID: 9094713275349182645, guid: af7e7183782284149bee92983aad0b58, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -785,21 +777,123 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8763964459011285543, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -4.4399967
       objectReference: {fileID: 0}
     - target: {fileID: 8763964459011285543, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 0.2870102
       objectReference: {fileID: 0}
     - target: {fileID: 8763964459011285543, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6981149806751807148, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
+    - {fileID: 8137777756022277260, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
+    - {fileID: 8627801518499449022, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6427651013289206968, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6638267170927664198}
+    - targetCorrespondingSourceObject: {fileID: 6427651013289206968, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6515235791531738170}
+    - targetCorrespondingSourceObject: {fileID: 6427651013289206968, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6971725894980468371}
+    - targetCorrespondingSourceObject: {fileID: 3118973545828264003, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4018422638632767026}
   m_SourcePrefab: {fileID: 100100000, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
+--- !u!1 &4459720606052191945 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3118973545828264003, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
+  m_PrefabInstance: {fileID: 1633906890827376266}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4018422638632767026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4459720606052191945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModelController
+  _propagateChangesToChildren: 1
+  _disableShadowsIfSmallerThan: 0.5
+  _allowCustomOutlineValues: 0
+  _outline:
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Thickness: 7
+    Mode: 1
+--- !u!1 &5737400260622041650 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6427651013289206968, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
+  m_PrefabInstance: {fileID: 1633906890827376266}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &6638267170927664198
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5737400260622041650}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!114 &6515235791531738170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5737400260622041650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcde3e00e2b04beda575db231c486325, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.GameSystems.Gameplay.Components.Drinks.Drink
+  defaultModel: {fileID: 4018422638632767026}
+  OnItemGrabbed: {fileID: 11400000, guid: 7bfe63f3ecb6e6343ba985c1a9991dbc, type: 2}
+  drinkType: 1
+  _animation: {fileID: 6971725894980468371}
+  _grabbedAnimation: {fileID: 7400000, guid: 3219c8407ee38c4418e10f37dd3572b8, type: 2}
+  _droppedAnimation: {fileID: 7400000, guid: bada8d9a9c18a4a4c9c525792463c6e5, type: 2}
+--- !u!111 &6971725894980468371
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5737400260622041650}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: bada8d9a9c18a4a4c9c525792463c6e5, type: 2}
+  - {fileID: 7400000, guid: 3219c8407ee38c4418e10f37dd3572b8, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!4 &8012772991166317741 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8763964459011285543, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
@@ -839,7 +933,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 172858904403395396, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.269
       objectReference: {fileID: 0}
     - target: {fileID: 326217734386043461, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
       propertyPath: m_Mesh
@@ -896,6 +990,14 @@ PrefabInstance:
     - target: {fileID: 476359866018202337, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
       propertyPath: OnCustomerBlended.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 509656937341842732, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 509656937341842732, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.042
       objectReference: {fileID: 0}
     - target: {fileID: 587355344576087760, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
       propertyPath: m_Mesh
@@ -1190,10 +1292,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8121006447976223116}
     - target: {fileID: 4083328046326528616, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
-      propertyPath: _assStation.DrinkButton
-      value: 
-      objectReference: {fileID: 2807414355763774225}
-    - target: {fileID: 4083328046326528616, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
       propertyPath: _assStation.ValveButton
       value: 
       objectReference: {fileID: 7823506990119908652}
@@ -1213,10 +1311,6 @@ PrefabInstance:
       propertyPath: _eyesStattion.ValveButton
       value: 
       objectReference: {fileID: 8441924306252038269}
-    - target: {fileID: 4083328046326528616, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
-      propertyPath: _toothStation.DrinkButton
-      value: 
-      objectReference: {fileID: 5774891340431397681}
     - target: {fileID: 4083328046326528616, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
       propertyPath: _toothStation.ValveButton
       value: 
@@ -1829,6 +1923,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9194062083016723045, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.349
+      objectReference: {fileID: 0}
+    - target: {fileID: 9194062083016723045, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9194062083016723045, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2995904587304821089, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
@@ -1863,17 +1969,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 4239581594027910061, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
   m_PrefabInstance: {fileID: 2074865406471461510}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2807414355763774225 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4196958355855219095, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
-  m_PrefabInstance: {fileID: 2074865406471461510}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f73d2525679cf86409b974e13c3960d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteractionButton
 --- !u!95 &3020093043666309933 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 3828870604583438763, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
@@ -1894,17 +1989,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6599133779719656764, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
   m_PrefabInstance: {fileID: 2074865406471461510}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5774891340431397681 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5543911400677493175, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
-  m_PrefabInstance: {fileID: 2074865406471461510}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f73d2525679cf86409b974e13c3960d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InteractionButton
 --- !u!95 &5955297508178857016 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5651472861504689854, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
@@ -1989,7 +2073,7 @@ MonoBehaviour:
   _assStation:
     Type: 2
     ValveButton: {fileID: 7823506990119908652}
-    DrinkButton: {fileID: 2807414355763774225}
+    DrinkButton: {fileID: 0}
     Drink: {fileID: 8812690983476521434}
     _drinkRenderer: {fileID: 3930884315084862407}
     _drinkMaterialIndex: 2
@@ -2009,7 +2093,7 @@ MonoBehaviour:
   _toothStation:
     Type: 3
     ValveButton: {fileID: 8441924306252038269}
-    DrinkButton: {fileID: 5774891340431397681}
+    DrinkButton: {fileID: 0}
     Drink: {fileID: 7204040350722530443}
     _drinkRenderer: {fileID: 2746461192782035243}
     _drinkMaterialIndex: 2
@@ -2087,14 +2171,6 @@ PrefabInstance:
       value: P_Drink_Fiak
       objectReference: {fileID: 0}
     - target: {fileID: 5947660161565427497, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5947660161565427497, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5947660161565427497, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.304
       objectReference: {fileID: 0}
@@ -2124,11 +2200,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5947660161565427497, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0.9560714
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5947660161565427497, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 209.46033
+      value: 269.56702
       objectReference: {fileID: 0}
     - target: {fileID: 5947660161565427497, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -2137,91 +2213,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 222866882189378175, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 842152415871580169}
-    - targetCorrespondingSourceObject: {fileID: 222866882189378175, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8054112761291415510}
-    - targetCorrespondingSourceObject: {fileID: 222866882189378175, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8928746132129612458}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
---- !u!114 &182816993210894146 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2539164299827516661, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
-  m_PrefabInstance: {fileID: 2429009668093186999}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2495657559176237512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ModelController
---- !u!1 &2495657559176237512 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 222866882189378175, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
-  m_PrefabInstance: {fileID: 2429009668093186999}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &842152415871580169
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2495657559176237512}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
---- !u!114 &8054112761291415510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2495657559176237512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fcde3e00e2b04beda575db231c486325, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.GameSystems.Gameplay.Components.Drinks.Drink
-  defaultModel: {fileID: 182816993210894146}
-  OnItemGrabbed: {fileID: 11400000, guid: 7bfe63f3ecb6e6343ba985c1a9991dbc, type: 2}
-  drinkType: 0
-  _animation: {fileID: 8928746132129612458}
-  _grabbedAnimation: {fileID: 7400000, guid: db399dda2328f5841a43eeaaddedfe4b, type: 2}
-  _droppedAnimation: {fileID: 7400000, guid: 40b1b8e89afb6f44c87dc49d5513e1b6, type: 2}
---- !u!111 &8928746132129612458
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2495657559176237512}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 0}
-  m_Animations:
-  - {fileID: 7400000, guid: db399dda2328f5841a43eeaaddedfe4b, type: 2}
-  - {fileID: 7400000, guid: 40b1b8e89afb6f44c87dc49d5513e1b6, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
 --- !u!4 &8304573991938856094 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5947660161565427497, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
@@ -2431,11 +2424,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 987440766730410980, guid: 31f6d7ca2ae57ef408f63916f145b64c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.509925
+      value: -11.509906
       objectReference: {fileID: 0}
     - target: {fileID: 6790531399225290873, guid: 31f6d7ca2ae57ef408f63916f145b64c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.959836
+      value: -5.959798
       objectReference: {fileID: 0}
     - target: {fileID: 6790531399225290873, guid: 31f6d7ca2ae57ef408f63916f145b64c, type: 3}
       propertyPath: m_LocalPosition.z
