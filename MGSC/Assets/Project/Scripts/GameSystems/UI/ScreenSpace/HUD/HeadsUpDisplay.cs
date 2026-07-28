@@ -13,6 +13,7 @@ namespace UI
     {
         public override bool ForceLoadOnUIInitialization => true;
         public EventReference SoundForInteractableObjects;
+        public bool PlaySoundWhenLookingAtInteractableObject = false;
         public Image I_Crosshair;
         public Sprite DefaultCrosshair; 
         public Sprite GrabbableCrosshair; 
@@ -39,12 +40,12 @@ namespace UI
             else if (target.TryGetSibling(out F_Grabbable grab) && !grab.IsLocked && (grab.Container == null ? true : grab.Container.CanDrop(grab)))
             {
                 I_Crosshair.sprite = GrabbableCrosshair;
-                AudioSystem.PlayAudio(SoundForInteractableObjects);
+                if (PlaySoundWhenLookingAtInteractableObject) AudioSystem.PlayAudio(SoundForInteractableObjects);
             }
             else if (target.TryGetSibling(out F_Interactable interact) && interact.CanInteract(new InteractionContext(PlayerSetup.Player)))
             {
                 I_Crosshair.sprite = InteractableCrosshair;
-                AudioSystem.PlayAudio(SoundForInteractableObjects);
+                if (PlaySoundWhenLookingAtInteractableObject) AudioSystem.PlayAudio(SoundForInteractableObjects);
             }
             else
                 I_Crosshair.sprite = DefaultCrosshair;

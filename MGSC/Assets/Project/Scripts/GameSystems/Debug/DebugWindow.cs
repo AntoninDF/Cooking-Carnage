@@ -33,11 +33,15 @@ public class DebugWindow : MonoBehaviour
     #region Methods
     private void OnEnable()
     {
+#if DEVELOPMENT_BUILD
         Reference.AssetReferences.InputActions.FindAction("ShowDebugWindow").performed += ToggleWindow;
+#endif
     }
     private void OnDisable()
     {
+#if DEVELOPMENT_BUILD
         Reference.AssetReferences.InputActions.FindAction("ShowDebugWindow").performed -= ToggleWindow;
+#endif
     }
     private void Update()
     {
@@ -117,7 +121,7 @@ public class DebugWindow : MonoBehaviour
         GUI.DragWindow(new Rect(0, 0, 10000, 20));
     }
     
-    #endregion
+#endregion
     
     #region Tabs
     private void DrawGeneralTab()

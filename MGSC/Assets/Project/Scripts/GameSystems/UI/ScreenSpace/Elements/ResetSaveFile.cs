@@ -2,6 +2,9 @@ using GameSystem;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace UI
 {
@@ -15,6 +18,9 @@ namespace UI
                 B_Reset.onClick.AddListener(ResetSave);
         }
 
+#if UNITY_EDITOR
+        [MenuItem("CookingCarnage/Reset save file")]
+#endif
         [Button("Reset save file")]
         public void ResetSave()
         {
