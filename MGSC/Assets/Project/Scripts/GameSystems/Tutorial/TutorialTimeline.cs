@@ -1,3 +1,4 @@
+using FMODUnity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,11 @@ public class TutorialTimeline : ScriptableObject
 
     public TutorialStep DefaultTutorialStep;
     public List<BindTutorialStepToEvent> TutorialStepsToBindToEvents = new();
+    public EventVariable EventRaisedUponEnd;
+
 
     private TutorialStep _currentPlayingTutorial;
-
+    List<Action> _tutorialStepBoundCallbacks = new();
 
     [NonSerialized] SubtitleOverlay Subs;
     public static void StartTutorial() => Instance.Start();
@@ -31,6 +34,7 @@ public class TutorialTimeline : ScriptableObject
         Debug.Log("[TutorialTimeline] Starting the introduction sequence");
         BindTutorialStepsToEvents(TutorialStepsToBindToEvents);
         Play(DefaultTutorialStep);
+        // You don't have to finish the tutorial to validate it, it is considered as played as soon as you start it
         Globals.Statistics.TutorialHasBeenPlayed.Value = true;
     }
 
@@ -69,8 +73,38 @@ public class TutorialTimeline : ScriptableObject
                         item.Event.RemoveListener(callback);
                     };
                 item.Event.AddListener(callback);
+                _tutorialStepBoundCallbacks.Add(callback);
             }
         }
+    }
+    public static void StopTutorial()
+    {
+        ClearBoundTutorialSteps(Instance.TutorialStepsToBindToEvents.Select(item => item.Event));
+        StopCurrentStep();
+    }
+
+    static void StopCurrentStep()
+    {
+        // End subtitles, remove tasks
+        if (Reference.TryGetManager(out UISystem ui))
+        {
+            Instance.Subs = ui.GetWidget<SubtitleOverlay>();
+            Instance.Subs.EndSubtitle();
+
+            var Tasks = ui.GetWidget<TaskPanel>();
+            Tasks.RemoveCurrentTasks();
+        }
+        AudioSystem.StopAudioForBus_Dialog();
+
+    }
+    static void ClearBoundTutorialSteps(IEnumerable<EventVariable> events)
+    {
+        foreach (var item in events)
+            if (item != null)
+                foreach (var callback in Instance._tutorialStepBoundCallbacks)
+                    item.RemoveListener(callback);
+
+        Instance._tutorialStepBoundCallbacks.Clear();
     }
     /*
     private void PlayTutorialSequence(List<TutorialStep> steps)

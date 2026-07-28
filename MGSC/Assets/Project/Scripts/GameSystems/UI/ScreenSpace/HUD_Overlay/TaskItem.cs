@@ -91,9 +91,10 @@ namespace UI
             foreach (var timer in _timers)
                 TimerManager.RemoveTimer(timer.Name);
             OnResolveFeedbacksOver?.Invoke();
+            Unbind();
             Destroy(gameObject);
         }
-
+        public void Unbind() => _unbindCallback?.Invoke();
         private void CallDelayedResolve(float delay)
             => _timers.Add(TimerManager.StartGameplayTimer("Resolve task " + Time.time, delay, Resolve /*, elapsed => Debug.Log("Resolving task... " + elapsed + "/" + delay + "s")*/));
 
