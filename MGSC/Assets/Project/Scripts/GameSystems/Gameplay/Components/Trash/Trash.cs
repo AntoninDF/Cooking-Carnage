@@ -109,7 +109,7 @@ namespace Trash
 
         private void Update()
         {
-            Debug.Log($"[Trash] Update : {Container}");
+            // Debug.Log($"[Trash] Update : {Container}");
         }
     }
 }

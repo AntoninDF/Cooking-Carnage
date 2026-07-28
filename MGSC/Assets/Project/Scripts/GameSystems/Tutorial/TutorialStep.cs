@@ -88,9 +88,11 @@ public class TutorialStep : ScriptableObject
         if (index >= Steps.Count) return;
         SubStep current = Steps[index];
 
+        /*
         Debug.Log("[TutorialStep] Playing substep of '" + name +
             "' with a duration of " + GetMinimumDurationForSubstep(current) + "s.");
-        
+        */
+
         // Try to play the voiceline
         if (!current.VoiceLine.IsNull)
         {
@@ -161,6 +163,10 @@ public class TutorialStep : ScriptableObject
             if (res == FMOD.RESULT.OK)
                 audioDuration = eventDurationInMs / 1000f;
         }
+        else
+        {
+            Debug.LogWarning("Step with text '" + step.SubtitleText + "' has it's voiceline considered null");
+        }
 
         // Get text display duration
         float textDuration = 0;
@@ -171,7 +177,7 @@ public class TutorialStep : ScriptableObject
         float result = Mathf.Max(audioDuration, textDuration);
         result += step.DelayBeforeNextSubStep;
 
-        Debug.Log("Duration for '" + step.SubtitleText + "' : audio is " + audioDuration + "s ; text is " + "s ; delay is " +
+        Debug.Log("Duration for '" + step.SubtitleText + "' : audio is " + audioDuration + "s ; text is " + textDuration + "s ; delay is " +
             step.DelayBeforeNextSubStep + "s ; total is " + result + "s, using " + (Mathf.Max(audioDuration, textDuration) == audioDuration ? "audio" : "text") + " as max duration");
 
         return result;
