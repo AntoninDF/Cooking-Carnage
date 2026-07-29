@@ -29,6 +29,7 @@ namespace UI
         private Action _unbindCallback;
 
         List<Timer> _timers = new();
+        float _defaultHeight;
         #region Methods
 
         private void OnEnable()
@@ -52,7 +53,7 @@ namespace UI
         {
             GameObject go = GameObject.Instantiate(gameObject, parent);
             TaskItem task = go.GetComponent<TaskItem>();
-
+            task._defaultHeight = task.GetComponent<LayoutElement>().preferredHeight;
             task.Setup(label);
 
             return task;
@@ -114,6 +115,7 @@ namespace UI
                 parent.SetLayoutVertical();
         }
 
+        // The 4 following methods are called in UnityEvents
         public void FadeIn(float duration)
         {
             var canvas = GetComponent<CanvasGroup>();
@@ -125,6 +127,18 @@ namespace UI
             var canvas = GetComponent<CanvasGroup>();
             var c = AnimationCurve.EaseInOut(0, 0, 1, 1);
             _timers.Add(TimerManager.StartGameplayTimer("Fade out taskitem " + Time.time + GetHashCode(), duration, null, elapsed => canvas.alpha = 1 - c.Evaluate(elapsed / duration)));
+        }
+        public void ExpandIn(float duration)
+        {
+            var layout = GetComponent<LayoutElement>();
+            var c = AnimationCurve.EaseInOut(0, 0, 1, _defaultHeight);
+            _timers.Add(TimerManager.StartGameplayTimer("Expand in taskitem " + Time.time + GetHashCode(), duration, null, elapsed => layout.preferredHeight = c.Evaluate(elapsed / duration)));
+        }
+        public void ShrinkOut(float duration)
+        {
+            var layout = GetComponent<LayoutElement>();
+            var c = AnimationCurve.EaseInOut(0, _defaultHeight, 1, 0);
+            _timers.Add(TimerManager.StartGameplayTimer("Shrink out taskitem " + Time.time + GetHashCode(), duration, null, elapsed => layout.preferredHeight = c.Evaluate(elapsed / duration)));
         }
         #endregion
     }

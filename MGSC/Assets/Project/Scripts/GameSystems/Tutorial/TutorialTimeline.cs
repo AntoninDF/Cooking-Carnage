@@ -59,8 +59,14 @@ public class TutorialTimeline : ScriptableObject
         if (step == null)
             return;
 
+        Action callback = () =>
+        {
+            Subs?.EndSubtitle();
+            onEnd?.Invoke();
+        };
+
         // Play the given tutorial step (if not null)
-        step.Play(onEnd);
+        step.Play(callback);
     }
     void BindTutorialStepsToEvents(List<BindTutorialStepToEvent> items)
     {
@@ -108,34 +114,7 @@ public class TutorialTimeline : ScriptableObject
 
         Instance._tutorialStepBoundCallbacks.Clear();
     }
-    /*
-    private void PlayTutorialSequence(List<TutorialStep> steps)
-    {
-        Action builtSequence = BuildSequence(steps);
-        builtSequence();
-    }
-    private Action BuildSequence(List<TutorialStep> steps, Action onEnd = null)
-    {
-        Debug.Log("[TutorialTimeline] Building sequence");
-        if (steps == null || steps.Count == 0)
-        {
-            if (Reference.TryGetManager(out UISystem ui))
-            {
-                ui.GetWidget(out SubtitleOverlay subs);
-                onEnd += () => subs?.EndSubtitle();
-            }
-            return onEnd;
-        }
-        List<TutorialStep> nextSequence = steps.GetRange(1, steps.Count - 1);
-        Debug.Log("Current is " + steps[0].name + ", NextSequence is of length " + nextSequence.Count);
-        return () => steps[0].Play(BuildSequence(nextSequence, onEnd));
-    }
-    */
-    private void End()
-    {
-        Subs?.FadeOut(onEnd:Subs.Disable);
-        Subs = null;
-    }
+
 
     [Serializable]
     public struct BindTutorialStepToEvent

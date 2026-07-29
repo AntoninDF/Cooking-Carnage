@@ -161,19 +161,19 @@ namespace UI
         public int GetCorrectOrdersCount()
         {
             if (!Reference.TryGetManager(out ClientManager clientMgr)) return 0;
-            return clientMgr.GetClientsHistory().Count(c => !c.killed && c.wasCorrectRecipe);
+            return clientMgr.GetClientsHistory().Count(c => !c.killed && c.wasCorrectRecipe && c.shiftNumber == Globals.Gameplay.ShiftNumber);
         }
 
         public int GetWrongOrdersCount()
         {
             if (!Reference.TryGetManager(out ClientManager clientMgr)) return 0;
-            return clientMgr.GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe && c.served);
+            return clientMgr.GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe && c.served && c.shiftNumber == Globals.Gameplay.ShiftNumber);
             //This version consider client leaving without food as wrong order, if u don't want to count them add && c.served (edit : I did)
         }
         public int GetMissedOrdersCount()
         {
             if (!Reference.TryGetManager(out ClientManager clientMgr)) return 0;
-            return clientMgr.GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe && !c.served);
+            return clientMgr.GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe && !c.served && c.shiftNumber == Globals.Gameplay.ShiftNumber);
             //This version consider client leaving without food as wrong order, if u don't want to count them add && c.served
         }
         private string ToString<T>(IEnumerable<T> items)

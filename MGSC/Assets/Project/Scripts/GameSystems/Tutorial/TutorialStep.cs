@@ -113,7 +113,7 @@ public class TutorialStep : ScriptableObject
             HandleActions(current.ActionsAfterDialogue);
             if (_currentAudioReference.Equals(current.VoiceLine))
                 _currentAudioReference = default;
-            Subtitles.EndSubtitle();
+            // Subtitles.EndSubtitle();
 
             GameLoop.OnPause  -= PauseVoiceline;
             GameLoop.OnResume -= ResumeVoiceline;

@@ -13,13 +13,29 @@ namespace GameSystem
     public class ClientManager : IManager, IFeatureCollection
     {
         #region Properties
-        
+
         // Public Properties
-        
-        public List<Client>                   CurrentClients         => currentClients;
-        public ClientWaitingQueue             WaitingQueue           { get;  private set; }
-        public int                            ClientsServedThisShift {  get; private set; }
-        public int                            ClientsKilledThisShift {  get; private set; }
+
+        public List<Client> CurrentClients => currentClients;
+        public ClientWaitingQueue WaitingQueue { get; private set; }
+        public int ClientsServedThisShift
+        {
+            get
+            {
+                if (_clientsServedPerShift.ContainsKey(Globals.Gameplay.ShiftNumber))
+                    return _clientsServedPerShift[Globals.Gameplay.ShiftNumber];
+                return 0;
+            }
+        }
+        public int ClientsKilledThisShift
+        {
+            get
+            {
+                if (_clientsKilledPerShift.ContainsKey(Globals.Gameplay.ShiftNumber))
+                    return _clientsKilledPerShift[Globals.Gameplay.ShiftNumber];
+                return 0;
+            }
+        }
         public Dictionary<EClientType, float> ClientTypeAmount       => UpdateClientTypeData();
 
         public FeatureCollection Collection { get; set; } = new();
@@ -31,6 +47,8 @@ namespace GameSystem
         // Clients Data Fields
         List<Client> currentClients = new List<Client>(); // script linked to entities
         List<ClientData> clientHistory =  new List<ClientData>(); // script copy
+        Dictionary<int, int> _clientsKilledPerShift = new();
+        Dictionary<int, int> _clientsServedPerShift = new();
         
         Dictionary<EClientType, float> clientTypePart = new Dictionary<EClientType, float>();
 
@@ -85,10 +103,9 @@ namespace GameSystem
 
         private void Reset()
         {
-            ClientsServedThisShift = 0;
-            ClientsKilledThisShift = 0;
             currentClients = new();
             clientHistory = new();
+            _clientsKilledPerShift.Clear();
         }
 
         public void Register(ClientSeat seat) => ClientSeats.Register(seat);
@@ -165,13 +182,21 @@ namespace GameSystem
             clientHistory.Add(clientData);
             if (killed)
             {
-                ClientsKilledThisShift++;
+                if (!_clientsKilledPerShift.ContainsKey(Globals.Gameplay.ShiftNumber))
+                {
+                    _clientsKilledPerShift[Globals.Gameplay.ShiftNumber] = 0;
+                }
+                _clientsKilledPerShift[Globals.Gameplay.ShiftNumber]++;
                 
                 this.Log(LogType.Log, "Client"+client.GetEntityId()+" is the "+ ClientsKilledThisShift+"th client killed during this shift");
             }
             else
             {
-                ClientsServedThisShift++;
+                if (!_clientsServedPerShift.ContainsKey(Globals.Gameplay.ShiftNumber))
+                {
+                    _clientsServedPerShift[Globals.Gameplay.ShiftNumber] = 0;
+                }
+                _clientsServedPerShift[Globals.Gameplay.ShiftNumber]++;
                 
                 this.Log(LogType.Log, "Client"+client.GetEntityId()+" is the "+ ClientsServedThisShift+"th client served during this shift");
             }
