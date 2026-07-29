@@ -36,6 +36,8 @@ public class TutorialTimeline : ScriptableObject
         Play(DefaultTutorialStep);
         // You don't have to finish the tutorial to validate it, it is considered as played as soon as you start it
         Globals.Statistics.TutorialHasBeenPlayed.Value = true;
+
+        EventRaisedUponEnd.AddListener(StopTutorial);
     }
 
     void Play(TutorialStep step, Action onEnd = null)

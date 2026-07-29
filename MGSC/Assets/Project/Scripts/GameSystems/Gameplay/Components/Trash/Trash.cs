@@ -60,11 +60,12 @@ namespace Trash
                 {
                     if(!_canEat)
                     {
-                        Debug.Log($"[Trash] Can't throw the object because glooby is already eating something 😞");
+                        //Debug.Log($"[Trash] Can't throw the object because glooby is already eating something 😞");
                         return false;
                     }
                     if (obj is not Feature _feature) return false;
                     if(_feature.Owner is not Item _item) return false;
+                    if (_item is not Plate) return false;
                     _objectAnimation = _item.Anim;
                     return true;
                 }

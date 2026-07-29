@@ -127,6 +127,8 @@ namespace GameSystem
             
             // Some stats are too precious to be overriden
             temp.SecondsPlayed = Data.SecondsPlayed;
+
+            temp.TutorialHasBeenPlayed = false;
             Data = temp;
             SaveGameData(Data);
         }
