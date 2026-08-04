@@ -26,7 +26,8 @@ namespace Orders
 			MoneyManager moneyManager = Reference.GetManager<MoneyManager>();
 
 			int   currentShift = shiftManager != null ? shiftManager.ShiftNumber : 0;
-			float currentMoney = moneyManager != null ? moneyManager.MoneyInfo : 0f;
+			// currentMoney is actually the sum of all money gained
+			float currentMoney = moneyManager != null ? moneyManager.GetMoneyGainedSinceBeginning() : 0f;
 
 			return currentShift >= requirement.minShift && currentMoney >= requirement.minMoney;
 		}

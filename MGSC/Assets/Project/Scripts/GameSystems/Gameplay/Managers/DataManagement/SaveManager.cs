@@ -163,27 +163,22 @@ namespace GameSystem
                 return;
             }
 
-            if(upgradeManager.Upgrades.Count != Data.upgrades.Count)
-                Debug.Log("the number of saved upgrades is not the same as the current number of upgrades");
-            else
-            {
-                // Reset all the upgrades in case they were not saved
-                foreach (var upgrade in upgradeManager.Upgrades)
-                    upgrade.SetLevel(0);
+            // Reset all the upgrades in case they were not saved
+            foreach (var upgrade in upgradeManager.Upgrades)
+                upgrade.SetLevel(0);
 
-                // Apply the levels for the upgrades that were saved
-                for (int i = 0; i < Data.upgrades.Count; i++)
-                {
-                    UpgradeData upgradeData = Data.upgrades[i];
-                    var correspondingUpgrades = upgradeManager.Upgrades.Where(upgrade => upgrade.GetType().Name == upgradeData.name).ToArray();
-                    if (correspondingUpgrades.Length == 0)
-                        continue;
-                    correspondingUpgrades[0].SetLevel(upgradeData.level);
-                }
-                upgradeManager.ActualizeAllUpgrade();
-                Debug.Log("All upgrades have been loaded");
+            // Apply the levels for the upgrades that were saved
+            for (int i = 0; i < Data.upgrades.Count; i++)
+            {
+                UpgradeData upgradeData = Data.upgrades[i];
+                var correspondingUpgrades = upgradeManager.Upgrades.Where(upgrade => upgrade.GetType().Name == upgradeData.name).ToArray();
+                if (correspondingUpgrades.Length == 0)
+                    continue;
+                correspondingUpgrades[0].SetLevel(upgradeData.level);
             }
             
+            upgradeManager.ActualizeAllUpgrade();
+            Debug.Log("All upgrades have been loaded");
         }
 
         static GameData DefaultData() => new GameData();

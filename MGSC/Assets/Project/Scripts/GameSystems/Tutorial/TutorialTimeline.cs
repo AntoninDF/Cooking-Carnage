@@ -34,12 +34,15 @@ public class TutorialTimeline : ScriptableObject
         Debug.Log("[TutorialTimeline] Starting the introduction sequence");
         BindTutorialStepsToEvents(TutorialStepsToBindToEvents);
         Play(DefaultTutorialStep);
-        // You don't have to finish the tutorial to validate it, it is considered as played as soon as you start it
-        Globals.Statistics.TutorialHasBeenPlayed.Value = true;
 
+        // You have to finish the tutorial to validate it, it is considered as played as soon as you finish the last voiceline
+        EventRaisedUponEnd.AddListener(ValidateTutorial);
         EventRaisedUponEnd.AddListener(StopTutorial);
     }
-
+    void ValidateTutorial()
+    {
+        Globals.Statistics.TutorialHasBeenPlayed.Value = true;
+    }
     void Play(TutorialStep step, Action onEnd = null)
     {
         // Stop the previous tutorial step

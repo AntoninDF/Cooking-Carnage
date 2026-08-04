@@ -81,12 +81,16 @@ public class Item : MonoBehaviour, IFeatureCollection
         Grabbable.OnGrab += TriggerAnim; 
         if (OnItemGrabbed != null)
             Grabbable.OnGrab += () => OnItemGrabbed.Raise(Grabbable); 
-        Grabbable.OnLock += () => Collider.enabled = false;
-        Grabbable.OnUnlock += () => Collider.enabled = true;
+        Grabbable.OnLock += () => ApplyOnAllColliders(collider => collider.enabled = false);
+        Grabbable.OnUnlock += () => ApplyOnAllColliders(collider => collider.enabled = true);
         Interactable.OnInteraction += TryInteract;
         Interactable.AddCondition(CanInteract);
     }
-
+    void ApplyOnAllColliders(Action<Collider> action)
+    {
+        foreach (var col in GetComponents<Collider>())
+            action?.Invoke(col);
+    }
     protected void TriggerAnim()
     {
         if (Grabbable.Container == null)
