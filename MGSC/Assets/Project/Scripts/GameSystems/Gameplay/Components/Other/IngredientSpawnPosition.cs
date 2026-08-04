@@ -27,7 +27,7 @@ public class IngredientSpawnPosition : MonoBehaviour
         Positions.Remove(this);
     }
 
-    public static void SpawnIngredients(int ingredientCount, Func<Ingredient, bool> filter = null)
+    public static void SpawnIngredients(int ingredientCount, Func<SO_Ingredient, bool> filter = null)
     {
         int i = 0; // i represents the amount of spawned ingredients, not the loop count
         foreach (var pos in Positions)
@@ -35,7 +35,7 @@ public class IngredientSpawnPosition : MonoBehaviour
             if (i == ingredientCount)
                 break;
 
-            Ingredient ing = pos.IngredientData?.Prefab?.GetComponent<Ingredient>();
+            SO_Ingredient ing = pos.IngredientData;
             if (ing == null)
                 continue;
 

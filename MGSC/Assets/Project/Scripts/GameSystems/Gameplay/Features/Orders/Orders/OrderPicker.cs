@@ -13,10 +13,16 @@ namespace Orders
         private const float UpgradeProbability = 1f / 3f; 
         private const int ForcedFullRecipeInterval = 15;   
 
-        private static int _selectionCount = 0; 
+        private static int _selectionCount = 0;
+        private static Queue<SO_Recipe> _forcedRecipes = new();
 
         public static SO_Recipe Pick()
         {
+            // If recipes have been explicitely enqueued, output them instead
+            if (TryPickQueuedRecipe(out var recipe))
+                return recipe;
+
+
             _selectionCount++;
 
             SO_RecipeBook         book         = FindCurrentRecipeBook();
@@ -49,7 +55,20 @@ namespace Orders
             SO_Recipe picked = PickRandomRecipe(weights);
             return ApplyUpgrade(picked, book, SO_RecipeUnlockConfig.Instance);
         }
-        
+
+        private static bool TryPickQueuedRecipe(out SO_Recipe recipe)
+        {
+            recipe = null;
+            if (_forcedRecipes.Count == 0) return false;
+            recipe = _forcedRecipes.Dequeue();
+            return true;
+        }
+        public static void AddRecipeToQueue(SO_Recipe recipe)
+        {
+            if (recipe == null) return;
+            _forcedRecipes.Enqueue(recipe);
+        }
+
         private static bool IsBaseRecipe(SO_Recipe recipe)
         {
             return recipe.Ingredients.Count == recipe.Ingredients.Distinct().Count();

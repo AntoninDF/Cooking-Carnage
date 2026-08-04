@@ -1,3 +1,6 @@
+using GameSystem;
+using Orders;
+using System.Linq;
 using UI;
 public class PreShiftState : GameplayState
 {
@@ -11,7 +14,22 @@ public class PreShiftState : GameplayState
             HUD = ui.GetWidget<HeadsUpDisplay>();
             HUD?.Enable();
         }
-        IngredientSpawnPosition.SpawnIngredients(6);
+
+        if (Globals.Statistics.TutorialHasBeenPlayed)
+            IngredientSpawnPosition.SpawnIngredients(6);
+        else
+        {
+            // Setup the tutorial by adding only one ingredient to the table, and forcing the first client to be Fabrice, ordering some buttocks
+            IngredientSpawnPosition.SpawnIngredients(1, ingredient => ingredient.Name.Contains("fiak"));
+            Reference.GetManager<AdaptiveClientSpawner>()?.AddClientToQueue(Clients.EClientType.C);
+            var book = Reference.AssetReferences.DefaultRecipeBook;
+            if (book != null)
+            {
+                var recipe = book.Recipes.Where(recipe => recipe.Ingredients.Count == 1 && recipe.Ingredients[0].Name.Contains("fiak")).First();
+                if (recipe != null)
+                    OrderPicker.AddRecipeToQueue(recipe);
+            }
+        }
         
         AudioSystem.PlayAudio(AudioSystem.Database.beforeShiftMusic,true);
         AudioSystem.PlayAudio(AudioSystem.Database.fliesAmbience);
