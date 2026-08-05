@@ -1,7 +1,9 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Transactions;
 using UnityEngine;
 using Upgrades;
 
@@ -24,67 +26,24 @@ namespace GameSystem
 
 
         #region Methods
-        private static GameData MakeGameData()
+
+        // UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
+        public static void ResetSave()
         {
-            var result = new GameData()
-            {
-                money = Reference.GetManager<MoneyManager>()?.MoneyInfo ?? 0f,
-                upgrades = ConvertUpgradeData(),
-                shiftNumber = Globals.Gameplay.ShiftNumber,
-                TutorialHasBeenPlayed = Globals.Statistics.TutorialHasBeenPlayed,
+            Debug.Log("Resetting save file");
 
-                SecondsPlayed = Globals.Statistics.SecondsPlayed
-            };
-
-            return result;
-        }
-        /// <summary>
-        /// Save multiple data (money, upgrades, daycount) into a file
-        /// </summary>
-        public static void SaveGameData() => SaveGameData(MakeGameData());
-        /// <summary>
-        /// Save multiple data (money, upgrades, daycount) into a file
-        /// </summary>
-        public static void SaveGameData(GameData gameData)
-        {
-            if (gameData == null)
-            {
-                Debug.LogWarning("[SaveManager] GameData was null, and could not be saved.");
-                return;
-            }
-
-            if (filePath == null)
-            {
-                Debug.LogWarning("The specified file path for the save file is null. Make sure the manager was initialized properly");
-                return;
-            }
+            Data = GetCurrentData();
+            GameData temp = DefaultData();
             
-            string json = JsonUtility.ToJson(gameData, true);
-            
-            File.WriteAllText(filePath, json);
-            OnSuccessfulSave?.Invoke();
-        }
-    
-        public static bool SaveFileExists()
-        {
-            return File.Exists(filePath);
+            // Some stats are too precious to be overriden
+            temp.SecondsPlayed = Data.SecondsPlayed;
+
+            temp.TutorialHasBeenPlayed = false;
+            Data = temp;
+            SaveGameData(Data);
         }
 
-        /// <summary>
-        /// Should never return null
-        /// </summary>
-        /// <returns></returns>
-        public static GameData GetCurrentData()
-        {
-            if (!SaveFileExists())
-            {
-                Data = DefaultData();
-                SaveGameData(Data);
-                return Data;
-            }
-            string json = File.ReadAllText(filePath);
-            return JsonUtility.FromJson<GameData>(json);
-        }
+        // UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
         /// <summary>
         /// Load multiple data (money, upgrades, daycount) and reload the game
         /// </summary>
@@ -113,25 +72,102 @@ namespace GameSystem
             // Apply seconds played
             Globals.Statistics.SecondsPlayed.Value = Data.SecondsPlayed;
 
+            // Apply transaction history
+            string serializedTransactions = Data.Transactions;
+            if (serializedTransactions == null) serializedTransactions = "";
+            Dictionary<int, List<float>> transactions = JsonConvert.DeserializeObject<Dictionary<int, List<float>>>(serializedTransactions);
+            if (transactions == null) transactions = new();
+            Debug.Log("Deserializing transactions : " + transactions.ToString_Detailed());
+            Reference.GetManager<MoneyManager>()?.SetTransactions(transactions);
+
             //Debug.Log($"Save loaded successfully, shift : {Data.shiftNumber},  money : {Data.money}");
             OnSaveLoaded?.Invoke();
             return true;
         }
-
-        public static void ResetSave()
+        // UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
+        private static GameData MakeGameData()
         {
-            Debug.Log("Resetting save file");
+            var result = new GameData()
+            {
+                money = Reference.GetManager<MoneyManager>()?.MoneyInfo ?? 0f,
+                upgrades = ConvertUpgradeData(),
+                shiftNumber = Globals.Gameplay.ShiftNumber,
+                TutorialHasBeenPlayed = Globals.Statistics.TutorialHasBeenPlayed,
+                Transactions = JsonConvert.SerializeObject(Reference.GetManager<MoneyManager>().GetTransactions()),
+                SecondsPlayed = Globals.Statistics.SecondsPlayed
+            };
 
-            Data = GetCurrentData();
-            GameData temp = DefaultData();
-            
-            // Some stats are too precious to be overriden
-            temp.SecondsPlayed = Data.SecondsPlayed;
-
-            temp.TutorialHasBeenPlayed = false;
-            Data = temp;
-            SaveGameData(Data);
+            return result;
         }
+        // UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
+        [System.Serializable]
+        public class GameData
+        {
+            public float money = 0;
+            public List<UpgradeData> upgrades = new List<UpgradeData> { };
+            public int shiftNumber = 0;
+            public bool TutorialHasBeenPlayed;
+            public string Transactions;
+
+            // Stats that should not be reset
+            public int SecondsPlayed = 0;
+
+
+            public override string ToString()
+            {
+                string result = 
+                    $"GameData(money={money}, upgrades={upgrades.ToString_EasyRead()}, shiftNumber={shiftNumber})";
+
+                return result;
+            }
+        }
+        /// <summary>
+        /// Save multiple data (money, upgrades, daycount) into a file
+        /// </summary>
+        public static void SaveGameData() => SaveGameData(MakeGameData());
+        /// <summary>
+        /// Save multiple data (money, upgrades, daycount) into a file
+        /// </summary>
+        public static void SaveGameData(GameData gameData)
+        {
+            if (gameData == null)
+            {
+                Debug.LogWarning("[SaveManager] GameData was null, and could not be saved.");
+                return;
+            }
+
+            if (filePath == null)
+            {
+                Debug.LogWarning("The specified file path for the save file is null. Make sure the manager was initialized properly");
+                return;
+            }
+            
+            string json = JsonUtility.ToJson(gameData, true);
+            File.WriteAllText(filePath, json);
+            OnSuccessfulSave?.Invoke();
+        }
+    
+        public static bool SaveFileExists()
+        {
+            return File.Exists(filePath);
+        }
+
+        /// <summary>
+        /// Should never return null
+        /// </summary>
+        /// <returns></returns>
+        public static GameData GetCurrentData()
+        {
+            if (!SaveFileExists())
+            {
+                Data = DefaultData();
+                SaveGameData(Data);
+                return Data;
+            }
+            string json = File.ReadAllText(filePath);
+            return JsonUtility.FromJson<GameData>(json);
+        }
+
 
         static List<UpgradeData> ConvertUpgradeData()
         {
@@ -163,54 +199,29 @@ namespace GameSystem
                 return;
             }
 
-            if(upgradeManager.Upgrades.Count != Data.upgrades.Count)
-                Debug.Log("the number of saved upgrades is not the same as the current number of upgrades");
-            else
-            {
-                // Reset all the upgrades in case they were not saved
-                foreach (var upgrade in upgradeManager.Upgrades)
-                    upgrade.SetLevel(0);
+            // Reset all the upgrades in case they were not saved
+            foreach (var upgrade in upgradeManager.Upgrades)
+                upgrade.SetLevel(0);
 
-                // Apply the levels for the upgrades that were saved
-                for (int i = 0; i < Data.upgrades.Count; i++)
-                {
-                    UpgradeData upgradeData = Data.upgrades[i];
-                    var correspondingUpgrades = upgradeManager.Upgrades.Where(upgrade => upgrade.GetType().Name == upgradeData.name).ToArray();
-                    if (correspondingUpgrades.Length == 0)
-                        continue;
-                    correspondingUpgrades[0].SetLevel(upgradeData.level);
-                }
-                upgradeManager.ActualizeAllUpgrade();
-                Debug.Log("All upgrades have been loaded");
+            // Apply the levels for the upgrades that were saved
+            for (int i = 0; i < Data.upgrades.Count; i++)
+            {
+                UpgradeData upgradeData = Data.upgrades[i];
+                var correspondingUpgrades = upgradeManager.Upgrades.Where(upgrade => upgrade.GetType().Name == upgradeData.name).ToArray();
+                if (correspondingUpgrades.Length == 0)
+                    continue;
+                correspondingUpgrades[0].SetLevel(upgradeData.level);
             }
             
+            upgradeManager.ActualizeAllUpgrade();
+            Debug.Log("All upgrades have been loaded");
         }
 
         static GameData DefaultData() => new GameData();
 
         #endregion
 
-        
-        [System.Serializable]
-        public class GameData
-        {
-            public float money = 0;
-            public List<UpgradeData> upgrades = new List<UpgradeData> { };
-            public int shiftNumber = 0;
-            public bool TutorialHasBeenPlayed;
 
-            // Stats that should not be reset
-            public int SecondsPlayed = 0;
-
-
-            public override string ToString()
-            {
-                string result = 
-                    $"GameData(money={money}, upgrades={upgrades.ToString_EasyRead()}, shiftNumber={shiftNumber})";
-
-                return result;
-            }
-        }
         
         [Serializable]
         public class UpgradeData

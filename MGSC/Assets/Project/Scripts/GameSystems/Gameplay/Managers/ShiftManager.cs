@@ -129,6 +129,7 @@ namespace GameSystem
                 HasFailed = true;
             }
 
+            ShiftNumber++;
             SaveManager.SaveGameData();
             OnShiftEnded?.Invoke();
             AudioSystem.PlayAudio(AudioSystem.Database.shiftEndSFX);
