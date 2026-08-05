@@ -1,7 +1,9 @@
-using UnityEngine;
+using Features;
+using NaughtyAttributes;
+using Orders;
 using System.Collections.Generic;
 using System.Linq;
-using NaughtyAttributes;
+using UnityEngine;
 
 namespace Cooking
 {
@@ -39,6 +41,19 @@ namespace Cooking
         #endregion
 
         #region Methods
+        public bool TryGetRequirements(out SO_RecipeUnlockConfig.UnlockRequirement requirements)
+        {
+            requirements = default;
+            var cat = RecipeCategoryHelper.GetCategory(this);
+            var config = SO_RecipeUnlockConfig.Instance;
+            if (config == null) return false;
+
+            if (!config.TryGetRequirement(cat, out requirements))
+            {
+                return true;
+            }
+            return false;
+        }
         public static bool Compare(SO_Recipe a, SO_Recipe b) => ScrambledEquals(a.Ingredients, b.Ingredients);
         public static bool Compare(IEnumerable<SO_Ingredient> a, SO_Recipe b) => ScrambledEquals(a, b.Ingredients);
         public static bool Compare(SO_Recipe a, IEnumerable<SO_Ingredient> b) => ScrambledEquals(b, a.Ingredients);

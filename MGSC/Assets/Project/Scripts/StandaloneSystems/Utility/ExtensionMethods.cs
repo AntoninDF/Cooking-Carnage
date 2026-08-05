@@ -2,7 +2,6 @@ using Features;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// Helper methods to extend functionality to GameObjects
@@ -104,7 +103,7 @@ public static class ExtensionMethods
 
             if (kvp.Key is IFormattable key)
                 result += key.ToString();
-            if (kvp.Key is object obj1)
+            else if (kvp.Key is object obj1)
                 result += obj1.ToString();
             else
                 result += typeof(T1).Name;
@@ -113,7 +112,7 @@ public static class ExtensionMethods
 
             if (kvp.Value is IFormattable value)
                 result += value.ToString();
-            if (kvp.Value is object obj2)
+            else if (kvp.Value is object obj2)
                 result += obj2.ToString();
             else
                 result += typeof(T2).Name;

@@ -40,7 +40,27 @@ namespace Orders
                 throw new NullReferenceException("[OrderPicker] : client manager not found");
 
             Dictionary<EClientType, int> clientCount = clientManager.GetSeenClientTypesCount();
-            IEnumerable<SO_Recipe> recipes = book.Recipes.Where(IsBaseRecipe).Where(r => RecipeUnlockChecker.IsUnlocked(r));
+            Debug.Log("[OrderPicker] : Client count is " + clientCount.ToString_Detailed());
+            List<SO_Recipe> recipes = new();
+            string recipeSelectionDebug = "[OrderPicker] Recipe selection yields :\n";
+            foreach (var curr in book.Recipes)
+            {
+                recipeSelectionDebug += curr.name;
+                if (curr.TryGetRequirements(out var req))
+                    recipeSelectionDebug += " (requires shift " + req.minShift + " and total money " + req.minMoney + "$)" ;
+                recipeSelectionDebug += " : ";
+                if (IsBaseRecipe(curr) && RecipeUnlockChecker.IsUnlocked(curr))
+                {
+                    recipes.Add(curr);
+                    recipeSelectionDebug += "valid";
+                }
+                else
+                    recipeSelectionDebug += "NOT valid";
+                recipeSelectionDebug += "\n";
+
+
+            } 
+            Debug.Log("[OrderPicker] : Available recipes are " + recipes.Select(recipe => recipe.name).ToList().ToString_Detailed()); 
 
             if (!recipes.Any())
             {
@@ -51,7 +71,9 @@ namespace Orders
             List<SO_Client> clientModels = Reference.AssetReferences.clientList;
             EnforceSeenClientsCountTypes(ref clientCount, clientModels.Select(model => model.clientType));
             Dictionary<SO_Recipe, float> weights = SetupRecipeWeights(recipes, clientCount, clientModels);
-
+            Debug.Log("[OrderPicker] : Weights are " + weights.ToString_Detailed());
+            Debug.Log("[OrderPicker] : Accumulated money is " + Reference.GetManager<MoneyManager>().GetMoneyGainedSinceBeginning());
+            Debug.Log("[OrderPicker] : Current shift is " + Globals.Gameplay.ShiftNumber);
             SO_Recipe picked = PickRandomRecipe(weights);
             return ApplyUpgrade(picked, book, SO_RecipeUnlockConfig.Instance);
         }
@@ -197,6 +219,11 @@ namespace Orders
             return output;
         }
 
+        /// <summary>
+        /// Makes sure that the ref dictionary <paramref name="clientCount"/> contains a key for each possible value of <see cref="EClientType"/>
+        /// </summary>
+        /// <param name="clientCount"></param>
+        /// <param name="clients"></param>
         private static void EnforceSeenClientsCountTypes(ref Dictionary<EClientType, int> clientCount, IEnumerable<EClientType> clients)
         {
             foreach (EClientType clientType in clients)

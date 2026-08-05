@@ -68,7 +68,8 @@ namespace GameSystem
             AddMoney(order.OrderRating.MoneyGained);
         }
 
-
+        public void SetTransactions(Dictionary<int, List<float>> dict) => _moneyTransactionsPerShift = dict;
+        public Dictionary<int, List<float>> GetTransactions () => _moneyTransactionsPerShift;
         public float GetMoneyGainedSinceBeginning()
         {
             List<float> gains = new();
