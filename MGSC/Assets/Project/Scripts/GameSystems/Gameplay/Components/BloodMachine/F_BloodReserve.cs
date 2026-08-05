@@ -45,13 +45,13 @@ namespace Project.Scripts.BloodMachine
        {
           if (!_quantityPerClient.ContainsKey(clientType))
           {
-             Debug.Log($"[F_BloodReserve] this client type {clientType} is not registered");
+             Debug.LogWarning($"[F_BloodReserve] this client type {clientType} is not registered");
              return;
           }
-          
           float addedBlood = _quantityPerClient[clientType] + quantity;
           _quantityPerClient[clientType] = Mathf.Clamp(addedBlood, 0, MaxBloodQaunity);
           OnBloodAdded?.Invoke(clientType, _quantityPerClient[clientType]);
+          Debug.Log($"[Blood Reserve] the current quantity of the reserve {clientType} is {_quantityPerClient[clientType]}");
        }
 
        public void RemoveBlood(EClientType clientType, float specificQuantity = 0)

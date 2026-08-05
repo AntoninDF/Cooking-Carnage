@@ -86,7 +86,8 @@ namespace Features
             client.CurrentSeat                      =  this;
             client.Behaviour.OnReactionEnd          += OnClientLeaving;
             client.Behaviour.GoodReaction           += OnClientLeavingWithTips;
-             RegisteredClient                        =  client;
+            client.ClientBlending.OnCustomerBlended += OnClientBlended;
+            RegisteredClient                       =  client;
             ActualizeSeatPos(client);
             return true;
         }

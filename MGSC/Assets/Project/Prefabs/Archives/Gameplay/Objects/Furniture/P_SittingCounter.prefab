@@ -262,7 +262,67 @@ MonoBehaviour:
         m_CallState: 2
   OnCustomerBlended:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5670825509469044708}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: SetTrigger
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Die
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 546657072793081989}
+        m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3333766840374621683}
+        m_TargetAssemblyTypeName: Orders.OrderDisplayer, Assembly-CSharp
+        m_MethodName: UndisplayOrder
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 11400000, guid: 90e8c256caa50c64c8f37e9ab174befe, type: 2}
+        m_TargetAssemblyTypeName: EventVariable, Assembly-CSharp
+        m_MethodName: Raise
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8542945016557381753}
+        m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _OrderDisplayer: {fileID: 3333766840374621683}
   _slotParent: {fileID: 2049341413406100142}
 --- !u!114 &8259305389291430800
@@ -461,7 +521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f73d2525679cf86409b974e13c3960d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractionButton
-  Model: {fileID: 0}
+  Model: {fileID: 3413386190200840069}
 --- !u!114 &3292589433501947321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1907,7 +1967,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServingArea
   MealSlot: {fileID: 3105233326953326532}
-  DrinkSlot: {fileID: 3105233326953326532}
+  DrinkSlot: {fileID: 2896599536157228082}
 --- !u!114 &7676619333211919107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2916,6 +2976,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4738911711032570369, guid: d17facc795421624e90c07c346e03404, type: 3}
   m_PrefabInstance: {fileID: 7580168617674795248}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3413386190200840069 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5074681113360004981, guid: d17facc795421624e90c07c346e03404, type: 3}
+  m_PrefabInstance: {fileID: 7580168617674795248}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8478240267194883503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModelController
 --- !u!1 &8478240267194883503 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2061216688120116575, guid: d17facc795421624e90c07c346e03404, type: 3}

@@ -21,6 +21,7 @@ namespace Project.Scripts.BloodMachine
        private DrinkStation      _drinkStation;
        private GlobalDrinkStation _station;
        
+       private bool _hasPendingDrink;
        private bool isServing;
 
        private float _bloodDecreaseOverTime;
@@ -48,9 +49,18 @@ namespace Project.Scripts.BloodMachine
           _secondTimerTime       = secondTimerTime;
           _bloodDecreaseOverTime = bloodDecreaseOverTime;
        }
+       
+
+       public void SetPendingDrink(bool value) => _hasPendingDrink = value;
 
        public void TryServeDrink()
        {
+          if (_hasPendingDrink)
+          {
+             Debug.Log("[F_Valve] Une boisson est déjà en attente d'être récupérée");
+             return;
+          }
+
           if (_reserve.CanServeDrink(_associedClientType) && !isServing)
           {
              isServing = true;
@@ -59,6 +69,28 @@ namespace Project.Scripts.BloodMachine
              _station.StartCoroutine(PourDrinkRoutine());
           }
        }
+
+       public void TryGrabbDrink()
+       {
+          if (!isServing) return;
+          if (TimerManager.IsTimerRunning(FirstTimerName))
+          {
+             Debug.Log("[F_Valve] votre boisson est occupée");
+             return;
+          }
+          DrinkTaken();
+       }
+
+       // public void TryServeDrink()
+       // {
+       //    if (_reserve.CanServeDrink(_associedClientType) && !isServing)
+       //    {
+       //       isServing = true;
+       //       StartServeDrink?.Invoke();
+       //       TimerManager.StartTimer(FirstTimerName, _firstTimerTime, WaitForPlayerToRetrieve);
+       //       _station.StartCoroutine(PourDrinkRoutine());
+       //    }
+       // }
 
        private IEnumerator PourDrinkRoutine()
        {
@@ -108,18 +140,16 @@ namespace Project.Scripts.BloodMachine
           isServing = false;
        }
 
-       public void TryGrabbDrink()
-       {
-          if (TimerManager.IsTimerRunning(FirstTimerName))
-          {
-             Debug.Log("[F_Valve] votre boisson est occupée");
-             return;
-          }
-          else
-          {
-             DrinkTaken();
-          }
-       }
+       // public void TryGrabbDrink()
+       // {
+       //    if (!isServing) return; 
+       //    if (TimerManager.IsTimerRunning(FirstTimerName))
+       //    {
+       //       Debug.Log("[F_Valve] votre boisson est occupée");
+       //       return;
+       //    }
+       //    DrinkTaken();
+       // }
        
        public void DrinkTaken()
        {

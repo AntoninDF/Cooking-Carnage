@@ -63,8 +63,9 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         MealSlot.Container.Filter  += BuildSlotFilter(MealSlot);
         DrinkSlot.Container.Filter += BuildSlotFilter(DrinkSlot);
         
-        // if (ReferenceEquals(MealSlot.Container.Filter, DrinkSlot.Container.Filter))
-        //     Debug.LogError("BUG: MealSlot et DrinkSlot partagent le même objet Filter !");
+        
+        if (MealSlot.Container == DrinkSlot.Container)
+            Debug.LogError($"[ServingArea] MealSlot et DrinkSlot référencent le MÊME container sur {name} — vérifier l'Inspector !");
     }
 
     private void OnClientSitting(Client obj)
@@ -72,6 +73,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         MealSlot.Container.IsLocked  = false;
         DrinkSlot.Container.IsLocked = !DrinkExpected;
     }
+   
 
     public void Initialize(ClientSeat clientSeat)
     {
@@ -91,38 +93,37 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
 
     }
 
+
     public void Update()
     {
         if (!_watching) return;
-        Debug.Log($"[ServingArea] MealSlot.Container instance hash {MealSlot?.Container?.GetHashCode()}, transform '{MealSlot?.Container?.transform?.name}'");
-        
+
+        var meal  = MealSlot?.Container?.HeldItem;
+        var drink = DrinkSlot?.Container?.HeldItem;
+
         if (!DrinkExpected)
         {
-            var current = MealSlot?.Container?.HeldItem;
-            if (current != null && current != _lastHeldItem)
+            if (meal != null && meal != _lastHeldItem)
             {
-                _lastHeldItem               = current;
+                _lastHeldItem               = meal;
                 MealSlot.Container.IsLocked = true;
                 ClientSeat.OnMealReady?.Invoke();
             }
-            if (current == null)
+            else if (meal == null)
+            {
                 _lastHeldItem = null;
+            }
             return;
         }
 
-        if (MealSlot.Container.IsLocked) return; 
-
-        var  meal     = MealSlot?.Container?.HeldItem;
-        var  drink    = DrinkSlot?.Container?.HeldItem;
+        if (MealSlot.Container.IsLocked) return;
 
         if (meal != null && drink != null)
         {
-
             MealSlot.Container.IsLocked  = true;
             DrinkSlot.Container.IsLocked = true;
             ClientSeat.OnMealReady?.Invoke();
-        } 
-        
+        }
     }
     
     private bool ItemTypeMatchesSlot(SlotContainer slot, F_Grabbable grab)

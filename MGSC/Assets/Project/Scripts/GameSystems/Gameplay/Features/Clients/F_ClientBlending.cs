@@ -7,7 +7,7 @@ namespace Features
 {
     public class F_ClientBlending : Feature
     {
-        public Action<EClientType> OnCustomerBlended { get; set; }
+        public Action  OnCustomerBlended { get; set; }
 
         private float  _destroyDelay;
         private float  _timer;
@@ -27,7 +27,7 @@ namespace Features
             _timer           = 0f;
             _client.IsCooked = true;
             _client.CurrentOrder.Cancel();
-            OnCustomerBlended?.Invoke(_client.Type);
+           // OnCustomerBlended?.Invoke(_client.Type);
             _client.CurrentSeat?.TryUnregister(_client);
 
         }

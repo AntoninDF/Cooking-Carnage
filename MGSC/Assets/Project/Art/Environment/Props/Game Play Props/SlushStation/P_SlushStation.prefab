@@ -58,6 +58,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5284729841080385667}
+  - component: {fileID: 3663830229655350739}
+  - component: {fileID: 2377019153398281109}
   m_Layer: 0
   m_Name: P_SlushStation
   m_TagString: Untagged
@@ -89,6 +91,462 @@ Transform:
   - {fileID: 4113092952475274643}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3663830229655350739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567189697456514083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31ba94a06db74eac9ca95f06db219783, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.BloodMachine.GlobalDrinkStation
+  BloodPerClients: []
+  _bloodPerDrinkCl: 30
+  _drinksPerFullReserve: 3
+  _timeToRefillDrink: 5
+  _timeBeforeLoosingBlood: 1.5
+  _assStation:
+    Type: 2
+    ValveButton: {fileID: 58035900474611585}
+    _drinkPrefab: {fileID: 222866882189378175, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
+    _drinkSpawnPoint: {fileID: 7109971346479663031}
+    _reserveRenderer: {fileID: 8390174860996361006}
+    _reserveMaterialIndex: 0
+    _animator: {fileID: 2084917202978616097}
+    _startServeClip: {fileID: 7400000, guid: f69346a25e9248741b42f2a0bc8a0d38, type: 2}
+  _eyesStation:
+    Type: 0
+    ValveButton: {fileID: 0}
+    _drinkPrefab: {fileID: 0}
+    _drinkSpawnPoint: {fileID: 0}
+    _reserveRenderer: {fileID: 0}
+    _reserveMaterialIndex: 0
+    _animator: {fileID: 0}
+    _startServeClip: {fileID: 0}
+  _toothStation:
+    Type: 3
+    ValveButton: {fileID: 1836127371908883152}
+    _drinkPrefab: {fileID: 2304281794536095463, guid: af7e7183782284149bee92983aad0b58, type: 3}
+    _drinkSpawnPoint: {fileID: 8558030956486575936}
+    _reserveRenderer: {fileID: 4784502931437997684}
+    _reserveMaterialIndex: 0
+    _animator: {fileID: 385636538884966000}
+    _startServeClip: {fileID: 7400000, guid: f69346a25e9248741b42f2a0bc8a0d38, type: 2}
+--- !u!114 &2377019153398281109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567189697456514083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
+  Events:
+  - ActionPath:
+      ActionVariableName: StartServeDrink
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: AssValve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3663830229655350739}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2103889171026003100}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 1879237266631880221}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: DrinkReady
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: AssValve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3663830229655350739}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2599019097738649107}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnDrinkTaked
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: AssValve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3663830229655350739}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2599019097738649107}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1879237266631880221}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 2103889171026003100}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: StartServeDrink
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: EyeValve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3663830229655350739}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4943949060748013836}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 2626367233717342955}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: DrinkReady
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: EyeValve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3663830229655350739}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 531903576631598589}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnDrinkTaked
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: EyeValve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3663830229655350739}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 531903576631598589}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 4943949060748013836}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 2626367233717342955}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: StartServeDrink
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: ToothValve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3663830229655350739}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4806570796119149443}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 2325128847588875267}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: DrinkReady
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: ToothValve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3663830229655350739}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7595640946205207133}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnDrinkTaked
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: ToothValve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3663830229655350739}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7595640946205207133}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 4806570796119149443}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 2325128847588875267}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1699328011314026905
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,6 +580,37 @@ Transform:
   - {fileID: 5790346610075086021}
   - {fileID: 4993842247678522509}
   m_Father: {fileID: 6052682503441185216}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2288519754728918707
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6186115863538738598}
+  m_Layer: 0
+  m_Name: Drink_SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6186115863538738598
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2288519754728918707}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3059601366858220712}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3730058394680467752
 GameObject:
@@ -248,6 +737,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5609261034483531786
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7109971346479663031}
+  m_Layer: 0
+  m_Name: Drink_SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7109971346479663031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5609261034483531786}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3944087869798747624}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5727767612788343977
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,6 +1038,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8880212066759770670
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8558030956486575936}
+  m_Layer: 0
+  m_Name: Drink_SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8558030956486575936
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8880212066759770670}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3389280054541973689}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9193880928395045573
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,6 +1115,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VFX_LiquideSlushy_Stop
       objectReference: {fileID: 0}
+    - target: {fileID: 2643874523588757087, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4123261296476535115, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8928729968608091343, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -604,11 +1163,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9028058093237227906, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+--- !u!1 &2626367233717342955 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2643874523588757087, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+  m_PrefabInstance: {fileID: 54701572915205300}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8875308797518743675 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8928729968608091343, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
@@ -626,6 +1194,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VFX_LiquideSlushy_Stop
       objectReference: {fileID: 0}
+    - target: {fileID: 2643874523588757087, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4123261296476535115, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8928729968608091343, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -666,11 +1242,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9028058093237227906, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+--- !u!1 &2325128847588875267 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2643874523588757087, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+  m_PrefabInstance: {fileID: 357026274192579164}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &9159566383397193363 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8928729968608091343, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
@@ -687,6 +1272,26 @@ PrefabInstance:
     - target: {fileID: 2391234727086394640, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
       propertyPath: m_Name
       value: VFX_OverflowRED
+      objectReference: {fileID: 0}
+    - target: {fileID: 2391234727086394640, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4704437725865578110, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6404839816492884903, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758553565617610305, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7665648277312219184, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8042553504921132461, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
       propertyPath: m_LocalPosition.x
@@ -733,6 +1338,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+--- !u!1 &2599019097738649107 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2391234727086394640, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+  m_PrefabInstance: {fileID: 377965135512933123}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7683755062683668142 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8042553504921132461, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
@@ -749,6 +1359,14 @@ PrefabInstance:
     - target: {fileID: 1439256434879447122, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
       propertyPath: m_Name
       value: VFX_LiquideSlushy_Loop
+      objectReference: {fileID: 0}
+    - target: {fileID: 1439256434879447122, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3066243210507911975, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
+      propertyPath: playOnAwake
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6814141433676376075, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
       propertyPath: m_LocalPosition.x
@@ -790,6 +1408,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8613935323191313615, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -817,6 +1439,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 49119fb5bb2861442a00a538dc2e9f86, type: 2}
+    - target: {fileID: 2802588553563444075, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3178310866199767869, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -925,8 +1551,27 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 916448799505100194, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5685045334504709207}
+    - targetCorrespondingSourceObject: {fileID: 916448799505100194, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8558030956486575936}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+--- !u!95 &385636538884966000 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2802588553563444075, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+  m_PrefabInstance: {fileID: 2575712723406935323}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1836127371908883152 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4235064865672132555, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+  m_PrefabInstance: {fileID: 2575712723406935323}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73d2525679cf86409b974e13c3960d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionButton
 --- !u!4 &3389280054541973689 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 916448799505100194, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
@@ -948,6 +1593,26 @@ PrefabInstance:
     - target: {fileID: 2391234727086394640, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
       propertyPath: m_Name
       value: VFX_OverflowRED
+      objectReference: {fileID: 0}
+    - target: {fileID: 2391234727086394640, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4704437725865578110, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6404839816492884903, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758553565617610305, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7665648277312219184, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8042553504921132461, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
       propertyPath: m_LocalPosition.x
@@ -994,6 +1659,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+--- !u!1 &531903576631598589 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2391234727086394640, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+  m_PrefabInstance: {fileID: 2760403298458718445}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5319331571379424576 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8042553504921132461, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
@@ -1015,6 +1685,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 2a737aa6604294a418c8110ed1b6b26b, type: 2}
+    - target: {fileID: 2802588553563444075, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3178310866199767869, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1127,6 +1801,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 916448799505100194, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3493976607737934531}
+    - targetCorrespondingSourceObject: {fileID: 916448799505100194, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6186115863538738598}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
 --- !u!4 &3059601366858220712 stripped
@@ -1150,6 +1827,10 @@ PrefabInstance:
     - target: {fileID: 2304281794536095463, guid: af7e7183782284149bee92983aad0b58, type: 3}
       propertyPath: m_Name
       value: P_Drink_Tooth
+      objectReference: {fileID: 0}
+    - target: {fileID: 2304281794536095463, guid: af7e7183782284149bee92983aad0b58, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9094713275349182645, guid: af7e7183782284149bee92983aad0b58, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1221,9 +1902,13 @@ PrefabInstance:
       propertyPath: InitialModule.startLifetime.scalar
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2802588553563444075, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3178310866199767869, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4573166068361298048, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
       propertyPath: m_Name
@@ -1269,12 +1954,44 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532684598675793507, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045754997008162368, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 5611427272680185722, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 916448799505100194, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7109971346479663031}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+--- !u!114 &58035900474611585 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4235064865672132555, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+  m_PrefabInstance: {fileID: 4182672346066034762}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73d2525679cf86409b974e13c3960d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionButton
+--- !u!95 &2084917202978616097 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2802588553563444075, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+  m_PrefabInstance: {fileID: 4182672346066034762}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3944087869798747624 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 916448799505100194, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
+  m_PrefabInstance: {fileID: 4182672346066034762}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8021624784274329739 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6150051680042463425, guid: abf4a970973e2f34eb4df1ec2f620402, type: 3}
@@ -1291,6 +2008,14 @@ PrefabInstance:
     - target: {fileID: 2643874523588757087, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
       propertyPath: m_Name
       value: VFX_LiquideSlushy_Stop
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643874523588757087, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4123261296476535115, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+      propertyPath: playOnAwake
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8928729968608091343, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1331,6 +2056,10 @@ PrefabInstance:
     - target: {fileID: 8928729968608091343, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028058093237227906, guid: 5b796cbef39e77c4e955bcf9cb35c188, type: 3}
+      propertyPath: playOnAwake
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1461,6 +2190,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: VFX_OverflowRED
       objectReference: {fileID: 0}
+    - target: {fileID: 2391234727086394640, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4704437725865578110, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6404839816492884903, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6758553565617610305, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7665648277312219184, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8042553504921132461, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.0438
@@ -1511,6 +2260,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8042553504921132461, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
   m_PrefabInstance: {fileID: 5207986783029634893}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7595640946205207133 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2391234727086394640, guid: 648d4b7ab5d92084a9d7d67225fcc549, type: 3}
+  m_PrefabInstance: {fileID: 5207986783029634893}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5324031064391962852
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1522,6 +2276,10 @@ PrefabInstance:
     - target: {fileID: 6427651013289206968, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
       propertyPath: m_Name
       value: P_Drink_Eye
+      objectReference: {fileID: 0}
+    - target: {fileID: 6427651013289206968, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8763964459011285543, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1585,6 +2343,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VFX_LiquideSlushy_Loop
       objectReference: {fileID: 0}
+    - target: {fileID: 1439256434879447122, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3066243210507911975, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6814141433676376075, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1625,6 +2391,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8613935323191313615, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1633,6 +2403,11 @@ PrefabInstance:
 --- !u!4 &1143258110925775834 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6814141433676376075, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
+  m_PrefabInstance: {fileID: 5858368059934084049}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4806570796119149443 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1439256434879447122, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
   m_PrefabInstance: {fileID: 5858368059934084049}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6297487345737118046
@@ -1647,6 +2422,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: VFX_LiquideSlushy_Loop
       objectReference: {fileID: 0}
+    - target: {fileID: 1439256434879447122, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3066243210507911975, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6814141433676376075, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1687,6 +2470,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8613935323191313615, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1695,5 +2482,10 @@ PrefabInstance:
 --- !u!4 &717650036583864661 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6814141433676376075, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
+  m_PrefabInstance: {fileID: 6297487345737118046}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4943949060748013836 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1439256434879447122, guid: f5dc8fd7791e06441bc612998ab9e975, type: 3}
   m_PrefabInstance: {fileID: 6297487345737118046}
   m_PrefabAsset: {fileID: 0}
