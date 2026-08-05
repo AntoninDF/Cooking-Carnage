@@ -59,7 +59,6 @@ namespace UI
             Owner.ShowWidget(this);
             _enabled = true;
             OnEnable?.Invoke();
-            //Debug.Log($"[UIWidget] '{name}' has been enabled.");
         }
         /// <summary>
         /// Hide the widget from the UI
@@ -70,7 +69,6 @@ namespace UI
             Owner?.StashWidget(this);
             _enabled = false;
             OnDisable?.Invoke();
-            //Debug.Log($"[UIWidget] '{name}' has been disabled.");
         }
 
         public class F_FullscreenWidgetActions : Feature

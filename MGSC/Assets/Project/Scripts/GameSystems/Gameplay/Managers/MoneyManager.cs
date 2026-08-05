@@ -109,7 +109,6 @@ namespace GameSystem
 
         public void AddMoney(float amount)
         {
-            Debug.Log("Money gained : " + amount);
             MoneyInfo += amount;
             if (!_moneyTransactionsPerShift.ContainsKey(shiftNumber))
                 _moneyTransactionsPerShift[shiftNumber] = new();
@@ -121,7 +120,6 @@ namespace GameSystem
             if (amount > 0)
             {
                 OnMoneyGain?.Invoke();
-                Debug.Log("OnMoneyGain called");
             }
             if (amount < 0) OnMoneyLoss?.Invoke();
 

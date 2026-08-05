@@ -40,7 +40,6 @@ namespace Orders
                 throw new NullReferenceException("[OrderPicker] : client manager not found");
 
             Dictionary<EClientType, int> clientCount = clientManager.GetSeenClientTypesCount();
-            Debug.Log("[OrderPicker] : Client count is " + clientCount.ToString_Detailed());
             List<SO_Recipe> recipes = new();
             string recipeSelectionDebug = "[OrderPicker] Recipe selection yields :\n";
             foreach (var curr in book.Recipes)
@@ -60,7 +59,6 @@ namespace Orders
 
 
             } 
-            Debug.Log("[OrderPicker] : Available recipes are " + recipes.Select(recipe => recipe.name).ToList().ToString_Detailed()); 
 
             if (!recipes.Any())
             {
@@ -71,9 +69,6 @@ namespace Orders
             List<SO_Client> clientModels = Reference.AssetReferences.clientList;
             EnforceSeenClientsCountTypes(ref clientCount, clientModels.Select(model => model.clientType));
             Dictionary<SO_Recipe, float> weights = SetupRecipeWeights(recipes, clientCount, clientModels);
-            Debug.Log("[OrderPicker] : Weights are " + weights.ToString_Detailed());
-            Debug.Log("[OrderPicker] : Accumulated money is " + Reference.GetManager<MoneyManager>().GetMoneyGainedSinceBeginning());
-            Debug.Log("[OrderPicker] : Current shift is " + Globals.Gameplay.ShiftNumber);
             SO_Recipe picked = PickRandomRecipe(weights);
             return ApplyUpgrade(picked, book, SO_RecipeUnlockConfig.Instance);
         }

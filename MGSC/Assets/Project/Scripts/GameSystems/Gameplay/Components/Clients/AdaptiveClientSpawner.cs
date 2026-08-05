@@ -101,7 +101,6 @@ namespace GameSystem
             // Start spawning clients when the shift begins
             ShiftManager.OnShiftBegin += () =>
             {
-                Debug.Log("Shift started, client will spawn soon");
                 Launch(2);
             };
         }
@@ -125,7 +124,6 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
-            //            Debug.Log("START SPAWN ROUTINE");
             TimerManager.StartGameplayTimer(timerName, delay, () => TrySpawnClient());
         }
 
@@ -152,7 +150,6 @@ namespace GameSystem
         /// </summary>
         void SpawnClient()
         {
-            //Debug.Log("Spawning client");
             if (nextClients.Count == 0)
             {
                 EnqueueClient(NewClient());

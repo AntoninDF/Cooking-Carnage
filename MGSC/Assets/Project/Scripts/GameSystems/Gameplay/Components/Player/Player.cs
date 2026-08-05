@@ -17,7 +17,6 @@ public class Player : MonoBehaviour, IFeatureCollection
         set
         {
             if (value == _lookedAtObject) return;
-           // Debug.Log("Looked at object set");
             if (_lookedAtObject != null)
                 _lookedAtObject.IsLookedAt = false;
             _lookedAtObject = value;
@@ -100,7 +99,6 @@ public class Player : MonoBehaviour, IFeatureCollection
 
         Collection.Update();
 
-        // Debug.Log("[Player] : Contains " + Container.HeldItem);
     }
 
     private void TryResetLookedAtObject()

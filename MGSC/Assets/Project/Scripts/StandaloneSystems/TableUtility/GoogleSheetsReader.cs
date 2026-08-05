@@ -40,14 +40,8 @@ namespace TableUtility
             }
 
             string json = req.downloadHandler.text;
-            //Debug.Log("Sheet data: " + json);
 
             Result = JToken.Parse(json).ToObject<TableData>();
-            /*
-            foreach (var row in Result.values)
-                foreach (var cell in row)
-                    Debug.Log(cell);
-            */
             OnReadingComplete?.Invoke();
             return;
         }

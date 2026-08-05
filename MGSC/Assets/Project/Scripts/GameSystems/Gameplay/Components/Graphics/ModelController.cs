@@ -42,7 +42,6 @@ public class ModelController : MonoBehaviour, IFeatureCollection
     {
 
         Shader shader = Shader.Find("CookingCarnage/SH_Outline");
-        //Debug.Log("Shader is '" + shader + "'");
         Outline.SetParameters(_outline);
         MeshController.OnDisable += Outline.DisableOutline;
     }

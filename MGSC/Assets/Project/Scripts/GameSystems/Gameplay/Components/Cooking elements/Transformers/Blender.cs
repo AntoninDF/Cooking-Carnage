@@ -1,5 +1,6 @@
 using Features;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 
@@ -21,6 +22,7 @@ namespace Cooking
         [SerializeField] private InteractionButton _cuttingTrigger;
         [SerializeField] private EventVariable OnCutStart;
         [SerializeField] private EventVariable OnCutStop;
+        [SerializeField] private UnityEvent OnCutFail;
         #endregion
 
 
@@ -80,13 +82,15 @@ namespace Cooking
         }
         private void TryCut(InteractionContext context)
         {
-            //Debug.Log("TryCut");
-            if (Container.HeldItem == null) return;
-            if (!Container.HeldItem.TryGetSibling(out F_Cuttable cuttable, true) || !cuttable.CanBeTransformed) return; // Ensure it is cuttable and not already cut
-            if (!Cutter.CanStartTransformation(cuttable)) return;
+            if (Container.HeldItem == null) goto CutFail;
+            if (!Container.HeldItem.TryGetSibling(out F_Cuttable cuttable, true) || !cuttable.CanBeTransformed) goto CutFail; // Ensure it is cuttable and not already cut
+            if (!Cutter.CanStartTransformation(cuttable)) goto CutFail;
             Cutter.RequestStartTransformation(cuttable);
             if (OnCutStart != null) OnCutStart.Raise();
-            //Debug.Log("Cutting");
+
+            CutFail:
+                OnCutFail?.Invoke();
+                return;
         }
         #endregion
     }

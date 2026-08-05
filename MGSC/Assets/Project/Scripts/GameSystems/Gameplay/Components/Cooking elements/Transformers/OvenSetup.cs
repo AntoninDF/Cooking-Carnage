@@ -48,12 +48,10 @@ namespace Cooking
                 {
                     oven.SetOvenActive(true);
                     //oven.enabled = true;
-                    //Debug.Log("[OvenSetup] : " + oven.name);
                     activeOvenNumer++;
                 }
                 else
                 {
-                    //Debug.Log("[OvenSetup] not unlocked : " + oven.name);
                     oven.SetOvenActive(false);
                     //oven.enabled = false;
                 }
@@ -101,7 +99,6 @@ namespace Cooking
 
         public void OnUpgraded(OvenCountUpgrade upgrade)
         {
-            //Debug.Log("OvenSetup upgraded");
             ActualizeOvenCount(upgrade);
         }
 

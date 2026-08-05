@@ -88,7 +88,6 @@ namespace Clients
                 {
                     OnSeatRegister?.Invoke(value);
                     value.OnClientSitting += _clientLook.SetClientSitting;
-                    //Debug.Log("SITTING");
                 }
                 _currentSeat = value;
             }
@@ -148,11 +147,8 @@ namespace Clients
        {
            List<SlotContainer> positions = containers;
            int numberToDrop = Random.Range((int)DropRate.x, (int)DropRate.y);
-           Debug.Log($"Min Drop Rate :{(int)DropRate.x}, Max Drop rate : {(int)DropRate.y}");
-           Debug.Log($"Decided Number : {numberToDrop}");
            for (int i = 0; i < numberToDrop; i++)
            {
-               Debug.Log($"Spawning {Model.loot.Prefab.name}, ingredient number : {i}");
                Instantiate(Model.loot.Prefab, positions[i].transform);
            }
        }

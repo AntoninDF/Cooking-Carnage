@@ -41,7 +41,6 @@ namespace Trash
         {
             BindEvents();
             SetupMeshCollider();
-            // Debug.Log(Model.Outline.Renderers.Length);
         }
         void Reset()
         {

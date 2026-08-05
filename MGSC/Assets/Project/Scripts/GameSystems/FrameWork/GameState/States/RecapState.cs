@@ -15,6 +15,7 @@ public class RecapState : MenuState
     public override void OnExit()
     {
         base.OnExit();
+        Globals.Gameplay.ShiftNumber.Value++;
     }
 
     public override GameState FindNext(StateTransitions transition = StateTransitions.None)

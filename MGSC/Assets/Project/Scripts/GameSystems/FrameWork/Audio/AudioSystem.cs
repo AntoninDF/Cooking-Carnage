@@ -151,10 +151,6 @@ public static class AudioSystem
         {
             UnityEngine.Debug.LogError("[AudioSystem] "+ parameterName + " not found and can't be modified.");
         }
-        else
-        {
-            //UnityEngine.Debug.Log("[AudioSystem] "+ parameterName + " changed successfully to "+ value);
-        }
     }
     
     public static void StopAllAudio(FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.ALLOWFADEOUT)

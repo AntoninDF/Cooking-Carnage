@@ -30,12 +30,6 @@ namespace Orders
             float tip             = isCorrectRecipe ? CalculateTip(basePrice, stars) : 0f;
             float totalGained     = basePrice + tip;
 
-            Debug.Log($"BasePrice is {basePrice}" +
-                      $" stars is {stars}" +
-                      $" tip is {tip}" +
-                      $" total is {totalGained}" +
-                      $" isCorrectRecipe is {isCorrectRecipe}");
-
             return new OrderRating(order, order.ServingInfo.Recipe, stars, totalGained);
         }
 

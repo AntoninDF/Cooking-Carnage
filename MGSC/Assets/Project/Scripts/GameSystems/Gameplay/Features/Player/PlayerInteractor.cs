@@ -63,7 +63,6 @@ namespace Features
             bool result = false;
             foreach (Feature feature in AvailableFeatures)
             {
-                //UnityEngine.Debug.Log("Feature is : " + feature);
                 if (TryPlayerAction(feature))
                 {
                     result = true;

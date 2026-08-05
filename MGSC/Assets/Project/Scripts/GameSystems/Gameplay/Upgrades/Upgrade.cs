@@ -42,7 +42,7 @@ namespace Upgrades
             }
             
             _level++;
-            Debug.Log($"[{GetType().Name}] Level {_level}/{_config?.MaxLevel}");
+            // Debug.Log($"[{GetType().Name}] Level {_level}/{_config?.MaxLevel}");
             OnUpgradeSuccess?.Invoke();
         }
         

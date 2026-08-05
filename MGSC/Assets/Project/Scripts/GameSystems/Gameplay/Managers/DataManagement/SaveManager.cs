@@ -30,7 +30,6 @@ namespace GameSystem
         // UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
         public static void ResetSave()
         {
-            Debug.Log("Resetting save file");
 
             Data = GetCurrentData();
             GameData temp = DefaultData();
@@ -51,7 +50,6 @@ namespace GameSystem
         public static bool LoadGlobalData()
         {
             Data = GetCurrentData();
-            Debug.Log("Loading save data : " + Data.ToString());
             
             // Apply money
             if (Reference.TryGetManager(out MoneyManager moneyMgr))
@@ -77,10 +75,8 @@ namespace GameSystem
             if (serializedTransactions == null) serializedTransactions = "";
             Dictionary<int, List<float>> transactions = JsonConvert.DeserializeObject<Dictionary<int, List<float>>>(serializedTransactions);
             if (transactions == null) transactions = new();
-            Debug.Log("Deserializing transactions : " + transactions.ToString_Detailed());
             Reference.GetManager<MoneyManager>()?.SetTransactions(transactions);
 
-            //Debug.Log($"Save loaded successfully, shift : {Data.shiftNumber},  money : {Data.money}");
             OnSaveLoaded?.Invoke();
             return true;
         }
@@ -94,9 +90,15 @@ namespace GameSystem
                 shiftNumber = Globals.Gameplay.ShiftNumber,
                 TutorialHasBeenPlayed = Globals.Statistics.TutorialHasBeenPlayed,
                 Transactions = JsonConvert.SerializeObject(Reference.GetManager<MoneyManager>().GetTransactions()),
+                // Save the recipes that were ordered. We don't care about the rest
+                OrderHistory = JsonConvert.SerializeObject(
+                    Reference.GetManager<OrderManager>().PastOrders
+                    .Select(kvp => new KeyValuePair<int, List<string>>(kvp.Key, kvp.Value
+                    .Select(order => order.Recipe.name)
+                    .ToList()
+                    ))),
                 SecondsPlayed = Globals.Statistics.SecondsPlayed
             };
-
             return result;
         }
         // UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
@@ -108,6 +110,7 @@ namespace GameSystem
             public int shiftNumber = 0;
             public bool TutorialHasBeenPlayed;
             public string Transactions;
+            public string OrderHistory;
 
             // Stats that should not be reset
             public int SecondsPlayed = 0;
@@ -178,7 +181,6 @@ namespace GameSystem
             for (var index = 0; index < upgradeManager.Upgrades.Count; index++)
             {
                 var upgrade = upgradeManager.Upgrades[index];
-                Debug.Log(upgrade.GetType().Name + "found, lvl : " + upgrade.Level);
                 result.Add(new UpgradeData());
                 result[index].level = upgrade.Level;
                 result[index].name = upgrade.GetType().Name;
@@ -214,7 +216,6 @@ namespace GameSystem
             }
             
             upgradeManager.ActualizeAllUpgrade();
-            Debug.Log("All upgrades have been loaded");
         }
 
         static GameData DefaultData() => new GameData();

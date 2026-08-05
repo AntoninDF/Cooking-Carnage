@@ -82,7 +82,6 @@ namespace Controller
                 "[Player Setup] : The player to be reset was null"))
                 return false;
 
-            //Debug.Log($"[PlayerSetup] Player is '{Player}', pos is '{pos}', rot is '{rot}'");
             ResetPlayer(Player, pos, rot);
             return true;
         }

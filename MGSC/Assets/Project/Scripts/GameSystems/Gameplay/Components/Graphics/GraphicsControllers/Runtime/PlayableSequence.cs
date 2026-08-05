@@ -18,7 +18,6 @@ public class PlayableSequence : PlayableGraphicsController
             }
             else
             {
-                Debug.Log("Playing first anim (" + PlayableTargets[0].name + ")");
                 PlayableTargets[0].Play();
             }
         }
@@ -30,9 +29,7 @@ public class PlayableSequence : PlayableGraphicsController
             int index = i; // Used to prevent the lambda expression to capture a reference to i, and pass it a value instead;
             if (PlayableTargets[i] == null || PlayableTargets[i + 1] == null)
                 continue;
-            //Debug.Log("Bind playable anim '" + i + "' (" + PlayableTargets[i].name + ") with '" + (i + 1) + "' (" + PlayableTargets[i+1].name + ")");
             PlayableTargets[i].OnStop += () => PlayableTargets[index + 1].Play();
-            //PlayableTargets[i].OnStop += () => Debug.Log("Playable anim '" + i + "' (" + PlayableTargets[index].name + ") stopped");
         }
     }
 }

@@ -90,7 +90,6 @@ namespace GameSystem
         public void RequestShiftTimer() => LaunchShiftTimer(_shiftDuration);
         void LaunchShiftTimer(float duration)
         {
-            Debug.Log( $"Launching new shift for {duration}s");
             TimerUntilEndOfShift = TimerManager.StartGameplayTimer("shiftDuration", duration, EndShift);
             TimerUntilFinalWarning = TimerManager.StartGameplayTimer("shiftDurationWithoutNoon", duration - _noonDuration, InvokeFinalWarning);
             // AddListener to the GameLoop in case the game pauses
@@ -129,8 +128,10 @@ namespace GameSystem
                 HasFailed = true;
             }
 
+            // We have to save the game validating the fact that this shift has been done, but the shift number should increase after the shift recap, not before.
             ShiftNumber++;
             SaveManager.SaveGameData();
+            ShiftNumber--;
             OnShiftEnded?.Invoke();
             AudioSystem.PlayAudio(AudioSystem.Database.shiftEndSFX);
             GameLoop.RequestTransition(StateTransitions.ShowShiftRecap);

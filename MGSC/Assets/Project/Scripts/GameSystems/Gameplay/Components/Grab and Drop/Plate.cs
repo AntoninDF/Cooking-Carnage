@@ -159,7 +159,12 @@ public class Plate : Item
 
     private void OnOverCook()
     {
-        var recipe = Reference.AssetReferences.DefaultRecipeBook.FailedRecipe;
+        SO_Recipe recipe;
+        var book = Reference.AssetReferences.DefaultRecipeBook;
+        if (GetContainedIngredients().Count == 0)
+            recipe = book.FailedEmptyRecipe;
+        else
+            recipe = book.FailedRecipe;
         EnableRecipeModel(recipe);
         // Assign the failed recipe, otherwise it might detect an empty recipe instead
         if (TryGetComponent<Recipe>(out var recipeComponent))

@@ -11,7 +11,7 @@ namespace GameSystem
     {
         #region Properties
         public List<Order> Orders => _activeOrders;
-        public List<Order> PastOrders => _pastOrders;
+        public Dictionary<int, List<Order>> PastOrders => _pastOrders;
         public Action<Order> OnNewOrder;
         public Action<Order> OnOrderResolved;
         public Action<Order> OnOrderCancelled;
@@ -21,7 +21,7 @@ namespace GameSystem
         #region Fields
 
         private List<Order> _activeOrders = new(); 
-        private List<Order> _pastOrders = new(); 
+        private Dictionary<int, List<Order>> _pastOrders = new(); 
         #endregion
 
         #region Methods
@@ -81,20 +81,11 @@ namespace GameSystem
                 return;
             }
             _activeOrders.Remove(order);
-            _pastOrders.Add(order);
+            if (!_pastOrders.ContainsKey(Globals.Gameplay.ShiftNumber))
+                _pastOrders[Globals.Gameplay.ShiftNumber] = new();
+            _pastOrders[Globals.Gameplay.ShiftNumber].Add(order);
             
             this.Log(LogType.Log, "Order n°"+order.ID+ " has been stashed");
-        }
-
-        public Order GetOrderByID(int id)
-        {
-            foreach (Order order in _pastOrders)
-                if (order.ID == id)
-                    return order;
-            foreach (Order order in _activeOrders)
-                if (order.ID == id)
-                    return order;
-            return null;
         }
         public void Register()
         {

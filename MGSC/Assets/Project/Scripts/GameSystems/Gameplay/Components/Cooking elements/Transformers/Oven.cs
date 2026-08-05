@@ -254,7 +254,6 @@ public class Oven : MonoBehaviour, IFeatureCollection
 
     public void SetOvenActive(bool active)
     {
-        // Debug.Log($"[Oven] {name} was {(active ? "enabled" : "disabled")}.");
         _isOvenActive = active;
         if (_button != null)
         {

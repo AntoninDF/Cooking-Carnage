@@ -10,8 +10,11 @@ namespace Cooking
     public class SO_RecipeBook : ScriptableObject
     {
         public SO_Recipe FailedRecipe { get => failedRecipe;set=> failedRecipe = value; }
+        public SO_Recipe FailedEmptyRecipe { get => failedEmptyRecipe; set=> failedEmptyRecipe = value; }
         [Tooltip("Recipe that will be generated if no other matching recipe is found but it contains ingredients")]
         [SerializeField] private SO_Recipe failedRecipe;
+        [Tooltip("Recipe that will be generated if no other matching recipe is found and it doesn't contain ingredients")]
+        [SerializeField] private SO_Recipe failedEmptyRecipe;
         public List<SO_Recipe> Recipes { get => recipes;set=>recipes =value; }
         [Tooltip("List all the recipes that can be made here")]
         [Expandable]
