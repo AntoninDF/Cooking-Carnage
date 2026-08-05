@@ -16,7 +16,7 @@ namespace Project.Scripts.BloodMachine
         [SerializeField] private InteractionButton ValveButton;
 
         [Header("Drink")]
-        [SerializeField] private GameObject _drinkPrefab;
+        public  GameObject _drinkPrefab;
         [SerializeField] private Transform  _drinkSpawnPoint;
 
         [Header("Liquid")]

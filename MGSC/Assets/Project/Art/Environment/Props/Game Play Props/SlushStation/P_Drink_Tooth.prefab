@@ -29,8 +29,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.99999976, y: 1, z: 0.99999976}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7785399478494449930}
   m_Father: {fileID: 0}
@@ -75,6 +75,8 @@ MonoBehaviour:
   _animation: {fileID: 8322598996206211122}
   _grabbedAnimation: {fileID: 7400000, guid: d6851e10b854a134a8e21b446370fec7, type: 2}
   _droppedAnimation: {fileID: 7400000, guid: 09ccbaf1c5627d64b82f8e44363ec1eb, type: 2}
+  _liquidRenderer: {fileID: 0}
+  _liquidMaterialIndex: 0
 --- !u!111 &8322598996206211122
 Animation:
   m_ObjectHideFlags: 0
@@ -84,12 +86,13 @@ Animation:
   m_GameObject: {fileID: 2304281794536095463}
   m_Enabled: 1
   serializedVersion: 4
-  m_Animation: {fileID: 0}
+  m_Animation: {fileID: 7400000, guid: 1477f14a82c77b84abc7ee5ddb515f5f, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: d6851e10b854a134a8e21b446370fec7, type: 2}
   - {fileID: 7400000, guid: 09ccbaf1c5627d64b82f8e44363ec1eb, type: 2}
+  - {fileID: 7400000, guid: 1477f14a82c77b84abc7ee5ddb515f5f, type: 2}
   m_WrapMode: 0
-  m_PlayAutomatically: 0
+  m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
