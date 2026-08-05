@@ -1,3 +1,4 @@
+using FMODUnity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,11 @@ public class TutorialTimeline : ScriptableObject
 
     public TutorialStep DefaultTutorialStep;
     public List<BindTutorialStepToEvent> TutorialStepsToBindToEvents = new();
+    public EventVariable EventRaisedUponEnd;
+
 
     private TutorialStep _currentPlayingTutorial;
-
+    List<Action> _tutorialStepBoundCallbacks = new();
 
     [NonSerialized] SubtitleOverlay Subs;
     public static void StartTutorial() => Instance.Start();
@@ -31,9 +34,15 @@ public class TutorialTimeline : ScriptableObject
         Debug.Log("[TutorialTimeline] Starting the introduction sequence");
         BindTutorialStepsToEvents(TutorialStepsToBindToEvents);
         Play(DefaultTutorialStep);
+
+        // You have to finish the tutorial to validate it, it is considered as played as soon as you finish the last voiceline
+        EventRaisedUponEnd.AddListener(ValidateTutorial);
+        EventRaisedUponEnd.AddListener(StopTutorial);
+    }
+    void ValidateTutorial()
+    {
         Globals.Statistics.TutorialHasBeenPlayed.Value = true;
     }
-
     void Play(TutorialStep step, Action onEnd = null)
     {
         // Stop the previous tutorial step
@@ -53,8 +62,14 @@ public class TutorialTimeline : ScriptableObject
         if (step == null)
             return;
 
+        Action callback = () =>
+        {
+            Subs?.EndSubtitle();
+            onEnd?.Invoke();
+        };
+
         // Play the given tutorial step (if not null)
-        step.Play(onEnd);
+        step.Play(callback);
     }
     void BindTutorialStepsToEvents(List<BindTutorialStepToEvent> items)
     {
@@ -69,37 +84,40 @@ public class TutorialTimeline : ScriptableObject
                         item.Event.RemoveListener(callback);
                     };
                 item.Event.AddListener(callback);
+                _tutorialStepBoundCallbacks.Add(callback);
             }
         }
     }
-    /*
-    private void PlayTutorialSequence(List<TutorialStep> steps)
+    public static void StopTutorial()
     {
-        Action builtSequence = BuildSequence(steps);
-        builtSequence();
+        ClearBoundTutorialSteps(Instance.TutorialStepsToBindToEvents.Select(item => item.Event));
+        StopCurrentStep();
     }
-    private Action BuildSequence(List<TutorialStep> steps, Action onEnd = null)
+
+    static void StopCurrentStep()
     {
-        Debug.Log("[TutorialTimeline] Building sequence");
-        if (steps == null || steps.Count == 0)
+        // End subtitles, remove tasks
+        if (Reference.TryGetManager(out UISystem ui))
         {
-            if (Reference.TryGetManager(out UISystem ui))
-            {
-                ui.GetWidget(out SubtitleOverlay subs);
-                onEnd += () => subs?.EndSubtitle();
-            }
-            return onEnd;
+            Instance.Subs = ui.GetWidget<SubtitleOverlay>();
+            Instance.Subs.EndSubtitle();
+
+            var Tasks = ui.GetWidget<TaskPanel>();
+            Tasks.RemoveCurrentTasks();
         }
-        List<TutorialStep> nextSequence = steps.GetRange(1, steps.Count - 1);
-        Debug.Log("Current is " + steps[0].name + ", NextSequence is of length " + nextSequence.Count);
-        return () => steps[0].Play(BuildSequence(nextSequence, onEnd));
+        AudioSystem.StopAudioForBus_Dialog();
+
     }
-    */
-    private void End()
+    static void ClearBoundTutorialSteps(IEnumerable<EventVariable> events)
     {
-        Subs?.FadeOut(onEnd:Subs.Disable);
-        Subs = null;
+        foreach (var item in events)
+            if (item != null)
+                foreach (var callback in Instance._tutorialStepBoundCallbacks)
+                    item.RemoveListener(callback);
+
+        Instance._tutorialStepBoundCallbacks.Clear();
     }
+
 
     [Serializable]
     public struct BindTutorialStepToEvent

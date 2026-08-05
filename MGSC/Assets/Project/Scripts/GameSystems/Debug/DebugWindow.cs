@@ -33,13 +33,13 @@ public class DebugWindow : MonoBehaviour
     #region Methods
     private void OnEnable()
     {
-#if DEVELOPMENT_BUILD
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         Reference.AssetReferences.InputActions.FindAction("ShowDebugWindow").performed += ToggleWindow;
 #endif
     }
     private void OnDisable()
     {
-#if DEVELOPMENT_BUILD
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         Reference.AssetReferences.InputActions.FindAction("ShowDebugWindow").performed -= ToggleWindow;
 #endif
     }

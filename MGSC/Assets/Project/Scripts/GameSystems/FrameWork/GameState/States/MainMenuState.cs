@@ -10,6 +10,7 @@ public class MainMenuState : MenuState
         base.OnEnter();
         
         AudioSystem.PlayAudio(AudioSystem.Database.mainMenuMusic,true, false);
+        TutorialTimeline.StopTutorial();
     }
 
     public override GameState FindNext(StateTransitions transition = StateTransitions.None)

@@ -36,6 +36,7 @@ namespace UI
         public void WaitAndDo(float duration, Action OnEnd) => Sub.WaitAndDo(duration, OnEnd);
         public void EndSubtitle(float duration = 0.5f, Action OnEnd = null)
         {
+            if (Sub == null) return;
             Sub.FadeOut(duration, OnEnd);
             //Debug.Log("Fade out");
         }

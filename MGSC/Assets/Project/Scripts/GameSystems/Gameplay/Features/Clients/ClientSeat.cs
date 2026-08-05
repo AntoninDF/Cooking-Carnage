@@ -20,10 +20,11 @@ namespace Features
         public Action OnClientLeaving {get; set; }
         public Action OnClientLeavingWithTips {get; set; }
         
-        public Action OnClientKilled {get; set; }
-        public Action OnMealReady { get; set; }
-        public Action OnIngredientDropped { get; set; }
-        public Action<Client> ClientLeaveTheSeat {get; set; }
+        public Action              OnClientKilled      {get;  set; }
+        public Action              OnMealReady         { get; set; }
+        public Action              OnIngredientDropped { get; set; }
+        public Action<Client>      ClientLeaveTheSeat  {get;  set; }
+        public Action  OnClientBlended     { get; set; }
         
         public Client RegisteredClient
         {
@@ -82,10 +83,10 @@ namespace Features
             if (client == null)return false;
             if (RegisteredClient != null)return false;
             
-            client.CurrentSeat        =  this;
-            client.Behaviour.OnReactionEnd += OnClientLeaving;
-            client.Behaviour.GoodReaction += OnClientLeavingWithTips;
-            RegisteredClient          =  client;
+            client.CurrentSeat                      =  this;
+            client.Behaviour.OnReactionEnd          += OnClientLeaving;
+            client.Behaviour.GoodReaction           += OnClientLeavingWithTips;
+             RegisteredClient                        =  client;
             ActualizeSeatPos(client);
             return true;
         }

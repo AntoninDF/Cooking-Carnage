@@ -23,19 +23,18 @@ namespace UI
 		/// <summary>
 		/// This generates a task to show up
 		/// </summary>
-		/// <param name="label"></param>
-		/// <param name="subscribe"></param>
-		/// <param name="unsubscribe"></param>
+		/// <param name="label">Text to display on the UI for this task</param>
+		/// <param name="subscribe">Not null</param>
+		/// <param name="unsubscribe">Not null</param>
 		public TaskItem BindTask(string label, Action<Action> subscribe, Action<Action> unsubscribe, Action onResolve = null)
 		{
 			var task = MakeNewTask(label);
             _activeTasks.Add(task);
 			EnableIfActiveTask();
-            Debug.Log("Binding task");
 			subscribe(task.RequestResolve);
+			task.SetUnbindingOperation(() => unsubscribe(task.RequestResolve));
 			task.OnResolveFeedbacksOver += () =>
 			{
-				unsubscribe(task.RequestResolve);
 				_activeTasks.Remove(task);
 				EnableIfActiveTask();
             }; 
@@ -50,7 +49,16 @@ namespace UI
 			else
 				Owner.StashWidget(this);
 		}
-        
+        public void RemoveCurrentTasks()
+		{
+			foreach(var task in _activeTasks)
+			{
+				task.Unbind();
+				Destroy(task.gameObject);
+			}
+			_activeTasks.Clear();
+			EnableIfActiveTask();
+		}
         #endregion
     }
 

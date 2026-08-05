@@ -6,6 +6,7 @@ using UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 using GameSystem;
+using FMOD.Studio;
 
 [CreateAssetMenu(fileName = "Tutorial step", menuName = "New tutorial step")]
 [HelpBox("You can customize your text's appearance using https://namestyler.app/ " +
@@ -21,10 +22,12 @@ public class TutorialStep : ScriptableObject
 
     [NonSerialized] private Action _playCallback;
     [NonSerialized] private Timer _currentTimer;
-    [NonSerialized] private EventReference _currentAudio;
+    [NonSerialized] private EventReference _currentAudioReference;
+    [NonSerialized] private EventInstance _currentAudioInstance;
 
     #region Methods
 
+    
     protected bool LoadDependencies()
     {
         if (!Reference.TryGetManager(out UI))
@@ -88,14 +91,14 @@ public class TutorialStep : ScriptableObject
         if (index >= Steps.Count) return;
         SubStep current = Steps[index];
 
-        Debug.Log("[TutorialStep] Playing substep of '" + name +
-            "' with a duration of " + GetMinimumDurationForSubstep(current) + "s.");
-        
+        GameLoop.OnPause += PauseVoiceline;
+        GameLoop.OnResume += ResumeVoiceline;
+
         // Try to play the voiceline
         if (!current.VoiceLine.IsNull)
         {
-            AudioSystem.PlayAudio(current.VoiceLine);
-            _currentAudio = current.VoiceLine;
+            _currentAudioInstance = AudioSystem.PlayAudio(current.VoiceLine);
+            _currentAudioReference = current.VoiceLine;
         }
 
         // Try to display the subtitle
@@ -103,13 +106,21 @@ public class TutorialStep : ScriptableObject
             Subtitles.PlaySubtitle(current.SubtitleText);
 
         HandleActions(current.ActionsBeforeDialogue);
+
+        // What to do when this substep is over
         Action onPreEnd = () =>
         {
             HandleActions(current.ActionsAfterDialogue);
-            if (_currentAudio.Equals(current.VoiceLine))
-                _currentAudio = default;
-            Subtitles.EndSubtitle();
+            if (_currentAudioReference.Equals(current.VoiceLine))
+                _currentAudioReference = default;
+            // Subtitles.EndSubtitle();
+
+            GameLoop.OnPause  -= PauseVoiceline;
+            GameLoop.OnResume -= ResumeVoiceline;
+            _currentAudioInstance = new EventInstance();
         };
+
+        // Launch the substep timer
         _currentTimer = TimerManager.StartGameplayTimer(
             "Playing tutorial : '" + current.SubtitleText + "' (" + Time.time + ")",
             GetMinimumDurationForSubstep(current),
@@ -120,6 +131,16 @@ public class TutorialStep : ScriptableObject
             );
     }
 
+    void PauseVoiceline()
+    {
+        if (_currentAudioInstance.isValid())
+            _currentAudioInstance.setPaused(true);
+    }
+    void ResumeVoiceline()
+    {
+        if (_currentAudioInstance.isValid())
+            _currentAudioInstance.setPaused(false);
+    }
     void HandleActions(SubStepInstantActions actions)
     {
         HandleFeatureLock(actions.LockFeatures, actions.UnlockFeatures);
@@ -171,8 +192,10 @@ public class TutorialStep : ScriptableObject
         float result = Mathf.Max(audioDuration, textDuration);
         result += step.DelayBeforeNextSubStep;
 
-        Debug.Log("Duration for '" + step.SubtitleText + "' : audio is " + audioDuration + "s ; text is " + "s ; delay is " +
+        /*
+        Debug.Log("Duration for '" + step.SubtitleText + "' : audio is " + audioDuration + "s ; text is " + textDuration + "s ; delay is " +
             step.DelayBeforeNextSubStep + "s ; total is " + result + "s, using " + (Mathf.Max(audioDuration, textDuration) == audioDuration ? "audio" : "text") + " as max duration");
+        */
 
         return result;
     }
@@ -206,7 +229,7 @@ public class TutorialStep : ScriptableObject
     internal void Stop()
     {
         TimerManager.RemoveTimer(_currentTimer?.Name);
-        AudioSystem.StopAudio(_currentAudio);
+        AudioSystem.StopAudio(_currentAudioReference);
     }
     #endregion
 

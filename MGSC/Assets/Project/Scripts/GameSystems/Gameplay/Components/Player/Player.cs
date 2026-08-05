@@ -100,7 +100,7 @@ public class Player : MonoBehaviour, IFeatureCollection
 
         Collection.Update();
 
-        //Debug.Log("[Player] : Contains " + Container.HeldItem);
+        // Debug.Log("[Player] : Contains " + Container.HeldItem);
     }
 
     private void TryResetLookedAtObject()

@@ -70,8 +70,13 @@ public static class AudioSystem
     public static void SetAmbienceVolume(float volume) => ambienceBus.setVolume(Mathf.Clamp01(volume));
     public static void SetSFXVolume(float volume) => sfxBus.setVolume(Mathf.Clamp01(volume));
     public static void SetVoiceVolume(float volume) => dialogBus.setVolume(Mathf.Clamp01(volume));
+    public static void StopAudioForBus_Master() => StopAllAudioForBus(masterBus);
+    public static void StopAudioForBus_Music() => StopAllAudioForBus(musicBus);
+    public static void StopAudioForBus_Ambience() => StopAllAudioForBus(ambienceBus);
+    public static void StopAudioForBus_SFX() => StopAllAudioForBus(sfxBus);
+    public static void StopAudioForBus_Dialog() => StopAllAudioForBus(dialogBus);
     
-    public static void PlayAudio(EventReference audioEvent, bool stopOtherAudios = false, bool forceRestart = true)
+    public static EventInstance PlayAudio(EventReference audioEvent, bool stopOtherAudios = false, bool forceRestart = true)
     {
         if (stopOtherAudios)
         {
@@ -85,12 +90,12 @@ public static class AudioSystem
         if (audioEvent.IsNull)
         {
             UnityEngine.Debug.LogWarning("[AudioSystem] An audio can't be played because it is null");
-            return;
+            return new EventInstance();
         }
         
         string id = audioEvent.Guid.ToString();
 
-        if (activeAudios.ContainsKey(id)) return;
+        if (activeAudios.ContainsKey(id)) return new EventInstance();
 
         EventInstance newTrack = RuntimeManager.CreateInstance(audioEvent);
         newTrack.start();
@@ -101,6 +106,7 @@ public static class AudioSystem
 #endif
         
         activeAudios.Add(id, newTrack);
+        return newTrack;
     }
 
     public static void StopOtherAudios(EventReference audioEvent, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.ALLOWFADEOUT)
@@ -130,7 +136,13 @@ public static class AudioSystem
 #endif
         }
     }
-    
+    public static void StopAllAudioForBus(Bus bus, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.ALLOWFADEOUT)
+    {
+        if (!bus.isValid()) return;
+        bus.stopAllEvents(stopMode);
+
+        // This should clear the stopped events from activeAudios, but idk how to
+    }
     public static void SetGlobalParameter(string parameterName, float value)
     {
         RESULT result = RuntimeManager.StudioSystem.setParameterByName(parameterName, Mathf.Clamp01(value));

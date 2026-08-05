@@ -54,7 +54,7 @@ namespace Project.Scripts.BloodMachine
 		{
 			_reserve.TryAddBlood(clientType, GetBloodQuantity(clientType));
 		}
-
+		
 		[ContextMenu("Remplir la réserve au maximum")]
 		private void FillReserveToMax()
 		{

@@ -68,6 +68,17 @@ namespace GameSystem
             AddMoney(order.OrderRating.MoneyGained);
         }
 
+
+        public float GetMoneyGainedSinceBeginning()
+        {
+            List<float> gains = new();
+            foreach (var list in _moneyTransactionsPerShift.Values)
+                foreach (float value in list)
+                    if (value > 0)
+                        gains.Add(value);
+            return gains.Sum();
+        }
+
         public float GetMoneyGainedOnShift(int shiftNumber)
             => _moneyTransactionsPerShift.ContainsKey(shiftNumber) ?
             _moneyTransactionsPerShift[shiftNumber].Where(value => value > 0).Sum() :
