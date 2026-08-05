@@ -131,19 +131,21 @@ namespace UI
                 GameObject.Destroy(G_ReceiptLines.GetChild(i).gameObject);
 
             AnimateRecipeLine(
-                "Rent payed",
-                -sm.GetCurrentRentPrice(),
+                "Salary",
+                mm.GetMoneyGainedThisShift(),
+            /*
             onEnd:
             () => AnimateRecipeLine(
                 "Upgrades",
                 mm.GetMoneyLostThisShift() + sm.GetCurrentRentPrice(),
+            */
             onEnd:
             () => AnimateRecipeLine(
-                "Salary",
-                mm.GetMoneyGainedThisShift(),
+                "Rent payed",
+                -sm.GetCurrentRentPrice(),
                 onEnd
                 )
-                )
+                //)
                 )
                 ;
         }
