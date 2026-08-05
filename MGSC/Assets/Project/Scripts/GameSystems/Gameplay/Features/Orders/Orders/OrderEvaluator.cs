@@ -53,7 +53,7 @@ namespace Orders
 
             // NOTE : Les recettes vides et brûlées ont déjà leur prix de vente dans le ppté Price
             
-            if (!isCorrectRecipe && meal.Recipe.name != "Failed recipe" && meal.Recipe.name != "Empty recipe")
+            if (!isCorrectRecipe && meal.Recipe.Name != "Failed recipe" && meal.Recipe.Name != "Empty recipe")
                 return WrongRecipePrice;
             
             return meal.Recipe.Price;
