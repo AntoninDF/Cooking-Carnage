@@ -4,10 +4,11 @@ using Clients;
 using Features;
 using GameSystem;
 using UnityEngine;
+using Upgrades;
 
 namespace Project.Scripts.BloodMachine
 {
-    public class F_Valve : Feature
+    public class F_Valve : Feature, IUpgradable<DrinkServingSpeedUpgrade>
     {
        public EClientType AssociedClientType => _associedClientType;
        
@@ -25,8 +26,10 @@ namespace Project.Scripts.BloodMachine
        private bool isServing;
 
        private float _bloodDecreaseOverTime;
-       private float _firstTimerTime;
+       private float _startServiceDuration;
        private float _secondTimerTime;
+
+       private float _serviceDuration;
 
        private string FirstTimerName  => _associedClientType + "first timer launched";
        private string SecondTimerName => _associedClientType + "wait before loosing Blood";
@@ -36,7 +39,7 @@ namespace Project.Scripts.BloodMachine
           GlobalDrinkStation  globalDrinkStation,
           F_BloodReserve      reserve, 
           EClientType         clientType, 
-          float               firstTimerTime, 
+          float               startServiceDuration, 
           float               secondTimerTime, 
           float               bloodDecreaseOverTime) : base(owner)
        {
@@ -45,7 +48,8 @@ namespace Project.Scripts.BloodMachine
           _station            = globalDrinkStation;
           _associedClientType = clientType;
 
-          _firstTimerTime        = firstTimerTime;
+          _startServiceDuration  = startServiceDuration;
+          _serviceDuration       = startServiceDuration;
           _secondTimerTime       = secondTimerTime;
           _bloodDecreaseOverTime = bloodDecreaseOverTime;
        }
@@ -55,6 +59,7 @@ namespace Project.Scripts.BloodMachine
 
        public void TryServeDrink()
        {
+          if (!Globals.Gameplay.AllowBlending) return;
           if (_hasPendingDrink)
           {
              Debug.Log("[F_Valve] Une boisson est déjà en attente d'être récupérée");
@@ -65,7 +70,7 @@ namespace Project.Scripts.BloodMachine
           {
              isServing = true;
              StartServeDrink?.Invoke();
-             TimerManager.StartTimer(FirstTimerName, _firstTimerTime, WaitForPlayerToRetrieve);
+             TimerManager.StartTimer(FirstTimerName, _serviceDuration, WaitForPlayerToRetrieve);
              _station.StartCoroutine(PourDrinkRoutine());
           }
        }
@@ -97,14 +102,14 @@ namespace Project.Scripts.BloodMachine
           float elapsed        = 0f;
           float bloodPerDrink  = _reserve.BloodPerDrink;
 
-          while (elapsed < _firstTimerTime)
+          while (elapsed < _startServiceDuration)
           {
              elapsed += Time.deltaTime;
-             float t = Mathf.Clamp01(elapsed / _firstTimerTime);
+             float t = Mathf.Clamp01(elapsed / _startServiceDuration);
 
              _drinkStation.ActualizeDrinkValue(t);
 
-             float delta = (bloodPerDrink / _firstTimerTime) * Time.deltaTime;
+             float delta = (bloodPerDrink / _startServiceDuration) * Time.deltaTime;
              _reserve.RemoveBlood(_associedClientType, delta);
              _drinkStation.ActualizeReserveValue(_reserve.GetReserveRatio(_associedClientType));
 
@@ -139,17 +144,6 @@ namespace Project.Scripts.BloodMachine
 
           isServing = false;
        }
-
-       // public void TryGrabbDrink()
-       // {
-       //    if (!isServing) return; 
-       //    if (TimerManager.IsTimerRunning(FirstTimerName))
-       //    {
-       //       Debug.Log("[F_Valve] votre boisson est occupée");
-       //       return;
-       //    }
-       //    DrinkTaken();
-       // }
        
        public void DrinkTaken()
        {
@@ -158,5 +152,21 @@ namespace Project.Scripts.BloodMachine
           if(TimerManager.IsTimerRunning(SecondTimerName))
              TimerManager.StopTimer(SecondTimerName);
        }
+
+       #region Upgrade
+
+       public void OnUpgradeInit(DrinkServingSpeedUpgrade upgrade)
+       {
+          _serviceDuration = upgrade.GetServiceDuration(_startServiceDuration);
+       }
+
+       public void OnUpgraded(DrinkServingSpeedUpgrade upgrade)
+       {
+          _serviceDuration = upgrade.GetServiceDuration(_startServiceDuration);
+       }
+
+       #endregion
+
+     
     }
 }

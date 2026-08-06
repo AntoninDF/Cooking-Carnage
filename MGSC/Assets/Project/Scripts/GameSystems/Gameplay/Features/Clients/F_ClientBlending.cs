@@ -22,12 +22,13 @@ namespace Features
         
         public void Trigger()
         {
+            if (!Globals.Gameplay.AllowBlending) return;
             if (_isRunning) return;
             _isRunning       = true;
             _timer           = 0f;
             _client.IsCooked = true;
             _client.CurrentOrder.Cancel();
-           // OnCustomerBlended?.Invoke(_client.Type);
+            //OnCustomerBlended?.Invoke();
             _client.CurrentSeat?.TryUnregister(_client);
 
         }

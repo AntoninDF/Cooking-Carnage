@@ -14,10 +14,13 @@ namespace Orders
         private const float UpgradeProbability = 1f / 3f; 
         private const int ForcedFullRecipeInterval = 15;
 
-        private const float DrinkProbability = 1f / 3f; //Hard code -> need to change for the wanted probability
+        private static float DrinkProbability;
+        private static float _extraDrinkChanceBonus = 0f;
 
         private static int _selectionCount = 0; 
 
+        public static void SetExtraDrinkChanceBonus(float bonus) => _extraDrinkChanceBonus = bonus;
+        
         public static SO_Recipe Pick()
         {
             _selectionCount++;
@@ -55,11 +58,12 @@ namespace Orders
 
         public static EClientType? PickDrink(Client client)
         {
-
             if (!RecipeUnlockChecker.IsUnlocked(RecipeCategory.Simple))
                 return null;
 
-            if (Random.value >= DrinkProbability)
+            float finalDrinkProbability = DrinkProbability + _extraDrinkChanceBonus;
+
+            if (Random.value >= finalDrinkProbability)
                 return null;
 
             return client.Type;

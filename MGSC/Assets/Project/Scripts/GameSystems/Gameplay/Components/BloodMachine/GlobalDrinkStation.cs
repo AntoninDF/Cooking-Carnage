@@ -4,10 +4,11 @@ using Clients;
 using Features;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Upgrades;
 
 namespace Project.Scripts.BloodMachine
 {
-	public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection
+	public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable<UnlockDrinkMachine>
 	{
 		#region Properties
 		
@@ -42,13 +43,19 @@ namespace Project.Scripts.BloodMachine
 		public DrinkStation _assStation;
 		public DrinkStation _eyesStation;
 		public DrinkStation _toothStation;
+
+		private DrinkOrder drinkPicker;
 	
 		public F_BloodReserve _reserve;
-	
+
+		private void Awake()
+		{
+			drinkPicker = new DrinkOrder();
+		}
+
 		private void Start()
 		{
 			CreateFeatures();
-			
 		}
 
 		public void CreateFeatures()
@@ -60,7 +67,6 @@ namespace Project.Scripts.BloodMachine
 			_toothStation.Initialize(this, this, _reserve, _timeToRefillDrink, _timeBeforeLoosingBlood, _bloodLostedPerSeconds);
 
 			BindEvents();
-		//	FillReserveToMax();
 			FillReserveToMin();
 		}
 	
@@ -113,6 +119,16 @@ namespace Project.Scripts.BloodMachine
 		}
 
 		#endregion
+
+		public void OnUpgradeInit(UnlockDrinkMachine upgrade)
+		{
+			
+		}
+
+		public void OnUpgraded(UnlockDrinkMachine upgrade)
+		{
+			Globals.Gameplay.AllowBlending = new (true);
+		}
 	}
 
 	[Serializable]

@@ -28,8 +28,6 @@ namespace Project.Scripts.BloodMachine
 
             _animator.SetTrigger("StartServe");
             TimerManager.StartTimer("StartServe" + _owner._drinkPrefab.name, 0.3f, SlowAnimation);
-            //start a timer with the InTime animation
-            //at the end we slow the time
         }
 
         private void SlowAnimation()

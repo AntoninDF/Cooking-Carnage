@@ -103,6 +103,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
 
     public void BlendClient()
     {
+        if (!Globals.Gameplay.AllowBlending) return;
         Client client = ClientSeat.RegisteredClient;
         if (client != null && ClientSeat.SittingClient != null)
         {
