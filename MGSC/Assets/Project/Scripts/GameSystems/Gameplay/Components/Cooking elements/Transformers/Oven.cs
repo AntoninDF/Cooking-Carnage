@@ -58,6 +58,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
         Cooker.OnTransformationOver?.Invoke(null);
         Cooker.OnTransformation?.Invoke();
         Container.OnDrop?.Invoke(null);
+        Cooker.RequestStopTransformation();
         ResetDisplayedSprites();
         OnStopCooking();
         UpdateFeedbacks(0f, false);
