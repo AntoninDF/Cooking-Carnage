@@ -186,7 +186,7 @@ namespace UI
 
             string timerName = "Animate total money";
             float startValue = mm.GetMoneyAtTheBeginningOfThisShift();
-            float endValue = mm.MoneyInfo;
+            float endValue = sm.HasFailed ? 0 : mm.MoneyInfo;
 
             L_CurrentTotalMoney.color = _defaultColor;
 

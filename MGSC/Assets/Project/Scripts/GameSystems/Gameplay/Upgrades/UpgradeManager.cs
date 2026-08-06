@@ -15,6 +15,7 @@ namespace Upgrades
         #region Properties
         
         public List<Upgrade> Upgrades => _upgrades;
+        public List<UpgradeLevelUpInfo> LevelUpHistory = new();
 
         [GlobalEvent("Upgrades/OnTryLevelUpFailed")]
         public static UnityEvent OnUpgradeFail    = new UnityEvent();
@@ -217,6 +218,15 @@ namespace Upgrades
             _pendingSubscriptions.Clear();
         }
 
+        [Serializable]
+        public struct UpgradeLevelUpInfo
+        {
+            public SerializableSystemType TargetUpgrade;
+            public int PreviousUpgradeLevel;
+            public int NewUpgradeLevel;
+            public float Price;
+            public int ShiftNumber;
+        }
         
     }
 }

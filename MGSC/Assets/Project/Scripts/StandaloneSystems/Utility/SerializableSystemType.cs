@@ -102,4 +102,6 @@ public class SerializableSystemType
     {
         return !(a == b);
     }
+
+    public static implicit operator Type(SerializableSystemType obj) => obj.SystemType;
 }

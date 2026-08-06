@@ -1,3 +1,4 @@
+using GameSystem;
 using UI;
 
 public class RecapState : MenuState
@@ -15,7 +16,8 @@ public class RecapState : MenuState
     public override void OnExit()
     {
         base.OnExit();
-        Globals.Gameplay.ShiftNumber.Value++;
+        if (!Reference.GetManager<ShiftManager>().HasFailed) 
+            Globals.Gameplay.ShiftNumber.Value++;
     }
 
     public override GameState FindNext(StateTransitions transition = StateTransitions.None)

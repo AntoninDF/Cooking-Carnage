@@ -22,12 +22,12 @@ namespace GameSystem
         [GlobalEvent("Saves/OnGameLoaded")]
         public static Action OnSaveLoaded;
         #endregion
-        
+
 
 
         #region Methods
 
-        // UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
+        //⚠️ UPDATE THIS WHEN ADDING NEW STUFF TO SAVE (only if what you add should survive save resets)
         public static void ResetSave()
         {
 
@@ -42,7 +42,7 @@ namespace GameSystem
             SaveGameData(Data);
         }
 
-        // UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
+        //⚠️ UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
         /// <summary>
         /// Load multiple data (money, upgrades, daycount) and reload the game
         /// </summary>
@@ -62,6 +62,11 @@ namespace GameSystem
             // Apply upgrades
             LoadUpgradeData();
 
+            // Apply upgrade history
+            var history = Data.LevelUpHistory;
+            history ??= new();
+            Reference.GetManager<UpgradeManager>().LevelUpHistory = history;
+
             // Apply tutorial being played
             // (we don't override it if it's false because maybe the GameSettings force it to true)
             if (Data.TutorialHasBeenPlayed)
@@ -77,10 +82,12 @@ namespace GameSystem
             if (transactions == null) transactions = new();
             Reference.GetManager<MoneyManager>()?.SetTransactions(transactions);
 
+
             OnSaveLoaded?.Invoke();
             return true;
         }
-        // UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
+
+        //⚠️ UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
         private static GameData MakeGameData()
         {
             var result = new GameData()
@@ -97,11 +104,12 @@ namespace GameSystem
                     .Select(order => order.Recipe.name)
                     .ToList()
                     ))),
+                LevelUpHistory = Reference.GetManager<UpgradeManager>().LevelUpHistory,
                 SecondsPlayed = Globals.Statistics.SecondsPlayed
             };
             return result;
         }
-        // UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
+        //⚠️ UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
         [System.Serializable]
         public class GameData
         {
@@ -111,6 +119,7 @@ namespace GameSystem
             public bool TutorialHasBeenPlayed;
             public string Transactions;
             public string OrderHistory;
+            public List<UpgradeManager.UpgradeLevelUpInfo> LevelUpHistory;
 
             // Stats that should not be reset
             public int SecondsPlayed = 0;

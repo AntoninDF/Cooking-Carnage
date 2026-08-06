@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Upgrades;
 
 namespace GameSystem
 {
@@ -126,14 +128,37 @@ namespace GameSystem
                 SaveManager.SaveGameData();
                 ShiftNumber--;
             }
-            else
+            else // If shift is failed
             {
                 OnShiftFailed?.Invoke();
                 HasFailed = true;
                 Reference.TryGetManager<MoneyManager>(out var mm);
                 mm.AddMoney(-mm.GetMoneyTransactionsThisShift().Sum());
                 mm.ResetTransactionsForShift(ShiftNumber);
+                // Reset the history of orders tracked for this shift
                 Reference.GetManager<OrderManager>().ResetOrdersForShift(ShiftNumber);
+
+                // Revert upgrades to their state before they were bought during this shift
+                Reference.TryGetManager<UpgradeManager>(out var um);
+                Dictionary<Type, int> previousUpgradeLevels = new();
+                // Retrieve the highest level reached for each upgrade, before this shift
+                foreach(var info in um.LevelUpHistory)
+                {
+                    if (!previousUpgradeLevels.ContainsKey(info.TargetUpgrade))
+                        previousUpgradeLevels[info.TargetUpgrade] = 0;
+                    if (info.ShiftNumber < ShiftNumber && info.NewUpgradeLevel > previousUpgradeLevels[info.TargetUpgrade])
+                        previousUpgradeLevels[info.TargetUpgrade] = info.NewUpgradeLevel;
+                }
+                // Apply these levels
+                foreach (var upgrade in um.Upgrades)
+                {
+                    Type type = upgrade.GetType();
+                    upgrade.SetLevel(0);
+                    if (previousUpgradeLevels.ContainsKey(type))
+                        upgrade.SetLevel(previousUpgradeLevels[type]);
+                }
+                um.ActualizeAllUpgrade();
+
                 SaveManager.SaveGameData();
             }
 

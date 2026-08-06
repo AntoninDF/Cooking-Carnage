@@ -40,7 +40,15 @@ namespace Upgrades
                 Debug.LogWarning($"[{GetType().Name}] Cannot level up further (level {_level}/{_config?.MaxLevel})");
                 return;
             }
-            
+
+            Reference.GetManager<UpgradeManager>().LevelUpHistory.Add(
+                new() { 
+                    TargetUpgrade = new(GetType()), 
+                    PreviousUpgradeLevel = _level, 
+                    NewUpgradeLevel = _level+1, 
+                    Price = GetPrice(), 
+                    ShiftNumber = Globals.Gameplay.ShiftNumber 
+                });
             _level++;
             // Debug.Log($"[{GetType().Name}] Level {_level}/{_config?.MaxLevel}");
             OnUpgradeSuccess?.Invoke();
@@ -52,6 +60,7 @@ namespace Upgrades
         public void SetLevel(int level)
         {
             _level = level;
+            NotifyAllSubscribers();
         }
         
         internal abstract void UnsubscribeObject(object subscriber);
