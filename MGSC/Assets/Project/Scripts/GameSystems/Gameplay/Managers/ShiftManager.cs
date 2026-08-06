@@ -132,40 +132,14 @@ namespace GameSystem
             {
                 OnShiftFailed?.Invoke();
                 HasFailed = true;
-                Reference.TryGetManager<MoneyManager>(out var mm);
-                Reference.TryGetManager<OrderManager>(out var om);
-                Reference.TryGetManager<UpgradeManager>(out var um);
-                            
-                var data = SaveManager.MakeGameData();
-                data.money = mm.GetMoneyAtTheBeginningOfThisShift();
-                data.Transactions = mm.GetTransactions();
-                data.Transactions[ShiftNumber] = new(); // Make sure not to save the current shift's transactions
-
-                // Save the orders up until (excluding) this shift
-                // Shallow copy to avoid modifying the original dict (lists are not deep-copied because we don't touch them anyway)
-                Dictionary<int, List<Order>> orders = new();
-                foreach (var kvp in om.PastOrders)
-                    orders[kvp.Key] = kvp.Value;
-                orders[ShiftNumber] = new();
-                data.OrderHistory = SaveManager.ParseOrdersToStringHistory(orders);
-
-                // Get previous upgrade levels and save these instead of the current ones (which should be reverted)
-                var previousUpgradeLevels = um.GetUpgradeLevelsOnShift(ShiftNumber - 1);
-                List <SaveManager.UpgradeData> upgrades = SaveManager.ConvertUpgradeData();
-                foreach(var upgrade in upgrades)
-                    foreach (var kvp in previousUpgradeLevels)
-                        if (kvp.Key.Name == upgrade.name)
-                            upgrade.level = kvp.Value;
-                data.upgrades = upgrades;
-
-                SaveManager.SaveGameData(data);
             }
 
-            
+
             OnShiftEnded?.Invoke();
             AudioSystem.PlayAudio(AudioSystem.Database.shiftEndSFX);
             GameLoop.RequestTransition(StateTransitions.ShowShiftRecap);
         }
+        
 
         private void ResetTimerUntilEndOfShift()
         {
