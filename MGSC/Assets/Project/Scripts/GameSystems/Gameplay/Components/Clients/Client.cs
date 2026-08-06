@@ -156,16 +156,17 @@ namespace Clients
 
        internal void Despawn()
        {
-           if (Behaviour?.ClientMovement != null)
-               Reference.GetManager<GameSystem.PathManager>()?.SplineTrafficManager.Unregister(Behaviour.ClientMovement);
+            if (Behaviour?.ClientMovement != null)
+                Reference.GetManager<GameSystem.PathManager>()?.SplineTrafficManager.Unregister(Behaviour.ClientMovement);
 
-           GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);
-           GameSystem.TimerManager.RemoveTimer($"Customer Eating Timer + {UniqueID}");
-           GameSystem.TimerManager.RemoveTimer($"{UniqueID}Wait For Quit the seat");
-           GameSystem.TimerManager.RemoveTimer($"{UniqueID} Wait For finishing the order ");
-           GameSystem.TimerManager.RemoveTimer($"{UniqueID} Wait finishing the react animation");
+            GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);
+            GameSystem.TimerManager.RemoveTimer($"Customer Eating Timer + {UniqueID}");
+            GameSystem.TimerManager.RemoveTimer($"{UniqueID}Wait For Quit the seat");
+            GameSystem.TimerManager.RemoveTimer($"{UniqueID} Wait For finishing the order ");
+            GameSystem.TimerManager.RemoveTimer($"{UniqueID} Wait finishing the react animation");
 
-           Destroy(gameObject);
+            CurrentSeat?.TryUnregister(this);
+            Destroy(gameObject);
        }
 
         #region Seat
