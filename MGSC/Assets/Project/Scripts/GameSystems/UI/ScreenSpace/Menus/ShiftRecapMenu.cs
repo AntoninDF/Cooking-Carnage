@@ -2,6 +2,7 @@ using GameSystem;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
+using System.Transactions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -189,6 +190,7 @@ namespace UI
             float endValue = sm.HasFailed ? 0 : mm.MoneyInfo;
 
             L_CurrentTotalMoney.color = _defaultColor;
+            Debug.Log("Startvalue is " + startValue + ", " + "endvalue is " + endValue + " (failed is " + sm.HasFailed + ")\n" + "Transactions this shift are " + mm.GetMoneyTransactionsThisShift().ToString_Detailed());
 
             Action onEnd =
                 () =>

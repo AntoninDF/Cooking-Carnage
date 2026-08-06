@@ -166,6 +166,8 @@ public class Oven : MonoBehaviour, IFeatureCollection
     {
         if (target is F_Cookable)
             Container.IsLocked = true;
+        if (target.TryGetSibling(out F_Container container))
+            container.IsLocked = true;
     }
     private void OnStopCooking(TransformableAfterTimer target=null)
     {

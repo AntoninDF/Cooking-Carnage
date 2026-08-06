@@ -133,33 +133,32 @@ namespace GameSystem
                 OnShiftFailed?.Invoke();
                 HasFailed = true;
                 Reference.TryGetManager<MoneyManager>(out var mm);
-                mm.AddMoney(-mm.GetMoneyTransactionsThisShift().Sum());
-                mm.ResetTransactionsForShift(ShiftNumber);
-                // Reset the history of orders tracked for this shift
-                Reference.GetManager<OrderManager>().ResetOrdersForShift(ShiftNumber);
-
-                // Revert upgrades to their state before they were bought during this shift
+                Reference.TryGetManager<OrderManager>(out var om);
                 Reference.TryGetManager<UpgradeManager>(out var um);
-                Dictionary<Type, int> previousUpgradeLevels = new();
-                // Retrieve the highest level reached for each upgrade, before this shift
-                foreach(var info in um.LevelUpHistory)
-                {
-                    if (!previousUpgradeLevels.ContainsKey(info.TargetUpgrade))
-                        previousUpgradeLevels[info.TargetUpgrade] = 0;
-                    if (info.ShiftNumber < ShiftNumber && info.NewUpgradeLevel > previousUpgradeLevels[info.TargetUpgrade])
-                        previousUpgradeLevels[info.TargetUpgrade] = info.NewUpgradeLevel;
-                }
-                // Apply these levels
-                foreach (var upgrade in um.Upgrades)
-                {
-                    Type type = upgrade.GetType();
-                    upgrade.SetLevel(0);
-                    if (previousUpgradeLevels.ContainsKey(type))
-                        upgrade.SetLevel(previousUpgradeLevels[type]);
-                }
-                um.ActualizeAllUpgrade();
+                            
+                var data = SaveManager.MakeGameData();
+                data.money = mm.GetMoneyAtTheBeginningOfThisShift();
+                data.Transactions = mm.GetTransactions();
+                data.Transactions[ShiftNumber] = new(); // Make sure not to save the current shift's transactions
 
-                SaveManager.SaveGameData();
+                // Save the orders up until (excluding) this shift
+                // Shallow copy to avoid modifying the original dict (lists are not deep-copied because we don't touch them anyway)
+                Dictionary<int, List<Order>> orders = new();
+                foreach (var kvp in om.PastOrders)
+                    orders[kvp.Key] = kvp.Value;
+                orders[ShiftNumber] = new();
+                data.OrderHistory = SaveManager.ParseOrdersToStringHistory(orders);
+
+                // Get previous upgrade levels and save these instead of the current ones (which should be reverted)
+                var previousUpgradeLevels = um.GetUpgradeLevelsOnShift(ShiftNumber - 1);
+                List <SaveManager.UpgradeData> upgrades = SaveManager.ConvertUpgradeData();
+                foreach(var upgrade in upgrades)
+                    foreach (var kvp in previousUpgradeLevels)
+                        if (kvp.Key.Name == upgrade.name)
+                            upgrade.level = kvp.Value;
+                data.upgrades = upgrades;
+
+                SaveManager.SaveGameData(data);
             }
 
             
@@ -206,7 +205,9 @@ namespace GameSystem
             moneyManager.AddMoney(-rentPrice);
             return true;
         }
+        /// <summary> Has to be a positive value </summary>
         public float GetCurrentRentPrice() => GetRentPrice(ShiftNumber);
+        /// <summary> Has to be a positive value </summary>
         public float GetRentPrice(int shiftCount) => _rentPriceCurve.Evaluate(shiftCount);
 
         public void Register()
