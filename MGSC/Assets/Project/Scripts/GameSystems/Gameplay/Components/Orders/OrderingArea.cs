@@ -23,6 +23,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     public Transform SeatTransform;
     public Transform SeatParent;
     public ServingArea ServingArea;
+    public InteractionButton KillButton;
     
     
     public ClientSeatHeightConfig ServingAreaConfig;
@@ -46,6 +47,12 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         ServingArea.Initialize(ClientSeat);
         BindEvents();
         GetDropSlots();
+    }
+
+    void Start()
+    {
+        if (KillButton != null)
+            KillButton.OnInteraction += _ => KillClient();
     }
 
     private void BindEvents()
@@ -90,6 +97,8 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
 
     public void KillClient()
     {
+        if (!Globals.Gameplay.AllowClientKilling)
+            return;
         Client client = ClientSeat.RegisteredClient;
         if (client != null && ClientSeat.SittingClient != null)
         {
@@ -104,19 +113,40 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     
     private void OnDrawGizmos()
     {
+        float baseHandleHeight = 1f;
+        float increment = 0.2f;
+        int handleCount = 0;
+        float GetY()
+        {
+            handleCount++;
+            return baseHandleHeight + (handleCount - 1) * increment;
+        }
         if (!Application.isPlaying) return;
         if (ClientSeat == null) return;
+        
         if (ClientSeat.SittingClient != null)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawCube(transform.position, transform.localScale * 1.01f);
+            Gizmos.DrawSphere(transform.position, 0.1f);
             Gizmos.DrawSphere(ClientSeat.SittingClient.transform.position + Vector3.up * 1f, 0.1f);
         }
         else if (ClientSeat.RegisteredClient != null)
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawCube(transform.position, transform.localScale * 1.01f);
+            Gizmos.DrawSphere(transform.position, 0.1f);
             Gizmos.DrawSphere(ClientSeat.RegisteredClient.transform.position + Vector3.up * 1f, 0.1f);
         }
+
+        // Display current client
+        Gizmos.color = Color.white;
+        UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Client : " + (ClientSeat.RegisteredClient != null ? ClientSeat.RegisteredClient.Type : "null"));
+
+        // Display current meal
+        Gizmos.color = Color.white;
+        UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Current meal : " + (ServingArea.MealSlot.HeldItem != null ? (ServingArea.MealSlot.HeldItem.Owner as Plate).Recipe.Name : "null"));
+
+        // Display seat height
+        Gizmos.color = Color.white;
+        UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Seat height : " + ClientSeat.ClientSeatPosition(ClientSeat.RegisteredClient));
     }
 }

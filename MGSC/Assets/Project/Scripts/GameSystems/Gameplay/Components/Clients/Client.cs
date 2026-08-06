@@ -7,6 +7,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 using UnityEditor;
+using System.Linq;
+using GameSystem;
 
 namespace Clients
 {
@@ -50,33 +52,6 @@ namespace Clients
 
             }
         }
-        
-        public void BeginOrderTimer()
-        {
-            if (CurrentOrder == null) return;
-            if (_currentOrder != null) _currentOrder.SeatedTimestamp = Time.time;
-            StartOrderTimer(CurrentOrder);
-        }
-        
-        private void StartOrderTimer(Order order)
-        {
-            string timerName = "OrderTimer_" + UniqueID;
-            var patienceTimer = GameSystem.TimerManager.StartGameplayTimer(
-                timerName,
-                order.PatienceDuration,
-                () => OnOrderTimeout(order),
-                elapsed => OnOrderTimeProgress?.Invoke(Mathf.Clamp01(elapsed / order.PatienceDuration))
-            );
-        }
-        
-        private void OnOrderTimeout(Order order)
-        {
-            if (CurrentOrder != order) return;
-            IsAngry = true;
-            order.Cancel();
-            CurrentSeat?.TryUnregister(this);
-        }
-
         public ClientSeat CurrentSeat
         {
             get => _currentSeat;
@@ -127,9 +102,33 @@ namespace Clients
            Behaviour.Update();
        }
 
-       #endregion
+        #endregion
+        public void BeginOrderTimer()
+        {
+            if (CurrentOrder == null) return;
+            if (_currentOrder != null) _currentOrder.SeatedTimestamp = Time.time;
+            StartOrderTimer(CurrentOrder);
+        }
 
-       public void InitFeatures(ClientMovement movement)
+        private void StartOrderTimer(Order order)
+        {
+            string timerName = "OrderTimer_" + UniqueID;
+            var patienceTimer = GameSystem.TimerManager.StartGameplayTimer(
+                timerName,
+                order.PatienceDuration,
+                () => OnOrderTimeout(order),
+                elapsed => OnOrderTimeProgress?.Invoke(Mathf.Clamp01(elapsed / order.PatienceDuration))
+            );
+        }
+
+        private void OnOrderTimeout(Order order)
+        {
+            if (CurrentOrder != order) return;
+            IsAngry = true;
+            order.Cancel();
+            CurrentSeat?.TryUnregister(this);
+        }
+        public void InitFeatures(ClientMovement movement)
        {
            _clientLook = new ClientLook(this, transform, movement);
            Cooked      = new ClientCooked(this, _cookingDelay);
@@ -282,31 +281,47 @@ namespace Clients
         #region Gizmos
 
 #if UNITY_EDITOR
+        
         private void OnDrawGizmos()
-       {
-           if (!Application.isPlaying) return;
+        {
+            float baseHandleHeight = 1f;
+            float increment = 0.2f;
+            int handleCount = 0;
+            float GetY()
+            {
+                handleCount++;
+                return baseHandleHeight + (handleCount - 1) * increment;
+            }
+            if (!Application.isPlaying) return;
 
-           if (CurrentOrder != null)
-           {
+            if (CurrentOrder != null)
+            {
                Gizmos.color = Color.white;
-               UnityEditor.Handles.Label(transform.position + Vector3.up * 1f, "HAS ORDER");
-           }
-           else
-           {
-               Gizmos.color = Color.Lerp(Color.white, Color.red, 0.3f);
-               UnityEditor.Handles.Label(transform.position + Vector3.up * 1f, "NO ORDER");
-           }
+               UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "HAS ORDER");
+               UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Order contains " + CurrentOrder.Recipe.Ingredients.Select(ing => ing.Name).ToList().ToString_EasyRead());
+            }
+            else
+            {
+                Gizmos.color = Color.Lerp(Color.white, Color.red, 0.3f);
+                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "NO ORDER");
+            }
 
-           if (CurrentSeat != null)
-           {
-               Gizmos.color = Color.Lerp(Color.white, Color.blue, 0.3f);
-               UnityEditor.Handles.Label(
-                                         transform.position + Vector3.up * 1.2f,
-                                         "CurrentSeat is " + (CurrentSeat.Owner as UnityEngine.Object)?.name);
-           }
-           
-           
-       }
+            if (CurrentSeat != null)
+            {
+                Gizmos.color = Color.Lerp(Color.white, Color.blue, 0.3f);
+                UnityEditor.Handles.Label(
+                                            transform.position + Vector3.up * GetY(),
+                                            "CurrentSeat is " + (CurrentSeat.Owner as UnityEngine.Object)?.name);
+            }
+            {
+                Gizmos.color = Color.Lerp(Color.white, Color.blue, 0.3f);
+                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "ClientType : " + Type);
+            }
+            {
+                Gizmos.color = Color.Lerp(Color.white, Color.blue, 0.3f);
+                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Patience : " + TimerManager.TimeLeft("OrderTimer_" + UniqueID) + "s");
+            }
+        }
 
 #endif
         #endregion

@@ -273,6 +273,41 @@ public class Oven : MonoBehaviour, IFeatureCollection
     }
 
     public void ShowRecipeSprites() => ShowSpriteList(GetSpritesFromIngredients(GetContainedIngredients()));
+
+    void OnDrawGizmos()
+    {
+        float baseHandleHeight = 1f;
+        float increment = 0.2f;
+        int handleCount = 0;
+        float GetY()
+        {
+            handleCount++;
+            return baseHandleHeight + (handleCount - 1) * increment;
+        }
+        if (!Application.isPlaying) return;
+
+        // Display current process
+        Gizmos.color = Color.white;
+        if (Cooker.currentProcess != null)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Current process : " + Cooker.currentProcess.Name + "(" + Cooker.currentProcess.Elapsed + "s/" + Cooker.currentProcess.Duration + "s)");
+        else
+            UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Current process : null");
+
+        // Display contained item
+        Gizmos.color = Color.white;
+        if (Container.HeldItem != null)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Contained item : " + (Container.HeldItem.Owner as Item).name);
+        else
+            UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Contained item : null");
+
+        // Display if oven is locked
+        Gizmos.color = Color.white;
+            UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Is locked ? : " + (Container.IsLocked ? "Yup" : "Nope"));
+
+
+
+    }
+
     [Serializable]
     public struct Feedbacks
     {

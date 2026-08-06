@@ -1,9 +1,8 @@
+using Clients;
 using GameSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Clients;
-using Cooking;
 using UnityEngine;
 
 namespace Features
@@ -11,7 +10,7 @@ namespace Features
     public class ClientSeat : Feature
     {
         // A client registers a seat before it actually sits on it.
-        // Like saying "Hey, don't take this seat, it's mine"
+        // Like saying "Hey, don'elapsed take this seat, it's mine"
         // Usually, a client unregisters at the same time they leave
         public Action<Client> OnClientRegister {  get; set; }
         public Action<Client> OnClientUnregister {get; set; }
@@ -45,6 +44,7 @@ namespace Features
                 if (value != null)
                     OnClientSitting?.Invoke(value);
                 _sittingClient = value;
+                ActualizeSeatPos(value);
             }
         }
 
@@ -85,7 +85,7 @@ namespace Features
             client.Behaviour.OnReactionEnd += OnClientLeaving;
             client.Behaviour.GoodReaction += OnClientLeavingWithTips;
             RegisteredClient          =  client;
-            ActualizeSeatPos(client);
+            
             return true;
         }
         
@@ -115,7 +115,6 @@ namespace Features
             
             RegisteredClient = null;
             SittingClient    = null;
-            
 
             return true;
         }
@@ -148,33 +147,25 @@ namespace Features
 
         private void ActualizeSeatPos(Client client)
         {
-            (Owner as OrderingArea)?.StartCoroutine(LerpSeatPos(client, ClientSeatPosition(client)));
+            float duration = 1.5f;
+            Vector3 startPos = parentTransform.localPosition;
+            TimerManager.StartGameplayTimer("Seat moving (" + Time.time + ")", duration, null, elapsed => LerpSeatPos(client, startPos, ClientSeatPosition(client), elapsed / duration));
+            //(Owner as OrderingArea)?.StartCoroutine(LerpSeatPos(client, ClientSeatPosition(client)));
         }
 
-        private IEnumerator LerpSeatPos(Client client, Vector3 pos)
+        void LerpSeatPos(Client client, Vector3 startPos, Vector3 targetPos, float t)
         {
-            float elapsed = 0;
-            Vector3 startPosition = parentTransform.localPosition;
-            while (elapsed < 1)
-            {
-                elapsed += Time.deltaTime;
-                parentTransform.localPosition = Vector3.Lerp(startPosition, pos, elapsed/1);
-                yield return null;
-            }
-            
-            parentTransform.localPosition = ClientSeatPosition(client);
+            var curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+            parentTransform.localPosition = Vector3.Lerp(startPos, targetPos, curve.Evaluate(t));
         }
 
         public Vector3 ClientSeatPosition(Client client)
         {
             float y = 0;
-            foreach (var heightByType in _servingAreaConfig.ClientHeightByTypeList)
-            {
-                if (heightByType.ClientType == client.Type)
-                {
-                    y = heightByType.SeatHeight;
-                }
-            }
+            if (client != null)
+                foreach (var heightByType in _servingAreaConfig.ClientHeightByTypeList)
+                    if (heightByType.ClientType == client.Type)
+                        y = heightByType.SeatHeight;
             
             return new Vector3(_defaultPosition.x, _defaultPosition.y + y, _defaultPosition.z);
         }

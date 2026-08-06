@@ -12,7 +12,7 @@ namespace Features
         public Action<float> OnTransformationProgress { get; set; }
         public Action<TransformableAfterTimer> OnTransformationOver { get; set; }
         public Action<TransformableAfterTimer> OnTransformationStart { get; set; } 
-        protected Timer currentProcess;
+        public Timer currentProcess;
 
 
         #region Methods

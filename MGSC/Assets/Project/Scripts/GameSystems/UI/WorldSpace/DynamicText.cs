@@ -120,7 +120,7 @@ namespace UI
                 case EDataInfo.LastMoneyDelta:                  return ((int)mm?.LastMoneyDelta).ToString() ;
                 case EDataInfo.TotalAvailableUpgrades:          return um?.Upgrades.Select(up => up.Config.MaxLevel).Sum().ToString();
                 case EDataInfo.TotalBoughtUpgrades:             return um?.Upgrades.Select(up => up.Level).Sum().ToString();
-                case EDataInfo.MoneyAtTheBeginningOfTheShift:   return (mm?.MoneyInfo - mm?.GetMoneyTransactionsThisShift().Sum()).ToString(); // This ignores what was spent in upgrades
+                case EDataInfo.MoneyAtTheBeginningOfTheShift:   return (mm?.GetMoneyAtTheBeginningOfThisShift() + mm.GetMoneySpentOnUpgradesThisShift()).ToString(); // This ignores what was spent in upgrades
                 case EDataInfo.CurrentProjectVersion:           return (Application.version).ToString();
                 case EDataInfo.TimePlayed:                      return SecondsAsDuration(Globals.Statistics.SecondsPlayed + (int)Time.realtimeSinceStartup); // Adds up time played during previous sessions and this session
 
