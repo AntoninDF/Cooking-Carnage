@@ -1,5 +1,5 @@
-using Controller;
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace GameSystem
@@ -121,17 +121,23 @@ namespace GameSystem
             if (validRent)
             {
                 OnShiftSucceeded?.Invoke();
+                // We have to save the game validating the fact that this shift has been done, but the shift number should increase after the shift recap, not before.
+                ShiftNumber++;
+                SaveManager.SaveGameData();
+                ShiftNumber--;
             }
             else
             {
                 OnShiftFailed?.Invoke();
                 HasFailed = true;
+                Reference.TryGetManager<MoneyManager>(out var mm);
+                mm.AddMoney(-mm.GetMoneyTransactionsThisShift().Sum());
+                mm.ResetTransactionsForShift(ShiftNumber);
+                Reference.GetManager<OrderManager>().ResetOrdersForShift(ShiftNumber);
+                SaveManager.SaveGameData();
             }
 
-            // We have to save the game validating the fact that this shift has been done, but the shift number should increase after the shift recap, not before.
-            ShiftNumber++;
-            SaveManager.SaveGameData();
-            ShiftNumber--;
+            
             OnShiftEnded?.Invoke();
             AudioSystem.PlayAudio(AudioSystem.Database.shiftEndSFX);
             GameLoop.RequestTransition(StateTransitions.ShowShiftRecap);

@@ -69,6 +69,7 @@ namespace GameSystem
         }
 
         public void SetTransactions(Dictionary<int, List<float>> dict) => _moneyTransactionsPerShift = dict;
+        public void ResetTransactionsForShift(int shift) => _moneyTransactionsPerShift[shift] = new();
         public Dictionary<int, List<float>> GetTransactions () => _moneyTransactionsPerShift;
         public float GetMoneyGainedSinceBeginning()
         {

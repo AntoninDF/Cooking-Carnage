@@ -19,6 +19,9 @@ public partial class Globals
 
         }
 
+        // GLOOBY TRASH
+        public static Param<bool> AllowTrashingStuff { get; set; } = new(true);
+
         // PLATES
         public static Param<bool> AllowPuttingIngredientsInPlates { get; set; } = new(true);
 

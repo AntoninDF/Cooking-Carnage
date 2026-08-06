@@ -169,6 +169,7 @@ public class TutorialStep : ScriptableObject
         LockOrUnlock(LockableFeature.PutIngredientsInPlates, Globals.Gameplay.AllowPuttingIngredientsInPlates);
         LockOrUnlock(LockableFeature.PutPlatesInOvens, Globals.Gameplay.AllowPuttingPlatesInOvens);
         LockOrUnlock(LockableFeature.Serve, Globals.Gameplay.AllowClientServing);
+        LockOrUnlock(LockableFeature.GloobyTrash, Globals.Gameplay.AllowTrashingStuff);
     }
 
 
@@ -269,7 +270,8 @@ public class TutorialStep : ScriptableObject
         StartShift =                1 << 4,
         PutIngredientsInPlates =    1 << 5,
         PutPlatesInOvens =          1 << 6,
-        Serve =                     1 << 7
+        Serve =                     1 << 7,
+        GloobyTrash =               1 << 8,
     }
 
     #endregion

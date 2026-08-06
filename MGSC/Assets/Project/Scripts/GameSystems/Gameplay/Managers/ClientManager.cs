@@ -296,6 +296,9 @@ namespace GameSystem
                 currentClients.RemoveAt(i);
                 client.Despawn();
             }
+            var clients = GameObject.FindObjectsByType<Client>(FindObjectsSortMode.None);
+            foreach (var client in clients)
+                client.Despawn();
             WaitingQueue?.Clear();
         }
 

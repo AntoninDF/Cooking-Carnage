@@ -96,6 +96,11 @@ namespace GameSystem
             Reference.RemoveManager(this);
         }
         public void Init() { }
+
+        internal void ResetOrdersForShift(int shiftNumber)
+        {
+            _pastOrders[shiftNumber] = new();
+        }
         #endregion
 
     }

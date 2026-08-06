@@ -62,6 +62,7 @@ namespace Trash
                     {
                         return false;
                     }
+                    if (!Globals.Gameplay.AllowTrashingStuff) return false;
                     if (obj is not Feature _feature) return false;
                     if(_feature.Owner is not Item _item) return false;
                     if (_item is not Plate) return false;
@@ -76,6 +77,7 @@ namespace Trash
         {
             
             if(!_canEat)return;
+            if (!Globals.Gameplay.AllowTrashingStuff) return;
             
             if (_objectAnimation != null) 
                 _objectAnimation.OnAnimationStop += (() =>
