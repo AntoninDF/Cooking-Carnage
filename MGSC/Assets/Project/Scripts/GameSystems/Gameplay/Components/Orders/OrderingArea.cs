@@ -109,8 +109,8 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         }
         
     }
-    
-    
+
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         float baseHandleHeight = 1f;
@@ -149,4 +149,5 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         Gizmos.color = Color.white;
         UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Seat height : " + ClientSeat.ClientSeatPosition(ClientSeat.RegisteredClient));
     }
+#endif
 }

@@ -274,6 +274,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
 
     public void ShowRecipeSprites() => ShowSpriteList(GetSpritesFromIngredients(GetContainedIngredients()));
 
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
         float baseHandleHeight = 1f;
@@ -303,10 +304,8 @@ public class Oven : MonoBehaviour, IFeatureCollection
         // Display if oven is locked
         Gizmos.color = Color.white;
             UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Is locked ? : " + (Container.IsLocked ? "Yup" : "Nope"));
-
-
-
     }
+#endif
 
     [Serializable]
     public struct Feedbacks

@@ -10,8 +10,9 @@ public class IngredientSpawnPosition : MonoBehaviour
 
     public SO_Ingredient IngredientData;
     [Range(0f, 1f)]
+#if UNITY_EDITOR
     [SerializeField] private float _gizmoSize = 0.1f;
-
+#endif
     private GameObject _lastSpawnedObject;
     private void Awake()
     {
