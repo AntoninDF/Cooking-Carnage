@@ -168,6 +168,8 @@ public class DebugWindow : MonoBehaviour
             GUILayout.Label($"Set Money: {mm.MoneyInfo:F2}€");
             int newMoney = (int)GUILayout.HorizontalSlider(mm.MoneyInfo, 0.0f, 999f);
             mm.SetCurrentMoney(newMoney);
+            if (GUILayout.Button("Get 100$"))
+                mm.AddMoney(100);
         }
 
         GUILayout.Space(15);

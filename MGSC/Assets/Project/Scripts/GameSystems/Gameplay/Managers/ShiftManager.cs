@@ -182,7 +182,17 @@ namespace GameSystem
         /// <summary> Has to be a positive value </summary>
         public float GetCurrentRentPrice() => GetRentPrice(ShiftNumber);
         /// <summary> Has to be a positive value </summary>
-        public float GetRentPrice(int shiftCount) => _rentPriceCurve.Evaluate(shiftCount);
+        public float GetRentPrice(int shiftCount)
+        {
+            float percentage = 1f;
+            if (Reference.TryGetManager(out UpgradeManager um))
+            {
+                var upgrade = um.GetUpgradeByType<LowerRentUpgrade>();
+                if (upgrade != null)
+                    percentage = upgrade.GetRentMultiplier();
+            }
+            return _rentPriceCurve.Evaluate(shiftCount) * percentage;
+        }
 
         public void Register()
         {

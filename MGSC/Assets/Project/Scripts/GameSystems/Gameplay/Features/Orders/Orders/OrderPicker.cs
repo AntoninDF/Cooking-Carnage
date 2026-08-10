@@ -5,13 +5,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Upgrades;
 
 namespace Orders
 {
     public static class OrderPicker
     {
         private const float UpgradeProbability = 1f / 3f; 
-        private const int ForcedFullRecipeInterval = 15;   
+        private static int ForcedFullRecipeInterval
+        {
+            get
+            {
+                if (Reference.TryGetManager(out UpgradeManager um))
+                {
+                    var upgrade = um.GetUpgradeByType<MixtRecipePityThresholdUpgrade>();
+                    if (upgrade != null)
+                        return upgrade.CurrentPityThreshold;
+                }
+                return 15;
+            }
+        }
 
         private static int _selectionCount = 0;
         private static Queue<SO_Recipe> _forcedRecipes = new();
@@ -27,7 +40,7 @@ namespace Orders
 
             SO_RecipeBook         book         = FindCurrentRecipeBook();
 
-            if (_selectionCount % ForcedFullRecipeInterval == 0
+            if ((ForcedFullRecipeInterval == 0 || _selectionCount % ForcedFullRecipeInterval == 0)
                 && RecipeUnlockChecker.IsUnlocked(RecipeCategory.MixteTriple))
             {
                 SO_Recipe forced = FindTripleDistinctRecipe(book);
