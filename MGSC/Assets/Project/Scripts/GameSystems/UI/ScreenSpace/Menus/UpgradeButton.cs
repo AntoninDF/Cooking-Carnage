@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using Upgrades;
@@ -7,6 +8,8 @@ namespace UI
 {
     public class UpgradeButton : UIWidget
     {
+        public bool IsLocked;
+
         public Image I_Icon;
         public Image I_Icon2;
         public TMP_Text L_Title;
@@ -42,16 +45,18 @@ namespace UI
                 B_LevelUp.onClick.AddListener(RequestLevelUp);
             else
                 UnityEngine.Debug.LogWarning($"[UpgradeButton] ({name}) B_LevelUp non assigné — le clic ne fera rien");
+
+            IsLocked = config.IsLocked;
         }
 
         public void UpdateGraphics()
         {
             if (_config == null) return;
 
-            if (I_Icon != null)
+            if (I_Icon != null && _config.Icon != null)
                 I_Icon.sprite = _config.Icon;
 
-            if (I_Icon2 != null)
+            if (I_Icon2 != null && _config.Icon != null)
                 I_Icon2.sprite = _config.Icon;
 
             var upgrade = _config.GetUpgrade();
@@ -68,13 +73,24 @@ namespace UI
 
             if (L_PriceTag != null)
                 L_PriceTag.text = upgrade.GetPrice().ToString() + "$";
+
+            if (B_LevelUp.TryGetComponent(out Graphic graphic))
+                graphic.color = IsLocked ? new Color(1f,1f,1f, 0.4f) : Color.white;
+
+            // Set as locked visually
+            if (!IsLocked) return;
+            if (L_Title != null)
+                L_Title.text += " (Locked)";
+            if (L_PriceTag != null)
+                L_PriceTag.text = "?";
+
         }
 
         public void RequestLevelUp()
         {
             UnityEngine.Debug.Log($"[UpgradeButton] RequestLevelUp() DÉCLENCHÉ pour {_config?.name}");
 
-            if (_config == null)
+            if (_config == null || IsLocked)
             {
                 OnLevelUpFail?.Invoke();
                 return;

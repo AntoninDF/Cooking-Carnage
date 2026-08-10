@@ -1,6 +1,5 @@
 ﻿using Cooking;
 using UnityEngine;
-using static Autodesk.Fbx.FbxEuler;
 
 namespace Orders
 {
