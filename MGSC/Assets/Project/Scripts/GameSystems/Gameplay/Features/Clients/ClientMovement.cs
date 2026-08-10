@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Features.Path;
 using GameSystem;
 using UnityEngine;
 using UnityEngine.AI;
@@ -264,7 +263,6 @@ namespace Features
         {
             IsOnSpline            = false;
             _navmeshAgent.enabled = true;
-            Debug.Log("Client speed is " +  _navmeshAgent.speed);
             Reference.GetManager<PathManager>().SplineTrafficManager.Unregister(this);
 
             bool warped = _navmeshAgent.Warp(ControlledTransform.position);

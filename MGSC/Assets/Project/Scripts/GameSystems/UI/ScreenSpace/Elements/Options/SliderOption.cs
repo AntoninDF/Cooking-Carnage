@@ -44,7 +44,7 @@ namespace UI
         public void SetValue(float value)
         {
             if (Slider == null) return;
-
+            value = Mathf.InverseLerp(ValueRange.x, ValueRange.y, value);
             Slider.value = value;
         }
         public void OnValueChangedCallback(float value)

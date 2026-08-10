@@ -44,7 +44,6 @@ namespace Features
                 if (value != null)
                     OnClientSitting?.Invoke(value);
                 _sittingClient = value;
-                ActualizeSeatPos(value);
             }
         }
 
@@ -74,6 +73,7 @@ namespace Features
             base.Reset();
             RegisteredClient = null;
             SittingClient = null;
+            parentTransform.localPosition = _defaultPosition;
         }
 
         public bool TryRegister(Client client)
@@ -97,11 +97,16 @@ namespace Features
             if(!client.IsCooked)
             {
                 TryLeave(client);
+                if (client.IsAngry)
+                    ActualizeSeatPos(null);
+                else
+                    TimerManager.StartTimer("Lower client seat (" + Time.time + ")", 5.5f, () => ActualizeSeatPos(null));
             }
             else
             {
                 OnIngredientDropped?.Invoke();
                 client.SpawnIngredients(dropSlots);
+                ActualizeSeatPos(null);
             }
     
             //parentTransform.localPosition = _defaultPosition;
@@ -127,7 +132,9 @@ namespace Features
             SittingClient = client;
             
             client.SittingClient(transform);
-            
+
+            ActualizeSeatPos(client);
+
             return true;
         }
         

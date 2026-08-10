@@ -104,7 +104,7 @@ namespace GameSystem
             ResetTimerUntilFinalWarning();
             this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
             OnShiftFinalWarning?.Invoke();
-            AudioSystem.PlayAudio(AudioSystem.Database.shiftNoonSFX);
+            AudioSystem.SetEventParameter(AudioSystem.Database.beforeShiftMusic, "Ingame Music Sequence", 2); // 2 is Shift Countdown
         }
 
         /// <summary>

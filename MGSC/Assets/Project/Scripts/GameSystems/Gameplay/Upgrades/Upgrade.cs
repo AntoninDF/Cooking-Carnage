@@ -113,7 +113,7 @@ namespace Upgrades
                 var sub = _subscribers[i];
                 if (sub is UnityEngine.Object uo && uo == null)
                 {
-                    Debug.LogError("An Upgrade subscriber has been destroyed, level up impossible");
+                    //Debug.LogError("An Upgrade subscriber has been destroyed, level up impossible");
                     _subscribers.RemoveAt(i);
                     continue;
                 }

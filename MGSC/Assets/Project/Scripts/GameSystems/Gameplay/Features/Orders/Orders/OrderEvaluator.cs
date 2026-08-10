@@ -1,5 +1,6 @@
 ﻿using Cooking;
 using UnityEngine;
+using static Autodesk.Fbx.FbxEuler;
 
 namespace Orders
 {
@@ -42,28 +43,38 @@ namespace Orders
         {
             Servable meal = order.ServingInfo.Meal;
 
-            if (meal == null || meal.Recipe == null)
+            if (meal == null) return PlainJellyPrice;
+
+            return CalculateBasePrice(meal.Recipe, isCorrectRecipe);
+        }
+        public static float CalculateBasePrice(SO_Recipe recipe, bool isCorrectRecipe=true)
+        {
+            if (recipe == null)
                 return PlainJellyPrice;
 
             // NOTE : Les recettes vides et brûlées ont déjà leur prix de vente dans le ppté Price
-            
-            if (!isCorrectRecipe && meal.Recipe.Name != "Failed recipe" && meal.Recipe.Name != "Empty recipe")
+
+            if (!isCorrectRecipe && recipe.Name != "Failed recipe" && recipe.Name != "Empty recipe")
                 return WrongRecipePrice;
-            
-            return meal.Recipe.Price;
+
+            return recipe.Price;
         }
 
         private static int CalculateStars(Order order)
         {
             float elapsedSeconds = order.ServingInfo.Timestamp - order.SeatedTimestamp;
-            float patience       = Mathf.Clamp01(1f - elapsedSeconds / order.PatienceDuration);
+            return CalculateStars(elapsedSeconds, order.PatienceDuration);
+        }
+        public static int CalculateStars(float elapsedTime, float totalPatience)
+        {
+            float patience = Mathf.Clamp01(1f - elapsedTime / totalPatience);
 
             if (patience >= Threshold2Star) return 2;
             if (patience >= Threshold1Star) return 1;
             return 0;
         }
 
-        private static float CalculateTip(float basePrice, int stars) => stars switch
+        public static float CalculateTip(float basePrice, int stars) => stars switch
         {
             2 => TipMultiplier2Star * basePrice,
             1 => TipMultiplier1Star * basePrice,

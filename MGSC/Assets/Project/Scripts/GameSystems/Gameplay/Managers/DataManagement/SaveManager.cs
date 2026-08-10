@@ -16,10 +16,6 @@ namespace GameSystem
     public static class SaveManager
     {
 
-        static SaveManager()
-        {
-            Application.quitting += SaveUponQuit;
-        }
         #region Fields
         public static GameData Data;
         public static string filePath = Path.Combine(Application.persistentDataPath, "gameData.json");
@@ -87,12 +83,22 @@ namespace GameSystem
             if (transactions == null) transactions = new();
             Reference.GetManager<MoneyManager>()?.SetTransactions(transactions);
 
+            // Apply audio
+            Globals.Audio.MasterVolume.Value                = Data.MasterVolume;
+            Globals.Audio.MusicVolume.Value                 = Data.MusicVolume;
+            Globals.Audio.AmbienceVolume.Value              = Data.AmbienceVolume;
+            Globals.Audio.SFXVolume.Value                   = Data.SFXVolume;
+            Globals.Audio.DialogVolume.Value                = Data.DialogVolume;
+
+            // Apply player parameters
+            Globals.Gameplay.Player.LookSpeed.Value         = Data.LookSpeed;
+            Globals.Gameplay.Player.ScrollSensitivity.Value = Data.ScrollSensitivity;
 
             OnSaveLoaded?.Invoke();
             return true;
         }
 
-        //⚠️ UPDATE THIS WHEN ADDING NEW STUFF TO SAVE
+        //⚠️ UPDATE THIS WHEN ADDING NEW STUFF TO SAVE (only if the default value is different than the one in GameData's constructor)
         /// <summary>Returns a <see cref="GameData"/> containing all the current data about the game </summary>
         public static GameData MakeGameData()
         {
@@ -118,23 +124,36 @@ namespace GameSystem
             public List<UpgradeData> upgrades = new List<UpgradeData> { };
             public int shiftNumber = 0;
             public bool TutorialHasBeenPlayed;
+
+            public float MasterVolume       = Globals.Audio.MasterVolume;
+            public float MusicVolume        = Globals.Audio.MusicVolume;
+            public float AmbienceVolume     = Globals.Audio.AmbienceVolume;
+            public float SFXVolume          = Globals.Audio.SFXVolume;
+            public float DialogVolume       = Globals.Audio.DialogVolume;
+
+            public float LookSpeed          = Globals.Gameplay.Player.LookSpeed;
+            public float ScrollSensitivity  = Globals.Gameplay.Player.ScrollSensitivity;
+
+
             // Non-serializable complex types use backing fields that are their JSON representation to still allow being saved
             public Dictionary<int, List<float>> Transactions
             {
                 get => JsonConvert.DeserializeObject< Dictionary<int, List<float>>>(transactions);
                 set => transactions = JsonConvert.SerializeObject(value);
             }
+            [SerializeField]
+            private string transactions;
+
             public List<KeyValuePair<int, List<string>>> OrderHistory
             {
                 get => JsonConvert.DeserializeObject<List<KeyValuePair<int, List<string>>>>(orderHistory);
                 set => orderHistory = JsonConvert.SerializeObject(value);
             }
-            public List<UpgradeManager.UpgradeLevelUpInfo> LevelUpHistory;
-
-            [SerializeField]
-            private string transactions;
             [SerializeField]
             private string orderHistory;
+
+            public List<UpgradeManager.UpgradeLevelUpInfo> LevelUpHistory;
+
             // Stats that should not be reset
             public int SecondsPlayed = 0;
 
@@ -146,6 +165,25 @@ namespace GameSystem
 
                 return result;
             }
+        }
+        //⚠️ UPDATE THIS WHEN ADDING NEW STUFF TO SAVE (only if it should be saved when closing the game)
+        private static void SaveUponQuit()
+        {
+            // Save how long the player has played
+            Data.SecondsPlayed += (int)Time.realtimeSinceStartup;
+
+            // Save audio parameters
+            Data.MasterVolume = Globals.Audio.MasterVolume;
+            Data.MusicVolume = Globals.Audio.MusicVolume;
+            Data.AmbienceVolume = Globals.Audio.AmbienceVolume;
+            Data.SFXVolume = Globals.Audio.SFXVolume;
+            Data.DialogVolume = Globals.Audio.DialogVolume;
+
+            Data.LookSpeed = Globals.Gameplay.Player.LookSpeed;
+            Data.ScrollSensitivity = Globals.Gameplay.Player.ScrollSensitivity;
+
+            Debug.Log("Saving upon quit. Data.MasterVolume is " + Data.MasterVolume + ". Globals.Audio.MasterVolume is " + Globals.Audio.MasterVolume.Value);
+            SaveGameData(Data);
         }
         /// <summary>
         /// Save multiple data (money, upgrades, daycount) into a file
@@ -194,12 +232,10 @@ namespace GameSystem
             return JsonUtility.FromJson<GameData>(json);
         }
 
-
-        private static void SaveUponQuit()
+        [RuntimeInitializeOnLoadMethod]
+        static void BindSaveUponQuit()
         {
-            // Save how long the player has played
-            Data.SecondsPlayed += (int)Time.realtimeSinceStartup;
-            SaveGameData(Data);
+            Application.quitting += SaveUponQuit;
         }
         public static List<UpgradeData> ConvertUpgradeData()
         {

@@ -1,6 +1,8 @@
+using Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -35,6 +37,10 @@ namespace GameSystem
         {
             GameLoop.OnReset += RemoveFinishedTimers;
         }
+
+#if UNITY_EDITOR
+        static float elapsedSinceLastLog = 0f;
+#endif
         /// <summary>
         /// Updates all active timers
         /// </summary>
@@ -51,9 +57,36 @@ namespace GameSystem
                     timers[key].Update(Time.deltaTime);
                 }
             }
+
+#if UNITY_EDITOR
+            // This huge debug block should be removed later
+            float logCooldown = 2f;
+            elapsedSinceLastLog += Time.deltaTime;
+            if (elapsedSinceLastLog >= logCooldown)
+            {
+                elapsedSinceLastLog -= logCooldown;
+                Log();
+            }
+
+            void Log()
+            {
+                Debug.Log("__________ " + "TimerManager" + " __________");
+
+                string result = "All timers :";
+                foreach (var kvp in timers)
+                {
+                    result += "\n\t" + kvp.Key + " : \t\t" + Mathf.Round(kvp.Value.Elapsed*100f)/100f + "s/" + kvp.Value.Duration + "s (ProgressCallback = '" + kvp.Value.onUpdate + "', EndCallback = '" + kvp.Value.onComplete + "'";
+                }
+                Debug.Log(result);
+
+                Debug.Log("__________ " + "##########" + " __________");
+
+            }
+#endif
+
         }
 
-        
+
         /// <summary>
         /// Starts a timer with the given name, duration, callback, and loop option.
         /// OnUpdate is invoked with the time elapsed in seconds as parameter.
@@ -98,6 +131,14 @@ namespace GameSystem
                 t.Pause();
             }
         }
+        /// <summary>
+        /// Pauses a timer
+        /// </summary>
+        public static void StopTimer(Timer timer)
+        {
+            if (timer != null)
+                timer.Pause();
+        }
         
         /// <summary>
         /// Resumes a paused timer
@@ -105,15 +146,7 @@ namespace GameSystem
         public static void ResumeTimer(string name)
         {
             if (timers.TryGetValue(name, out var t))
-            {
                 t.Resume();
-                
-                //this.Log(LogType.Log, "Timer " + name + " is now resumed ");
-            }
-            else
-            {
-                //this.Log(LogType.Warning, "Timer " + name + "cannot be paused, it doesn't exist");
-            }
         }
         
         /// <summary>
@@ -132,10 +165,24 @@ namespace GameSystem
             }
         }
 
+        /// <summary>
+        /// Returns a float value of the time left for this timer in seconds. If the timer wasn't found, returns 0
+        /// </summary>
+        /// <param name="name">The name of the requested timer</param>
         public static float TimeLeft(string name)
         {
             if (timers.TryGetValue(name, out var t) && t != null)
-                return t.Duration - t.Elapsed;
+                return TimeLeft(t);
+            return 0f;
+        }
+        /// <summary>
+        /// Returns a float value of the time left for this timer in seconds. If the timer wasn't found, returns 0
+        /// </summary>
+        /// <param name="name">The name of the requested timer</param>
+        public static float TimeLeft(Timer timer)
+        {
+            if (timer != null)
+                return timer.Duration - timer.Elapsed;
             return 0f;
         }
         
@@ -146,8 +193,16 @@ namespace GameSystem
         {
             if (string.IsNullOrEmpty(name)) return;
             if (!timers.ContainsKey(name)) return;
-            GameLoop.UnbindTimerFromGamePause(timers[name]);
-            timers.Remove(name);
+            RemoveTimer(timers[name]);
+        }
+        /// <summary>
+        /// Removes a timer from the list (deletes it)
+        /// </summary>
+        public static void RemoveTimer(Timer timer)
+        {
+            if (timer == null) return;
+            GameLoop.UnbindTimerFromGamePause(timer);
+            timers.Remove(timer.Name);
             
             //this.Log(LogType.Log, "Timer " + name + " has been erased");
         }
@@ -180,6 +235,9 @@ namespace GameSystem
         public bool IsPaused => paused;
         
         public Action onComplete;
+        /// <summary>
+        /// OnUpdate is invoked with the elapsed time as a parameter. Divide it by <see cref="Duration"/> to get the normalized progression
+        /// </summary>
         public Action<float> onUpdate;
         private bool paused;
         

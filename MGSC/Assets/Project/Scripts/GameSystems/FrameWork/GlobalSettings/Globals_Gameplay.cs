@@ -14,8 +14,8 @@ public partial class Globals
             public static Param<bool> AllowControllerMovement { get; set; } = new(true);
             public static Param<bool> AllowPlayerInteractions { get; set; } = new(true);
             public static Param<bool> AllowPlayerGrab { get; set; } = new(true);
-            public static Param<float> LookSpeed { get; set; } = new(0.1f);
-            public static Param<float> ScrollSensitivity { get; set; } = new(0.2f);
+            public static Param<float> LookSpeed { get; set; } = new(0.5f);
+            public static Param<float> ScrollSensitivity { get; set; } = new(0.5f);
 
         }
 

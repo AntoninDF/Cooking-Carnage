@@ -43,14 +43,14 @@ public static class GameLoop
             if (!IsRunning) return;
             IsRunning = false;
             OnPause?.Invoke();
-            AudioSystem.SetGlobalParameter("GamePaused", 1);
+            //AudioSystem.SetGlobalParameter("GamePaused", 1);
         }
         else
         { 
             if (IsRunning) return;
-                IsRunning = true;
-                OnResume?.Invoke();
-                AudioSystem.SetGlobalParameter("GamePaused", 0);
+            IsRunning = true;
+            OnResume?.Invoke();
+            //AudioSystem.SetGlobalParameter("GamePaused", 0);
         }
     }
 

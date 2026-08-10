@@ -42,11 +42,11 @@ namespace UI
 		{
 			ClearContent();
 			AddGroup("Audio")
-				.AddSlider("Master volume", AudioSystem.SetMasterVolume, 1f, SliderOption.DisplayMode.Percentage)
-				.AddSlider("SFX volume", AudioSystem.SetSFXVolume, 1f, SliderOption.DisplayMode.Percentage)
-				.AddSlider("Ambience volume", AudioSystem.SetAmbienceVolume, 1f, SliderOption.DisplayMode.Percentage)
-				.AddSlider("Music volume", AudioSystem.SetMusicVolume, 1f, SliderOption.DisplayMode.Percentage)
-				.AddSlider("Voice volume", AudioSystem.SetVoiceVolume, 1f, SliderOption.DisplayMode.Percentage)
+				.AddSlider("Master volume",		AudioSystem.SetMasterVolume,	Globals.Audio.MasterVolume,		SliderOption.DisplayMode.Percentage)
+				.AddSlider("SFX volume",		AudioSystem.SetSFXVolume,		Globals.Audio.SFXVolume,		SliderOption.DisplayMode.Percentage)
+				.AddSlider("Ambience volume",	AudioSystem.SetAmbienceVolume,	Globals.Audio.AmbienceVolume,	SliderOption.DisplayMode.Percentage)
+				.AddSlider("Music volume",		AudioSystem.SetMusicVolume,		Globals.Audio.MusicVolume,		SliderOption.DisplayMode.Percentage)
+				.AddSlider("Voice volume",		AudioSystem.SetVoiceVolume,		Globals.Audio.DialogVolume,		SliderOption.DisplayMode.Percentage)
 				;
 
 			// Only 16:9 resolution options
@@ -85,8 +85,8 @@ namespace UI
 				;
 
 			AddGroup("Controls")
-				.AddSlider("Camera sensitivity", Globals.Gameplay.Player.LookSpeed.Set, 0.5f, SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(0.01f, 0.2f))
-				.AddSlider("Scroll sensitivity", Globals.Gameplay.Player.ScrollSensitivity.Set, 0.5f, SliderOption.DisplayMode.Integer, new Vector2(1, 100))
+				.AddSlider("Camera sensitivity", Globals.Gameplay.Player.LookSpeed.Set,			Globals.Gameplay.Player.LookSpeed,			SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(0.01f, 0.2f))
+				.AddSlider("Scroll sensitivity", Globals.Gameplay.Player.ScrollSensitivity.Set, Globals.Gameplay.Player.ScrollSensitivity,	SliderOption.DisplayMode.Integer, new Vector2(1, 100))
 				;
 
 			if (_availableGroups.Count > 0 && _currentActiveGroup == null)

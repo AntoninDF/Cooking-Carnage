@@ -26,6 +26,7 @@ public class Param<T>
 
     public void Set(T value)
     {
+        Debug.Log("Parameter set to " + value);
         _value = value;
         OnValueChange?.Invoke(value);
     }

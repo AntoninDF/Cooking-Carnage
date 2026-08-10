@@ -19,8 +19,7 @@ public class ShiftState : GameplayState
 
         mgr.RequestShiftTimer();
         
-        AudioSystem.StopAudio(AudioSystem.Database.beforeShiftMusic);
-        AudioSystem.PlayAudio(AudioSystem.Database.ingameMusic);
+        AudioSystem.SetEventParameter(AudioSystem.Database.beforeShiftMusic, "Ingame Music Sequence", 1); // 1 Triggers the shift music (opposed to the preshift music that should be currently playing)
     }
 
     public override void OnExit()

@@ -36,6 +36,7 @@ namespace Clients
         public bool               IsCooked         { get; set; }
         public bool               IsAngry          { get; set; }
         public int UniqueID { get; set; }
+        public Timer PatienceTimer;
         
         public Order OrderLog { get;  set; }
         public Order CurrentOrder
@@ -90,16 +91,69 @@ namespace Clients
            
            OnSeatRegister += OnNewSeatRegister;
            UniqueID = gameObject.GetInstanceID();
-       }
 
-       public void Begin()
-       {
-           Behaviour.Begin();
-       }
-       void Update()
-       {
+        }
+
+        // The following block is for debug purposes only
+        void OnNewOrderLog(Order obj)               => Debug.Log($"[Client {name}] OnNewOrder          " + " was invoked" + " with parameter " + (obj != null ? obj.Recipe.name : "'null'"));
+        void OnOrderAcceptedLog(Order obj)          => Debug.Log($"[Client {name}] OnOrderAccepted     " + " was invoked" + " with parameter " + (obj != null ? obj.Recipe.name : "'null'"));
+        void OnSeatRegisterLog(ClientSeat obj)      => Debug.Log($"[Client {name}] OnSeatRegister      " + " was invoked" + " with parameter " + (obj != null ? (obj.Owner as UnityEngine.Object).name : "'null'"));
+        void OnSeatUnregisterLog(ClientSeat obj)    => Debug.Log($"[Client {name}] OnSeatUnregister    " + " was invoked" + " with parameter " + (obj != null ? (obj.Owner as UnityEngine.Object).name : "'null'"));
+        void OnEnable() => BindActionLogs();
+        void OnDisable() => UnbindActionLogs();
+        void BindActionLogs()
+        {
+            OnNewOrder              += OnNewOrderLog;
+            OnOrderAccepted         += OnOrderAcceptedLog;
+            OnSeatRegister          += OnSeatRegisterLog;
+            OnSeatUnregister        += OnSeatUnregisterLog;
+        }
+        void UnbindActionLogs()
+        {
+            OnNewOrder              -= OnNewOrderLog;
+            OnOrderAccepted         -= OnOrderAcceptedLog;
+            OnSeatRegister          -= OnSeatRegisterLog;
+            OnSeatUnregister        -= OnSeatUnregisterLog;
+        }
+        // End of debug block
+
+#if UNITY_EDITOR
+        // This huge debug block should be removed later
+        float elapsedSinceLastLog = 0f;
+#endif
+        void Update()
+        {
            Collection.Update();
            Behaviour.Update();
+#if UNITY_EDITOR
+            float logCooldown = 2f;
+            elapsedSinceLastLog += Time.deltaTime;
+            if (elapsedSinceLastLog >= logCooldown)
+            {
+                elapsedSinceLastLog -= logCooldown;
+                Log();
+            }
+
+            void Log()
+            {
+                Debug.Log("__________ " + GetType().Name + " : " + name + " __________");
+
+                Debug.Log("Client type" + " : " + Type);
+                Debug.Log("Current box position" + " : " + (CurrentSeat != null ? ((CurrentSeat.Owner as UnityEngine.Object).name.Contains("1") ? "Middle" : (CurrentSeat.Owner as UnityEngine.Object).name.Contains("2") ? "Right" : "Left") : "null"));
+                Debug.Log("Order" + " : " + (CurrentOrder != null ? (CurrentOrder.Recipe.name + " (Has" + (CurrentOrder.ServingInfo.HasBeenServed ? " not" : "") + " been served)") : "null"));
+                if (CurrentOrder != null && CurrentOrder.ServingInfo.HasBeenServed)
+                    Debug.Log("Serving" + " : " + CurrentOrder.ServingInfo.Recipe.name+ ", " + CurrentOrder.OrderRating.MoneyGained + "€, " + CurrentOrder.OrderRating.Stars + " stars");
+                Debug.Log("Patience" + " : " + (PatienceTimer == null ? 0f : PatienceTimer.Elapsed) + "s/" + (PatienceTimer == null ? 0f : PatienceTimer.Duration));
+
+                Debug.Log("__________ " + "##########" + " __________");
+
+            }
+#endif
+        }
+
+        public void Begin()
+       {
+           Behaviour.Begin();
        }
 
         #endregion
@@ -113,7 +167,7 @@ namespace Clients
         private void StartOrderTimer(Order order)
         {
             string timerName = "OrderTimer_" + UniqueID;
-            var patienceTimer = GameSystem.TimerManager.StartGameplayTimer(
+            PatienceTimer = GameSystem.TimerManager.StartGameplayTimer(
                 timerName,
                 order.PatienceDuration,
                 () => OnOrderTimeout(order),
@@ -158,7 +212,7 @@ namespace Clients
             if (Behaviour?.ClientMovement != null)
                 Reference.GetManager<GameSystem.PathManager>()?.SplineTrafficManager.Unregister(Behaviour.ClientMovement);
 
-            GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);
+            GameSystem.TimerManager.RemoveTimer(PatienceTimer);
             GameSystem.TimerManager.RemoveTimer($"Customer Eating Timer + {UniqueID}");
             GameSystem.TimerManager.RemoveTimer($"{UniqueID}Wait For Quit the seat");
             GameSystem.TimerManager.RemoveTimer($"{UniqueID} Wait For finishing the order ");
@@ -272,7 +326,7 @@ namespace Clients
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);
-           GameSystem.TimerManager.RemoveTimer("OrderTimer_" + UniqueID);
+           GameSystem.TimerManager.RemoveTimer(PatienceTimer);
            CurrentSeat?.TryUnregister(this);
        }
 
@@ -286,6 +340,8 @@ namespace Clients
         {
             float baseHandleHeight = 1f;
             float increment = 0.2f;
+            var cam = SceneView.lastActiveSceneView.camera;
+            if (cam != null) increment = Vector3.Distance(cam.transform.position, transform.position) / 50f;
             int handleCount = 0;
             float GetY()
             {
