@@ -86,7 +86,7 @@ namespace UI
 
 			AddGroup("Controls")
 				.AddSlider("Camera sensitivity", Globals.Gameplay.Player.LookSpeed.Set,			Globals.Gameplay.Player.LookSpeed,			SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(0.01f, 0.2f))
-				.AddSlider("Scroll sensitivity", Globals.Gameplay.Player.ScrollSensitivity.Set, Globals.Gameplay.Player.ScrollSensitivity,	SliderOption.DisplayMode.Integer, new Vector2(1, 100))
+				.AddSlider("Scroll sensitivity", Globals.Gameplay.Player.ScrollSensitivity.Set, Globals.Gameplay.Player.ScrollSensitivity,	SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(0.1f,30f))
 				;
 
 			if (_availableGroups.Count > 0 && _currentActiveGroup == null)

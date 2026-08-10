@@ -1,6 +1,10 @@
+using GameSystem;
 using System;
 using System.Collections.Generic;
-using GameSystem;
+using System.Reflection;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -13,7 +17,7 @@ public class DebugWindow : MonoBehaviour
     // On initialise avec une taille raisonnable, la hauteur s'adaptera toute seule
     private Rect _windowRect = new Rect(20, 20, 450, 400); 
     private int _currentTab;
-    private readonly string[] _tabs = { "General", "Settings", "Timers", "Clients", "Upgrades", "Managers" };
+    private readonly string[] _tabs = { "General", "Settings", "Timers", "Clients", "Upgrades", "Managers", "Global variables" };
     
     private float _gameSpeed = 1f;
     private float _deltaTime;
@@ -29,6 +33,9 @@ public class DebugWindow : MonoBehaviour
 
     private bool _previousMouseVisibility;
     private CursorLockMode _previousMouseLockMode;
+
+    const int INDENT_SIZE = 10;
+    int indentLevel = 0;
 
     #region Methods
     private void OnEnable()
@@ -112,6 +119,7 @@ public class DebugWindow : MonoBehaviour
             case 3: DrawClientsTab(); break;
             case 4: DrawUpgradesTab(); break;
             case 5: DrawManagersTab(); break;
+            case 6: DrawGlobalsTab(); break;
         }
 
         GUILayout.EndVertical();
@@ -133,18 +141,7 @@ public class DebugWindow : MonoBehaviour
         GUILayout.Label($"FPS: {fps:F1}");
 
         var data = SaveManager.Data;
-
-        GUILayout.Space(10);
-        if (data != null)
-        {
-            GUILayout.Label($"Current Shift: {data.shiftNumber}");
-            GUILayout.Label($"Current Money: {data.money:F1}€");
-        }
-        else
-        {
-            GUILayout.Label($"No game data loaded", GUI.skin.label);
-        }
-        
+                
         GUILayout.Space(10);
         if (GUILayout.Button("Reload Scene", GUILayout.Height(30)))
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -163,11 +160,15 @@ public class DebugWindow : MonoBehaviour
         
         GUILayout.Space(10);
         
-        GUILayout.Label($"Set Shift: {newShift}");
-        newShift = Mathf.RoundToInt(GUILayout.HorizontalSlider(newShift, 0, 99f));
+        GUILayout.Label($"Set Shift: {Globals.Gameplay.ShiftNumber}");
+        Globals.Gameplay.ShiftNumber.Value = Mathf.RoundToInt(GUILayout.HorizontalSlider(Globals.Gameplay.ShiftNumber, 0, 20));
         
-        GUILayout.Label($"Set Money: {newMoney:F2}€");
-        newMoney = GUILayout.HorizontalSlider(newMoney, 0.0f, 999f);
+        if (Reference.TryGetManager(out MoneyManager mm))
+        {
+            GUILayout.Label($"Set Money: {mm.MoneyInfo:F2}€");
+            int newMoney = (int)GUILayout.HorizontalSlider(mm.MoneyInfo, 0.0f, 999f);
+            mm.SetCurrentMoney(newMoney);
+        }
 
         GUILayout.Space(15);
         
@@ -175,22 +176,15 @@ public class DebugWindow : MonoBehaviour
 
         if (GUILayout.Button("Save and Reload"))
         {
-            SaveManager.GameData data = new SaveManager.GameData();
-            data.shiftNumber = newShift;
-            data.money = newMoney;
-            data.upgrades = SaveManager.Data.upgrades;
+            SaveManager.GameData data = SaveManager.MakeGameData();
             SaveManager.SaveGameData(data);
-                
-            // Assurez-vous que cette classe existe bien dans votre projet
-            // StudioEventEmitterExtension.StopAll_Static(); 
-                
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SaveManager.LoadGlobalData();
         }
         
         GUILayout.Space(5);
         
         GUI.backgroundColor = Color.red;
-        if (GUILayout.Button("Reset Save (Hard Reset)"))
+        if (GUILayout.Button("Reset Save and reload scene"))
         {
             SaveManager.ResetSave();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -359,6 +353,81 @@ public class DebugWindow : MonoBehaviour
 
             GUILayout.EndHorizontal();
         }
+
+    }
+
+    Dictionary<Type, bool> doDisplay = new();
+    void DrawGlobalsTab()
+    {
+        DrawType(typeof(Globals));
+    }
+    void DrawStaticMembersForType(Type type)
+    {
+        foreach (var member in type.GetMembers())
+        {
+            // Filter for fields and properties
+            if ((member.MemberType & (MemberTypes.Property | MemberTypes.Field)) == 0) continue;
+            // Filter for static ppties/fields
+            if (!member.IsStatic()) continue;
+
+            object value;
+            if (member.MemberType == MemberTypes.Property)
+            {
+                var obj = (PropertyInfo)member;
+                value = obj.GetValue(null);
+                Label(member.Name + " : " + value);
+            }
+            if (member.MemberType == MemberTypes.Field)
+            {
+                var obj = (FieldInfo)member;
+                value = obj.GetValue(null);
+                Label(member.Name + " : " + value);
+            }
+        }
+    }
+    void DrawType(Type type)
+    {
+        GUIStyle typeStyle = new();
+        typeStyle.fontStyle = FontStyle.Bold;
+        typeStyle.fontSize = 18;
+        typeStyle.normal.textColor = Color.white;
+
+        if (!doDisplay.ContainsKey(type))
+            doDisplay.Add(type, false);
+
+        doDisplay[type] = Toggle(doDisplay[type], type.Name, typeStyle);
+
+        if (doDisplay[type])
+        {
+            indentLevel++;
+            DrawStaticMembersForType(type);
+
+            foreach (var nestedType in type.GetNestedTypes())
+                DrawType(nestedType);
+            indentLevel--;
+        }
+
+    }
+    void Label(string text, GUIStyle style = null)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(INDENT_SIZE * indentLevel);
+        if (style != null)
+            GUILayout.Label(text, style);
+        else
+            GUILayout.Label(text);
+        GUILayout.EndHorizontal();
+    }
+    bool Toggle(bool value, string text, GUIStyle style = null)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(INDENT_SIZE * indentLevel);
+        if (style != null)
+            value = GUILayout.Toggle(value, text, style);
+        else
+            value = GUILayout.Toggle(value, text);
+        GUILayout.EndHorizontal();
+        return value;
     }
 
     #endregion

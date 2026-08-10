@@ -170,7 +170,7 @@ namespace Clients
 
         public Client SubscribeToUpgrade()
         {
-            this.TrySubscribe<IngredientDropUpgrade>();
+            (this as IUpgradable<IngredientDropUpgrade>).TrySubscribe();
             return this;
         }
         #endregion

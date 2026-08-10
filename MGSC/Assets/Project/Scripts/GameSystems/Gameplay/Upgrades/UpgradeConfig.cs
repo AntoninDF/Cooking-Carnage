@@ -9,6 +9,7 @@ namespace Upgrades
 	[CreateAssetMenu(menuName = "Scriptable Objects/Upgrades/Config")]
 	public class UpgradeConfig : ScriptableObject
 	{
+		public bool IsLocked;
 		[Expandable]
 		[Tooltip("The maximum level of the upgrade")]
 		public int            MaxLevel  = 999;

@@ -3,6 +3,7 @@ using Cooking;
 using System;
 using Clients;
 using Orders;
+using Upgrades;
 
 public class Order
 {
@@ -16,7 +17,23 @@ public class Order
     public bool IsCancelled { get; set; } // Wether the client has been killed or not
     public Orders.ServingInfo ServingInfo { get; set; }
     public Orders.OrderRating OrderRating { get; set; }
-    public float PatienceDuration { get; set; } = 60f;
+    /// <summary>Be careful, the get accessor will give you the value taking upgrades into account. The set accessor will set the default value (without upgrades).
+    /// This means that getting <see cref="PatienceDuration"/> right after it has been set might give you a different value</summary>
+    public float PatienceDuration
+    {
+        get
+        {
+            if (Reference.TryGetManager(out UpgradeManager um))
+            {
+                var upgrade = um.GetUpgradeByType<PatienceUpgrade>();
+                if (upgrade != null)
+                    return DefaultPatienceDuration + upgrade.GetPatienceGain();
+                else return DefaultPatienceDuration;
+            }
+            else return DefaultPatienceDuration;
+        }
+    }
+    public float DefaultPatienceDuration { get; set; } = 60f;
     public float SeatedTimestamp { get; set; }
 
     #endregion
@@ -31,7 +48,7 @@ public class Order
 
     private Action _onResolve;
     private Action _onCancel;
-
+    
     #endregion
 
     #region Methods
