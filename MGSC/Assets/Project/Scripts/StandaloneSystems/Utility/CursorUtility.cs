@@ -5,6 +5,8 @@
 /// </summary>
 public static class CursorUtility
 {
+    public static bool CursorIsLocked => !CursorIsFree;
+    public static bool CursorIsFree => _objectsRequiringCursor.Count > 0;
     private static System.Collections.Generic.List<object> _objectsRequiringCursor = new();
 
     /// <summary>

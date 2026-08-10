@@ -1,5 +1,6 @@
 ﻿using Cooking;
 using UnityEngine;
+using Upgrades;
 using static Autodesk.Fbx.FbxEuler;
 
 namespace Orders
@@ -74,13 +75,23 @@ namespace Orders
             return 0;
         }
 
-        public static float CalculateTip(float basePrice, int stars) => stars switch
+        public static float CalculateTip(float basePrice, int stars)
         {
-            2 => TipMultiplier2Star * basePrice,
-            1 => TipMultiplier1Star * basePrice,
-            0 => TipMultiplier0Star * basePrice,
-            _ => 0f * basePrice
-        };
+            float increase = 0f;
+            if (Reference.TryGetManager<UpgradeManager>(out var um))
+            {
+                var upgrade = um.GetUpgradeByType<TipAmountUpgrade>();
+                if (upgrade != null)
+                    increase = upgrade.GetTipPercentageIncrease();
+            }
+            return stars switch
+            {
+                2 => (TipMultiplier2Star + increase) * basePrice,
+                1 => (TipMultiplier1Star + increase) * basePrice,
+                0 => (TipMultiplier0Star + increase) * basePrice,
+                _ => 0f * basePrice
+            };
+        }
 
     
     }

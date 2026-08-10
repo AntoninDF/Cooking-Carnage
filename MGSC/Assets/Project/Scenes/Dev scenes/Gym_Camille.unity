@@ -657,6 +657,7 @@ MonoBehaviour:
   SeatTransform: {fileID: 827436068}
   SeatParent: {fileID: 0}
   ServingArea: {fileID: 0}
+  KillButton: {fileID: 0}
   ServingAreaConfig: {fileID: 0}
   OnCustomerKilled:
     m_PersistentCalls:
@@ -936,66 +937,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f33e147f48419ba4091a0d1889f4a45a, type: 3}
---- !u!1001 &752345347
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.912
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.000000020412244
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.019120758
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      propertyPath: m_Name
-      value: SK_Fabrice
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1910211370}
-  m_SourcePrefab: {fileID: 100100000, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
 --- !u!1 &753356550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1122,6 +1063,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61d23b3a8a3d6804180130f7178c64f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Client
+  _defaultDropRate: {x: 1, y: 1}
 --- !u!1 &769272237
 GameObject:
   m_ObjectHideFlags: 1
@@ -2454,33 +2396,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!1 &1910211369 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3048d612a1a77654e8af78783e2a489d, type: 3}
-  m_PrefabInstance: {fileID: 752345347}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1910211370
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1910211369}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 30455ad7ce3c6c64db8b57a19ffaeb6f, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &1957296004
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2631,6 +2546,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
   defaultModel: {fileID: 0}
+  OnItemGrabbed: {fileID: 0}
 --- !u!64 &2016225126
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2793,7 +2709,6 @@ SceneRoots:
   - {fileID: 769272239}
   - {fileID: 1100444055}
   - {fileID: 1106979862}
-  - {fileID: 752345347}
   - {fileID: 1831212431}
   - {fileID: 1957296004}
   - {fileID: 181142646}

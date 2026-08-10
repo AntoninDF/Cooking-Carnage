@@ -41,7 +41,7 @@ public class GameSettings : ScriptableObject
         Screen.fullScreenMode = Instance.ApplicationSettings.FullScreenMode;
 	}
 
-    void OnValidate() => Apply();
+    //void OnValidate() => Apply();
 
     public S_ShiftSettings ShiftSettings;
     [Serializable]

@@ -128,7 +128,12 @@ public class Player : MonoBehaviour, IFeatureCollection
     }
     void TryAnyPlayerAction() => PlayerActor.TryAnyPlayerAction();
     void UpdateMovement() => PlayerMovement.MovementDirection = PlayerInputs.MovementDirection;
-    void UpdateCamera() => PlayerMovement.LookOffset = PlayerInputs.LookOffset;
+    void UpdateCamera()
+    {
+        // The player shouldn't be ablee to look around if the cursor is being shown. It's one or the other
+        if (CursorUtility.CursorIsFree) return;
+        PlayerMovement.LookOffset = PlayerInputs.LookOffset;
+    }
 
     void AddInteractions()
     {
