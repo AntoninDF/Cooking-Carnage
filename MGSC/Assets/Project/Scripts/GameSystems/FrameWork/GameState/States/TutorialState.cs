@@ -14,8 +14,7 @@ public class TutorialState : GameplayState
         GameLoop.RequestTransition(StateTransitions.StartShift);
         
         AudioSystem.PlayAudio(AudioSystem.Database.beforeShiftMusic,true);
-        AudioSystem.PlayAudio(AudioSystem.Database.fliesAmbience);
-        AudioSystem.PlayAudio(AudioSystem.Database.kitchenAmbience);
+        AudioSystem.PlayAudio(AudioSystem.Database.ambience);
         TutorialTimeline.StartTutorial();
     }
 

@@ -1954,6 +1954,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 9081247612387045233, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
+      propertyPath: Events.Array.data[0].Event.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 8348143546647052998}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2995904587304821089, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
@@ -1985,7 +1989,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7768820293291577474, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
       insertIndex: -1
       addedObject: {fileID: 529695870151871686}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4229647210871535445, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8348143546647052998}
   m_SourcePrefab: {fileID: 100100000, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
 --- !u!4 &1293850169185994178 stripped
 Transform:
@@ -2002,6 +2009,42 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4364565857883566865, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
   m_PrefabInstance: {fileID: 2074865406471461510}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2772491835610918355 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4229647210871535445, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
+  m_PrefabInstance: {fileID: 2074865406471461510}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8348143546647052998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2772491835610918355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -831389982
+      Data2: 1297493308
+      Data3: -1532322403
+      Data4: -1885676758
+    Path: event:/SFX/Cuisine/StartingFlush
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!4 &4427341247740447266 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2430382975292756132, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
@@ -2517,11 +2560,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 987440766730410980, guid: 31f6d7ca2ae57ef408f63916f145b64c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.509968
+      value: -11.509967
       objectReference: {fileID: 0}
     - target: {fileID: 6790531399225290873, guid: 31f6d7ca2ae57ef408f63916f145b64c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.959922
+      value: -5.95992
       objectReference: {fileID: 0}
     - target: {fileID: 6938757409014042154, guid: 31f6d7ca2ae57ef408f63916f145b64c, type: 3}
       propertyPath: m_LocalPosition.x

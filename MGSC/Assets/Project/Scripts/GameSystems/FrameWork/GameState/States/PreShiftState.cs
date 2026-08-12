@@ -32,8 +32,7 @@ public class PreShiftState : GameplayState
         }
         
         AudioSystem.PlayAudio(AudioSystem.Database.beforeShiftMusic,true);
-        AudioSystem.PlayAudio(AudioSystem.Database.fliesAmbience);
-        AudioSystem.PlayAudio(AudioSystem.Database.kitchenAmbience);
+        AudioSystem.PlayAudio(AudioSystem.Database.ambience);
     }
 
     public override void OnExit()

@@ -83,6 +83,7 @@ namespace UI
                 SetContentMode(ContentMode.Fail);
             else
                 SetContentMode(ContentMode.Success);
+            AudioSystem.PlayAudio(AudioSystem.Database.rentPaid);
 
             if (L_CurrentTotalMoney != null)
             {
