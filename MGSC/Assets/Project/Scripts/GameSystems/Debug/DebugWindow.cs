@@ -76,9 +76,20 @@ public class DebugWindow : MonoBehaviour
         
         // Empêche la fenêtre d'être plus grande que l'écran
         float maxHeight = Screen.height - 40;
-        
+
+        // Création du style de la fenêtre
+        GUIStyle style = new (GUI.skin.box);
+        var tex = new Texture2D(1,1);
+        tex.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.7f));
+        tex.Apply();
+        style.normal.background = tex;
+        style.active.background = tex;
+        style.focused.background = tex;
+        style.hover.background = tex;
+        style.hover.textColor = style.normal.textColor;
+
         // Création de la fenêtre avec une option pour limiter la hauteur max
-        _windowRect = GUILayout.Window(0, _windowRect, DrawWindow, "Debug Window", GUILayout.Width(450), GUILayout.MaxHeight(maxHeight));
+        _windowRect = GUILayout.Window(0, _windowRect, DrawWindow, "Debug Window", style, GUILayout.Width(450), GUILayout.MaxHeight(maxHeight));
         
         // Empêche la fenêtre de sortir de l'écran
         _windowRect.x = Mathf.Clamp(_windowRect.x, 0, Screen.width - _windowRect.width);
@@ -91,7 +102,7 @@ public class DebugWindow : MonoBehaviour
         _mainScrollPos = GUILayout.BeginScrollView(_mainScrollPos);
 
         GUILayout.BeginVertical();
-
+        GUILayout.Space(30);
         // Onglets
         GUILayout.BeginHorizontal();
         for (int i = 0; i < _tabs.Length; i++)

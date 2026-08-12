@@ -122,7 +122,7 @@ public class Item : MonoBehaviour, IFeatureCollection
     }
     bool CanInteract(InteractionContext context)
     {
-        if (!Globals.Gameplay.Player.AllowPlayerGrab) return false;
+        if (!Globals.Authorizations.Player.AllowPlayerGrab) return false;
         return CanBeGrabbed(context);
     }
 

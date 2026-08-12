@@ -22,7 +22,7 @@ namespace Features
         public Cooker(IFeatureCollection owner) : base(owner)
         {
             Conditions.AddCondition(item => item is F_Cookable || item is F_OverCookable);
-            Conditions.AddCondition(item => Globals.Gameplay.AllowCooking);
+            Conditions.AddCondition(item => Globals.Authorizations.AllowCooking);
             
             OnTransformationStart += HandleStart;
             OnTransformationProgress += HandleProgress;

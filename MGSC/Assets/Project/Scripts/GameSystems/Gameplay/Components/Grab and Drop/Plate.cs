@@ -75,7 +75,7 @@ public class Plate : Item
             if (_onIngredientAdded != null) Container.OnGrab += _onIngredientAdded.Raise;
             // Make sure only cut ingredients can be put in the plate
             Container.Filter.AddCondition(GrabbableCondition);
-            Container.Filter.AddCondition(_ => Globals.Gameplay.AllowPuttingIngredientsInPlates);
+            Container.Filter.AddCondition(_ => Globals.Authorizations.AllowPuttingIngredientsInPlates);
             Collection.Add(Container);
         }
         if (ContainerComponent.TryGetFeature(out F_Interactable interactable))

@@ -121,7 +121,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
                 {
                     if (item is not Feature feature) return false;
                     if (!feature.TryGetSibling<F_Cookable>(out var temp)) return false;
-                    if (!Globals.Gameplay.AllowPuttingPlatesInOvens) return false;
+                    if (!Globals.Authorizations.AllowPuttingPlatesInOvens) return false;
                     return true;
                 }
                 );

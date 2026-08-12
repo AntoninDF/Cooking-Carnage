@@ -167,11 +167,12 @@ namespace Clients
         private void StartOrderTimer(Order order)
         {
             string timerName = "OrderTimer_" + UniqueID;
+            float duration = order.PatienceDuration; // This variable is useful for unboxing purposes
             PatienceTimer = GameSystem.TimerManager.StartGameplayTimer(
                 timerName,
-                order.PatienceDuration,
+                duration,
                 () => OnOrderTimeout(order),
-                elapsed => OnOrderTimeProgress?.Invoke(Mathf.Clamp01(elapsed / order.PatienceDuration))
+                elapsed => OnOrderTimeProgress?.Invoke(Mathf.Clamp01(elapsed / duration))
             );
         }
 

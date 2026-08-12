@@ -85,7 +85,7 @@ namespace Features
         public override void Update()
         {
             if (!Enabled) return;
-            if (!Globals.Gameplay.Player.AllowControllerMovement) return;
+            if (!Globals.Authorizations.Player.AllowControllerMovement) return;
             if (!Mathf.Approximately(CharacterController.height, CharacterSize)) /*REFACTO : Cest uniquement pour du parametrage, a jarter assez vite*/
             {
                 CharacterController.height = CharacterSize;
@@ -146,14 +146,14 @@ namespace Features
         private void UpdateLookDirectionFromOffset(Vector2 offset)
         {
             if (!Enabled) return;
-            if (!Globals.Gameplay.Player.AllowControllerMovement) return;
+            if (!Globals.Authorizations.Player.AllowControllerMovement) return;
             _verticalRotation = Mathf.Clamp(_verticalRotation - offset.y * LookSpeed, -VerticalLookRange, VerticalLookRange);
             LookDirection = Quaternion.Euler(0, offset.x * LookSpeed, 0) * LookDirection;
         }
         private void HandleRotation()
         {
             if (!Enabled) return;
-            if (!Globals.Gameplay.Player.AllowControllerMovement) return;
+            if (!Globals.Authorizations.Player.AllowControllerMovement) return;
             ApplyLookDirection(LookDirection);
         } 
         #endregion

@@ -9,7 +9,7 @@ namespace Features
         public Cutter(IFeatureCollection owner) : base(owner)
         {
             Conditions.AddCondition(item => item is F_Cuttable);
-            Conditions.AddCondition(item => Globals.Gameplay.AllowCutting);
+            Conditions.AddCondition(item => Globals.Authorizations.AllowCutting);
             _baseDuration = SpeedMultiplier;
             (this as IUpgradable<BlenderSpeedUpgrade>).TrySubscribe();
         }

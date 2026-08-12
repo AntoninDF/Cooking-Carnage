@@ -25,7 +25,7 @@ namespace GameSystem
         public static Action OnNextShift { get; set; }
 
         public int ShiftNumber { get => Globals.Gameplay.ShiftNumber; set => Globals.Gameplay.ShiftNumber.Value = value; }
-        public float ShiftDuration => _shiftDuration;
+        public float ShiftDuration => _shiftDuration * Globals.BalancingWeights.ShiftDurationMultiplier;
         public bool IsShiftActive { get; set; }
         public bool HasFailed { get; set; }
         /// <summary>
@@ -89,7 +89,7 @@ namespace GameSystem
         /// <summary>
         /// Simply invokes <see cref="OnShiftBegin"/>, and starts the timers for the end of shift.
         /// </summary>
-        public void RequestShiftTimer() => LaunchShiftTimer(_shiftDuration);
+        public void RequestShiftTimer() => LaunchShiftTimer(ShiftDuration);
         void LaunchShiftTimer(float duration)
         {
             TimerUntilEndOfShift = TimerManager.StartGameplayTimer("shiftDuration", duration, EndShift);
@@ -184,12 +184,12 @@ namespace GameSystem
         /// <summary> Has to be a positive value </summary>
         public float GetRentPrice(int shiftCount)
         {
-            float percentage = 1f;
+            float percentage = Globals.BalancingWeights.RentPriceMultiplier;
             if (Reference.TryGetManager(out UpgradeManager um))
             {
                 var upgrade = um.GetUpgradeByType<LowerRentUpgrade>();
                 if (upgrade != null)
-                    percentage = upgrade.GetRentMultiplier();
+                    percentage *= upgrade.GetRentMultiplier();
             }
             return _rentPriceCurve.Evaluate(shiftCount) * percentage;
         }
@@ -206,7 +206,7 @@ namespace GameSystem
 
         public void PostInit()
         {
-            this.Log(LogType.Log, $"PostInit running (shift duration set to {_shiftDuration}s)");
+            this.Log(LogType.Log, $"PostInit running (shift duration set to {ShiftDuration}s)");
 
             SaveManager.LoadGlobalData();
 

@@ -46,7 +46,7 @@ namespace GameSystem
         /// </summary>
         private static void Update()
         {
-            if (!Globals.Gameplay.AllowTimerUpdate) return;
+            if (!Globals.Authorizations.AllowTimerUpdate) return;
             var keys = new List<string>(timers.Keys);
             for (int i = 0; i < keys.Count; i++)
             {

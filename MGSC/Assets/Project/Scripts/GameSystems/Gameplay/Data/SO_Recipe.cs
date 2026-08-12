@@ -1,9 +1,8 @@
-using Features;
-using NaughtyAttributes;
 using Orders;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Cooking
 {
@@ -25,8 +24,10 @@ namespace Cooking
         [Tooltip("The item prefab should contain the graphics and a meal component")]
         public ModelController mealPrefab;
         [Tooltip("How much money does a recipe give")]
-        public float Price;
-        
+        [FormerlySerializedAs("Price")]
+        public float DefaultPrice;
+        public float Price => DefaultPrice * Globals.BalancingWeights.RecipePriceMultiplier;
+
         [Tooltip("How likely this recipe is to be ordered by default. The unit is arbitrary and depends on the other recipes' probability rates.")]
         public float probabilityRate = 1f;
         [Tooltip("How much higher the probability rate will get each time a corresponding client is seen.")]

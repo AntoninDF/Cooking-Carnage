@@ -125,7 +125,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
 
     public void KillClient()
     {
-        if (!Globals.Gameplay.AllowClientKilling)
+        if (!Globals.Authorizations.AllowClientKilling)
             return;
         Client client = ClientSeat.RegisteredClient;
         if (client != null && ClientSeat.SittingClient != null)

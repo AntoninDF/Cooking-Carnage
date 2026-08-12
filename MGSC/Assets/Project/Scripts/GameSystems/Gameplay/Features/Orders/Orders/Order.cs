@@ -17,20 +17,18 @@ public class Order
     public bool IsCancelled { get; set; } // Wether the client has been killed or not
     public Orders.ServingInfo ServingInfo { get; set; }
     public Orders.OrderRating OrderRating { get; set; }
-    /// <summary>Be careful, the get accessor will give you the value taking upgrades into account. The set accessor will set the default value (without upgrades).
-    /// This means that getting <see cref="PatienceDuration"/> right after it has been set might give you a different value</summary>
     public float PatienceDuration
     {
         get
         {
+            float multiplier = Globals.BalancingWeights.ClientPatienceMultiplier;
             if (Reference.TryGetManager(out UpgradeManager um))
             {
                 var upgrade = um.GetUpgradeByType<PatienceUpgrade>();
                 if (upgrade != null)
-                    return DefaultPatienceDuration + upgrade.GetPatienceGain();
-                else return DefaultPatienceDuration;
+                    return DefaultPatienceDuration * multiplier + upgrade.GetPatienceGain();
             }
-            else return DefaultPatienceDuration;
+            return DefaultPatienceDuration * multiplier;
         }
     }
     public float DefaultPatienceDuration { get; set; } = 60f;

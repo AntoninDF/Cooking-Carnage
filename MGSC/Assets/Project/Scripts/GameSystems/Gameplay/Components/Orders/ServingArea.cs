@@ -49,7 +49,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         {
             if (obj is not F_Grabbable grab) return false;
             if (!grab.TryGetSibling(out Servable temp, true && ClientSeat.SittingClient != null)) return false;
-            if (!Globals.Gameplay.AllowClientServing) return false;
+            if (!Globals.Authorizations.AllowClientServing) return false;
             return true;
         };
     }

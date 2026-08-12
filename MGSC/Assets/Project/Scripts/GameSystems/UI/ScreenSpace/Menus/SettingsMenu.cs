@@ -15,6 +15,7 @@ namespace UI
 		[SerializeField, Required] ConfigurableButton MenuNamePrefab;
 		[SerializeField, Required] DropdownOption DropdownPrefab;
 		[SerializeField, Required] SliderOption SliderPrefab;
+		[SerializeField, Required] Scrollbar VerticalScrollbarPrefab;
 
 		[Space]
 		[SerializeField] private Button B_Close;
@@ -39,64 +40,121 @@ namespace UI
         }
 
         void GenerateContent()
-		{
-			ClearContent();
-			AddGroup("Audio")
-				.AddSlider("Master volume",		AudioSystem.SetMasterVolume,	Globals.Audio.MasterVolume,		SliderOption.DisplayMode.Percentage)
-				.AddSlider("SFX volume",		AudioSystem.SetSFXVolume,		Globals.Audio.SFXVolume,		SliderOption.DisplayMode.Percentage)
-				.AddSlider("Ambience volume",	AudioSystem.SetAmbienceVolume,	Globals.Audio.AmbienceVolume,	SliderOption.DisplayMode.Percentage)
-				.AddSlider("Music volume",		AudioSystem.SetMusicVolume,		Globals.Audio.MusicVolume,		SliderOption.DisplayMode.Percentage)
-				.AddSlider("Voice volume",		AudioSystem.SetVoiceVolume,		Globals.Audio.DialogVolume,		SliderOption.DisplayMode.Percentage)
-				;
+        {
+            ClearContent();
 
-			// Only 16:9 resolution options
-			var resolutions = new (string name, int width, int height, FullScreenMode screenMode)[]
-			{
-				("4K", 3840, 2160, FullScreenMode.ExclusiveFullScreen),
-				("QHD", 2560, 1440, FullScreenMode.ExclusiveFullScreen),
-				("Full HD", 1920, 1080, FullScreenMode.ExclusiveFullScreen),
-				("", 1600, 900, FullScreenMode.ExclusiveFullScreen),
-				("", 1536, 864, FullScreenMode.ExclusiveFullScreen),
-				("", 1366, 768, FullScreenMode.ExclusiveFullScreen),
-				("HD", 1280, 720, FullScreenMode.ExclusiveFullScreen),
-				("Full HD (windowed)", 1920, 1080, FullScreenMode.MaximizedWindow),
-				("Windowed", 1067, 600, FullScreenMode.Windowed),
-				("Windowed", 800, 450, FullScreenMode.Windowed)
-			};
+            // ADD GROUPS HERE
 
+            // Audio
+            AddGroup("Audio")
+                .AddSlider("Master volume", AudioSystem.SetMasterVolume, Globals.Audio.MasterVolume, SliderOption.DisplayMode.Percentage)
+                .AddSlider("SFX volume", AudioSystem.SetSFXVolume, Globals.Audio.SFXVolume, SliderOption.DisplayMode.Percentage)
+                .AddSlider("Ambience volume", AudioSystem.SetAmbienceVolume, Globals.Audio.AmbienceVolume, SliderOption.DisplayMode.Percentage)
+                .AddSlider("Music volume", AudioSystem.SetMusicVolume, Globals.Audio.MusicVolume, SliderOption.DisplayMode.Percentage)
+                .AddSlider("Voice volume", AudioSystem.SetVoiceVolume, Globals.Audio.DialogVolume, SliderOption.DisplayMode.Percentage)
+                ;
+
+            // Graphics
+            var resolutions = GetAvailableResolutions();
+            (string, Action)[] resolutionOptions = GetResolutionDropdownItems(resolutions);
+            AddGroup("Graphics")
+                .AddDropdown<FullScreenMode>("Window mode", value => Screen.fullScreenMode = (FullScreenMode)value, FullScreenMode.ExclusiveFullScreen)
+                .AddDropdown("Resolution", resolutionOptions, 999) // Set value to the maximum
+                ;
+            // Graphics (default settings)
+            GetGroup("Graphics")?.GetOption<DropdownOption>("Window mode")?.SetValue((int)Screen.fullScreenMode);
+            GetGroup("Graphics")?.GetOption<DropdownOption>("Resolution")?.SetValue(2); // 2 is full HD
+
+            // Controls
+            AddGroup("Controls")
+                .AddSlider("Camera sensitivity", Globals.Gameplay.Player.LookSpeed.Set, Globals.Gameplay.Player.LookSpeed, SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(0f, 0.2f), 2)
+                .AddSlider("Scroll sensitivity", Globals.Gameplay.Player.ScrollSensitivity.Set, Globals.Gameplay.Player.ScrollSensitivity, SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(1f, 100f), 0)
+                ;
+
+            // Difficulty
+            AddGroup("Difficulty")
+                .AddDropdown("Apply preset", GetDifficultyOptions(), 1)
+                .AddSlider("Upgrade price",         Globals.BalancingWeights.UpgradePriceMultiplier.Set,        1f, SliderOption.DisplayMode.Percentage,    new Vector2(0.35f, 4f), new Vector2(0.35f, 4f),     2)
+                .AddSlider("Recipe price",          Globals.BalancingWeights.RecipePriceMultiplier.Set,         1f, SliderOption.DisplayMode.Percentage,    new Vector2(0.35f, 4f), new Vector2(0.35f, 4f),     2)
+                .AddSlider("Shift duration",        Globals.BalancingWeights.ShiftDurationMultiplier.Set,       5f, SliderOption.DisplayMode.Minutes,       new Vector2(3, 8),      new Vector2(3f/5f, 8f/5f),  1)
+                .AddSlider("Rent price",            Globals.BalancingWeights.RentPriceMultiplier.Set,           1f, SliderOption.DisplayMode.Percentage,    new Vector2(0.35f, 4f), new Vector2(0.35f, 4f),     2)
+                .AddSlider("Client patience",       Globals.BalancingWeights.ClientPatienceMultiplier.Set,      1f, SliderOption.DisplayMode.Percentage,    new Vector2(0.5f, 2f),  new Vector2(0.5f, 2f),      2)
+                .AddSlider("Preparation fail time", Globals.BalancingWeights.PreparationFailTimeMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage,    new Vector2(3f, 0.25f), new Vector2(3f, 0.25f),     2)
+                ;
+
+            // Enable a default group
+            if (_availableGroups.Count > 0 && _currentActiveGroup == null)
+                EnableGroup(_availableGroups[0]);
+            }
+
+        private (string name, Action onOptionSelected)[] GetDifficultyOptions()
+        {
+            DifficultyPresetCollection col = DifficultyPresetCollection.DefaultCollection;
+            if (col == null)
+                return new (string name, Action onOptionSelected)[0];
+            int optionCount = col.Presets.Count;
+            var result = new (string name, Action onOptionSelected)[optionCount];
+
+            for (int i = 0; i < col.Presets.Count; i++)
+            {
+                var preset = col.Presets[i];
+                result[i] = (preset.name, () => ApplyDifficultyPreset(preset));
+            }
+
+            return result;
+        }
+        public void ApplyDifficultyPreset(DifficultyPreset preset)
+        {
+            if (preset == null) return;
+            var group = GetGroup("Difficulty");
+            if (group == null) return;
+            foreach (var setting in preset.DifficultySettingList)
+            {
+                var slider = group.GetOption<SliderOption>(setting.Name);
+                if (slider == null) continue;
+                slider.SetValue(setting.Value);
+            }
+        }
+
+        private static (string, Action)[] GetResolutionDropdownItems((string name, int width, int height, FullScreenMode screenMode)[] resolutions)
+        {
             var resolutionOptions = new (string, Action)[resolutions.Length];
-			int i = 0;
-			foreach (var rez in resolutions)
-			{
-				string name = rez.width + " x " + rez.height;
-				if (!string.IsNullOrEmpty(rez.name))
-					name = rez.name + " - " + name;
+            int i = 0;
+            foreach (var rez in resolutions)
+            {
+                string name = rez.width + " x " + rez.height;
+                if (!string.IsNullOrEmpty(rez.name))
+                    name = rez.name + " - " + name;
                 (string, Action) newValue = (name, () => Screen.SetResolution(rez.width, rez.height, rez.screenMode));
 
-				if (resolutionOptions.Contains(newValue))
-					continue;
-				resolutionOptions[i] = newValue;
-				i++;
-			}
+                if (resolutionOptions.Contains(newValue))
+                    continue;
+                resolutionOptions[i] = newValue;
+                i++;
+            }
 
-            AddGroup("Graphics")
-				.AddDropdown<FullScreenMode>("Window mode", value => Screen.fullScreenMode = (FullScreenMode)value, FullScreenMode.ExclusiveFullScreen)
-				.AddDropdown("Resolution", resolutionOptions, 999) // Set value to the maximum
-				;
+            return resolutionOptions;
+        }
 
-			AddGroup("Controls")
-				.AddSlider("Camera sensitivity", Globals.Gameplay.Player.LookSpeed.Set,			Globals.Gameplay.Player.LookSpeed,			SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(0.01f, 0.2f))
-				.AddSlider("Scroll sensitivity", Globals.Gameplay.Player.ScrollSensitivity.Set, Globals.Gameplay.Player.ScrollSensitivity,	SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(0.1f,100f))
-				;
+        private static (string name, int width, int height, FullScreenMode screenMode)[] GetAvailableResolutions()
+        {
+            // Only 16:9 resolution options
+            return new (string name, int width, int height, FullScreenMode screenMode)[]
+            {
+                ("4K", 3840, 2160, FullScreenMode.ExclusiveFullScreen),
+                ("QHD", 2560, 1440, FullScreenMode.ExclusiveFullScreen),
+                ("Full HD", 1920, 1080, FullScreenMode.ExclusiveFullScreen),
+                ("", 1600, 900, FullScreenMode.ExclusiveFullScreen),
+                ("", 1536, 864, FullScreenMode.ExclusiveFullScreen),
+                ("", 1366, 768, FullScreenMode.ExclusiveFullScreen),
+                ("HD", 1280, 720, FullScreenMode.ExclusiveFullScreen),
+                ("Full HD (windowed)", 1920, 1080, FullScreenMode.MaximizedWindow),
+                ("Windowed", 1067, 600, FullScreenMode.Windowed),
+                ("Windowed", 800, 450, FullScreenMode.Windowed)
+            };
+        }
 
-			if (_availableGroups.Count > 0 && _currentActiveGroup == null)
-				EnableGroup(_availableGroups[0]);
-
-			GetGroup("Graphics")?.GetOption<DropdownOption>("Window mode")?.SetValue((int)Screen.fullScreenMode);
-			//Debug.Log("Fullscreen mode is " + Enum.GetName(typeof(FullScreenMode), Screen.fullScreenMode) + ", value is " + (int)Screen.fullScreenMode);
-		}
-
-		void ClearContent()
+        void ClearContent()
 		{
 			_availableGroups.Clear();
 			
@@ -134,13 +192,12 @@ namespace UI
 		{
 			var title = Instantiate(MenuNamePrefab, G_MenuNames);
 
-			var group = new SettingsGroup(name, title, G_Options, DropdownPrefab, SliderPrefab);
+			var group = new SettingsGroup(name, title, G_Options, DropdownPrefab, SliderPrefab, VerticalScrollbarPrefab);
             group.GroupButton.Setup(name, () => EnableGroup(group));
 
 			_availableGroups.Add(group);
 			return group;
 		}
-
 		SettingsGroup GetGroup(string name)
 		{
 			foreach (var group in _availableGroups)

@@ -54,7 +54,7 @@ namespace Upgrades
             OnUpgradeSuccess?.Invoke();
         }
         
-        public virtual float GetPrice()   => _config.PriceCurve.Evaluate(_level);
+        public virtual float GetPrice()   => _config.PriceCurve.Evaluate(_level) * Globals.BalancingWeights.UpgradePriceMultiplier;
         public virtual bool  CanLevelUp() => _level < _config.MaxLevel;
 
         public void SetLevel(int level)
