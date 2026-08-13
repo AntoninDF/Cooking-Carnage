@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Clients;
 using Features;
@@ -102,7 +101,7 @@ namespace Project.Scripts.BloodMachine
 				return;
 			}
 
-			_reserve.FillAllToMax();
+			_reserve.FillAllToMin();
 		}
 
 		#region Helpers
@@ -129,12 +128,5 @@ namespace Project.Scripts.BloodMachine
 		{
 			Globals.Gameplay.AllowBlending = new (true);
 		}
-	}
-
-	[Serializable]
-	public class BloodPerClient
-	{
-		public float bloodGained;
-		public EClientType clientType;
 	}
 }

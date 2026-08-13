@@ -26,9 +26,9 @@ namespace Features
             if (_isRunning) return;
             _isRunning       = true;
             _timer           = 0f;
-            _client.IsCooked = true;
+            _client.IsBlended = true;
             _client.CurrentOrder.Cancel();
-            //OnCustomerBlended?.Invoke();
+            OnCustomerBlended?.Invoke();
             _client.CurrentSeat?.TryUnregister(_client);
 
         }

@@ -74,6 +74,11 @@ namespace Project.Scripts.BloodMachine
           {
              return true;
           }
+          else
+          {
+             Debug.Log(_quantityPerClient[clientType]);
+             Debug.Log(_bloodPerDrink);
+          }
 
           return false;
        }

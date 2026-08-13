@@ -101,7 +101,7 @@ namespace GameSystem
             // Start spawning clients when the shift begins
             ShiftManager.OnShiftBegin += () =>
             {
-                Debug.Log("Shift started, client will spawn soon");
+//                Debug.Log("Shift started, client will spawn soon");
                 Launch(2);
             };
         }

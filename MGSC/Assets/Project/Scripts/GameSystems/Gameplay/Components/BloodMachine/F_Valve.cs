@@ -59,7 +59,11 @@ namespace Project.Scripts.BloodMachine
 
        public void TryServeDrink()
        {
-          if (!Globals.Gameplay.AllowBlending) return;
+          if (!Globals.Gameplay.AllowBlending)
+          {
+             Debug.Log("[F_Valve] is not allowed to serve, the blood machine is not ulocked");
+             return;
+          }
           if (_hasPendingDrink)
           {
              Debug.Log("[F_Valve] Une boisson est déjà en attente d'être récupérée");
@@ -72,6 +76,10 @@ namespace Project.Scripts.BloodMachine
              StartServeDrink?.Invoke();
              TimerManager.StartTimer(FirstTimerName, _serviceDuration, WaitForPlayerToRetrieve);
              _station.StartCoroutine(PourDrinkRoutine());
+          }
+          else
+          {
+             Debug.Log($"[F_Valve] the drink cant be serve, CanServeDrink = {_reserve.CanServeDrink(_associedClientType)} & isServing = {isServing}");
           }
        }
 

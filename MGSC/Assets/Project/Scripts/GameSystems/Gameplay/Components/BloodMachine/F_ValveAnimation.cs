@@ -24,8 +24,6 @@ namespace Project.Scripts.BloodMachine
         public void StartServing()
         {
             Debug.Log(_startServeClip.name);
-            
-
             _animator.SetTrigger("StartServe");
             TimerManager.StartTimer("StartServe" + _owner._drinkPrefab.name, 0.3f, SlowAnimation);
         }

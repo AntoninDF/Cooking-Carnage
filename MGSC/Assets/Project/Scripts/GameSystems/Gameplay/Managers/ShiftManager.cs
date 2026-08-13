@@ -90,7 +90,7 @@ namespace GameSystem
         public void RequestShiftTimer() => LaunchShiftTimer(_shiftDuration);
         void LaunchShiftTimer(float duration)
         {
-            Debug.Log( $"Launching new shift for {duration}s");
+//            Debug.Log( $"Launching new shift for {duration}s");
             TimerUntilEndOfShift = TimerManager.StartGameplayTimer("shiftDuration", duration, EndShift);
             TimerUntilFinalWarning = TimerManager.StartGameplayTimer("shiftDurationWithoutNoon", duration - _noonDuration, InvokeFinalWarning);
             // AddListener to the GameLoop in case the game pauses

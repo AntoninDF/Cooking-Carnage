@@ -1591,6 +1591,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 4778156780744611320, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
+      propertyPath: _bloodPerDrinkCl
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4778156780744611320, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
       propertyPath: _eyesStation.Type
       value: 1
       objectReference: {fileID: 0}
@@ -1614,10 +1618,6 @@ PrefabInstance:
       propertyPath: _eyesStation._startServeClip
       value: 
       objectReference: {fileID: 7400000, guid: f69346a25e9248741b42f2a0bc8a0d38, type: 2}
-    - target: {fileID: 4778156780744611320, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
-      propertyPath: _toothStation.EventDisplayer
-      value: 
-      objectReference: {fileID: 2331021874000732705}
     - target: {fileID: 4778156780744611320, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
       propertyPath: _eyesStation._drinkSpawnPoint
       value: 
@@ -2480,10 +2480,7 @@ PrefabInstance:
     - {fileID: 6750479624255433951, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
     - {fileID: 1167824531167395330, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8595390843084463112, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2331021874000732705}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
 --- !u!114 &1092829498501476935 stripped
 MonoBehaviour:
@@ -2617,7 +2614,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4778156780744611320, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
   m_PrefabInstance: {fileID: 2074865406471461510}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7747195721724167822}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31ba94a06db74eac9ca95f06db219783, type: 3}
@@ -2676,27 +2673,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
---- !u!1 &7747195721724167822 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8595390843084463112, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
-  m_PrefabInstance: {fileID: 2074865406471461510}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2331021874000732705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7747195721724167822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
-  Events: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!95 &7816639717686761676 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8120323764305494602, guid: d26cc3545551b8e4088a0c9164cf3202, type: 3}
@@ -3016,11 +2992,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 987440766730410980, guid: 31f6d7ca2ae57ef408f63916f145b64c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.509879
+      value: -11.509876
       objectReference: {fileID: 0}
     - target: {fileID: 6790531399225290873, guid: 31f6d7ca2ae57ef408f63916f145b64c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.9597454
+      value: -5.9597397
       objectReference: {fileID: 0}
     - target: {fileID: 6790531399225290873, guid: 31f6d7ca2ae57ef408f63916f145b64c, type: 3}
       propertyPath: m_LocalPosition.z

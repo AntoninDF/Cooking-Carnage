@@ -44,7 +44,7 @@ namespace Features
             item.Container?.RequestDrop(item);
             item.GetGrabbedBy(this);
             OnGrab?.Invoke(item);
-            Debug.Log($"[F_SoloContainer] Grab réussi sur transform '{transform?.name}', instance hash {GetHashCode()}");
+//            Debug.Log($"[F_SoloContainer] Grab réussi sur transform '{transform?.name}', instance hash {GetHashCode()}");
 
         }
         protected virtual void Drop(F_Grabbable item = null)

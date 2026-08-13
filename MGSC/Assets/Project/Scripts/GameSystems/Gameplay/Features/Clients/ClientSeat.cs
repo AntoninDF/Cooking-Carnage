@@ -101,7 +101,7 @@ namespace Features
             {
                 TryLeave(client);
             }
-            else
+            else if(!client.IsBlended)
             {
                 OnIngredientDropped?.Invoke();
                 client.SpawnIngredients(dropSlots);

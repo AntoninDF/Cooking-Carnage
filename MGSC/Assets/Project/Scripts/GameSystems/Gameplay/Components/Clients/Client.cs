@@ -32,9 +32,10 @@ namespace Clients
         public F_ClientBlending    ClientBlending    { get; set; }
         public ClientLook         ClientLook       => _clientLook;
         
-        public bool               IsCooked         { get; set; }
-        public bool               IsAngry          { get; set; }
-        public int UniqueID { get; set; }
+        public bool IsCooked { get; set; }
+        public bool IsBlended { get; set; }
+        public bool IsAngry  { get; set; }
+        public int  UniqueID { get; set; }
         
         public Order OrderLog { get;  set; }
         public Order CurrentOrder
