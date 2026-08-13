@@ -8,7 +8,7 @@ namespace UI
 {
     public class UpgradeButton : UIWidget
     {
-        public bool IsLocked;
+        public bool IsLocked => _config == null ? true : _config.IsLocked;
 
         public Image I_Icon;
         public Image I_Icon2;
@@ -45,8 +45,6 @@ namespace UI
                 B_LevelUp.onClick.AddListener(RequestLevelUp);
             else
                 UnityEngine.Debug.LogWarning($"[UpgradeButton] ({name}) B_LevelUp non assigné — le clic ne fera rien");
-
-            IsLocked = config.IsLocked;
         }
 
         public void UpdateGraphics()

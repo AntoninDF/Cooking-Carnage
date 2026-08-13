@@ -81,7 +81,18 @@ namespace UI
             if (G_UpgradeButtonList == null || UpgradeButtonPrefab == null)
                 return;
 
-            foreach (var config in GetUpgradeConfigs())
+            var configs = GetUpgradeConfigs();
+            // Sort configs so that le locked ones are showing last (-1 means "show before" and 1 means "show after")
+            configs.Sort(new Comparison<UpgradeConfig>((x, y) =>
+                {
+                    if (x == null) return 1;
+                    if (y == null) return -1;
+                    if (x.IsLocked == y.IsLocked) return 0;
+                    if (x.IsLocked) return 1;
+                    return -1;
+                }
+                ));
+            foreach (var config in configs)
             {
                 MakeNewUpgradeButton(config);
             }
@@ -90,7 +101,7 @@ namespace UI
         ///  Returns the list of all the update configs available
         /// </summary>
         /// <returns></returns>
-        IEnumerable<UpgradeConfig> GetUpgradeConfigs() => UpgradeBindingIndex.Instance.Bindings.Select(binding => binding.Config);
+        List<UpgradeConfig> GetUpgradeConfigs() => UpgradeBindingIndex.Instance.Bindings.Select(binding => binding.Config).ToList();
 
         UpgradeButton MakeNewUpgradeButton(UpgradeConfig config)
         {

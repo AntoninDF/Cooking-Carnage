@@ -89,10 +89,12 @@ public class RecapState : MenuState
         switch (transition)
         {
             case StateTransitions.UpgradeShop:
+#if DEMO
                 // End the demo at the end of the third shift
                 if (Globals.Gameplay.ShiftNumber >= 2)
                     return new DemoEndState();
                 else
+#endif
                     return new UpgradeState();
             case StateTransitions.OpenMainMenu:
                 return new MainMenuState();

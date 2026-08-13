@@ -1,5 +1,6 @@
 using GameSystem;
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,7 +20,10 @@ namespace UI
         [Tooltip("This is the quit button, it will quit the game")]
         public Button B_Quit;
 
-
+        [Tooltip("These objects will be disabled unless we're in the release version")]
+        [SerializeField] List<GameObject> _releaseSpecificObjects; 
+        [Tooltip("These objects will be disabled unless we're in the demo version")]
+        [SerializeField] List<GameObject> _demoSpecificObjects; 
         #endregion
 
 
@@ -28,6 +32,24 @@ namespace UI
         {
             base.OnLoad();
             BindAll();
+            LoadSpecificObjects();
+        }
+
+        private void LoadSpecificObjects()
+        {
+#if !DEMO
+            // Release mode
+            foreach (GameObject obj in _releaseSpecificObjects)
+                obj.SetActive(true);
+            foreach (GameObject obj in _demoSpecificObjects)
+                obj.SetActive(false);
+#else
+            // Demo mode
+            foreach (GameObject obj in _demoSpecificObjects)
+                obj.SetActive(true);
+            foreach (GameObject obj in _releaseSpecificObjects)
+                obj.SetActive(false);
+#endif
         }
 
         void BindAll()
@@ -71,6 +93,6 @@ namespace UI
         }
 
 
-        #endregion
+#endregion
     } 
 }
