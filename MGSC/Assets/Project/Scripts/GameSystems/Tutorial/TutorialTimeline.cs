@@ -64,7 +64,7 @@ public class TutorialTimeline : ScriptableObject
 
         Action callback = () =>
         {
-            Subs?.EndSubtitle();
+            // Subs?.EndSubtitle();
             onEnd?.Invoke();
         };
 
