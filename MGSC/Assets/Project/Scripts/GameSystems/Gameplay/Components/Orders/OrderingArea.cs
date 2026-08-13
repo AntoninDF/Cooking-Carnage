@@ -1,11 +1,10 @@
 using Features;
-using System;
-using System.Collections.Generic;
 using Clients;
-using Cooking;
 using Orders;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEditor;
+using System.Linq;
 
 public class OrderingArea : MonoBehaviour, IFeatureCollection
 {
@@ -23,6 +22,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     public Transform SeatTransform;
     public Transform SeatParent;
     public ServingArea ServingArea;
+    public InteractionButton KillButton;
     
     
     public ClientSeatHeightConfig ServingAreaConfig;
@@ -48,6 +48,41 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         GetDropSlots();
     }
 
+    void Start()
+    {
+        if (KillButton != null)
+            KillButton.OnInteraction += _ => KillClient();
+    }
+
+#if UNITY_EDITOR
+    // This huge debug block should be removed later
+    float elapsedSinceLastLog = 0f;
+    void Update()
+    {
+        float logCooldown = 2f;
+        elapsedSinceLastLog += Time.deltaTime;
+        if (elapsedSinceLastLog >= logCooldown)
+        {
+            elapsedSinceLastLog -= logCooldown;
+            Log();
+        }
+
+        void Log()
+        {
+            Debug.Log("__________ " + GetType().Name + " : " + name + " __________");
+
+            Debug.Log("Box position" + " : " + (name.Contains("1") ? "Middle" : name.Contains("2") ? "Right" : "Left"));
+            Debug.Log("Current client" + " : " + (ClientSeat.RegisteredClient != null ? ClientSeat.RegisteredClient.Type : "null"));
+            Debug.Log("Current held meal" + " : " + (ServingArea.MealSlot.HeldItem != null ? (ServingArea.MealSlot.HeldItem.Owner as Plate).Recipe.Name : "null"));
+            Debug.Log("Current order" + " : " + (NextOrder != null ? NextOrder.Recipe.Name + NextOrder.Recipe.Ingredients.Select(ingr => ingr.Name).ToList().ToString_EasyRead() : "null"));
+            Debug.Log("Serving area's mealSlot's last child" + " : " + (ServingArea.MealSlot.transform.childCount > 0 ? ServingArea.MealSlot.transform.GetChild(ServingArea.MealSlot.transform.childCount-1).name : "none"));
+
+            Debug.Log("__________ " + "##########" + " __________");
+
+        }
+    }
+#endif
+
     private void BindEvents()
     {
         ClientSeat.OnClientRegister += RequestOrder;
@@ -56,7 +91,6 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         {
             client.BeginOrderTimer();
             client.OnOrderTimeProgress += _OrderDisplayer.UpdateTimeSlider;
-            //Debug.Log($"[OrderingArea] Ordering Sitting : {client}");
             _OrderDisplayer.DisplayOrder(client.CurrentOrder);
         };
          
@@ -91,12 +125,15 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
 
     public void KillClient()
     {
+        if (!Globals.Authorizations.AllowClientKilling)
+            return;
         Client client = ClientSeat.RegisteredClient;
         if (client != null && ClientSeat.SittingClient != null)
         {
             client.Cooked.Trigger();
             GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
             ClientSeat.OnClientKilled?.Invoke();
+            Debug.Log("[OrderingArea] OnCustomerKilled invoked for client " + client.name);
             OnCustomerKilled?.Invoke();
         }
     }
@@ -113,23 +150,51 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
             OnCustomerBlended?.Invoke(client.Type);
         }
     }
-    
-    
+
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
+        float baseHandleHeight = 1f;
+        float increment = 0.2f;
+        var cam = SceneView.lastActiveSceneView.camera;
+        if (cam != null) increment = Vector3.Distance(cam.transform.position, transform.position) / 50f;
+        int handleCount = 0;
+        float GetY()
+        {
+            handleCount++;
+            return baseHandleHeight + (handleCount - 1) * increment;
+        }
         if (!Application.isPlaying) return;
         if (ClientSeat == null) return;
+        
         if (ClientSeat.SittingClient != null)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawCube(transform.position, transform.localScale * 1.01f);
+            Gizmos.DrawSphere(transform.position, 0.1f);
             Gizmos.DrawSphere(ClientSeat.SittingClient.transform.position + Vector3.up * 1f, 0.1f);
         }
         else if (ClientSeat.RegisteredClient != null)
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawCube(transform.position, transform.localScale * 1.01f);
+            Gizmos.DrawSphere(transform.position, 0.1f);
             Gizmos.DrawSphere(ClientSeat.RegisteredClient.transform.position + Vector3.up * 1f, 0.1f);
         }
+
+        // Display current client
+        Gizmos.color = Color.white;
+        UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Client : " + (ClientSeat.RegisteredClient != null ? ClientSeat.RegisteredClient.Type : "null"));
+
+        // Display current meal
+        Gizmos.color = Color.white;
+        UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Current meal : " + (ServingArea.MealSlot.HeldItem != null ? (ServingArea.MealSlot.HeldItem.Owner as Plate).Recipe.Name : "null"));
+
+        // Display seat height
+        Gizmos.color = Color.white;
+        UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Seat height : " + ClientSeat.ClientSeatPosition(ClientSeat.RegisteredClient));
+
+        // Display increment
+        Gizmos.color = Color.white;
+        UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Increment : " + increment);
     }
+#endif
 }

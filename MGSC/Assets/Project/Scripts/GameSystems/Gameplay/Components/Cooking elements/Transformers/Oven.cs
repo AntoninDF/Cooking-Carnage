@@ -1,7 +1,11 @@
 using Features;
+using GameSystem;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -46,18 +50,50 @@ public class Oven : MonoBehaviour, IFeatureCollection
     private void OnEnable()
     {
         GameLoop.OnReset += ResetThis;
+        BindActionLogs();
     }
     private void OnDisable()
     {
         GameLoop.OnReset -= ResetThis;
+        UnbindActionLogs();
     }
+    // The following block is for debug purposes only
+    void FailedLaunchCooking_Log()                  => Debug.Log($"[Oven {name}] FailedLaunchCooking    " + " was invoked");
+    void OnCookingStart_Log()                       => Debug.Log($"[Oven {name}] OnCookingStart         " + " was invoked");
+    void OnCookingProgress_Log(float elapsed)       => Debug.Log($"[Oven {name}] OnCookingProgress      " + " was invoked" + " with parameter " + elapsed);
+    void OnCookingOver_Log()                        => Debug.Log($"[Oven {name}] OnCookingOver          " + " was invoked");
+    void OnOvercookingStart_Log()                   => Debug.Log($"[Oven {name}] OnOvercookingStart     " + " was invoked");
+    void OnOvercookingProgress_Log(float elapsed)   => Debug.Log($"[Oven {name}] OnOvercookingProgress  " + " was invoked" + " with parameter " + elapsed);
+    void OnOvercookingOver_Log()                    => Debug.Log($"[Oven {name}] OnOvercookingOver      " + " was invoked");
+    void BindActionLogs()
+    {
+        Cooker.FailedLaunchCooking      += FailedLaunchCooking_Log;
+        Cooker.OnCookingStart           += OnCookingStart_Log;
+        Cooker.OnCookingProgress        += OnCookingProgress_Log;
+        Cooker.OnCookingOver            += OnCookingOver_Log;
+        Cooker.OnOvercookingStart       += OnOvercookingStart_Log;
+        Cooker.OnOvercookingProgress    += OnOvercookingProgress_Log;
+        Cooker.OnOvercookingOver        += OnOvercookingOver_Log;
 
+    }
+    void UnbindActionLogs()
+    {
+        Cooker.FailedLaunchCooking      -= FailedLaunchCooking_Log;
+        Cooker.OnCookingStart           -= OnCookingStart_Log;
+        Cooker.OnCookingProgress        -= OnCookingProgress_Log;
+        Cooker.OnCookingOver            -= OnCookingOver_Log;
+        Cooker.OnOvercookingStart       -= OnOvercookingStart_Log;
+        Cooker.OnOvercookingProgress    -= OnOvercookingProgress_Log;
+        Cooker.OnOvercookingOver        -= OnOvercookingOver_Log;
+    }
+    // End of debug block
     void ResetThis()
     {
         Container?.Empty();
         Cooker.OnTransformationOver?.Invoke(null);
         Cooker.OnTransformation?.Invoke();
         Container.OnDrop?.Invoke(null);
+        Cooker.RequestStopTransformation();
         ResetDisplayedSprites();
         OnStopCooking();
         UpdateFeedbacks(0f, false);
@@ -85,7 +121,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
                 {
                     if (item is not Feature feature) return false;
                     if (!feature.TryGetSibling<F_Cookable>(out var temp)) return false;
-                    if (!Globals.Gameplay.AllowPuttingPlatesInOvens) return false;
+                    if (!Globals.Authorizations.AllowPuttingPlatesInOvens) return false;
                     return true;
                 }
                 );
@@ -159,12 +195,16 @@ public class Oven : MonoBehaviour, IFeatureCollection
         if (!Container.HeldItem.TryGetSibling(out F_OverCookable cookable, true) || !cookable.CanBeTransformed) return;
 
         bool success = Cooker.RequestStartTransformation(cookable);
+        if (success)
+            _button.gameObject.SetActive(false);
     }
     
     private void OnStartCooking(TransformableAfterTimer target)
     {
         if (target is F_Cookable)
             Container.IsLocked = true;
+        if (target.TryGetSibling(out F_Container container))
+            container.IsLocked = true;
     }
     private void OnStopCooking(TransformableAfterTimer target=null)
     {
@@ -254,7 +294,6 @@ public class Oven : MonoBehaviour, IFeatureCollection
 
     public void SetOvenActive(bool active)
     {
-        // Debug.Log($"[Oven] {name} was {(active ? "enabled" : "disabled")}.");
         _isOvenActive = active;
         if (_button != null)
         {
@@ -271,6 +310,73 @@ public class Oven : MonoBehaviour, IFeatureCollection
     }
 
     public void ShowRecipeSprites() => ShowSpriteList(GetSpritesFromIngredients(GetContainedIngredients()));
+
+
+
+    #if UNITY_EDITOR
+        // This huge debug block should be removed later
+        float elapsedSinceLastLog = 0f;
+    void Update()
+    {
+        float logCooldown = 2f;
+        elapsedSinceLastLog += Time.deltaTime;
+        if (elapsedSinceLastLog >= logCooldown)
+        {
+            elapsedSinceLastLog -= logCooldown;
+            Log();
+        }
+
+        void Log()
+        {
+            Debug.Log("__________ " + GetType().Name + " : " + name + " __________");
+
+            Debug.Log("Current process" + " : " + (Cooker.currentProcess != null ? Mathf.Round(Cooker.currentProcess.Elapsed*100f)/100f + "/" + Cooker.currentProcess.Duration + "s": "null"));
+            Debug.Log("Is locked ?" + " : " + Container.IsLocked);
+            Debug.Log("Contains" + " : " + (Container.HeldItem != null ? (Container.HeldItem.Owner as Item) : "null"));
+            if (Container.HeldItem != null && Container.HeldItem.Owner is Plate plate)
+                Debug.Log("Contained object is a plate containing" + " : " +  plate.Container.SoloContainers.Where(container => container.HeldItem != null).Select(container => container.HeldItem.Owner as Item).ToList().ToString_EasyRead());
+
+            Debug.Log("__________ " + "##########" + " __________");
+
+        }
+    }
+#endif
+
+#if UNITY_EDITOR
+    void OnDrawGizmos()
+    {
+        float baseHandleHeight = 1f;
+        float increment = 0.2f;
+        var cam = SceneView.lastActiveSceneView.camera;
+        if (cam != null) increment = Vector3.Distance(cam.transform.position, transform.position) / 50f;
+        int handleCount = 0;
+        float GetY()
+        {
+            handleCount++;
+            return baseHandleHeight + (handleCount - 1) * increment;
+        }
+        if (!Application.isPlaying) return;
+
+        // Display current process
+        Gizmos.color = Color.white;
+        if (Cooker.currentProcess != null)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Current process : " + Cooker.currentProcess.Name + "(" + Cooker.currentProcess.Elapsed + "s/" + Cooker.currentProcess.Duration + "s)");
+        else
+            UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Current process : null");
+
+        // Display contained item
+        Gizmos.color = Color.white;
+        if (Container.HeldItem != null)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Contained item : " + (Container.HeldItem.Owner as Item).name);
+        else
+            UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Contained item : null");
+
+        // Display if oven is locked
+        Gizmos.color = Color.white;
+            UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Is locked ? : " + (Container.IsLocked ? "Yup" : "Nope"));
+    }
+#endif
+
     [Serializable]
     public struct Feedbacks
     {

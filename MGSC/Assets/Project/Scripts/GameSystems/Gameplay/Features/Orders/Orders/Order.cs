@@ -3,22 +3,37 @@ using Cooking;
 using System;
 using Clients;
 using Orders;
+using Upgrades;
 
 public class Order
 {
     #region Properties
 
-    public Client             Owner            => _owner;
-    public SO_Recipe          Recipe           => _recipe;
-    public EClientType?       Drink            { get; set; }
-    public float              Timestamp        => _timestamp;
-    public int                ID               => _id;
-    public bool               IsResolved       { get; set; } // Wether the order has been served or not
-    public bool               IsCancelled      { get; set; } // Wether the client has been killed or not
-    public Orders.ServingInfo ServingInfo      { get; set; }
-    public Orders.OrderRating OrderRating      { get; set; }
-    public float              PatienceDuration { get; set; } = 60f;
-    public float              SeatedTimestamp  { get; set; }
+    public Client Owner => _owner;
+    public SO_Recipe Recipe => _recipe;
+    public float Timestamp => _timestamp;
+    public EClientType? Drink { get; set; }
+    public int ID => _id;
+    public bool IsResolved { get; set; } // Wether the order has been served or not
+    public bool IsCancelled { get; set; } // Wether the client has been killed or not
+    public Orders.ServingInfo ServingInfo { get; set; }
+    public Orders.OrderRating OrderRating { get; set; }
+    public float PatienceDuration
+    {
+        get
+        {
+            float multiplier = Globals.BalancingWeights.ClientPatienceMultiplier;
+            if (Reference.TryGetManager(out UpgradeManager um))
+            {
+                var upgrade = um.GetUpgradeByType<PatienceUpgrade>();
+                if (upgrade != null)
+                    return DefaultPatienceDuration * multiplier + upgrade.GetPatienceGain();
+            }
+            return DefaultPatienceDuration * multiplier;
+        }
+    }
+    public float DefaultPatienceDuration { get; set; } = 60f;
+    public float SeatedTimestamp { get; set; }
 
     #endregion
 
@@ -32,7 +47,7 @@ public class Order
 
     private Action _onResolve;
     private Action _onCancel;
-
+    
     #endregion
 
     #region Methods

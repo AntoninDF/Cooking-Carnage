@@ -43,14 +43,14 @@ public static class GameLoop
             if (!IsRunning) return;
             IsRunning = false;
             OnPause?.Invoke();
-            AudioSystem.SetGlobalParameter("GamePaused", 1);
+            //AudioSystem.SetGlobalParameter("GamePaused", 1);
         }
         else
         { 
             if (IsRunning) return;
-                IsRunning = true;
-                OnResume?.Invoke();
-                AudioSystem.SetGlobalParameter("GamePaused", 0);
+            IsRunning = true;
+            OnResume?.Invoke();
+            //AudioSystem.SetGlobalParameter("GamePaused", 0);
         }
     }
 
@@ -101,7 +101,6 @@ public static class GameLoop
     /// </summary>
     public static void ResetAll()
     {
-        UnityEngine.Debug.Log("Resetting the game");
         OnBeforeReset?.Invoke();
         OnReset?.Invoke();
         OnAfterReset?.Invoke();
@@ -113,7 +112,7 @@ public static class GameLoop
         if (_currentState != null)
             _currentState.OnExit();
         _currentState = newState;
-        UnityEngine.Debug.Log("Current state is " + CurrentState.GetType().Name);
+        //UnityEngine.Debug.Log("Current state is " + CurrentState.GetType().Name);
         _currentState.OnEnter();
     }
     public static bool RequestTransition(StateTransitions transition = default)

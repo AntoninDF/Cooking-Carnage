@@ -39,10 +39,9 @@ public class GameSettings : ScriptableObject
             Globals.Statistics.TutorialHasBeenPlayed.Value = true;
 
         Screen.fullScreenMode = Instance.ApplicationSettings.FullScreenMode;
-		//Debug.Log("Game settings : Fullscreen mode is " + Enum.GetName(typeof(FullScreenMode), Instance.ApplicationSettings.FullScreenMode) + ", value is " + (int)Instance.ApplicationSettings.FullScreenMode);
-    }
+	}
 
-    void OnValidate() => Apply();
+    //void OnValidate() => Apply();
 
     public S_ShiftSettings ShiftSettings;
     [Serializable]

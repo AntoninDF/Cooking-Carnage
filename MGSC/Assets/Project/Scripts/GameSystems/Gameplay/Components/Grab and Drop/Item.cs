@@ -47,6 +47,7 @@ public class Item : MonoBehaviour, IFeatureCollection
     #region Methods
     protected virtual void OnEnable() => OnItemEnabled?.Invoke(this);
     protected virtual void OnDisable() => OnItemDisabled?.Invoke(this);
+    
     ~Item()
     {
         if (Grabbable.Container != null)
@@ -122,7 +123,7 @@ public class Item : MonoBehaviour, IFeatureCollection
     }
     bool CanInteract(InteractionContext context)
     {
-        if (!Globals.Gameplay.Player.AllowPlayerGrab) return false;
+        if (!Globals.Authorizations.Player.AllowPlayerGrab) return false;
         return CanBeGrabbed(context);
     }
 

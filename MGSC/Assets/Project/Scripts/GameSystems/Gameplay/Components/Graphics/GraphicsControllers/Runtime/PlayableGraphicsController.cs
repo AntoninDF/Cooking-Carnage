@@ -46,7 +46,6 @@ public abstract class PlayableGraphicsController : GraphicsController
     protected virtual void Update()
     {
         ProcessElapsedTime();
-        //Debug.Log($"GameObject : {this.gameObject.name}, TimeElapsed: {TimeElapsed}, DelayTimeElapsed: {DelayTimeElapsed}");
     }
 
     public virtual void Play(bool skipDelay=false)

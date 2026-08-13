@@ -1,6 +1,8 @@
-using Controller;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Upgrades;
 
 namespace GameSystem
 {
@@ -23,7 +25,7 @@ namespace GameSystem
         public static Action OnNextShift { get; set; }
 
         public int ShiftNumber { get => Globals.Gameplay.ShiftNumber; set => Globals.Gameplay.ShiftNumber.Value = value; }
-        public float ShiftDuration => _shiftDuration;
+        public float ShiftDuration => _shiftDuration * Globals.BalancingWeights.ShiftDurationMultiplier;
         public bool IsShiftActive { get; set; }
         public bool HasFailed { get; set; }
         /// <summary>
@@ -87,7 +89,7 @@ namespace GameSystem
         /// <summary>
         /// Simply invokes <see cref="OnShiftBegin"/>, and starts the timers for the end of shift.
         /// </summary>
-        public void RequestShiftTimer() => LaunchShiftTimer(_shiftDuration);
+        public void RequestShiftTimer() => LaunchShiftTimer(ShiftDuration);
         void LaunchShiftTimer(float duration)
         {
 //            Debug.Log( $"Launching new shift for {duration}s");
@@ -103,7 +105,7 @@ namespace GameSystem
             ResetTimerUntilFinalWarning();
             this.Log(LogType.Log, $"{_noonDuration}s left before shift end");
             OnShiftFinalWarning?.Invoke();
-            AudioSystem.PlayAudio(AudioSystem.Database.shiftNoonSFX);
+            AudioSystem.SetEventParameter(AudioSystem.Database.beforeShiftMusic, "Ingame Music Sequence", 2); // 2 is Shift Countdown
         }
 
         /// <summary>
@@ -122,18 +124,23 @@ namespace GameSystem
             if (validRent)
             {
                 OnShiftSucceeded?.Invoke();
+                // We have to save the game validating the fact that this shift has been done, but the shift number should increase after the shift recap, not before.
+                ShiftNumber++;
+                SaveManager.SaveGameData();
+                ShiftNumber--;
             }
-            else
+            else // If shift is failed
             {
                 OnShiftFailed?.Invoke();
                 HasFailed = true;
             }
 
-            SaveManager.SaveGameData();
+
             OnShiftEnded?.Invoke();
             AudioSystem.PlayAudio(AudioSystem.Database.shiftEndSFX);
             GameLoop.RequestTransition(StateTransitions.ShowShiftRecap);
         }
+        
 
         private void ResetTimerUntilEndOfShift()
         {
@@ -173,8 +180,20 @@ namespace GameSystem
             moneyManager.AddMoney(-rentPrice);
             return true;
         }
+        /// <summary> Has to be a positive value </summary>
         public float GetCurrentRentPrice() => GetRentPrice(ShiftNumber);
-        public float GetRentPrice(int shiftCount) => _rentPriceCurve.Evaluate(shiftCount);
+        /// <summary> Has to be a positive value </summary>
+        public float GetRentPrice(int shiftCount)
+        {
+            float percentage = Globals.BalancingWeights.RentPriceMultiplier;
+            if (Reference.TryGetManager(out UpgradeManager um))
+            {
+                var upgrade = um.GetUpgradeByType<LowerRentUpgrade>();
+                if (upgrade != null)
+                    percentage *= upgrade.GetRentMultiplier();
+            }
+            return _rentPriceCurve.Evaluate(shiftCount) * percentage;
+        }
 
         public void Register()
         {
@@ -188,7 +207,7 @@ namespace GameSystem
 
         public void PostInit()
         {
-            this.Log(LogType.Log, $"PostInit running (shift duration set to {_shiftDuration}s)");
+            this.Log(LogType.Log, $"PostInit running (shift duration set to {ShiftDuration}s)");
 
             SaveManager.LoadGlobalData();
 

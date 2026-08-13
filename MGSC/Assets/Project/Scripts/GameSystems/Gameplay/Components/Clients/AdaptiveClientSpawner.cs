@@ -101,7 +101,6 @@ namespace GameSystem
             // Start spawning clients when the shift begins
             ShiftManager.OnShiftBegin += () =>
             {
-//                Debug.Log("Shift started, client will spawn soon");
                 Launch(2);
             };
         }
@@ -125,7 +124,6 @@ namespace GameSystem
         /// </summary>
         void Launch(float delay = 2)
         {
-            //            Debug.Log("START SPAWN ROUTINE");
             TimerManager.StartGameplayTimer(timerName, delay, () => TrySpawnClient());
         }
 
@@ -143,12 +141,15 @@ namespace GameSystem
             }
         }
 
+        public void AddClientToQueue(EClientType clientType = EClientType.None)
+        {
+            EnqueueClient(NewClient(clientType));
+        }
         /// <summary>
         /// Spawn a new Client if it is possible
         /// </summary>
         void SpawnClient()
         {
-            //Debug.Log("Spawning client");
             if (nextClients.Count == 0)
             {
                 EnqueueClient(NewClient());
@@ -174,11 +175,16 @@ namespace GameSystem
         /// <summary>
         /// Select a random Client of the right type through a referenced list
         /// </summary>
-        SO_Client NewClient()
+        SO_Client NewClient(EClientType clientType = EClientType.None)
         {
             // WIP : could generate the entirety of the client instead of selecting
-            
-            EClientType chosenType = GetRandomWeightedType();
+
+            // Set a random client type if none have been specified
+            EClientType chosenType;
+            if (clientType == EClientType.None)
+                chosenType = GetRandomWeightedType();
+            else
+                chosenType = clientType;
             
             // Creates a filtered array according to chosenType
             var clientsOfType = models.Where(m => m.clientType == chosenType).ToArray();

@@ -68,7 +68,13 @@ namespace GameSystem
             AddMoney(order.OrderRating.MoneyGained);
         }
 
-
+        public void SetTransactions(Dictionary<int, List<float>> dict) => _moneyTransactionsPerShift = dict;
+        public void ResetTransactionsForShift(int shift) => _moneyTransactionsPerShift[shift] = new();
+        public Dictionary<int, List<float>> GetTransactions () => _moneyTransactionsPerShift;
+        /// <summary> Will return a negative value </summary>
+        public float GetMoneySpentOnUpgradesThisShift() => GetMoneySpentOnUpgradesOnShift(Globals.Gameplay.ShiftNumber);
+        /// <summary> Will return a negative value </summary>
+        public float GetMoneySpentOnUpgradesOnShift(int shiftNumber) => GetMoneyLostOnShift(shiftNumber) + Reference.GetManager<ShiftManager>().GetRentPrice(shiftNumber);
         public float GetMoneyGainedSinceBeginning()
         {
             List<float> gains = new();
@@ -108,7 +114,6 @@ namespace GameSystem
 
         public void AddMoney(float amount)
         {
-            Debug.Log("Money gained : " + amount);
             MoneyInfo += amount;
             if (!_moneyTransactionsPerShift.ContainsKey(shiftNumber))
                 _moneyTransactionsPerShift[shiftNumber] = new();
@@ -120,7 +125,6 @@ namespace GameSystem
             if (amount > 0)
             {
                 OnMoneyGain?.Invoke();
-                Debug.Log("OnMoneyGain called");
             }
             if (amount < 0) OnMoneyLoss?.Invoke();
 

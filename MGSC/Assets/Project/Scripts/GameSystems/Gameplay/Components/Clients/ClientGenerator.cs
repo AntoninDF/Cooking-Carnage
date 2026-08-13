@@ -40,7 +40,7 @@ namespace Clients
         #region Fields
 
         //private bool _useUpgrades   = true;
-        private float _speed         = 1f;
+        private float _speed         = 5f;
         private float _reachDistance = 1f;
         private SplineContainer _splineComp;
         public Vector2 _defaultDropRate = Vector2.one;
@@ -170,7 +170,7 @@ namespace Clients
 
         public Client SubscribeToUpgrade()
         {
-            this.TrySubscribe<IngredientDropUpgrade>();
+            (this as IUpgradable<IngredientDropUpgrade>).TrySubscribe();
             return this;
         }
         #endregion

@@ -100,7 +100,6 @@ namespace GameSystem
         {
             foreach (var kvp in Reference.Managers)
             {
-                //Debug.Log("[GameInitializer] : Initializing " + kvp.Key + ", object is " + kvp.Value);
                 (kvp.Value).Init();
             }
         }

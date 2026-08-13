@@ -63,7 +63,6 @@ namespace Features
             bool result = false;
             foreach (Feature feature in AvailableFeatures)
             {
-                //UnityEngine.Debug.Log("Feature is : " + feature);
                 if (TryPlayerAction(feature))
                 {
                     result = true;
@@ -76,7 +75,7 @@ namespace Features
 
         private bool TryPlayerAction(Feature feature)
         {
-            if (!Globals.Gameplay.Player.AllowPlayerInteractions) return false;
+            if (!Globals.Authorizations.Player.AllowPlayerInteractions) return false;
 
             bool primaryActionPerformed = false;
             if (_playerActions.TryGetValue(PlayerActionType.Primary, out var primaryActionsByType)) {
@@ -149,7 +148,7 @@ namespace Features
 
         private void UpdateConstantActions()
         {
-            if (!Globals.Gameplay.Player.AllowPlayerInteractions) return;
+            if (!Globals.Authorizations.Player.AllowPlayerInteractions) return;
             if (!Enabled) return;
 
             if (AvailableFeatures == null || AvailableFeatures.Count == 0) return;

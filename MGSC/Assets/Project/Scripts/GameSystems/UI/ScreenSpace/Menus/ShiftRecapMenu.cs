@@ -2,6 +2,7 @@ using GameSystem;
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
+using System.Transactions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -82,6 +83,7 @@ namespace UI
                 SetContentMode(ContentMode.Fail);
             else
                 SetContentMode(ContentMode.Success);
+            AudioSystem.PlayAudio(AudioSystem.Database.rentPaid);
 
             if (L_CurrentTotalMoney != null)
             {
@@ -131,19 +133,21 @@ namespace UI
                 GameObject.Destroy(G_ReceiptLines.GetChild(i).gameObject);
 
             AnimateRecipeLine(
-                "Rent payed",
-                -sm.GetCurrentRentPrice(),
+                "Salary",
+                mm.GetMoneyGainedThisShift(),
+            /*
             onEnd:
             () => AnimateRecipeLine(
                 "Upgrades",
                 mm.GetMoneyLostThisShift() + sm.GetCurrentRentPrice(),
+            */
             onEnd:
             () => AnimateRecipeLine(
-                "Salary",
-                mm.GetMoneyGainedThisShift(),
+                "Rent payed",
+                -sm.GetCurrentRentPrice(),
                 onEnd
                 )
-                )
+                //)
                 )
                 ;
         }
@@ -184,9 +188,10 @@ namespace UI
 
             string timerName = "Animate total money";
             float startValue = mm.GetMoneyAtTheBeginningOfThisShift();
-            float endValue = mm.MoneyInfo;
+            float endValue = sm.HasFailed ? 0 : mm.MoneyInfo;
 
             L_CurrentTotalMoney.color = _defaultColor;
+            Debug.Log("Startvalue is " + startValue + ", " + "endvalue is " + endValue + " (failed is " + sm.HasFailed + ")\n" + "Transactions this shift are " + mm.GetMoneyTransactionsThisShift().ToString_Detailed());
 
             Action onEnd =
                 () =>

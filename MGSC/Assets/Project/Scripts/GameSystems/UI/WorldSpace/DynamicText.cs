@@ -120,9 +120,9 @@ namespace UI
                 case EDataInfo.LastMoneyDelta:                  return ((int)mm?.LastMoneyDelta).ToString() ;
                 case EDataInfo.TotalAvailableUpgrades:          return um?.Upgrades.Select(up => up.Config.MaxLevel).Sum().ToString();
                 case EDataInfo.TotalBoughtUpgrades:             return um?.Upgrades.Select(up => up.Level).Sum().ToString();
-                case EDataInfo.MoneyAtTheBeginningOfTheShift:   return (mm?.GetMoneyAtTheBeginningOfThisShift()).ToString();
+                case EDataInfo.MoneyAtTheBeginningOfTheShift:   return (mm?.GetMoneyAtTheBeginningOfThisShift() + mm.GetMoneySpentOnUpgradesThisShift()).ToString(); // This ignores what was spent in upgrades
                 case EDataInfo.CurrentProjectVersion:           return (Application.version).ToString();
-                case EDataInfo.TimePlayed:                      return SecondsAsDuration(Globals.Statistics.SecondsPlayed);
+                case EDataInfo.TimePlayed:                      return SecondsAsDuration(Globals.Statistics.SecondsPlayed + (int)Time.realtimeSinceStartup); // Adds up time played during previous sessions and this session
 
             }
             return result;
@@ -132,6 +132,7 @@ namespace UI
             int secondsUsed = 0;
             int secondsInADay = 3600 * 24;
 
+            // Values
             int d = seconds / secondsInADay;
             secondsUsed += d * secondsInADay;
 
@@ -143,7 +144,18 @@ namespace UI
             
             int s = (seconds - secondsUsed);
 
-            return $"{d}d {h}h {mn}mn {s}s";
+            // Strings
+            string ds = d + "d";
+            string hs = h + "h";
+            string mns = mn + "mn";
+            string ss = s + "s";
+
+            string result = "";
+            if (d > 0) result += ds;
+            if (h > 0) result += hs;
+            if (mn > 0) result += mns;
+            // if (s > 0) result += ss; // There's not much reason to include seconds, it's unnecessary noise
+            return result;
         }
         string ProcessTimeLeft()
         {

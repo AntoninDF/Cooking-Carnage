@@ -40,18 +40,27 @@ namespace Upgrades
                 Debug.LogWarning($"[{GetType().Name}] Cannot level up further (level {_level}/{_config?.MaxLevel})");
                 return;
             }
-            
+
+            Reference.GetManager<UpgradeManager>().LevelUpHistory.Add(
+                new() { 
+                    TargetUpgrade = new(GetType()), 
+                    PreviousUpgradeLevel = _level, 
+                    NewUpgradeLevel = _level+1, 
+                    Price = GetPrice(), 
+                    ShiftNumber = Globals.Gameplay.ShiftNumber 
+                });
             _level++;
-            Debug.Log($"[{GetType().Name}] Level {_level}/{_config?.MaxLevel}");
+            // Debug.Log($"[{GetType().Name}] Level {_level}/{_config?.MaxLevel}");
             OnUpgradeSuccess?.Invoke();
         }
         
-        public virtual float GetPrice()   => _config.PriceCurve.Evaluate(_level);
+        public virtual float GetPrice()   => _config.PriceCurve.Evaluate(_level) * Globals.BalancingWeights.UpgradePriceMultiplier;
         public virtual bool  CanLevelUp() => _level < _config.MaxLevel;
 
         public void SetLevel(int level)
         {
             _level = level;
+            NotifyAllSubscribers();
         }
         
         internal abstract void UnsubscribeObject(object subscriber);
@@ -104,7 +113,7 @@ namespace Upgrades
                 var sub = _subscribers[i];
                 if (sub is UnityEngine.Object uo && uo == null)
                 {
-                    Debug.LogError("An Upgrade subscriber has been destroyed, level up impossible");
+                    //Debug.LogError("An Upgrade subscriber has been destroyed, level up impossible");
                     _subscribers.RemoveAt(i);
                     continue;
                 }

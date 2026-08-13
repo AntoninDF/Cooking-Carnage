@@ -1,7 +1,8 @@
-using UnityEngine;
+using Orders;
 using System.Collections.Generic;
 using System.Linq;
-using NaughtyAttributes;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Cooking
 {
@@ -23,8 +24,10 @@ namespace Cooking
         [Tooltip("The item prefab should contain the graphics and a meal component")]
         public ModelController mealPrefab;
         [Tooltip("How much money does a recipe give")]
-        public float Price;
-        
+        [FormerlySerializedAs("Price")]
+        public float DefaultPrice;
+        public float Price => DefaultPrice * Globals.BalancingWeights.RecipePriceMultiplier;
+
         [Tooltip("How likely this recipe is to be ordered by default. The unit is arbitrary and depends on the other recipes' probability rates.")]
         public float probabilityRate = 1f;
         [Tooltip("How much higher the probability rate will get each time a corresponding client is seen.")]
@@ -39,6 +42,19 @@ namespace Cooking
         #endregion
 
         #region Methods
+        public bool TryGetRequirements(out SO_RecipeUnlockConfig.UnlockRequirement requirements)
+        {
+            requirements = default;
+            var cat = RecipeCategoryHelper.GetCategory(this);
+            var config = SO_RecipeUnlockConfig.Instance;
+            if (config == null) return false;
+
+            if (!config.TryGetRequirement(cat, out requirements))
+            {
+                return true;
+            }
+            return false;
+        }
         public static bool Compare(SO_Recipe a, SO_Recipe b) => ScrambledEquals(a.Ingredients, b.Ingredients);
         public static bool Compare(IEnumerable<SO_Ingredient> a, SO_Recipe b) => ScrambledEquals(a, b.Ingredients);
         public static bool Compare(SO_Recipe a, IEnumerable<SO_Ingredient> b) => ScrambledEquals(b, a.Ingredients);

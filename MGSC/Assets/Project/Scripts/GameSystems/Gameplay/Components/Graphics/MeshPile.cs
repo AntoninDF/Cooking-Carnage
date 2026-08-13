@@ -103,7 +103,7 @@ public class MeshPile : MonoBehaviour
             MeshPileUtility.MakePile(ref newMesh, mesh, count, mesh.bounds.size.y, 0, 0, 0);
         mf.sharedMesh = newMesh;
         if (mc != null)
-            mc.sharedMesh = newMesh;
+            mc.sharedMesh = count > 0 ? newMesh : null;
         if (material != null)
             mr.sharedMaterial = material;
         

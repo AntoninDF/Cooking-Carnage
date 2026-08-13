@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Upgrades;
 using Random = UnityEngine.Random;
 
 namespace Orders
@@ -12,22 +13,39 @@ namespace Orders
     public static class OrderPicker
     {
         private const float UpgradeProbability = 1f / 3f; 
-        private const int ForcedFullRecipeInterval = 15;
+        private static int ForcedFullRecipeInterval
+        {
+            get
+            {
+                if (Reference.TryGetManager(out UpgradeManager um))
+                {
+                    var upgrade = um.GetUpgradeByType<MixtRecipePityThresholdUpgrade>();
+                    if (upgrade != null)
+                        return upgrade.CurrentPityThreshold;
+                }
+                return 15;
+            }
+        }
 
         private static float DrinkProbability;
         private static float _extraDrinkChanceBonus = 0f;
 
         private static int _selectionCount = 0; 
-
+        private static Queue<SO_Recipe> _forcedRecipes = new();
         public static void SetExtraDrinkChanceBonus(float bonus) => _extraDrinkChanceBonus = bonus;
         
         public static SO_Recipe Pick()
         {
+            // If recipes have been explicitely enqueued, output them instead
+            if (TryPickQueuedRecipe(out var recipe))
+                return recipe;
+
+
             _selectionCount++;
 
             SO_RecipeBook         book         = FindCurrentRecipeBook();
 
-            if (_selectionCount % ForcedFullRecipeInterval == 0
+            if ((ForcedFullRecipeInterval == 0 || _selectionCount % ForcedFullRecipeInterval == 0)
                 && RecipeUnlockChecker.IsUnlocked(RecipeCategory.MixteTriple))
             {
                 SO_Recipe forced = FindTripleDistinctRecipe(book);
@@ -40,7 +58,25 @@ namespace Orders
                 throw new NullReferenceException("[OrderPicker] : client manager not found");
 
             Dictionary<EClientType, int> clientCount = clientManager.GetSeenClientTypesCount();
-            IEnumerable<SO_Recipe> recipes = book.Recipes.Where(IsBaseRecipe).Where(r => RecipeUnlockChecker.IsUnlocked(r));
+            List<SO_Recipe> recipes = new();
+            string recipeSelectionDebug = "[OrderPicker] Recipe selection yields :\n";
+            foreach (var curr in book.Recipes)
+            {
+                recipeSelectionDebug += curr.name;
+                if (curr.TryGetRequirements(out var req))
+                    recipeSelectionDebug += " (requires shift " + req.minShift + " and total money " + req.minMoney + "$)" ;
+                recipeSelectionDebug += " : ";
+                if (IsBaseRecipe(curr) && RecipeUnlockChecker.IsUnlocked(curr))
+                {
+                    recipes.Add(curr);
+                    recipeSelectionDebug += "valid";
+                }
+                else
+                    recipeSelectionDebug += "NOT valid";
+                recipeSelectionDebug += "\n";
+
+
+            } 
 
             if (!recipes.Any())
             {
@@ -51,7 +87,6 @@ namespace Orders
             List<SO_Client> clientModels = Reference.AssetReferences.clientList;
             EnforceSeenClientsCountTypes(ref clientCount, clientModels.Select(model => model.clientType));
             Dictionary<SO_Recipe, float> weights = SetupRecipeWeights(recipes, clientCount, clientModels);
-
             SO_Recipe picked = PickRandomRecipe(weights);
             return ApplyUpgrade(picked, book, SO_RecipeUnlockConfig.Instance);
         }
@@ -68,7 +103,21 @@ namespace Orders
 
             return client.Type;
         }
-        
+
+
+        private static bool TryPickQueuedRecipe(out SO_Recipe recipe)
+        {
+            recipe = null;
+            if (_forcedRecipes.Count == 0) return false;
+            recipe = _forcedRecipes.Dequeue();
+            return true;
+        }
+        public static void AddRecipeToQueue(SO_Recipe recipe)
+        {
+            if (recipe == null) return;
+            _forcedRecipes.Enqueue(recipe);
+        }
+
         private static bool IsBaseRecipe(SO_Recipe recipe)
         {
             return recipe.Ingredients.Count == recipe.Ingredients.Distinct().Count();
@@ -197,6 +246,11 @@ namespace Orders
             return output;
         }
 
+        /// <summary>
+        /// Makes sure that the ref dictionary <paramref name="clientCount"/> contains a key for each possible value of <see cref="EClientType"/>
+        /// </summary>
+        /// <param name="clientCount"></param>
+        /// <param name="clients"></param>
         private static void EnforceSeenClientsCountTypes(ref Dictionary<EClientType, int> clientCount, IEnumerable<EClientType> clients)
         {
             foreach (EClientType clientType in clients)

@@ -17,7 +17,6 @@ public class Player : MonoBehaviour, IFeatureCollection
         set
         {
             if (value == _lookedAtObject) return;
-           // Debug.Log("Looked at object set");
             if (_lookedAtObject != null)
                 _lookedAtObject.IsLookedAt = false;
             _lookedAtObject = value;
@@ -63,7 +62,7 @@ public class Player : MonoBehaviour, IFeatureCollection
 
         Container.OnGrab += SetHeldLayer;
         Container.OnDrop += ResetHeldLayer;
-        Container.Filter.AddCondition(() => Globals.Gameplay.Player.AllowPlayerGrab);
+        Container.Filter.AddCondition(() => Globals.Authorizations.Player.AllowPlayerGrab);
 
     }
 
@@ -100,7 +99,6 @@ public class Player : MonoBehaviour, IFeatureCollection
 
         Collection.Update();
 
-        // Debug.Log("[Player] : Contains " + Container.HeldItem);
     }
 
     private void TryResetLookedAtObject()
@@ -130,7 +128,12 @@ public class Player : MonoBehaviour, IFeatureCollection
     }
     void TryAnyPlayerAction() => PlayerActor.TryAnyPlayerAction();
     void UpdateMovement() => PlayerMovement.MovementDirection = PlayerInputs.MovementDirection;
-    void UpdateCamera() => PlayerMovement.LookOffset = PlayerInputs.LookOffset;
+    void UpdateCamera()
+    {
+        // The player shouldn't be ablee to look around if the cursor is being shown. It's one or the other
+        if (CursorUtility.CursorIsFree) return;
+        PlayerMovement.LookOffset = PlayerInputs.LookOffset;
+    }
 
     void AddInteractions()
     {

@@ -42,7 +42,7 @@ namespace Upgrades
         /// </summary>
         public void TryLevelUp()
         {   
-            if (!Globals.Gameplay.AllowUpgrades) return;
+            if (!Globals.Authorizations.AllowUpgrades) return;
             if (_upgradeManager == null || _targetUpgrade == null) return;
 
             bool granted = _upgradeManager.TryLevelUp(_targetUpgrade);

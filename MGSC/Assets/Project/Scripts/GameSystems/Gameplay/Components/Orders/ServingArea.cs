@@ -138,7 +138,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         return obj =>
                {
                    if (obj is not F_Grabbable grab) return false;
-                   if (!Globals.Gameplay.AllowClientServing) return false;
+                   if (!Globals.Authorizations.AllowClientServing) return false;
                    return ItemTypeMatchesSlot(slot, grab);
                };
     }
@@ -150,13 +150,13 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         if (ClientSeat.SittingClient != null)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawCube(transform.position, transform.localScale * 1.01f);
+            Gizmos.DrawSphere(transform.position, 0.1f);
             Gizmos.DrawSphere(ClientSeat.SittingClient.transform.position + Vector3.up * 1f, 0.1f);
         }
         else if (ClientSeat.RegisteredClient != null)
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawCube(transform.position, transform.localScale * 1.01f);
+            Gizmos.DrawSphere(transform.position, 0.1f);
             Gizmos.DrawSphere(ClientSeat.RegisteredClient.transform.position + Vector3.up * 1f, 0.1f);
         }
     }

@@ -1,8 +1,10 @@
-using System.Collections.Generic;
+using Autodesk.Fbx;
 using FMOD;
-using UnityEngine;
 using FMOD.Studio;
 using FMODUnity;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 public static class AudioSystem
 {
@@ -40,9 +42,15 @@ public static class AudioSystem
             musicBus = FMODUnity.RuntimeManager.GetBus("bus:/MusicBus"); 
             sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/AmbienceBus"); 
             ambienceBus = FMODUnity.RuntimeManager.GetBus("bus:/SFXBus"); 
-            dialogBus = FMODUnity.RuntimeManager.GetBus("bus:/DialogBus"); 
-        
-            isInitialized = true;
+            dialogBus = FMODUnity.RuntimeManager.GetBus("bus:/DialogBus");
+
+            Globals.Audio.MasterVolume.OnValueChange    += volume => masterBus.setVolume(Mathf.Clamp01(volume));
+            Globals.Audio.MusicVolume.OnValueChange     += volume => musicBus.setVolume(Mathf.Clamp01(volume));
+            Globals.Audio.AmbienceVolume.OnValueChange  += volume => ambienceBus.setVolume(Mathf.Clamp01(volume));
+            Globals.Audio.SFXVolume.OnValueChange       += volume => sfxBus.setVolume(Mathf.Clamp01(volume));
+            Globals.Audio.DialogVolume.OnValueChange    += volume => dialogBus.setVolume(Mathf.Clamp01(volume));
+
+    isInitialized = true;
         }
         catch (System.Exception e)
         {
@@ -65,11 +73,11 @@ public static class AudioSystem
         isInitialized = true;
     }
     
-    public static void SetMasterVolume(float volume) => masterBus.setVolume(Mathf.Clamp01(volume));
-    public static void SetMusicVolume(float volume) => musicBus.setVolume(Mathf.Clamp01(volume));
-    public static void SetAmbienceVolume(float volume) => ambienceBus.setVolume(Mathf.Clamp01(volume));
-    public static void SetSFXVolume(float volume) => sfxBus.setVolume(Mathf.Clamp01(volume));
-    public static void SetVoiceVolume(float volume) => dialogBus.setVolume(Mathf.Clamp01(volume));
+    public static void SetMasterVolume(float volume) => Globals.Audio.MasterVolume.Set(volume);
+    public static void SetMusicVolume(float volume) => Globals.Audio.MusicVolume.Set(volume);
+    public static void SetAmbienceVolume(float volume) => Globals.Audio.AmbienceVolume.Set(volume);
+    public static void SetSFXVolume(float volume) => Globals.Audio.SFXVolume.Set(volume);
+    public static void SetVoiceVolume(float volume) => Globals.Audio.DialogVolume.Set(volume);
     public static void StopAudioForBus_Master() => StopAllAudioForBus(masterBus);
     public static void StopAudioForBus_Music() => StopAllAudioForBus(musicBus);
     public static void StopAudioForBus_Ambience() => StopAllAudioForBus(ambienceBus);
@@ -151,10 +159,16 @@ public static class AudioSystem
         {
             UnityEngine.Debug.LogError("[AudioSystem] "+ parameterName + " not found and can't be modified.");
         }
-        else
-        {
-            //UnityEngine.Debug.Log("[AudioSystem] "+ parameterName + " changed successfully to "+ value);
-        }
+    }
+    public static void SetEventParameter(EventInstance eventInst, string parameterName, float value)
+    {
+        eventInst.setParameterByName(parameterName, value);
+    }
+    public static void SetEventParameter(EventReference eventRef, string parameterName, float value)
+    {
+        if (!activeAudios.ContainsKey(eventRef.Guid.ToString())) return;
+        EventInstance eventInst = activeAudios[eventRef.Guid.ToString()];
+        eventInst.setParameterByName(parameterName, value);
     }
     
     public static void StopAllAudio(FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.ALLOWFADEOUT)
@@ -167,6 +181,44 @@ public static class AudioSystem
         activeAudios.Clear();
         
         masterBus.stopAllEvents(stopMode);
+    }
+
+    public static void LogActiveAudios()
+    {
+        string debug = "[AudioSystem] All active audios : ";
+        foreach (var kvp in activeAudios)
+        {
+            debug += "\n" + kvp.Key + " : ";
+
+            RESULT res = RESULT.OK;
+
+            // Retrieve event name
+            res = res | kvp.Value.getDescription(out EventDescription desc);
+            res = res | desc.getPath(out string path);
+            debug += "\t\tPath is ";
+            if (res == RESULT.OK)
+                debug += path;
+            else
+                debug += "Invalid";
+
+            // Retrieve playback state
+            res = res | kvp.Value.getPlaybackState(out PLAYBACK_STATE playbackState);
+            debug += "\t\t" + "Playback state is ";
+            if (res == RESULT.OK)
+                debug += playbackState.ToString();
+            else
+                debug += "Invalid";
+
+            // Retrieve volume
+            res = res | kvp.Value.getVolume(out float volume);
+            debug += "\t\tVolume is ";
+            if (res == RESULT.OK)
+                debug += volume;
+            else
+                debug += "Invalid";
+        }
+
+        UnityEngine.Debug.Log(debug);
     }
     
     #endregion

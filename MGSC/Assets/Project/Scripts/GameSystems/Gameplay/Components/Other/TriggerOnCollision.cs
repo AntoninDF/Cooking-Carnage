@@ -9,13 +9,11 @@ public class TriggerOnCollision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("OnTriggerEnter invoked on " + name);
         OnCollisionEnter?.Invoke();
     }
 
     private void OnTriggerExit(Collider other)
     {
-        //Debug.Log("OnTriggerExit invoked on " + name);
         OnCollisionExit?.Invoke();
     }
 

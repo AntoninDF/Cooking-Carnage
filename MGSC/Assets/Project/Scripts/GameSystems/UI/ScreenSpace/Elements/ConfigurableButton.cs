@@ -20,7 +20,6 @@ namespace UI
 			if (B_Button != null)
 			{
 				B_Button.onClick.AddListener(() => onClick());
-				B_Button.onClick.AddListener(() => Debug.Log("Configurable button setup"));
 			}
 		}
 

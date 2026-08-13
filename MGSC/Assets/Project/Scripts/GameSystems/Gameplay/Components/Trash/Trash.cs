@@ -60,9 +60,9 @@ namespace Trash
                 {
                     if(!_canEat)
                     {
-                        //Debug.Log($"[Trash] Can't throw the object because glooby is already eating something 😞");
                         return false;
                     }
+                    if (!Globals.Authorizations.AllowTrashingStuff) return false;
                     if (obj is not Feature _feature) return false;
                     if(_feature.Owner is not Item _item) return false;
                     if (_item is not Plate) return false;
@@ -75,17 +75,15 @@ namespace Trash
 
         void TryDestroy(F_Grabbable obj)
         {
-            Debug.Log($"[Trash] Try to throw : {obj.GetParentTransform().name}");
             
             if(!_canEat)return;
+            if (!Globals.Authorizations.AllowTrashingStuff) return;
             
             if (_objectAnimation != null) 
                 _objectAnimation.OnAnimationStop += (() =>
                 {
                     StartCoroutine(EatCoroutine(obj.GetParentTransform().gameObject));
                 });
-            else 
-                Debug.Log($"[Trash] can't trow {obj.GetParentTransform().name} into trash");
         }
         
         private IEnumerator EatCoroutine(GameObject obj)
@@ -104,7 +102,6 @@ namespace Trash
         
         private void DestroyItem(GameObject go)
         {
-            Debug.Log($"[Trash] Destroy : {go.name}");
             Destroy(go);
         }
         

@@ -15,6 +15,7 @@ namespace Upgrades
         #region Properties
         
         public List<Upgrade> Upgrades => _upgrades;
+        public List<UpgradeLevelUpInfo> LevelUpHistory = new();
 
         [GlobalEvent("Upgrades/OnTryLevelUpFailed")]
         public static UnityEvent OnUpgradeFail    = new UnityEvent();
@@ -161,6 +162,30 @@ namespace Upgrades
             return upgrade != null;
         }
 
+        public Dictionary<Type, int> GetUpgradeLevelsOnShift(int shiftNumber)
+        {
+            // Retrieve the highest level reached for each upgrade, before this shift
+            Dictionary<Type, int> previousUpgradeLevels = new();
+            foreach (var info in LevelUpHistory)
+            {
+                if (!previousUpgradeLevels.ContainsKey(info.TargetUpgrade))
+                    previousUpgradeLevels[info.TargetUpgrade] = 0;
+                if (info.ShiftNumber <= shiftNumber && info.NewUpgradeLevel > previousUpgradeLevels[info.TargetUpgrade])
+                    previousUpgradeLevels[info.TargetUpgrade] = info.NewUpgradeLevel;
+            }
+            return previousUpgradeLevels;
+        }
+        public void ApplyLevels(Dictionary<Type, int> upgradeLevels)
+        {
+            foreach (var upgrade in Upgrades)
+            {
+                Type type = upgrade.GetType();
+                upgrade.SetLevel(0);
+                if (upgradeLevels.ContainsKey(type))
+                    upgrade.SetLevel(upgradeLevels[type]);
+            }
+        }
+
         #endregion
         
         #region IManager
@@ -217,6 +242,15 @@ namespace Upgrades
             _pendingSubscriptions.Clear();
         }
 
+        [Serializable]
+        public struct UpgradeLevelUpInfo
+        {
+            public SerializableSystemType TargetUpgrade;
+            public int PreviousUpgradeLevel;
+            public int NewUpgradeLevel;
+            public float Price;
+            public int ShiftNumber;
+        }
         
     }
 }

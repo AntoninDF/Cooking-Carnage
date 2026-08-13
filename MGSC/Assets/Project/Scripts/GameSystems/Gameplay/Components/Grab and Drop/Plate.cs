@@ -76,7 +76,7 @@ public class Plate : Item
             if (_onIngredientAdded != null) Container.OnGrab += _onIngredientAdded.Raise;
             // Make sure only cut ingredients can be put in the plate
             Container.Filter.AddCondition(GrabbableCondition);
-            Container.Filter.AddCondition(_ => Globals.Gameplay.AllowPuttingIngredientsInPlates);
+            Container.Filter.AddCondition(_ => Globals.Authorizations.AllowPuttingIngredientsInPlates);
             Collection.Add(Container);
         }
         if (ContainerComponent.TryGetFeature(out F_Interactable interactable))
@@ -160,7 +160,12 @@ public class Plate : Item
 
     private void OnOverCook()
     {
-        var recipe = Reference.AssetReferences.DefaultRecipeBook.FailedRecipe;
+        SO_Recipe recipe;
+        var book = Reference.AssetReferences.DefaultRecipeBook;
+        if (GetContainedIngredients().Count == 0)
+            recipe = book.FailedEmptyRecipe;
+        else
+            recipe = book.FailedRecipe;
         EnableRecipeModel(recipe);
         // Assign the failed recipe, otherwise it might detect an empty recipe instead
         if (TryGetComponent<Recipe>(out var recipeComponent))

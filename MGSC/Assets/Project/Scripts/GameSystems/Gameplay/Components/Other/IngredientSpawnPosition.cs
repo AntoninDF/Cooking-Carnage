@@ -10,8 +10,9 @@ public class IngredientSpawnPosition : MonoBehaviour
 
     public SO_Ingredient IngredientData;
     [Range(0f, 1f)]
+#if UNITY_EDITOR
     [SerializeField] private float _gizmoSize = 0.1f;
-
+#endif
     private GameObject _lastSpawnedObject;
     private void Awake()
     {
@@ -27,7 +28,7 @@ public class IngredientSpawnPosition : MonoBehaviour
         Positions.Remove(this);
     }
 
-    public static void SpawnIngredients(int ingredientCount, Func<Ingredient, bool> filter = null)
+    public static void SpawnIngredients(int ingredientCount, Func<SO_Ingredient, bool> filter = null)
     {
         int i = 0; // i represents the amount of spawned ingredients, not the loop count
         foreach (var pos in Positions)
@@ -35,7 +36,7 @@ public class IngredientSpawnPosition : MonoBehaviour
             if (i == ingredientCount)
                 break;
 
-            Ingredient ing = pos.IngredientData?.Prefab?.GetComponent<Ingredient>();
+            SO_Ingredient ing = pos.IngredientData;
             if (ing == null)
                 continue;
 

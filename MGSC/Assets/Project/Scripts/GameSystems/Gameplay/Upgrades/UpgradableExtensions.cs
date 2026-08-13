@@ -1,3 +1,4 @@
+		/*
 namespace Upgrades
 {
 	public static class UpgradableExtensions
@@ -9,3 +10,4 @@ namespace Upgrades
 		}
 	}
 }
+		*/

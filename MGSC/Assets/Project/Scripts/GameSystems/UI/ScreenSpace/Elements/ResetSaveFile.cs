@@ -22,7 +22,7 @@ namespace UI
         [MenuItem("CookingCarnage/Reset save file")]
 #endif
         [Button("Reset save file")]
-        public void ResetSave()
+        public static void ResetSave()
         {
             SaveManager.ResetSave();
             SaveManager.LoadGlobalData();

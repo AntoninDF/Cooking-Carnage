@@ -12,7 +12,7 @@ namespace Features
         public Action<float> OnTransformationProgress { get; set; }
         public Action<TransformableAfterTimer> OnTransformationOver { get; set; }
         public Action<TransformableAfterTimer> OnTransformationStart { get; set; } 
-        protected Timer currentProcess;
+        public Timer currentProcess;
 
 
         #region Methods
@@ -61,11 +61,6 @@ namespace Features
 
         protected virtual void Progress(float progress, float duration)
         {
-            /*
-            // Log every second
-            if (UnityEngine.Mathf.Round(progress - 0.5f) + UnityEngine.Time.deltaTime > progress)
-                UnityEngine.Debug.Log(UnityEngine.Mathf.Round(progress).ToString() + "s elapsed");
-            */
             if (duration == 0) duration = 1f;
             OnTransformationProgress?.Invoke(progress / duration);
         }

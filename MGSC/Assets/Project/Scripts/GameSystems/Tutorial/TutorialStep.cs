@@ -161,14 +161,15 @@ public class TutorialStep : ScriptableObject
                 param.Value = _unlock || !_lock;
         }
 
-        LockOrUnlock(LockableFeature.Grab, Globals.Gameplay.Player.AllowPlayerGrab);
-        LockOrUnlock(LockableFeature.Cut, Globals.Gameplay.AllowCutting);
-        LockOrUnlock(LockableFeature.Cook, Globals.Gameplay.AllowCooking);
-        LockOrUnlock(LockableFeature.Kill, Globals.Gameplay.AllowClientKilling);
-        LockOrUnlock(LockableFeature.StartShift, Globals.Gameplay.AllowShiftStart);
-        LockOrUnlock(LockableFeature.PutIngredientsInPlates, Globals.Gameplay.AllowPuttingIngredientsInPlates);
-        LockOrUnlock(LockableFeature.PutPlatesInOvens, Globals.Gameplay.AllowPuttingPlatesInOvens);
-        LockOrUnlock(LockableFeature.Serve, Globals.Gameplay.AllowClientServing);
+        LockOrUnlock(LockableFeature.Grab, Globals.Authorizations.Player.AllowPlayerGrab);
+        LockOrUnlock(LockableFeature.Cut, Globals.Authorizations.AllowCutting);
+        LockOrUnlock(LockableFeature.Cook, Globals.Authorizations.AllowCooking);
+        LockOrUnlock(LockableFeature.Kill, Globals.Authorizations.AllowClientKilling);
+        LockOrUnlock(LockableFeature.StartShift, Globals.Authorizations.AllowShiftStart);
+        LockOrUnlock(LockableFeature.PutIngredientsInPlates, Globals.Authorizations.AllowPuttingIngredientsInPlates);
+        LockOrUnlock(LockableFeature.PutPlatesInOvens, Globals.Authorizations.AllowPuttingPlatesInOvens);
+        LockOrUnlock(LockableFeature.Serve, Globals.Authorizations.AllowClientServing);
+        LockOrUnlock(LockableFeature.GloobyTrash, Globals.Authorizations.AllowTrashingStuff);
     }
 
 
@@ -269,7 +270,8 @@ public class TutorialStep : ScriptableObject
         StartShift =                1 << 4,
         PutIngredientsInPlates =    1 << 5,
         PutPlatesInOvens =          1 << 6,
-        Serve =                     1 << 7
+        Serve =                     1 << 7,
+        GloobyTrash =               1 << 8,
     }
 
     #endregion

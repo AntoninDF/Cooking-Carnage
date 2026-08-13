@@ -1,6 +1,8 @@
 ﻿using Clients;
 using Cooking;
 using UnityEngine;
+using Upgrades;
+using static Autodesk.Fbx.FbxEuler;
 
 namespace Orders
 {
@@ -35,12 +37,6 @@ namespace Orders
             float drinkBonus  = CalculateDrinkBonus(order);
             float totalGained = basePrice + tip +  drinkBonus;
 
-            Debug.Log($"BasePrice is {basePrice}" +
-                      $" stars is {stars}" +
-                      $" tip is {tip}" +
-                      $" total is {totalGained}" +
-                      $" isCorrectRecipe is {isCorrectRecipe}");
-
             return new OrderRating(order, order.ServingInfo.Recipe, stars, totalGained);
         }
 
@@ -65,34 +61,54 @@ namespace Orders
         {
             Servable meal = order.ServingInfo.Meal;
 
-            if (meal == null || meal.Recipe == null)
+            if (meal == null) return PlainJellyPrice;
+
+            return CalculateBasePrice(meal.Recipe, isCorrectRecipe);
+        }
+        public static float CalculateBasePrice(SO_Recipe recipe, bool isCorrectRecipe=true)
+        {
+            if (recipe == null)
                 return PlainJellyPrice;
 
             // NOTE : Les recettes vides et brûlées ont déjà leur prix de vente dans le ppté Price
-            
-            if (!isCorrectRecipe && meal.Recipe.name != "Failed recipe" && meal.Recipe.name != "Empty recipe")
+
+            if (!isCorrectRecipe && recipe.Name != "Failed recipe" && recipe.Name != "Empty recipe")
                 return WrongRecipePrice;
-            
-            return meal.Recipe.Price;
+
+            return recipe.Price;
         }
 
         private static int CalculateStars(Order order)
         {
             float elapsedSeconds = order.ServingInfo.Timestamp - order.SeatedTimestamp;
-            float patience       = Mathf.Clamp01(1f - elapsedSeconds / order.PatienceDuration);
+            return CalculateStars(elapsedSeconds, order.PatienceDuration);
+        }
+        public static int CalculateStars(float elapsedTime, float totalPatience)
+        {
+            float patience = Mathf.Clamp01(1f - elapsedTime / totalPatience);
 
             if (patience >= Threshold2Star) return 2;
             if (patience >= Threshold1Star) return 1;
             return 0;
         }
 
-        private static float CalculateTip(float basePrice, int stars) => stars switch
+        public static float CalculateTip(float basePrice, int stars)
         {
-            2 => TipMultiplier2Star * basePrice,
-            1 => TipMultiplier1Star * basePrice,
-            0 => TipMultiplier0Star * basePrice,
-            _ => 0f * basePrice
-        };
+            float increase = 0f;
+            if (Reference.TryGetManager<UpgradeManager>(out var um))
+            {
+                var upgrade = um.GetUpgradeByType<TipAmountUpgrade>();
+                if (upgrade != null)
+                    increase = upgrade.GetTipPercentageIncrease();
+            }
+            return stars switch
+            {
+                2 => (TipMultiplier2Star + increase) * basePrice,
+                1 => (TipMultiplier1Star + increase) * basePrice,
+                0 => (TipMultiplier0Star + increase) * basePrice,
+                _ => 0f * basePrice
+            };
+        }
 
     
     }
