@@ -2,7 +2,7 @@ using GameSystem;
 using UnityEditor;
 using UnityEngine;
 
-public static class CookingCarnageUitlity
+public static class CookingCarnageUtility
 {
 
     [MenuItem("CookingCarnage/Motherlode (get rich fast)")]
