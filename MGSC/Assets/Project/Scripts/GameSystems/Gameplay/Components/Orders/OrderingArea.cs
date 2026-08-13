@@ -54,7 +54,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
             KillButton.OnInteraction += _ => KillClient();
     }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && EXTENSIVE_DEBUG
     // This huge debug block should be removed later
     float elapsedSinceLastLog = 0f;
     void Update()

@@ -58,7 +58,7 @@ namespace GameSystem
                 }
             }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && EXTENSIVE_DEBUG
             // This huge debug block should be removed later
             float logCooldown = 2f;
             elapsedSinceLastLog += Time.deltaTime;
