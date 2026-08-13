@@ -26,6 +26,7 @@ namespace UI
 		private List<SettingsGroup> _availableGroups = new();
 		private SettingsGroup _currentActiveGroup;
 
+        void Update() => Debug.Log("QualitySettings.shadows is " + QualitySettings.shadows);
         public override void OnLoad()
         {
             base.OnLoad();
@@ -86,7 +87,9 @@ namespace UI
                 .AddDropdown("Resolution", resolutionOptions, 999) // Set value to the maximum
                 .AddDropdown("Target FPS", GetTargetFPSOptions(), 0)
                 //.AddDropdown("Vertical sync (VSync)", GetVSyncOptions(GetGroup("Graphics").GetOption<DropdownOption>("Target FPS")), 0)
+                .AddDropdown("Graphics quality", GetGraphicsQualityOptions(), 0);
                 ;
+
             // Graphics (default settings)
             GetGroup("Graphics")?.GetOption<DropdownOption>("Window mode")?.SetValue((int)Screen.fullScreenMode);
             GetGroup("Graphics")?.GetOption<DropdownOption>("Resolution")?.SetValue(2); // 2 is full HD
@@ -104,6 +107,18 @@ namespace UI
                 ;
         }
         #region Other
+
+
+        private (string name, Action onOptionSelected)[] GetGraphicsQualityOptions()
+        {
+            var result = new (string name, Action onOptionSelected)[]
+                {
+                    ("High", () => QualitySettings.SetQualityLevel(0)),
+                    ("Medium", () => QualitySettings.SetQualityLevel(1)),
+                    ("Low", () => QualitySettings.SetQualityLevel(2))
+                };
+            return result;
+        }
         private (string name, Action onOptionSelected)[] GetTargetFPSOptions()
         {
             var result = new (string name, Action onOptionSelected)[]

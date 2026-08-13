@@ -359,6 +359,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
 
         // Display current process
         Gizmos.color = Color.white;
+        if (Cooker == null) return;
         if (Cooker.currentProcess != null)
             UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Current process : " + Cooker.currentProcess.Name + "(" + Cooker.currentProcess.Elapsed + "s/" + Cooker.currentProcess.Duration + "s)");
         else
