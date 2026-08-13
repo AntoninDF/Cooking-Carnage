@@ -4,6 +4,7 @@ using Features;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Project.Scripts.GameSystems.Gameplay.Components.Drinks;
 using UnityEngine;
 
 /// <summary>
@@ -136,7 +137,7 @@ public class Plate : Item
             if (!Container.RequestGrab(playerContainer.HeldItem))
             {
                 // Try to swap the plates
-                if (playerContainer.HeldItem != null && playerContainer.HeldItem.Owner is Plate playerPlate)
+                if (playerContainer.HeldItem != null && (playerContainer.HeldItem.Owner is Plate || playerContainer.HeldItem.Owner is Drink))
                 {
                     SwapWith(playerContainer.HeldItem);
                 }

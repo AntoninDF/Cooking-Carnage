@@ -44,5 +44,25 @@ namespace Project.Scripts.GameSystems.Gameplay.Components.Drinks
 			_liquidBlock.SetFloat("_LiquidLevel", shaderValue);
 			_liquidRenderer.SetPropertyBlock(_liquidBlock, _liquidMaterialIndex);
 		}
+		
+		protected override void TryInteract(InteractionContext context)
+		{
+			if (context.TryGetFeature(out F_Container playerContainer))
+			{
+				if (playerContainer.HeldItem != null && playerContainer.HeldItem.Owner is Item )
+				{
+					SwapWith(playerContainer.HeldItem);
+				}
+				else
+				{
+					playerContainer.RequestGrab(Grabbable);
+				}
+			}
+		}
+
+		// private bool CanBeSwap(F_Container container)
+		// {
+		// 	return (
+		// }
 	}
 }
