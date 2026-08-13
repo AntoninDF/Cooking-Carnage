@@ -39,10 +39,10 @@ namespace Features
 
             _timer += Time.deltaTime;
             if (_timer >= _destroyDelay)
-                BlencClient();
+                BlendClient();
         }
 
-        private void BlencClient()
+        private void BlendClient()
         {
             _isRunning = false;
 

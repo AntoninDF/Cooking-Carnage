@@ -78,7 +78,7 @@ namespace Project.Scripts.BloodMachine
 
 		public void TryGetBlood(EClientType clientType)
 		{
-			Debug.Log("[Global Drink Station]Try Get Blood Called");
+		//	Debug.Log("[Global Drink Station]Try Get Blood Called");
 			_reserve.TryAddBlood(clientType, GetBloodQuantity(clientType));
 		}
 
@@ -113,7 +113,7 @@ namespace Project.Scripts.BloodMachine
 				if(client.clientType == clientType) return client.bloodGained;
 			}
 			
-			Debug.Log($"[Global Drink Station] this client type :{clientType} do not have a blood quantity associated");
+			//Debug.Log($"[Global Drink Station] this client type :{clientType} do not have a blood quantity associated");
 			return 0f;
 		}
 

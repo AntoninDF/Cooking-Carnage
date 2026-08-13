@@ -66,7 +66,7 @@ namespace Project.Scripts.BloodMachine
        {
           if (!_quantityPerClient.ContainsKey(clientType))
           {
-             Debug.Log($"[F_BloodReserve] this client type {clientType} is not registered");
+             //Debug.Log($"[F_BloodReserve] this client type {clientType} is not registered");
              return false;
           }
 
@@ -76,8 +76,8 @@ namespace Project.Scripts.BloodMachine
           }
           else
           {
-             Debug.Log(_quantityPerClient[clientType]);
-             Debug.Log(_bloodPerDrink);
+             //Debug.Log(_quantityPerClient[clientType]);
+             //Debug.Log(_bloodPerDrink);
           }
 
           return false;

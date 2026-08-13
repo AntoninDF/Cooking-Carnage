@@ -56,7 +56,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
 
         if (MealSlot == null)
         {
-            Debug.LogWarning("Please assign a meal slot on the serving area component of " + name);
+            //Debug.LogWarning("Please assign a meal slot on the serving area component of " + name);
             return;
         }
 

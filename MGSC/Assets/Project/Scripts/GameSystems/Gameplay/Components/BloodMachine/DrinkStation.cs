@@ -98,7 +98,7 @@ namespace Project.Scripts.BloodMachine
 
             if (_drinkPrefab == null || _drinkSpawnPoint == null)
             {
-                Debug.LogError($"[DrinkStation] _drinkPrefab ou _drinkSpawnPoint non assigné sur la station (type {Type}) — vérifier l'Inspector.");
+                //Debug.LogError($"[DrinkStation] _drinkPrefab ou _drinkSpawnPoint non assigné sur la station (type {Type}) — vérifier l'Inspector.");
                 return;
             }
 
@@ -117,7 +117,7 @@ namespace Project.Scripts.BloodMachine
             }
             else
             {
-                Debug.LogWarning($"[DrinkStation] Le prefab {_drinkPrefab.name} n'a pas de composant Drink");
+               // Debug.LogWarning($"[DrinkStation] Le prefab {_drinkPrefab.name} n'a pas de composant Drink");
             }
         }
 
