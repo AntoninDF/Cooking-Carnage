@@ -1,10 +1,8 @@
-using Autodesk.Fbx;
 using FMOD;
 using FMOD.Studio;
 using FMODUnity;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public static class AudioSystem
 {
