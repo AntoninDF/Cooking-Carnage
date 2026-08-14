@@ -4,6 +4,7 @@ using UnityEditor;
 
 using System;
 using UnityEngine;
+using Unity.Profiling;
 
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 [ExecuteAlways]
@@ -28,6 +29,9 @@ public class MeshPile : MonoBehaviour
     
     public Collider colliderPile;
     public Action OnPlateCountChanged;
+
+    // Profiling
+    ProfilerMarker MeshPile_Regenerate = new("MeshPile/Regenerate()");
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -94,6 +98,7 @@ public class MeshPile : MonoBehaviour
 
     public void Regenerate(bool applyRandomPresets=true)
     {
+        MeshPile_Regenerate.Begin();
         if (mr == null) TryGetComponent(out mr);
         if (mesh == null) return;
         Mesh newMesh = mf.sharedMesh;
@@ -106,7 +111,8 @@ public class MeshPile : MonoBehaviour
             mc.sharedMesh = newMesh;
         if (material != null)
             mr.sharedMaterial = material;
-        
+        MeshPile_Regenerate.End();
+
         OnPlateCountChanged?.Invoke();
     }
     [ContextMenu("Regenerate mesh")]
