@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class MeshPileUtility
@@ -16,13 +19,62 @@ public static class MeshPileUtility
     }
     
     public static int Seed = 0;
+    public static bool AllowCaching = true;
+    [Serializable]
+    private struct PilePreset
+    {
+        public Mesh Mesh;
+        public int Count;
+        public float Spacing;
+        public float RandomRotation;
+        public float RandomScale;
+        public float Jitter;
+        
+        public PilePreset(Mesh mesh,  int count, float spacing, float randomRotation, float randomScale, float jitter)
+        {
+            Mesh = mesh;
+            Count = count;
+            Spacing = spacing;
+            RandomRotation = randomRotation;
+            RandomScale = randomScale;
+            Jitter = jitter;
+        }
+    }
+    private static Dictionary<PilePreset, Mesh> _meshCache = new();
+
+    static double totalGenerationTime = 0;
+
     public static bool MakePile_Auto(ref Mesh result, Mesh mesh, int count)
     {
         return MakePile(ref result, mesh, count, mesh.bounds.size.y);
     }
+    /// <summary>
+    /// Will return a newly generated pile, or a deep copy (via <see cref="UnityEngine.Object.Instantiate"/>) of a cached one if parameters match the ones from a previously cached version
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="mesh"></param>
+    /// <param name="count"></param>
+    /// <param name="spacing"></param>
+    /// <param name="randRot01"></param>
+    /// <param name="randScale01"></param>
+    /// <param name="jitter"></param>
+    /// <returns></returns>
     public static bool MakePile(ref Mesh result, Mesh mesh, int count, float spacing, float randRot01 = 0f, float randScale01 = 0f, float jitter = 0f)
     {
         if (count < 0) return false;
+        //UnityEngine.Debug.Log($"[MeshPileUtility] Total generation time is {totalGenerationTime}s");
+        PilePreset currentPreset = new(mesh, count, spacing, randRot01, randScale01, jitter);
+        if (AllowCaching)
+        {
+            if (_meshCache.ContainsKey(currentPreset) && _meshCache[currentPreset] != null)
+            {
+                //UnityEngine.Debug.Log($"[MeshPileUtility] A mesh request has been fulfilled with a cached mesh (count is {count}) :\nPreset :\n\t{currentPreset.Serialize().ToString()}\n\nMesh :\n\t{_meshCache[currentPreset]}");
+                result = UnityEngine.Object.Instantiate(_meshCache[currentPreset]);
+                return true;
+            }
+        }
+
+
         System.Random _rng = new(Seed);
 
         var timer = Stopwatch.StartNew();
@@ -33,43 +85,55 @@ public static class MeshPileUtility
         // They are not combined immediately for performance reasons
         for (int i = 0; i < count; i++)
         {
-            toCombine[i] = GetCopy(mesh);
+            toCombine[i] = UnityEngine.Object.Instantiate(mesh);
 
+            Vector3 offset;
+            Quaternion rotation = Quaternion.identity;
+            Vector3 scale = Vector3.one;
+
+            // SCALE
             // rand is systematically computed even if it is not used, so that the random sequence stays consistent anyway
             float rand = (float)_rng.NextDouble();
-
-            // Apply random scale if needed
             if (randScale01 > 0f)
-            {
-                float scale = 1 + (float)(rand * 2 - 1) * randScale01;
-                Scale(ref toCombine[i], scale);
-            }
+                scale *= 1 + (float)(rand * 2 - 1) * randScale01;
 
+            // ROTATION
             rand = (float)_rng.NextDouble();
-
-            // Apply random rotation if needed
             if (randRot01 > 0f)
-            {
-                Quaternion rot = Quaternion.Euler(new Vector3(0, (float)(rand * 2 - 1) * randRot01 * 180, 0));
-                Rotate(ref toCombine[i], rot);
-            }
+                rotation = Quaternion.Euler(new Vector3(0, (float)(rand * 2 - 1) * randRot01 * 180, 0));
             
-            // Apply vertical spacing and jitter
-            Offset(
-                ref toCombine[i],
-                new Vector3(0, spacing * i, 0) +
-                Quaternion.Euler(new Vector3(0, (float)_rng.NextDouble() * 360, 0)) * Vector3.forward * (float)_rng.NextDouble() * jitter);
+            // OFFSET
+            offset = new Vector3(0, spacing * i, 0) +
+                Quaternion.Euler(new Vector3(0, (float)_rng.NextDouble() * 360, 0)) * Vector3.forward * (float)_rng.NextDouble() * jitter;
+
+            // APPLY CHANGES
+            Matrix4x4 mat = Matrix4x4.identity;
+            mat = mat * Matrix4x4.Translate(offset);
+            mat = mat * Matrix4x4.Rotate(rotation);
+            mat = mat * Matrix4x4.Scale(scale);
+            ApplyMatrix(ref toCombine[i], mat);
+        
 
             // Make sure that the time budget is not consumed
             if (timer.Elapsed.TotalSeconds > MaxGenerationDuration)
             {
-                UnityEngine.Debug.LogWarning("MeshPile generation has been aborted because it was longer than " + MaxGenerationDuration + "s. It generated " + mesh.vertices.Length * (i+1) + " vertices and copied " + (i+1) + " meshes.");
+                // UnityEngine.Debug.LogWarning("MeshPile generation has been aborted because it was longer than " + MaxGenerationDuration + "s. It generated " + mesh.vertices.Length * (i+1) + " vertices and copied " + (i+1) + " meshes.");
                 return false;
             }
         }
         result = Combine(toCombine);
         result.name = mesh.name + " (pile of " + count + ")";
+
+        if (AllowCaching)
+        {
+            // We don't cache the same mesh that is passed on so that it doesn't get modified by error. So we instantiate a new one.
+            _meshCache.Add(currentPreset, UnityEngine.Object.Instantiate(result));
+            UnityEngine.Debug.Log($"[MeshPileUtility] A mesh has been added to cache (cache contains {_meshCache.Count} meshes) (pile of {count} elements) :\nPreset :\n\t{currentPreset.Serialize().ToString().Replace("\n", "\n\t| ")}\n\nMesh :\n\t{result.name}");
+        }
+
         timer.Stop();
+        totalGenerationTime += timer.Elapsed.TotalSeconds;
+
         return true;
     }
 
@@ -86,7 +150,7 @@ public static class MeshPileUtility
             p[i] = mesh.vertices[i] + offset;
         }
         mesh.SetVertices(p);
-        mesh.RecalculateBounds();
+        //mesh.RecalculateBounds();
     }
     /// <summary>
     /// Scales the mesh
@@ -101,7 +165,7 @@ public static class MeshPileUtility
             p[i] = mesh.vertices[i] * scale;
         }
         mesh.SetVertices(p);
-        mesh.RecalculateBounds();
+        //mesh.RecalculateBounds();
     }
     /// <summary>
     /// Rotates the mesh
@@ -119,28 +183,29 @@ public static class MeshPileUtility
         }
         mesh.SetVertices(p);
         mesh.SetNormals(n);
-        mesh.RecalculateBounds();
+        //mesh.RecalculateBounds();
     }
     /// <summary>
-    /// Returns a new copy identical to the reference
+    /// Applies a transformation matrix on the mesh
     /// </summary>
     /// <param name="mesh"></param>
-    /// <returns></returns>
-    public static Mesh GetCopy(Mesh mesh)
+    /// <param name="mat"></param>
+    public static void ApplyMatrix(ref Mesh mesh, Matrix4x4 mat)
     {
-        Mesh result = new();
-        result.name = mesh.name;
-        result.SetVertices(mesh.vertices);
-        result.SetNormals(mesh.normals);
-        result.SetColors(mesh.colors);
-        result.SetUVs(0, mesh.uv);
-        result.SetUVs(1, mesh.uv2);
-        result.SetUVs(2, mesh.uv3);
-        result.SetUVs(3, mesh.uv4);
-        result.SetTriangles(mesh.triangles, 0, true);
-
-        return result;
+        Vector3[] p = new Vector3[mesh.vertices.Length];
+        Vector3[] n = new Vector3[mesh.vertices.Length];
+        for (int i = 0; i < mesh.vertices.Length; i++)
+        {
+            Vector4 vert = mesh.vertices[i];
+            vert.w = 1; // Make sure that positions are offset
+            p[i] = mat * vert;
+            n[i] = mat * mesh.normals[i]; // Normals keep w with a value of 0 because they shouldn't be offset
+        }
+        mesh.SetVertices(p);
+        mesh.SetNormals(n);
+        mesh.RecalculateBounds();
     }
+
     /// <summary>
     /// Combines all meshes into one. Submeshes are not preserved.
     /// </summary>

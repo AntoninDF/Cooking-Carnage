@@ -24,6 +24,8 @@ namespace UI
         [SerializeField] List<GameObject> _releaseSpecificObjects; 
         [Tooltip("These objects will be disabled unless we're in the demo version")]
         [SerializeField] List<GameObject> _demoSpecificObjects; 
+        [Tooltip("These objects will be disabled unless we're in a development build")]
+        [SerializeField] List<GameObject> _debugSpecificObjects; 
         #endregion
 
 
@@ -37,19 +39,23 @@ namespace UI
 
         private void LoadSpecificObjects()
         {
-#if !DEMO
+            bool allowReleaseObj = true;
+            bool allowDemoObj = false;
+            bool allowDebugObj = false;
+#if DEMO
+            allowDemoObj = true;
+#endif
+#if DEVELOPMENT_BUILD
+            allowDebugObj = true;
+#endif
             // Release mode
             foreach (GameObject obj in _releaseSpecificObjects)
-                obj.SetActive(true);
+                obj.SetActive(allowReleaseObj);
             foreach (GameObject obj in _demoSpecificObjects)
-                obj.SetActive(false);
-#else
-            // Demo mode
-            foreach (GameObject obj in _demoSpecificObjects)
-                obj.SetActive(true);
-            foreach (GameObject obj in _releaseSpecificObjects)
-                obj.SetActive(false);
-#endif
+                obj.SetActive(allowDemoObj);
+            foreach (GameObject obj in _debugSpecificObjects)
+                obj.SetActive(allowDebugObj);
+
         }
 
         void BindAll()

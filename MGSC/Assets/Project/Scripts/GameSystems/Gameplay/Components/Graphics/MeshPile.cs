@@ -5,6 +5,7 @@ using UnityEditor;
 using System;
 using UnityEngine;
 using Unity.Profiling;
+using NaughtyAttributes;
 
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 [ExecuteAlways]
@@ -22,8 +23,11 @@ public class MeshPile : MonoBehaviour
     [Tooltip("Jitter is fine, use it as you wish")]
     public float jitter;
 
+    /// <summary>Mesh Filter</summary>
     private MeshFilter mf;
+    /// <summary>Mesh Collider</summary>
     private MeshCollider mc;
+    /// <summary>Mesh Renderer</summary>
     private MeshRenderer mr;
     private int _defaultLayer;
     
@@ -94,7 +98,7 @@ public class MeshPile : MonoBehaviour
         mr.sharedMaterial = new Material(Shader.Find("HDRP/Lit"));
     }
 
-    void OnValidate() => Regenerate_Editor();
+    // void OnValidate() => Regenerate_Editor();
 
     public void Regenerate(bool applyRandomPresets=true)
     {
@@ -116,6 +120,7 @@ public class MeshPile : MonoBehaviour
         OnPlateCountChanged?.Invoke();
     }
     [ContextMenu("Regenerate mesh")]
+    [Button("Regenerate mesh")]
     internal void Regenerate_Editor()
     {
         TryGetComponent(out mf);

@@ -26,7 +26,6 @@ namespace UI
 		private List<SettingsGroup> _availableGroups = new();
 		private SettingsGroup _currentActiveGroup;
 
-        void Update() => Debug.Log("QualitySettings.shadows is " + QualitySettings.shadows);
         public override void OnLoad()
         {
             base.OnLoad();
@@ -86,7 +85,7 @@ namespace UI
                 .AddDropdown<FullScreenMode>("Window mode", value => Screen.fullScreenMode = (FullScreenMode)value, FullScreenMode.ExclusiveFullScreen)
                 .AddDropdown("Resolution", resolutionOptions, 999) // Set value to the maximum
                 .AddDropdown("Target FPS", GetTargetFPSOptions(), 0)
-                //.AddDropdown("Vertical sync (VSync)", GetVSyncOptions(GetGroup("Graphics").GetOption<DropdownOption>("Target FPS")), 0)
+                .AddDropdown("Vertical sync (VSync)", GetVSyncOptions(GetGroup("Graphics").GetOption<DropdownOption>("Target FPS")), 0)
                 .AddDropdown("Graphics quality", GetGraphicsQualityOptions(), 0);
                 ;
 
@@ -134,15 +133,25 @@ namespace UI
             void SetVSync(int value)
             {
                 QualitySettings.vSyncCount = value;
+                Debug.Log("QualitySettings.vSyncCount set to " + QualitySettings.vSyncCount);
+                
                 if (fpsDropdown != null)
                 {
                         fpsDropdown.ClearOptions();
                     if (value > 0)
-                        fpsDropdown.AddOption("Auto");
+                    {
+                        fpsDropdown.AddOption("Auto (controlled by vSync)");
+                        fpsDropdown.SetValue(0);
+                    }
                     else
+                    {
                         fpsDropdown.SetOptions(GetTargetFPSOptions());
-                    fpsDropdown.SetValue(0);
+                        if (Application.targetFrameRate == -1) fpsDropdown.SetValue(0);
+                        else if (Application.targetFrameRate == 60) fpsDropdown.SetValue(1);
+                        else if (Application.targetFrameRate == 30) fpsDropdown.SetValue(2);
+                    }
                 }
+                
             }
             var result = new (string name, Action onOptionSelected)[]
                 {

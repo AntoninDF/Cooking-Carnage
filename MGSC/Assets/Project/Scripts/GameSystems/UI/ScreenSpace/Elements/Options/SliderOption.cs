@@ -79,7 +79,7 @@ namespace UI
             float t = Mathf.InverseLerp(ValueRange.x, ValueRange.y, value);
             if (integerDisplayMode)
                 t = Mathf.Lerp(DisplayRange.x, DisplayRange.y, t);
-            Debug.Log("Set value for " + Name + " : " + value + " with range (" + ValueRange.x + ", " + ValueRange.y + "). t is " + t);
+            // Debug.Log("Set value for " + Name + " : " + value + " with range (" + ValueRange.x + ", " + ValueRange.y + "). t is " + t);
             Slider.value = t;
         }
         public void ResetValue() => SetValue(defaultValue);

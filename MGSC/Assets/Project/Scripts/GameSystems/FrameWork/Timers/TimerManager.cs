@@ -38,7 +38,7 @@ namespace GameSystem
             GameLoop.OnReset += RemoveFinishedTimers;
         }
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && EXTENSIVE_DEBUG
         static float elapsedSinceLastLog = 0f;
 #endif
         /// <summary>
