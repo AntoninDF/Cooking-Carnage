@@ -61,7 +61,7 @@ namespace UI
                 .AddDropdown("Apply preset", GetDifficultyOptions(), 1)
                 .AddSlider("Upgrade price", Globals.BalancingWeights.UpgradePriceMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage, new Vector2(0.35f, 4f), new Vector2(0.35f, 4f), 2)
                 .AddSlider("Recipe price", Globals.BalancingWeights.RecipePriceMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage, new Vector2(0.35f, 4f), new Vector2(0.35f, 4f), 2)
-                .AddSlider("Shift duration", Globals.BalancingWeights.ShiftDurationMultiplier.Set, 5f, SliderOption.DisplayMode.Minutes, new Vector2(3, 8), new Vector2(3f / 5f, 8f / 5f), 1)
+                .AddSlider("Shift duration", Globals.BalancingWeights.ShiftDurationMultiplier.Set, 1f, SliderOption.DisplayMode.Minutes, new Vector2(3, 8), new Vector2(3f / 5f, 8f / 5f), 1)
                 .AddSlider("Rent price", Globals.BalancingWeights.RentPriceMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage, new Vector2(0.35f, 4f), new Vector2(0.35f, 4f), 2)
                 .AddSlider("Client patience", Globals.BalancingWeights.ClientPatienceMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage, new Vector2(0.5f, 2f), new Vector2(0.5f, 2f), 2)
                 .AddSlider("Preparation fail time", Globals.BalancingWeights.PreparationFailTimeMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage, new Vector2(3f, 0.25f), new Vector2(3f, 0.25f), 2)
