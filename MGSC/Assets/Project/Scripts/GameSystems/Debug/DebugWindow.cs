@@ -2,9 +2,7 @@ using GameSystem;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using TMPro;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -36,6 +34,8 @@ public class DebugWindow : MonoBehaviour
 
     const int INDENT_SIZE = 10;
     int indentLevel = 0;
+
+    DebugInfo _screenInfo = new DebugInfo();
 
     #region Methods
     private void OnEnable()
@@ -72,6 +72,7 @@ public class DebugWindow : MonoBehaviour
 
     private void OnGUI()
     {
+        _screenInfo.Show();
         if (!_visible) return;
         
         // Empêche la fenêtre d'être plus grande que l'écran
