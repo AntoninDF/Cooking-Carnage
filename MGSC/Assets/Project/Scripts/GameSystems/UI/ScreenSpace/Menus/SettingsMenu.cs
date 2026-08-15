@@ -86,13 +86,15 @@ namespace UI
                 .AddDropdown("Resolution", resolutionOptions, 999) // Set value to the maximum
                 .AddDropdown("Target FPS", GetTargetFPSOptions(), 0)
                 .AddDropdown("Vertical sync (VSync)", GetVSyncOptions(GetGroup("Graphics").GetOption<DropdownOption>("Target FPS")), 0)
-                .AddDropdown("Graphics quality", GetGraphicsQualityOptions(), 0);
+                .AddDropdown("Graphics quality", GetGraphicsQualityOptions(), 0)
+                .AddDropdown("Show FPS", GetFPSDisplayOptions(), 0);
                 ;
 
             // Graphics (default settings)
             GetGroup("Graphics")?.GetOption<DropdownOption>("Window mode")?.SetValue((int)Screen.fullScreenMode);
             GetGroup("Graphics")?.GetOption<DropdownOption>("Resolution")?.SetValue(2); // 2 is full HD
         }
+
 
         private void AddAudioGroup()
         {
@@ -108,6 +110,15 @@ namespace UI
         #region Other
 
 
+        private (string name, Action onOptionSelected)[] GetFPSDisplayOptions()
+        {
+            var result = new (string name, Action onOptionSelected)[]
+                 {
+                    ("Disabled", () => Globals.Authorizations.DisplayFPS.Value = false),
+                    ("Enabled", () => Globals.Authorizations.DisplayFPS.Value = true)
+                 };
+            return result;
+        }
         private (string name, Action onOptionSelected)[] GetGraphicsQualityOptions()
         {
             var result = new (string name, Action onOptionSelected)[]
