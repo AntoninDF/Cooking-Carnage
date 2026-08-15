@@ -6,8 +6,8 @@ using Upgrades;
 
 public class RecapState : MenuState
 {
-    // To Do : Change the menu according to wether the player has succeeded or failed
     protected override System.Type DefaultMenuType => typeof(ShiftRecapMenu);
+    protected override float WaitBeforeDisablingMenu => 1f;
 
     public override void OnEnter()
     {

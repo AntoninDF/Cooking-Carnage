@@ -32,6 +32,7 @@ namespace UI
             PopulateUpgradeList();
 
             OnEnable += UpdateGraphicsForEveryUpgrade;
+            OnEnable += PlayTransition;
         }
 
         private void UpdateGraphicsForEveryUpgrade()
@@ -121,6 +122,24 @@ namespace UI
             result.OnLevelUpSuccess.AddListener(UpdateGraphicsForEveryUpgrade);
 
             return result;
+        }
+
+        void PlayTransition()
+        {
+            StartTransition();
+            TimerManager.StartTimer("Wait before upgrade transition stop", 3f, StopTransition);
+        }
+        void StartTransition()
+        {
+            canvas.enabled = false;
+            if (Reference.TryGetManager<UISystem>(out var ui))
+                ui.GetWidget<UITransition>()?.Show("Start of shift " + Globals.Gameplay.ShiftNumber);
+        }
+        void StopTransition()
+        {
+            canvas.enabled = true;
+            if (Reference.TryGetManager<UISystem>(out var ui))
+                ui.GetWidget<UITransition>()?.Hide();
         }
     }
 
