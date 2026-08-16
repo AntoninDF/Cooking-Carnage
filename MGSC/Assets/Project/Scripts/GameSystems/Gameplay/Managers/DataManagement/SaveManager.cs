@@ -182,7 +182,7 @@ namespace GameSystem
             Data.LookSpeed = Globals.Gameplay.Player.LookSpeed;
             Data.ScrollSensitivity = Globals.Gameplay.Player.ScrollSensitivity;
 
-            Debug.Log("Saving upon quit. Data.MasterVolume is " + Data.MasterVolume + ". Globals.Audio.MasterVolume is " + Globals.Audio.MasterVolume.Value);
+            //Debug.Log("Saving upon quit. Data.MasterVolume is " + Data.MasterVolume + ". Globals.Audio.MasterVolume is " + Globals.Audio.MasterVolume.Value);
             SaveGameData(Data);
         }
         /// <summary>

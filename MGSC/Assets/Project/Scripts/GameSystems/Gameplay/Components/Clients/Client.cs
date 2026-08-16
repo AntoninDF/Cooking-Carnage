@@ -190,12 +190,12 @@ namespace Clients
            Collection.Add(Cooked);
        }
 
- 
+ /*
        public void CookClient()
        {
            Cooked.Trigger();
        }
-
+ */
        public void SpawnIngredients(List<SlotContainer> containers)
        {
            List<SlotContainer> positions = containers;

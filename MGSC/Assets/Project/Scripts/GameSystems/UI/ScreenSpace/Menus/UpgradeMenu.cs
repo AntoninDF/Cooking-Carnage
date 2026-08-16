@@ -70,7 +70,6 @@ namespace UI
                 {
                     var book = Reference.AssetReferences.DefaultRecipeBook;
                     var recipe = book.Recipes.Where(recipe => RecipeCategoryHelper.GetCategory(recipe) == RecipeCategory.MixteTriple).FirstOrDefault();
-                    Debug.Log("Mixt recipe is " + recipe + ". Unlocked : " + RecipeUnlockChecker.IsUnlocked(recipe));
                     line.Config.IsLocked = !RecipeUnlockChecker.IsUnlocked(recipe);
                 }
             }

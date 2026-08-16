@@ -61,7 +61,9 @@ public class MeshPile : MonoBehaviour
     void CheckCollider()
     {
         if (colliderPile != null)
+        {
             colliderPile.enabled = count != 0;
+        }
 
     }
 #if UNITY_EDITOR
@@ -102,6 +104,7 @@ public class MeshPile : MonoBehaviour
 
     public void Regenerate(bool applyRandomPresets=true)
     {
+        //Debug.Log("Regenerate called");
         MeshPile_Regenerate.Begin();
         if (mr == null) TryGetComponent(out mr);
         if (mesh == null) return;
@@ -111,8 +114,14 @@ public class MeshPile : MonoBehaviour
         else
             MeshPileUtility.MakePile(ref newMesh, mesh, count, mesh.bounds.size.y, 0, 0, 0);
         mf.sharedMesh = newMesh;
+
+        TryGetComponent(out mc);
+        //Debug.Log("Mesh collider is '" + mc + "' on object " + gameObject);
         if (mc != null)
+        {
+            //Debug.Log("Set mesh collider mesh to " + newMesh + " on " + gameObject);
             mc.sharedMesh = newMesh;
+        }
         if (material != null)
             mr.sharedMaterial = material;
         MeshPile_Regenerate.End();

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using Object = System.Object;
 
 
 namespace Upgrades
@@ -40,9 +39,24 @@ namespace Upgrades
         {
             Register();
             GameLoop.OnAfterReset += ActualizeAllUpgrade;
+            OnUpgradeSuccess.AddListener(CheckIfAllUpgradesAreUnlocked);
         }
         
-        
+        void CheckIfAllUpgradesAreUnlocked()
+        {
+            bool valid = true;
+            foreach (var upgrade in _upgrades)
+            {
+                if (upgrade.Level != upgrade.Config.MaxLevel)
+                {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid)
+                Achievements.Unlock("ACH_UMAX");
+        }
+
         /// <summary>
         /// Init all the Upgrades and give them their ScriptableObject
         /// </summary>
@@ -166,7 +180,6 @@ namespace Upgrades
             _moneyManager.AddMoney(-price);
             upgrade.LevelUp();
             this.Log(LogType.Log, $"{upgrade.GetType().Name} leveled up to {upgrade.Level}");
-            OnUpgradeSuccess?.Invoke();
             return true;
         }
         

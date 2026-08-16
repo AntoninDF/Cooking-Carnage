@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using Upgrades;
 
@@ -158,6 +159,7 @@ namespace GameSystem
                 if (killed == 0) Achievements.Unlock("ACH_B16");
 
                 var hist = cmgr.GetClientsHistory();
+                Debug.Log("Client history : \n" + hist.Select(data => data.Serialize()).ToList().ToString_Detailed());
                 // Serve only Eugene
                 if (hist.All(data => data.killed || (data.clientType == Clients.EClientType.A && data.served)) && hist.Any(data => data.served))
                     Achievements.Unlock("ACH_B05");
@@ -172,7 +174,7 @@ namespace GameSystem
                     Achievements.Unlock("ACH_B06");
                 // Kill only Mr. Fesse
                 if (hist.All(data => (data.killed && data.clientType == Clients.EClientType.B) || !data.killed) && hist.Any(data => data.killed))
-                    Achievements.Unlock("ACH_B010");
+                    Achievements.Unlock("ACH_B10");
                 // Kill only Fabrice
                 if (hist.All(data => (data.killed && data.clientType == Clients.EClientType.C) || !data.killed) && hist.Any(data => data.killed))
                     Achievements.Unlock("ACH_B08");

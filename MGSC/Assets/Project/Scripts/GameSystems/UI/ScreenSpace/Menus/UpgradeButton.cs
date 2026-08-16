@@ -86,7 +86,6 @@ namespace UI
 
         public void RequestLevelUp()
         {
-            UnityEngine.Debug.Log($"[UpgradeButton] RequestLevelUp() DÉCLENCHÉ pour {Config?.name}");
 
             if (Config == null || IsLocked)
             {
