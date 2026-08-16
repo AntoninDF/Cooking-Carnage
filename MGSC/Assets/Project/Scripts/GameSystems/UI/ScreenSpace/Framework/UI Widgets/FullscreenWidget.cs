@@ -1,4 +1,5 @@
 using Features;
+using GameSystem;
 using JetBrains.Annotations;
 using System;
 using UnityEngine;
@@ -73,7 +74,23 @@ namespace UI
             _enabled = false;
             onDisable?.Invoke();
         }
-
+        public void PlayTransition(string text)
+        {
+            StartTransition(text);
+            TimerManager.StartTimer("Wait before upgrade transition stop", 3f, StopTransition);
+        }
+        void StartTransition(string text)
+        {
+            canvas.enabled = false;
+            if (Reference.TryGetManager<UISystem>(out var ui))
+                ui.GetWidget<UITransition>()?.Show(text);
+        }
+        void StopTransition()
+        {
+            canvas.enabled = true;
+            if (Reference.TryGetManager<UISystem>(out var ui))
+                ui.GetWidget<UITransition>()?.Hide();
+        }
         public class F_FullscreenWidgetActions : Feature
         {
             public F_FullscreenWidgetActions(IFeatureCollection owner) : base(owner){}
