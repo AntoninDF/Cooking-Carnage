@@ -8,5 +8,11 @@ namespace Upgrades
     public class OvenCountUpgrade : Upgrade<OvenCountUpgrade>
     {
         public int OvenCount => _level + 1;
+        public override void LevelUp()
+        {
+            base.LevelUp();
+            if (_level == _config.MaxLevel)
+                Achievements.Unlock("ACH_U01");
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace UI
 {
     public class UpgradeButton : UIWidget
     {
-        public bool IsLocked => _config == null ? true : _config.IsLocked;
+        public bool IsLocked => Config == null ? true : Config.IsLocked;
 
         public Image I_Icon;
         public Image I_Icon2;
@@ -19,7 +19,7 @@ namespace UI
 
         public UnityEvent OnLevelUpSuccess;
         public UnityEvent OnLevelUpFail;
-        UpgradeConfig _config;
+        public UpgradeConfig Config;
 
         
         public void Setup(UpgradeConfig config)
@@ -34,7 +34,7 @@ namespace UI
         }
         public void BindWithUpgrade(UpgradeConfig config)
         {
-            _config = config;
+            Config = config;
             if (config == null)
             {
                 UnityEngine.Debug.LogWarning($"[UpgradeButton] ({name}) The given config was null");
@@ -49,25 +49,25 @@ namespace UI
 
         public void UpdateGraphics()
         {
-            if (_config == null) return;
+            if (Config == null) return;
 
-            if (I_Icon != null && _config.Icon != null)
-                I_Icon.sprite = _config.Icon;
+            if (I_Icon != null && Config.Icon != null)
+                I_Icon.sprite = Config.Icon;
 
-            if (I_Icon2 != null && _config.Icon != null)
-                I_Icon2.sprite = _config.Icon;
+            if (I_Icon2 != null && Config.Icon != null)
+                I_Icon2.sprite = Config.Icon;
 
-            var upgrade = _config.GetUpgrade();
+            var upgrade = Config.GetUpgrade();
             if (upgrade == null)
                 return;
 
-            // upgrade.GetType().Name can be replaced by _config.name to get the scriptable object's name instead of the type name
+            // upgrade.GetType().Name can be replaced by Config.name to get the scriptable object's name instead of the type name
             // (And vice versa)
             if (L_Title != null)
-                L_Title.text = NicifyName(_config.name);
+                L_Title.text = NicifyName(Config.name);
 
             if (L_Subtitle != null)
-                L_Subtitle.text = "" + upgrade.Level + "/" + _config.MaxLevel;
+                L_Subtitle.text = "" + upgrade.Level + "/" + Config.MaxLevel;
 
             if (L_PriceTag != null)
                 L_PriceTag.text = upgrade.GetPrice().ToString() + "$";
@@ -86,9 +86,8 @@ namespace UI
 
         public void RequestLevelUp()
         {
-            UnityEngine.Debug.Log($"[UpgradeButton] RequestLevelUp() DÉCLENCHÉ pour {_config?.name}");
 
-            if (_config == null || IsLocked)
+            if (Config == null || IsLocked)
             {
                 OnLevelUpFail?.Invoke();
                 return;
@@ -99,7 +98,7 @@ namespace UI
                 return;
             }
 
-            if (!mgr.TryLevelUp(_config))
+            if (!mgr.TryLevelUp(Config))
             {
                 OnLevelUpFail?.Invoke();
                 return;

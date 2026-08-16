@@ -94,8 +94,9 @@ namespace UI
 
         void OnQuit()
         {
-            var menu = Owner.GetWidget<QuitConfirmationPopUp>();
+            var menu = Owner.GetWidget<ConfirmationPopUp>();
             menu.Enable();
+            menu.Setup("Are you sure you want to quit ?", menu.QuitGameWithDelay_1s, keepMenuOpenAfterConfirmation: true);
         }
 
 

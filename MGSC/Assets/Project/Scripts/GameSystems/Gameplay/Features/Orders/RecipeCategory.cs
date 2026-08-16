@@ -7,5 +7,6 @@ namespace Orders
 		MixteSimple,      // AB, AC, BC
 		MixteSupplement,  // AAB, AAC, ABB, ACC, BBC, BCC
 		MixteTriple,      // ABC
+		Vide,			  // _
 	}
 }

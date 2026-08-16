@@ -50,13 +50,19 @@ public class Oven : MonoBehaviour, IFeatureCollection
     private void OnEnable()
     {
         GameLoop.OnReset += ResetThis;
+#if UNITY_EDITOR && EXTENSIVE_DEBUG
         BindActionLogs();
+#endif
     }
     private void OnDisable()
     {
         GameLoop.OnReset -= ResetThis;
+#if UNITY_EDITOR && EXTENSIVE_DEBUG
         UnbindActionLogs();
+#endif
     }
+
+#if UNITY_EDITOR && EXTENSIVE_DEBUG
     // The following block is for debug purposes only
     void FailedLaunchCooking_Log()                  => Debug.Log($"[Oven {name}] FailedLaunchCooking    " + " was invoked");
     void OnCookingStart_Log()                       => Debug.Log($"[Oven {name}] OnCookingStart         " + " was invoked");
@@ -87,6 +93,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
         Cooker.OnOvercookingOver        -= OnOvercookingOver_Log;
     }
     // End of debug block
+#endif
     void ResetThis()
     {
         Container?.Empty();

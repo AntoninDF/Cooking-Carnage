@@ -36,6 +36,13 @@ namespace UI
         }
         void OnMainMenu()
         {
+            var menu = Owner.GetWidget<ConfirmationPopUp>();
+            menu.Enable();
+            menu.Setup("Are you sure you want to go back to the main menu ?<br><color=#900>Progress made this shift won't be saved", GoToMainMenu, 50);
+
+        }
+        void GoToMainMenu()
+        {
             Disable();
             GameLoop.RequestTransition(StateTransitions.OpenMainMenu);
         }
@@ -45,8 +52,9 @@ namespace UI
         }
         void OnQuit()
         {
-            var menu = Owner.GetWidget<QuitConfirmationPopUp>();
+            var menu = Owner.GetWidget<ConfirmationPopUp>();
             menu.Enable();
+            menu.Setup("Are you sure you want to quit ?", menu.QuitGameWithDelay_1s, keepMenuOpenAfterConfirmation:true);
         }
 
 

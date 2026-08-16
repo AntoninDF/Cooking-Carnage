@@ -13,5 +13,11 @@ namespace Upgrades
         {
             return Mathf.Max(minDuration, baseDuration - TimeReduction);
         }
+        public override void LevelUp()
+        {
+            base.LevelUp();
+            if (_level == _config.MaxLevel)
+                Achievements.Unlock("ACH_U02");
+        }
     }
 }

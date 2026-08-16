@@ -1,4 +1,5 @@
 using GameSystem;
+using Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace UI
 
         private void UpdateGraphicsForEveryUpgrade()
         {
+            CheckUpgradeLocks();
             foreach (var line in _upgradeLines)
                 line.UpdateGraphics();
         }
@@ -59,6 +61,18 @@ namespace UI
                 Enable();
             }
             
+        }
+        void CheckUpgradeLocks()
+        {
+            foreach (var line in _upgradeLines)
+            {
+                if (line.Config.GetUpgrade().GetType() == typeof(MixtRecipePityThresholdUpgrade))
+                {
+                    var book = Reference.AssetReferences.DefaultRecipeBook;
+                    var recipe = book.Recipes.Where(recipe => RecipeCategoryHelper.GetCategory(recipe) == RecipeCategory.MixteTriple).FirstOrDefault();
+                    line.Config.IsLocked = !RecipeUnlockChecker.IsUnlocked(recipe);
+                }
+            }
         }
         void TriggerGameStart() => GameLoop.RequestTransition(StateTransitions.StartShift);
 

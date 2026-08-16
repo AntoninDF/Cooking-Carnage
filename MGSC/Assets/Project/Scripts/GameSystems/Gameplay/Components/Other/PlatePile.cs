@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using Features;
 using UnityEngine;
 
@@ -8,7 +10,7 @@ public class PlatePile : MonoBehaviour, IFeatureCollection
     public FeatureCollection Collection { get; set; } = new();
     public F_LookAtTarget LookAtTarget { get; set; }
     public F_Interactable Interactable { get; set; }
-
+    public int Count => _mp.count;
     public Item ItemPrefab;
 
     private Transform _target;
@@ -16,6 +18,7 @@ public class PlatePile : MonoBehaviour, IFeatureCollection
     private MeshPile _mp;
 
     int _defaultPileCount;
+    static List<PlatePile> _allPiles = new();
 
     private void Awake()
     {
@@ -29,10 +32,12 @@ public class PlatePile : MonoBehaviour, IFeatureCollection
     private void OnEnable()
     {
         GameLoop.OnAfterReset += ResetThis;
+        _allPiles.Add(this);
     }
     private void OnDisable()
     {
         GameLoop.OnAfterReset -= ResetThis;
+        _allPiles.Remove(this);
     }
 
     void Start()
@@ -81,6 +86,25 @@ public class PlatePile : MonoBehaviour, IFeatureCollection
         item.Grabbable.OnPlayerGrabSFX?.Invoke();
 
         _mp.RemoveOneElement();
+        CheckForRemainingPlates();
+    }
+
+    private void CheckForRemainingPlates()
+    {
+        bool empty = true;
+        foreach (var pile in _allPiles)
+        {
+            if (pile.Count != 0)
+            {
+                empty = false;
+                break;
+            }
+        }
+        if (empty)
+        {
+            Achievements.Unlock("ACH_B04");
+            Debug.Log("Empty");
+        }
     }
 
     void SetupTarget()
