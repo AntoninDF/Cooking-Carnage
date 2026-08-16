@@ -73,7 +73,7 @@ namespace UI
 
         void ShowShiftRecap()
         {
-            StartTransition("End of shift " + Globals.Gameplay.ShiftNumber);
+            StartTransition(Globals.Gameplay.ShiftNumber == 0 ? "End of tutorial shift" : "End of shift " + Globals.Gameplay.ShiftNumber);
             canvas.enabled = false;
             TimerManager.StartTimer("Animate shift recap", 3f, UpdateTexts);
         }
