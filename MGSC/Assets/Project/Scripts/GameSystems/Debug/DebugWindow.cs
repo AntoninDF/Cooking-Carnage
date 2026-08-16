@@ -204,6 +204,10 @@ public class DebugWindow : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         GUI.backgroundColor = Color.white;
+        if (GUILayout.Button("Toggle HUD info display"))
+        {
+            _screenInfo.DisplayAll = !_screenInfo.DisplayAll;
+        }
     }
 
     private void DrawTimersTab()
