@@ -28,7 +28,7 @@ namespace UI
 
         public FeatureCollection Collection { get; set; } = new();
         public F_FullscreenWidgetActions Actions;
-        public Canvas canvas;
+        [HideInInspector] public Canvas canvas;
         #endregion
 
 
