@@ -131,7 +131,7 @@ public static class MeshPileUtility
                 _meshCache[currentPreset] = UnityEngine.Object.Instantiate(result);
             else
                 _meshCache.Add(currentPreset, UnityEngine.Object.Instantiate(result));
-            UnityEngine.Debug.Log($"[MeshPileUtility] A mesh has been added to cache (cache contains {_meshCache.Count} meshes) (pile of {count} elements) :\nPreset :\n\t{currentPreset.Serialize().ToString().Replace("\n", "\n\t| ")}\n\nMesh :\n\t{result.name}");
+            //UnityEngine.Debug.Log($"[MeshPileUtility] A mesh has been added to cache (cache contains {_meshCache.Count} meshes) (pile of {count} elements) :\nPreset :\n\t{currentPreset.Serialize().ToString().Replace("\n", "\n\t| ")}\n\nMesh :\n\t{result.name}");
         }
 
         timer.Stop();
