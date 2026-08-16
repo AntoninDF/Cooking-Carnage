@@ -102,7 +102,15 @@ namespace Features
 
                 if (!newInstance.mesh.isReadable)
                 {
-                    Debug.LogWarning("Tried to combine mesh '" + mesh.name + "', but it is not marked as read/write. Please check the import settings.");
+                    string log = "Tried to combine mesh '" + mesh.name + "', but it is not marked as read/write. ";
+                    if (mesh.name.Contains("Combined Mesh (root:"))
+                        log += "Please make sure it is not static. Batched meshes cannot be combined by a the MeshController feature.";
+                    else
+                        log += "Please check the import settings.";
+
+                    if (Owner is UnityEngine.Object obj)
+                        log += " (object is " + obj.name + ")";
+                    Debug.LogWarning(log);
                 }
             }
 

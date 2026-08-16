@@ -43,8 +43,61 @@ namespace UI
         {
             ClearContent();
 
-            // ADD GROUPS HERE
+            AddAudioGroup();
+            AddGraphicsGroup();
+            AddControlsGroup();
+            AddDifficultyGroup();
 
+            // Enable a default group
+            if (_availableGroups.Count > 0 && _currentActiveGroup == null)
+                EnableGroup(_availableGroups[0]);
+        }
+
+        private void AddDifficultyGroup()
+        {
+            // Difficulty
+            AddGroup("Difficulty")
+                .AddDropdown("Apply preset", GetDifficultyOptions(), 1)
+                .AddSlider("Upgrade price", Globals.BalancingWeights.UpgradePriceMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage, new Vector2(0.35f, 4f), new Vector2(0.35f, 4f), 2)
+                .AddSlider("Recipe price", Globals.BalancingWeights.RecipePriceMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage, new Vector2(0.35f, 4f), new Vector2(0.35f, 4f), 2)
+                .AddSlider("Shift duration", Globals.BalancingWeights.ShiftDurationMultiplier.Set, 1f, SliderOption.DisplayMode.Minutes, new Vector2(3, 8), new Vector2(3f / 5f, 8f / 5f), 1)
+                .AddSlider("Rent price", Globals.BalancingWeights.RentPriceMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage, new Vector2(0.35f, 4f), new Vector2(0.35f, 4f), 2)
+                .AddSlider("Client patience", Globals.BalancingWeights.ClientPatienceMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage, new Vector2(0.5f, 2f), new Vector2(0.5f, 2f), 2)
+                .AddSlider("Preparation fail time", Globals.BalancingWeights.PreparationFailTimeMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage, new Vector2(3f, 0.25f), new Vector2(3f, 0.25f), 2)
+                ;
+        }
+
+        private void AddControlsGroup()
+        {
+            // Controls
+            AddGroup("Controls")
+                .AddSlider("Camera sensitivity", Globals.Gameplay.Player.LookSpeed.Set, Globals.Gameplay.Player.LookSpeed, SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(0f, 0.2f), 2)
+                .AddSlider("Scroll sensitivity", Globals.Gameplay.Player.ScrollSensitivity.Set, Globals.Gameplay.Player.ScrollSensitivity, SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(1f, 100f), 0)
+                ;
+        }
+
+        private void AddGraphicsGroup()
+        {
+            // Graphics
+            var resolutions = GetAvailableResolutions();
+            (string, Action)[] resolutionOptions = GetResolutionDropdownItems(resolutions);
+            AddGroup("Graphics")
+                .AddDropdown<FullScreenMode>("Window mode", value => Screen.fullScreenMode = (FullScreenMode)value, FullScreenMode.ExclusiveFullScreen)
+                .AddDropdown("Resolution", resolutionOptions, 999) // Set value to the maximum
+                .AddDropdown("Target FPS", GetTargetFPSOptions(), 0)
+                .AddDropdown("Vertical sync (VSync)", GetVSyncOptions(GetGroup("Graphics").GetOption<DropdownOption>("Target FPS")), 0)
+                .AddDropdown("Graphics quality", GetGraphicsQualityOptions(), 0)
+                .AddDropdown("Show FPS", GetFPSDisplayOptions(), 0);
+                ;
+
+            // Graphics (default settings)
+            GetGroup("Graphics")?.GetOption<DropdownOption>("Window mode")?.SetValue((int)Screen.fullScreenMode);
+            GetGroup("Graphics")?.GetOption<DropdownOption>("Resolution")?.SetValue(2); // 2 is full HD
+        }
+
+
+        private void AddAudioGroup()
+        {
             // Audio
             AddGroup("Audio")
                 .AddSlider("Master volume", AudioSystem.SetMasterVolume, Globals.Audio.MasterVolume, SliderOption.DisplayMode.Percentage)
@@ -53,39 +106,71 @@ namespace UI
                 .AddSlider("Music volume", AudioSystem.SetMusicVolume, Globals.Audio.MusicVolume, SliderOption.DisplayMode.Percentage)
                 .AddSlider("Voice volume", AudioSystem.SetVoiceVolume, Globals.Audio.DialogVolume, SliderOption.DisplayMode.Percentage)
                 ;
+        }
+        #region Other
 
-            // Graphics
-            var resolutions = GetAvailableResolutions();
-            (string, Action)[] resolutionOptions = GetResolutionDropdownItems(resolutions);
-            AddGroup("Graphics")
-                .AddDropdown<FullScreenMode>("Window mode", value => Screen.fullScreenMode = (FullScreenMode)value, FullScreenMode.ExclusiveFullScreen)
-                .AddDropdown("Resolution", resolutionOptions, 999) // Set value to the maximum
-                ;
-            // Graphics (default settings)
-            GetGroup("Graphics")?.GetOption<DropdownOption>("Window mode")?.SetValue((int)Screen.fullScreenMode);
-            GetGroup("Graphics")?.GetOption<DropdownOption>("Resolution")?.SetValue(2); // 2 is full HD
 
-            // Controls
-            AddGroup("Controls")
-                .AddSlider("Camera sensitivity", Globals.Gameplay.Player.LookSpeed.Set, Globals.Gameplay.Player.LookSpeed, SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(0f, 0.2f), 2)
-                .AddSlider("Scroll sensitivity", Globals.Gameplay.Player.ScrollSensitivity.Set, Globals.Gameplay.Player.ScrollSensitivity, SliderOption.DisplayMode.Integer, new Vector2(1, 100), new Vector2(1f, 100f), 0)
-                ;
-
-            // Difficulty
-            AddGroup("Difficulty")
-                .AddDropdown("Apply preset", GetDifficultyOptions(), 1)
-                .AddSlider("Upgrade price",         Globals.BalancingWeights.UpgradePriceMultiplier.Set,        1f, SliderOption.DisplayMode.Percentage,    new Vector2(0.35f, 4f), new Vector2(0.35f, 4f),     2)
-                .AddSlider("Recipe price",          Globals.BalancingWeights.RecipePriceMultiplier.Set,         1f, SliderOption.DisplayMode.Percentage,    new Vector2(0.35f, 4f), new Vector2(0.35f, 4f),     2)
-                .AddSlider("Shift duration",        Globals.BalancingWeights.ShiftDurationMultiplier.Set,       5f, SliderOption.DisplayMode.Minutes,       new Vector2(3, 8),      new Vector2(3f/5f, 8f/5f),  1)
-                .AddSlider("Rent price",            Globals.BalancingWeights.RentPriceMultiplier.Set,           1f, SliderOption.DisplayMode.Percentage,    new Vector2(0.35f, 4f), new Vector2(0.35f, 4f),     2)
-                .AddSlider("Client patience",       Globals.BalancingWeights.ClientPatienceMultiplier.Set,      1f, SliderOption.DisplayMode.Percentage,    new Vector2(0.5f, 2f),  new Vector2(0.5f, 2f),      2)
-                .AddSlider("Preparation fail time", Globals.BalancingWeights.PreparationFailTimeMultiplier.Set, 1f, SliderOption.DisplayMode.Percentage,    new Vector2(3f, 0.25f), new Vector2(3f, 0.25f),     2)
-                ;
-
-            // Enable a default group
-            if (_availableGroups.Count > 0 && _currentActiveGroup == null)
-                EnableGroup(_availableGroups[0]);
+        private (string name, Action onOptionSelected)[] GetFPSDisplayOptions()
+        {
+            var result = new (string name, Action onOptionSelected)[]
+                 {
+                    ("Disabled", () => Globals.Authorizations.DisplayFPS.Value = false),
+                    ("Enabled", () => Globals.Authorizations.DisplayFPS.Value = true)
+                 };
+            return result;
+        }
+        private (string name, Action onOptionSelected)[] GetGraphicsQualityOptions()
+        {
+            var result = new (string name, Action onOptionSelected)[]
+                {
+                    ("High", () => QualitySettings.SetQualityLevel(0)),
+                    ("Medium", () => QualitySettings.SetQualityLevel(1)),
+                    ("Low", () => QualitySettings.SetQualityLevel(2))
+                };
+            return result;
+        }
+        private (string name, Action onOptionSelected)[] GetTargetFPSOptions()
+        {
+            var result = new (string name, Action onOptionSelected)[]
+                {
+                    ("Unlimited fps", () => Application.targetFrameRate = -1),
+                    ("60 fps", () => Application.targetFrameRate = 60),
+                    ("30 fps", () => Application.targetFrameRate = 30)
+                };
+            return result;
+        }
+        private (string name, Action onOptionSelected)[] GetVSyncOptions(DropdownOption fpsDropdown)
+        {
+            void SetVSync(int value)
+            {
+                QualitySettings.vSyncCount = value;
+                Debug.Log("QualitySettings.vSyncCount set to " + QualitySettings.vSyncCount);
+                
+                if (fpsDropdown != null)
+                {
+                        fpsDropdown.ClearOptions();
+                    if (value > 0)
+                    {
+                        fpsDropdown.AddOption("Auto (controlled by vSync)");
+                        fpsDropdown.SetValue(0);
+                    }
+                    else
+                    {
+                        fpsDropdown.SetOptions(GetTargetFPSOptions());
+                        if (Application.targetFrameRate == -1) fpsDropdown.SetValue(0);
+                        else if (Application.targetFrameRate == 60) fpsDropdown.SetValue(1);
+                        else if (Application.targetFrameRate == 30) fpsDropdown.SetValue(2);
+                    }
+                }
+                
             }
+            var result = new (string name, Action onOptionSelected)[]
+                {
+                    ("Disabled", () => SetVSync(0)),
+                    ("Enabled", () => SetVSync(1))
+                };
+            return result;
+        }
 
         private (string name, Action onOptionSelected)[] GetDifficultyOptions()
         {
@@ -153,7 +238,8 @@ namespace UI
                 ("Windowed", 800, 450, FullScreenMode.Windowed)
             };
         }
-
+        #endregion
+        #region Utility
         void ClearContent()
 		{
 			_availableGroups.Clear();
@@ -190,6 +276,7 @@ namespace UI
 		}
 		SettingsGroup AddGroup(string name)
 		{
+            RemoveGroup(name);
 			var title = Instantiate(MenuNamePrefab, G_MenuNames);
 
 			var group = new SettingsGroup(name, title, G_Options, DropdownPrefab, SliderPrefab, VerticalScrollbarPrefab);
@@ -198,6 +285,15 @@ namespace UI
 			_availableGroups.Add(group);
 			return group;
 		}
+        void RemoveGroup(string name)
+        {
+            var group = GetGroup(name);
+            if (group == null) return;
+
+            GameObject.Destroy(group.GroupButton.gameObject);
+            GameObject.Destroy(group.gameObject);
+            _availableGroups.Remove(group);
+        }
 		SettingsGroup GetGroup(string name)
 		{
 			foreach (var group in _availableGroups)
@@ -205,6 +301,7 @@ namespace UI
 					return group;
 			return null;
 		}
+        #endregion
     }
 
 }

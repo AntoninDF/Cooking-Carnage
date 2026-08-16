@@ -70,7 +70,7 @@ public class TutorialStep : ScriptableObject
             return;
         }
 
-        onEnd += () => Debug.Log("onEnd invoked at the end of tutorial step");
+        // onEnd += () => Debug.Log("onEnd invoked at the end of tutorial step");
         _playCallback = null;
         Action sequence = BuildSequence(0, onEnd);
         sequence();
@@ -80,7 +80,7 @@ public class TutorialStep : ScriptableObject
     {
         if (startIndex >= Steps.Count)
         {
-            Debug.Log("Return onEnd, index is " + startIndex);
+            // Debug.Log("Return onEnd, index is " + startIndex);
             return onEnd;
         }
         return () => PlaySubStep(startIndex, BuildSequence(startIndex + 1, onEnd));
@@ -110,10 +110,11 @@ public class TutorialStep : ScriptableObject
         // What to do when this substep is over
         Action onPreEnd = () =>
         {
+            Subtitles.EndSubtitle();
+
             HandleActions(current.ActionsAfterDialogue);
             if (_currentAudioReference.Equals(current.VoiceLine))
                 _currentAudioReference = default;
-            // Subtitles.EndSubtitle();
 
             GameLoop.OnPause  -= PauseVoiceline;
             GameLoop.OnResume -= ResumeVoiceline;

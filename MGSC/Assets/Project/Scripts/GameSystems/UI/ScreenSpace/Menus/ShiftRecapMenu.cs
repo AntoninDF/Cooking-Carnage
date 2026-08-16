@@ -24,7 +24,7 @@ namespace UI
         [SerializeField] private Color _defaultColor = Color.gray2;
         [SerializeField] private Color _failureColor = Color.firebrick;
         [SerializeField] private Color _successColor = Color.seaGreen;
-
+        
         [SerializeField] private Action onTotalMoneyBegin;
         [SerializeField] private Action onTotalMoneyEnd;
 
@@ -48,7 +48,7 @@ namespace UI
             {
                 mgr.OnMoneyChange += SetMoneyGained;
             }
-            OnEnable += UpdateTexts;
+            OnEnable += ShowShiftRecap;
             SetContentMode(ContentMode.Default);
             BindAll();
         }
@@ -70,10 +70,32 @@ namespace UI
         {
             GameLoop.RequestTransition(StateTransitions.UpgradeShop);
         }
+
+        void ShowShiftRecap()
+        {
+            StartTransition(Globals.Gameplay.ShiftNumber == 0 ? "End of tutorial shift" : "End of shift " + Globals.Gameplay.ShiftNumber);
+            canvas.enabled = false;
+            TimerManager.StartTimer("Animate shift recap", 3f, UpdateTexts);
+        }
+
+        void StartTransition(string text)
+        {
+            if (Reference.TryGetManager<UISystem>(out var ui))
+                ui.GetWidget<UITransition>()?.Show(text);
+        }
+        void StopTransition()
+        {
+            if (Reference.TryGetManager<UISystem>(out var ui))
+                ui.GetWidget<UITransition>()?.Hide();
+        }
         void UpdateTexts()
         {
             if (!Reference.TryGetManager(out MoneyManager mm)) return;
             if (!Reference.TryGetManager(out ShiftManager sm)) return;
+
+            canvas.enabled = true;
+            StopTransition();
+
             SetMoneyGained(mm.GetMoneyGainedThisShift());
             SetCurrentTotalMoney(mm.MoneyInfo);
             
@@ -91,9 +113,8 @@ namespace UI
                 L_CurrentTotalMoney.text = "...";
             }
 
-            AnimateReceipt(
-                UpdateTotalMoney
-                );
+            TryClearLines();
+            TimerManager.StartTimer("Wait before receipt anim", 1.5f, () => AnimateReceipt(UpdateTotalMoney));
 
         }
         void SetContentMode(ContentMode mode = ContentMode.Default)
@@ -126,11 +147,7 @@ namespace UI
             if (!Reference.TryGetManager(out MoneyManager mm)) return;
             if (!Reference.TryGetManager(out ShiftManager sm)) return;
 
-            // Remove existing lines
-            _currentLines.Clear();
-            if (G_ReceiptLines == null) return;
-            for (int i = 0; i < G_ReceiptLines.childCount; i++)
-                GameObject.Destroy(G_ReceiptLines.GetChild(i).gameObject);
+            if (!TryClearLines()) return;
 
             AnimateRecipeLine(
                 "Salary",
@@ -151,6 +168,18 @@ namespace UI
                 )
                 ;
         }
+
+        private bool TryClearLines()
+        {
+            UpdateMoneyDelta();
+            // Remove existing lines
+            _currentLines.Clear();
+            if (G_ReceiptLines == null) return false;
+            for (int i = 0; i < G_ReceiptLines.childCount; i++)
+                GameObject.Destroy(G_ReceiptLines.GetChild(i).gameObject);
+            return true;
+        }
+
         void AnimateRecipeLine(string name, float targetValue, Action onEnd=null)
         {
             var go = Instantiate(ReceiptLinePrefab.gameObject, G_ReceiptLines);

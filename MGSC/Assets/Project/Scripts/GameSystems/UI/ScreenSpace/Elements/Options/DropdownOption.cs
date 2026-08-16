@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,8 @@ namespace UI
 
 		[SerializeField] private TMP_Dropdown Dropdown;
 		public Action<int> OnValueChanged = value => { };
+		public List<string> OptionNames => Dropdown.options.Select(obj => obj.text).ToList();
+		public int OptionCount => Dropdown.options.Count;
 		private Dictionary<int, Action> _optionCallbacks = new();
         private void Start()
         {
@@ -30,23 +33,25 @@ namespace UI
 		public void SetValue(int value)
 		{
 			if (Dropdown == null) return;
-			Dropdown.value = value;
+			// Callbacks aren't called if we assign the same value, so we make sure they are
+			// it's useful when the content of the dropdown changes and we want to apply the change without really changing the value
+			if (Dropdown.value == value)
+				Apply(value);
+			else
+				Dropdown.value = value;
 		}
 		public void ClearOptions()
 		{
 			if (Dropdown == null) return;
 			Dropdown.ClearOptions();
-		}
-		public void AddOption(string name, Sprite sprite, Color color)
-		{
-			if (Dropdown == null) return;
-			Dropdown.options.Add(new TMP_Dropdown.OptionData(name, sprite, color));
-		}
+			_optionCallbacks.Clear();
+        }
 		public void AddOption(string name, Action action = null)
 		{
 			if (Dropdown == null) return;
 			_optionCallbacks[Dropdown.options.Count] = action;
 			Dropdown.options.Add(new TMP_Dropdown.OptionData(name));
+			Dropdown.RefreshShownValue();
 		}
 		public void SetOptions(params string[] options)
 		{
@@ -64,8 +69,7 @@ namespace UI
 			for (int i = 0; i < options.Length; i++)
 			{
 				var option = options[i];
-				Dropdown.options.Add(new(option.name));
-				_optionCallbacks[i] = option.onOptionSelected;
+				AddOption(option.name, option.onOptionSelected);
 			}
 		}
 		void Apply(int value)

@@ -43,9 +43,13 @@ namespace Orders
         {
             if (order == null) return;
             SO_Recipe recipe = order.Recipe;
+
+            /*
             string debug = "[OrderDisplayer] DisplayOrder : ";
             debug += "\nIngredient image count = " + _ingredients.Count;
             debug += "\nIngredient in recipe count = " + recipe.Ingredients.Count;
+            */
+
             _hasTriggered1Star = false;
             _hasTriggered2Star = false;
             
@@ -56,12 +60,12 @@ namespace Orders
                 {
                     _ingredients[i].sprite = recipe.Ingredients[i].Sprite;
                     _ingredients[i].color = Color.white;
-                    debug += "\nSet image n°" + i + " to sprite = " + _ingredients[i].sprite.name + " and color = " + _ingredients[i].color;
+                    // debug += "\nSet image n°" + i + " to sprite = " + _ingredients[i].sprite.name + " and color = " + _ingredients[i].color;
                 }
                 else
                 {
                     _ingredients[i].color = new Color(1, 1, 1, 0);
-                    debug += "\nSet image n°" + i + " to empty (color = " + _ingredients[i].color + ")";
+                    // debug += "\nSet image n°" + i + " to empty (color = " + _ingredients[i].color + ")";
                 }
             }
 
@@ -70,7 +74,7 @@ namespace Orders
                 var timer = order.Owner.PatienceTimer;
                 order.Owner.PatienceTimer.onUpdate += elapsed => UpdatePriceText(recipe, elapsed, (timer != null ? timer.Duration : 60));
             }
-            Debug.Log(debug);
+            // Debug.Log(debug);
             StartDisplay();
         }
         void UpdatePriceText(SO_Recipe recipe, float patienceElapsed, float totalPatience)

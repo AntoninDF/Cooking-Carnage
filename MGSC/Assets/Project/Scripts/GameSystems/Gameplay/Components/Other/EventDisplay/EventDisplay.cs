@@ -33,10 +33,6 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
         BindEvents();
         Collection.LateSetup();
     }
-    void Update()
-    {
-        Collection.Update();
-    }
 
     public bool IsValid(UnityEventWrapper wrapper)
     {

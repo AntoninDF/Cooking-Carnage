@@ -94,6 +94,7 @@ namespace Clients
 
         }
 
+#if UNITY_EDITOR && EXTENSIVE_DEBUG
         // The following block is for debug purposes only
         void OnNewOrderLog(Order obj)               => Debug.Log($"[Client {name}] OnNewOrder          " + " was invoked" + " with parameter " + (obj != null ? obj.Recipe.name : "'null'"));
         void OnOrderAcceptedLog(Order obj)          => Debug.Log($"[Client {name}] OnOrderAccepted     " + " was invoked" + " with parameter " + (obj != null ? obj.Recipe.name : "'null'"));
@@ -115,9 +116,7 @@ namespace Clients
             OnSeatRegister          -= OnSeatRegisterLog;
             OnSeatUnregister        -= OnSeatUnregisterLog;
         }
-        // End of debug block
 
-#if UNITY_EDITOR
         // This huge debug block should be removed later
         float elapsedSinceLastLog = 0f;
 #endif
@@ -125,7 +124,7 @@ namespace Clients
         {
            Collection.Update();
            Behaviour.Update();
-#if UNITY_EDITOR
+#if UNITY_EDITOR && EXTENSIVE_DEBUG
             float logCooldown = 2f;
             elapsedSinceLastLog += Time.deltaTime;
             if (elapsedSinceLastLog >= logCooldown)

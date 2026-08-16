@@ -1,6 +1,6 @@
+using GameSystem;
 using System;
 using UI;
-using UnityEngine;
 
 /// <summary>
 /// Menu states should override DefaultMenuType so that it returns the type of the associated menu
@@ -8,6 +8,7 @@ using UnityEngine;
 public class MenuState : GameState
 {
     protected virtual Type DefaultMenuType {  get;}
+    protected virtual float WaitBeforeDisablingMenu => 0f;
     public FullscreenWidget Menu {  get; private set; }
     
     public override void OnEnter()
@@ -21,7 +22,7 @@ public class MenuState : GameState
         Menu = ui.GetWidget(DefaultMenuType);
         if (Menu == null) return;
         Menu.Enable();
-        OnStateEnd += Menu.Disable;
+        OnStateEnd += () => TimerManager.StartTimer("Waiting before disabling menu " + DefaultMenuType.Name, WaitBeforeDisablingMenu, Menu.Disable);
     }
 
   

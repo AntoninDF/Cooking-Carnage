@@ -6,8 +6,8 @@ using System;
 /// </summary>
 public class GameState
 {
-    public static Action OnStateBegin;
-    public static Action OnStateEnd;
+    public Action OnStateBegin;
+    public Action OnStateEnd;
     public virtual GameState FindNext(StateTransitions transition = default)
     {
         switch (transition)

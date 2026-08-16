@@ -5,6 +5,8 @@ partial class Globals
         // TIMERS
         public static Param<bool> AllowTimerUpdate { get; set; } = new(true);
 
+        // PERFORMANCE
+        public static Param<bool> DisplayFPS { get; set; } = new(false);
         public static class Player
         {
             public static Param<bool> AllowControllerMovement { get; set; } = new(true);

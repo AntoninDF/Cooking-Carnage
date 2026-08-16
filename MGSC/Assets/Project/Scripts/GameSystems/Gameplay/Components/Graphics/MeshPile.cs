@@ -4,6 +4,8 @@ using UnityEditor;
 
 using System;
 using UnityEngine;
+using Unity.Profiling;
+using NaughtyAttributes;
 
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 [ExecuteAlways]
@@ -21,13 +23,19 @@ public class MeshPile : MonoBehaviour
     [Tooltip("Jitter is fine, use it as you wish")]
     public float jitter;
 
+    /// <summary>Mesh Filter</summary>
     private MeshFilter mf;
+    /// <summary>Mesh Collider</summary>
     private MeshCollider mc;
+    /// <summary>Mesh Renderer</summary>
     private MeshRenderer mr;
     private int _defaultLayer;
     
     public Collider colliderPile;
     public Action OnPlateCountChanged;
+
+    // Profiling
+    ProfilerMarker MeshPile_Regenerate = new("MeshPile/Regenerate()");
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -90,10 +98,11 @@ public class MeshPile : MonoBehaviour
         mr.sharedMaterial = new Material(Shader.Find("HDRP/Lit"));
     }
 
-    void OnValidate() => Regenerate_Editor();
+    // void OnValidate() => Regenerate_Editor();
 
     public void Regenerate(bool applyRandomPresets=true)
     {
+        MeshPile_Regenerate.Begin();
         if (mr == null) TryGetComponent(out mr);
         if (mesh == null) return;
         Mesh newMesh = mf.sharedMesh;
@@ -106,10 +115,12 @@ public class MeshPile : MonoBehaviour
             mc.sharedMesh = newMesh;
         if (material != null)
             mr.sharedMaterial = material;
-        
+        MeshPile_Regenerate.End();
+
         OnPlateCountChanged?.Invoke();
     }
     [ContextMenu("Regenerate mesh")]
+    [Button("Regenerate mesh")]
     internal void Regenerate_Editor()
     {
         TryGetComponent(out mf);

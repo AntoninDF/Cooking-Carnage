@@ -28,6 +28,7 @@ namespace UI
 
         public FeatureCollection Collection { get; set; } = new();
         public F_FullscreenWidgetActions Actions;
+        public Canvas canvas;
         #endregion
 
 
@@ -39,6 +40,8 @@ namespace UI
             Actions = new(this);
             OnEnable += () => Actions.OnWidgetAppears?.Invoke();
             OnDisable += () => Actions.OnWidgetDisappears?.Invoke();
+
+            canvas = GetComponent<Canvas>();
         }
         /// <summary>
         /// Init is called when the widget's prefab gets added to the UI System database (at the beginning of the game)

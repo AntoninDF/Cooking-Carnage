@@ -72,7 +72,7 @@ namespace UI
 
 			if (FadeInOutTimer != null) FadeInOutTimer.Pause();
 			FadeInOutTimer = TimerManager.StartGameplayTimer(
-				"Subtitle opacity fade",
+				"Subtitle opacity fade", // Fixed name so that new timers replace the previous one
 				duration,
 				OnFadeEnd,
 				elapsed => Visibility = Mathf.Lerp(startVisibility, endVisibility, elapsed / duration));

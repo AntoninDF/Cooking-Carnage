@@ -10,7 +10,7 @@ namespace Features
         {
         }
         public Action Start { get; set; }
-        public Action FrameUpdate { get; set; }
+        //public Action FrameUpdate { get; set; }
         public Action CustomEvent0 { get; set; }
         public Action CustomEvent1 { get; set; }
         public Action CustomEvent2 { get; set; }
@@ -20,11 +20,6 @@ namespace Features
         {
             base.LateSetup();
             Start?.Invoke();
-        }
-
-        public override void Update()
-        {
-            FrameUpdate?.Invoke();
         }
         public void InvokeCustomEvent0() => CustomEvent0?.Invoke();
         public void InvokeCustomEvent1() => CustomEvent1?.Invoke();

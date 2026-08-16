@@ -11,6 +11,7 @@ namespace UI
     {
         public string Name = "New menu";
         public Transform ContentParent;
+        public GameObject gameObject;
         public DropdownOption DropdownPrefab;
         public SliderOption SliderPrefab;
         public Scrollbar VerticalScrollbarPrefab;
@@ -57,6 +58,7 @@ namespace UI
                 name,
                 typeof(ScrollRect))
                 .GetComponent<ScrollRect>();
+            if (gameObject == null) gameObject = ScrollRect.gameObject;
             RectTransform rt = ScrollRect.transform as RectTransform;
             rt.SetParent(ContentParent);
             SetTransformToStretch(rt);
@@ -104,6 +106,7 @@ namespace UI
                 name + " (Container content)",
                 typeof(RectTransform))
                 .GetComponent<RectTransform>();
+            if (gameObject == null) gameObject = Container.gameObject;
             Transform parent = Viewport == null ? ContentParent : Viewport;
             Container.SetParent(parent);
             SetTransformToStretch(Container);
@@ -159,6 +162,13 @@ namespace UI
                     return option;
             }
             return null;
+        }
+        public void ClearOptions()
+        {
+            foreach(var option in Options)
+                if (option != null)
+                GameObject.Destroy(option.gameObject);
+            Options.Clear();
         }
         private T AddOption<T>(T prefab, string name) where T : UIOption
         {

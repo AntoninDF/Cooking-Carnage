@@ -76,6 +76,24 @@ namespace Upgrades
                     continue;
                 }
 
+#if DEMO
+                // Force specific upgrades to be enabled, and only these upgrades
+                Type[] demoOnlyUpgrades = new[] {
+                    typeof(BlenderSpeedUpgrade),
+                    typeof(CookingSpeedUpgrade)
+                };
+                foreach (Type demoType in demoOnlyUpgrades)
+                {
+                    if (type == demoType)
+                    {
+                        entry.Config.IsLocked = false;
+                        break;
+                    }
+                    else
+                        entry.Config.IsLocked = true;
+                }
+#endif
+
                 var upgrade = (Upgrade)Activator.CreateInstance(type);
                 upgrade.SetConfig(entry.Config);
 
