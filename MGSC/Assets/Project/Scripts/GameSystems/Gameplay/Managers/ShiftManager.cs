@@ -153,10 +153,10 @@ namespace GameSystem
                 int missed = cmgr.GetMissedOrdersCount();
                 int burnt = cmgr.GetBurntOrdersCount();
                 int killed = cmgr.ClientsKilledThisShift;
-                if (wrong == 0 && correct > 0) Achievements.Unlock("ACH_B01");
-                if (correct == 0 && wrong > 0) Achievements.Unlock("ACH_B02");
-                if (correct == 0 && wrong == burnt && burnt > 0) Achievements.Unlock("ACH_B03");
-                if (killed == 0) Achievements.Unlock("ACH_B16");
+                if (wrong == 0 && correct > 0) Achievements.Unlock("ACH_B01"); // Servir Uniquement de bonnes commandes pendant un service
+                if (correct == 0 && wrong > 0) Achievements.Unlock("ACH_B02"); // Servir que des mauvaises commandes pendant un service
+                if (correct == 0 && wrong == burnt && burnt > 0) Achievements.Unlock("ACH_B03"); // Servir Uniquement des plats brûlés pendant un service
+                if (killed == 0) Achievements.Unlock("ACH_B16"); // Finir un service sans tuer personne (pacifiste)
 
                 var hist = cmgr.GetClientsHistory();
                 Debug.Log("Client history : \n" + hist.Select(data => data.Serialize()).ToList().ToString_Detailed());
