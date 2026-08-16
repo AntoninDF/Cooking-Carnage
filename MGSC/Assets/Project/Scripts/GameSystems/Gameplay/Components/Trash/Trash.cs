@@ -83,6 +83,7 @@ namespace Trash
                 _objectAnimation.OnAnimationStop += (() =>
                 {
                     StartCoroutine(EatCoroutine(obj.GetParentTransform().gameObject));
+                    Achievements.Unlock("ACH_05");
                 });
         }
         

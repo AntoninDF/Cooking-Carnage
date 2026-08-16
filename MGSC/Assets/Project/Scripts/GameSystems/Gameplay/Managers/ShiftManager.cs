@@ -127,6 +127,17 @@ namespace GameSystem
                 ShiftNumber++;
                 SaveManager.SaveGameData();
                 ShiftNumber--;
+
+                if ( ShiftNumber == 0 ) Achievements.Unlock("ACH_04");
+                if (Reference.TryGetManager(out ClientManager cmgr))
+                {
+                    int correct = cmgr.GetCorrectOrdersCount();
+                    int wrong = cmgr.GetWrongOrdersCount();
+                    int missed = cmgr.GetMissedOrdersCount();
+                    int burnt = cmgr.GetBurntOrdersCount();
+                    if (wrong == 0) Achievements.Unlock("ACH_B02");
+                    if (correct == 0 && wrong == burnt) Achievements.Unlock("ACH_B03");
+                }
             }
             else // If shift is failed
             {

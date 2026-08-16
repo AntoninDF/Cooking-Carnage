@@ -230,6 +230,14 @@ namespace GameSystem
             }
             return list;
         }
+        public int GetCorrectOrdersCount() 
+            => GetClientsHistory().Count(c => !c.killed && c.wasCorrectRecipe && c.shiftNumber == Globals.Gameplay.ShiftNumber);
+        public int GetWrongOrdersCount()
+            => GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe && c.served && c.shiftNumber == Globals.Gameplay.ShiftNumber);
+        public int GetMissedOrdersCount()
+            => GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe && !c.served && c.shiftNumber == Globals.Gameplay.ShiftNumber);
+        public int GetBurntOrdersCount()
+            => GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe && c.served && c.servedRecipe.name.Contains("Failed") && c.shiftNumber == Globals.Gameplay.ShiftNumber);
 
         public Dictionary<EClientType, int> GetSeenClientTypesCount(int amount = -1)
         {

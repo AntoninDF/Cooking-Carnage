@@ -322,7 +322,9 @@ namespace Clients
            if (soRecipe == null) return;
 
            var info = new Orders.ServingInfo(serving); 
-           CurrentOrder.ServingInfo = info;            
+           CurrentOrder.ServingInfo = info;
+
+            Achievements.Unlock("ACH_02");
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);

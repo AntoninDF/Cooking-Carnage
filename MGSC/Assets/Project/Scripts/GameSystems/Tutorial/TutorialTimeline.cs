@@ -42,6 +42,7 @@ public class TutorialTimeline : ScriptableObject
     void ValidateTutorial()
     {
         Globals.Statistics.TutorialHasBeenPlayed.Value = true;
+        Achievements.Unlock("ACH_03");
     }
     void Play(TutorialStep step, Action onEnd = null)
     {
