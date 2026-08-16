@@ -161,13 +161,13 @@ namespace GameSystem
                 var hist = cmgr.GetClientsHistory();
                 Debug.Log("Client history : \n" + hist.Select(data => data.Serialize()).ToList().ToString_Detailed());
                 // Serve only Eugene
-                if (hist.All(data => data.killed || (data.clientType == Clients.EClientType.A && data.served)) && hist.Any(data => data.served))
+                if (hist.All(data => data.killed || data.timedOut || (data.clientType == Clients.EClientType.A && data.served)) && hist.Any(data => data.served))
                     Achievements.Unlock("ACH_B05");
                 // Serve only Mr Fesse
-                if (hist.All(data => data.killed || (data.clientType == Clients.EClientType.B && data.served)) && hist.Any(data => data.served))
+                if (hist.All(data => data.killed || data.timedOut || (data.clientType == Clients.EClientType.B && data.served)) && hist.Any(data => data.served))
                     Achievements.Unlock("ACH_B09");
                 // Serve only Fabrice
-                if (hist.All(data => data.killed || (data.clientType == Clients.EClientType.C && data.served)) && hist.Any(data => data.served))
+                if (hist.All(data => data.killed || data.timedOut || (data.clientType == Clients.EClientType.C && data.served)) && hist.Any(data => data.served))
                     Achievements.Unlock("ACH_B07");
                 // Kill only Eugene (makes sure all clients killed are Eugene, and there is at list one kill)
                 if (hist.All(data => (data.killed && data.clientType == Clients.EClientType.A) || !data.killed) && hist.Any(data => data.killed))
@@ -179,13 +179,13 @@ namespace GameSystem
                 if (hist.All(data => (data.killed && data.clientType == Clients.EClientType.C) || !data.killed) && hist.Any(data => data.killed))
                     Achievements.Unlock("ACH_B08");
                 // Serve only recipes containing eyes
-                if (hist.All(data => (data.served && data.servedRecipe.Ingredients.All(ingredient => ingredient.name.Contains("Eye"))) || data.killed) && hist.Any(data => data.served))
+                if (hist.All(data => (data.served && data.servedRecipe.Ingredients.All(ingredient => ingredient.name.Contains("Eye"))) || data.killed || data.timedOut) && hist.Any(data => data.served))
                     Achievements.Unlock("ACH_B11");
                 // Serve only recipes containing teeth
-                if (hist.All(data => (data.served && data.servedRecipe.Ingredients.All(ingredient => ingredient.name.Contains("Tooth"))) || data.killed) && hist.Any(data => data.served))
+                if (hist.All(data => (data.served && data.servedRecipe.Ingredients.All(ingredient => ingredient.name.Contains("Tooth"))) || data.killed || data.timedOut) && hist.Any(data => data.served))
                     Achievements.Unlock("ACH_B12");
                 // Serve only recipes containing butts
-                if (hist.All(data => (data.served && data.servedRecipe.Ingredients.All(ingredient => ingredient.name.Contains("Fiak"))) || data.killed) && hist.Any(data => data.served))
+                if (hist.All(data => (data.served && data.servedRecipe.Ingredients.All(ingredient => ingredient.name.Contains("Fiak"))) || data.killed || data.timedOut) && hist.Any(data => data.served))
                     Achievements.Unlock("ACH_B13");
             }
         }

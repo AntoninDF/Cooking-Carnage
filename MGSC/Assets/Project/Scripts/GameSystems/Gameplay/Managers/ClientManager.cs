@@ -46,7 +46,12 @@ namespace GameSystem
 
         // Clients Data Fields
         List<Client> currentClients = new List<Client>(); // script linked to entities
-        List<ClientData> clientHistory =  new List<ClientData>(); // script copy
+        Dictionary<int, List<ClientData>> clientHistory =  new (); // script copy
+        List<ClientData> currentClientHistory {
+            get { 
+                EnforceClientHistoryKey();
+                return clientHistory[Globals.Gameplay.ShiftNumber];
+                }}
         Dictionary<int, int> _clientsKilledPerShift = new();
         Dictionary<int, int> _clientsServedPerShift = new();
         
@@ -157,8 +162,8 @@ namespace GameSystem
         {
             if (HistoryContainsClient(client.GetEntityId()))
             {
-                this.Log(LogType.Warning, "Data for Client"+client.GetEntityId()+" has already been archived");
-                
+                this.Log(LogType.Warning, "Data for Client" + client.GetEntityId() + " has already been archived");
+
                 return;
             }
 
@@ -178,8 +183,8 @@ namespace GameSystem
                 clientHistory.Count,
                 shiftCount
             );
-            
-            clientHistory.Add(clientData);
+
+            currentClientHistory.Add(clientData);
             if (killed)
             {
                 if (!_clientsKilledPerShift.ContainsKey(Globals.Gameplay.ShiftNumber))
@@ -187,8 +192,8 @@ namespace GameSystem
                     _clientsKilledPerShift[Globals.Gameplay.ShiftNumber] = 0;
                 }
                 _clientsKilledPerShift[Globals.Gameplay.ShiftNumber]++;
-                
-                this.Log(LogType.Log, "Client"+client.GetEntityId()+" is the "+ ClientsKilledThisShift+"th client killed during this shift");
+
+                this.Log(LogType.Log, "Client" + client.GetEntityId() + " is the " + ClientsKilledThisShift + "th client killed during this shift");
             }
             else
             {
@@ -197,17 +202,23 @@ namespace GameSystem
                     _clientsServedPerShift[Globals.Gameplay.ShiftNumber] = 0;
                 }
                 _clientsServedPerShift[Globals.Gameplay.ShiftNumber]++;
-                
-                this.Log(LogType.Log, "Client"+client.GetEntityId()+" is the "+ ClientsServedThisShift+"th client served during this shift");
+
+                this.Log(LogType.Log, "Client" + client.GetEntityId() + " is the " + ClientsServedThisShift + "th client served during this shift");
             }
         }
-        
+
+        private void EnforceClientHistoryKey()
+        {
+            if (!clientHistory.ContainsKey(Globals.Gameplay.ShiftNumber) || clientHistory[Globals.Gameplay.ShiftNumber] == null)
+                clientHistory[Globals.Gameplay.ShiftNumber] = new();
+        }
+
         /// <summary>
         /// Checks if the history contains a client data corresponding to the id
         /// </summary>
         bool HistoryContainsClient(int entityId)
         {
-            return clientHistory.Any(data => data.id == entityId);
+            return clientHistory.Any(kvp => kvp.Value.Any(data => data.id == entityId));
         }
 
 
@@ -217,17 +228,16 @@ namespace GameSystem
         public List<ClientData> GetClientsHistory(int amount=-1)
         {
             //if(clientHistory.Count == 0) { return null; }
-            
-            amount = amount == -1 ? clientHistory.Count : amount;
+
+            amount = amount == -1 ? currentClientHistory.Count : amount;
             
             List<ClientData> list = new List<ClientData>();
             
-            int possibleAmount = Mathf.Min(amount, clientHistory.Count);
+            int possibleAmount = Mathf.Min(amount, currentClientHistory.Count);
             
-            for (int i = clientHistory.Count-1; i >= clientHistory.Count - possibleAmount; i--)
-            {
-                list.Add(clientHistory[i]);
-            }
+            for (int i = currentClientHistory.Count-1; i >= currentClientHistory.Count - possibleAmount; i--)
+                list.Add(currentClientHistory[i]);
+
             return list;
         }
         public int GetCorrectOrdersCount() 
@@ -242,7 +252,7 @@ namespace GameSystem
         public Dictionary<EClientType, int> GetSeenClientTypesCount(int amount = -1)
         {
             List<EClientType> seenTypes = currentClients.Where((client) => true).Select((client) => EClientType.None).ToList();
-            seenTypes.InsertRange(0, clientHistory.Select((data) => data.clientType).ToList());
+            seenTypes.InsertRange(0, currentClientHistory.Select((data) => data.clientType).ToList());
             if (amount < -1) throw new ArgumentException("[ClientManager] : You cannot ask for a negative amount of client types. Only use -1 to get all of the seen types.");
             if (amount != -1)
             {
@@ -264,7 +274,7 @@ namespace GameSystem
        /// </summary>
         Dictionary<EClientType, float> UpdateClientTypeData()
         {
-           int total = currentClients.Count + clientHistory.Count;
+            int total = currentClients.Count + currentClientHistory.Count;
            
            if (total == 0) { return clientTypePart; }
 
@@ -272,8 +282,8 @@ namespace GameSystem
            {
                clientTypePart[type] = 0;
            }
-           
-           foreach (var t in clientHistory)
+
+           foreach (var t in currentClientHistory)
            {
                clientTypePart[t.clientType]++;
            }
@@ -293,7 +303,7 @@ namespace GameSystem
         /// </summary>
         public ClientData GetClientDataByID(int entityId)
         {
-           return clientHistory.FirstOrDefault(data => data.id == entityId);
+            return currentClientHistory.FirstOrDefault(data => data.id == entityId);
         }
 
         internal void DestroyEveryClient()
