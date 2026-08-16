@@ -104,16 +104,18 @@ namespace UI
                 ViewportMask = ScrollView.viewport.GetComponent<Mask>();
             }
 
-            if (previousDuration != ScrollDuration && content != null)
+            if (content != null)
             {
-                previousDuration = ScrollDuration;
-                
+                if (previousDuration != ScrollDuration)
+                {
+                    previousDuration = ScrollDuration;
                     ScrollSpeed = content.sizeDelta.y / ScrollDuration;
-            }
-            else
-            {
-                ScrollDuration = content.sizeDelta.y / ScrollSpeed;
-                previousDuration = ScrollDuration;
+                }
+                else
+                {
+                    ScrollDuration = content.sizeDelta.y / ScrollSpeed;
+                    previousDuration = ScrollDuration;
+                }
             }
         }
         #endregion
