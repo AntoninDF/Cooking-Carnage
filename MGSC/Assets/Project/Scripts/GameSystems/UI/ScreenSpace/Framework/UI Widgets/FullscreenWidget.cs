@@ -20,8 +20,8 @@ namespace UI
             }
         }
         private bool _enabled;
-        public Action OnEnable;
-        public Action OnDisable;
+        public Action onEnable;
+        public Action onDisable;
 
         public UISystem Owner { get; set; }
         public virtual bool ForceLoadOnUIInitialization => false;
@@ -38,8 +38,8 @@ namespace UI
         public virtual void OnLoad() 
         {
             Actions = new(this);
-            OnEnable += () => Actions.OnWidgetAppears?.Invoke();
-            OnDisable += () => Actions.OnWidgetDisappears?.Invoke();
+            onEnable += () => Actions.OnWidgetAppears?.Invoke();
+            onDisable += () => Actions.OnWidgetDisappears?.Invoke();
 
             canvas = GetComponent<Canvas>();
         }
@@ -61,7 +61,7 @@ namespace UI
             if (_enabled) return;
             Owner.ShowWidget(this);
             _enabled = true;
-            OnEnable?.Invoke();
+            onEnable?.Invoke();
         }
         /// <summary>
         /// Hide the widget from the UI
@@ -71,7 +71,7 @@ namespace UI
             if (!_enabled) return;
             Owner?.StashWidget(this);
             _enabled = false;
-            OnDisable?.Invoke();
+            onDisable?.Invoke();
         }
 
         public class F_FullscreenWidgetActions : Feature

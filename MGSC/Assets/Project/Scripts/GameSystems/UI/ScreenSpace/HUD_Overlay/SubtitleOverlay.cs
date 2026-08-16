@@ -14,7 +14,7 @@ namespace UI
         public override void OnLoad()
         {
             base.OnLoad();
-            OnEnable += WhenEnabled;
+            onEnable += WhenEnabled;
         }
 
         void WhenEnabled()

@@ -8,8 +8,8 @@ namespace UI
     {
 		public UIMenu()
 		{
-			OnEnable += OnMenuOpen;
-			OnDisable += OnMenuClose;
+			onEnable += OnMenuOpen;
+			onDisable += OnMenuClose;
         }
         protected override void OnReset()
         {

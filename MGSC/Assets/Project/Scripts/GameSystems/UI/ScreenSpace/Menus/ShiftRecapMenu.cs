@@ -48,7 +48,7 @@ namespace UI
             {
                 mgr.OnMoneyChange += SetMoneyGained;
             }
-            OnEnable += ShowShiftRecap;
+            onEnable += ShowShiftRecap;
             SetContentMode(ContentMode.Default);
             BindAll();
         }

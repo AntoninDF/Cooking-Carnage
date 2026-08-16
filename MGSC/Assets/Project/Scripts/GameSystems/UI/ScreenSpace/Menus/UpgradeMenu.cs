@@ -31,8 +31,8 @@ namespace UI
 
             PopulateUpgradeList();
 
-            OnEnable += UpdateGraphicsForEveryUpgrade;
-            OnEnable += PlayTransition;
+            onEnable += UpdateGraphicsForEveryUpgrade;
+            onEnable += PlayTransition;
         }
 
         private void UpdateGraphicsForEveryUpgrade()
