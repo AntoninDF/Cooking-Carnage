@@ -1,6 +1,3 @@
-using Cooking;
-using GameSystem;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Upgrades
@@ -14,6 +11,13 @@ namespace Upgrades
         public float GetFinalDuration(float baseDuration, float minDuration = 0.1f)
         {
             return Mathf.Max(minDuration, baseDuration - TimeReduction);
+        }
+
+        public override void LevelUp()
+        {
+            base.LevelUp();
+            if (_level == _config.MaxLevel)
+                Achievements.Unlock("ACH_U03");
         }
     }
 }

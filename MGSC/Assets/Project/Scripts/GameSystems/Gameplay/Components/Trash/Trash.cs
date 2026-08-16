@@ -23,6 +23,7 @@ namespace Trash
         [SerializeField] private CustomSlot _slotContainer;
         private F_GoToAnimation _objectAnimation;
         private bool _canEat;
+        private int _objectsTrashedThisShift = 0;
         #endregion
         
         private void OnEnable()
@@ -38,6 +39,7 @@ namespace Trash
             Container?.Empty();
             _objectAnimation = null;
             _canEat = true;
+            _objectsTrashedThisShift = 0;
         }
 
         
@@ -83,7 +85,10 @@ namespace Trash
                 _objectAnimation.OnAnimationStop += (() =>
                 {
                     StartCoroutine(EatCoroutine(obj.GetParentTransform().gameObject));
-                    Achievements.Unlock("ACH_05");
+                    Achievements.Unlock("ACH_A05");
+                    _objectsTrashedThisShift++;
+                    if (_objectsTrashedThisShift == 10)
+                        Achievements.Unlock("ACH_B14");
                 });
         }
         

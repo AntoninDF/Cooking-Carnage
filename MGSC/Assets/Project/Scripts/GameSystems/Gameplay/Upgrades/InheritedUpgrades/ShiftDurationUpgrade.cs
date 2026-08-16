@@ -18,6 +18,12 @@ namespace Upgrades
         {
             Globals.Gameplay.ShiftDuration.Value = TotalShiftDuration;
         }
+        public override void LevelUp()
+        {
+            base.LevelUp();
+            if (_level == _config.MaxLevel)
+                Achievements.Unlock("ACH_U09");
+        }
     }
 
 }

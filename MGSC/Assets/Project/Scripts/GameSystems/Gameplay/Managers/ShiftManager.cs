@@ -128,16 +128,7 @@ namespace GameSystem
                 SaveManager.SaveGameData();
                 ShiftNumber--;
 
-                if ( ShiftNumber == 0 ) Achievements.Unlock("ACH_04");
-                if (Reference.TryGetManager(out ClientManager cmgr))
-                {
-                    int correct = cmgr.GetCorrectOrdersCount();
-                    int wrong = cmgr.GetWrongOrdersCount();
-                    int missed = cmgr.GetMissedOrdersCount();
-                    int burnt = cmgr.GetBurntOrdersCount();
-                    if (wrong == 0) Achievements.Unlock("ACH_B02");
-                    if (correct == 0 && wrong == burnt) Achievements.Unlock("ACH_B03");
-                }
+                CheckForAchievements();
             }
             else // If shift is failed
             {
@@ -150,7 +141,52 @@ namespace GameSystem
             AudioSystem.PlayAudio(AudioSystem.Database.shiftEndSFX);
             GameLoop.RequestTransition(StateTransitions.ShowShiftRecap);
         }
-        
+
+        private void CheckForAchievements()
+        {
+            if (ShiftNumber == 0) Achievements.Unlock("ACH_A04");
+            if (Reference.TryGetManager(out ClientManager cmgr))
+            {
+                int correct = cmgr.GetCorrectOrdersCount();
+                int wrong = cmgr.GetWrongOrdersCount();
+                int missed = cmgr.GetMissedOrdersCount();
+                int burnt = cmgr.GetBurntOrdersCount();
+                int killed = cmgr.ClientsKilledThisShift;
+                if (wrong == 0 && correct > 0) Achievements.Unlock("ACH_B01");
+                if (correct == 0 && wrong > 0) Achievements.Unlock("ACH_B02");
+                if (correct == 0 && wrong == burnt && burnt > 0) Achievements.Unlock("ACH_B03");
+                if (killed == 0) Achievements.Unlock("ACH_B16");
+
+                var hist = cmgr.GetClientsHistory();
+                // Serve only Eugene
+                if (hist.All(data => data.killed || (data.clientType == Clients.EClientType.A && data.served)) && hist.Any(data => data.served))
+                    Achievements.Unlock("ACH_B05");
+                // Serve only Mr Fesse
+                if (hist.All(data => data.killed || (data.clientType == Clients.EClientType.B && data.served)) && hist.Any(data => data.served))
+                    Achievements.Unlock("ACH_B09");
+                // Serve only Fabrice
+                if (hist.All(data => data.killed || (data.clientType == Clients.EClientType.C && data.served)) && hist.Any(data => data.served))
+                    Achievements.Unlock("ACH_B07");
+                // Kill only Eugene (makes sure all clients killed are Eugene, and there is at list one kill)
+                if (hist.All(data => (data.killed && data.clientType == Clients.EClientType.A) || !data.killed) && hist.Any(data => data.killed))
+                    Achievements.Unlock("ACH_B06");
+                // Kill only Mr. Fesse
+                if (hist.All(data => (data.killed && data.clientType == Clients.EClientType.B) || !data.killed) && hist.Any(data => data.killed))
+                    Achievements.Unlock("ACH_B010");
+                // Kill only Fabrice
+                if (hist.All(data => (data.killed && data.clientType == Clients.EClientType.C) || !data.killed) && hist.Any(data => data.killed))
+                    Achievements.Unlock("ACH_B08");
+                // Serve only recipes containing eyes
+                if (hist.All(data => (data.served && data.servedRecipe.Ingredients.All(ingredient => ingredient.name.Contains("Eye"))) || data.killed) && hist.Any(data => data.served))
+                    Achievements.Unlock("ACH_B11");
+                // Serve only recipes containing teeth
+                if (hist.All(data => (data.served && data.servedRecipe.Ingredients.All(ingredient => ingredient.name.Contains("Tooth"))) || data.killed) && hist.Any(data => data.served))
+                    Achievements.Unlock("ACH_B12");
+                // Serve only recipes containing butts
+                if (hist.All(data => (data.served && data.servedRecipe.Ingredients.All(ingredient => ingredient.name.Contains("Fiak"))) || data.killed) && hist.Any(data => data.served))
+                    Achievements.Unlock("ACH_B13");
+            }
+        }
 
         private void ResetTimerUntilEndOfShift()
         {

@@ -50,7 +50,7 @@ namespace Upgrades
                     ShiftNumber = Globals.Gameplay.ShiftNumber 
                 });
             _level++;
-            // Debug.Log($"[{GetType().Name}] Level {_level}/{_config?.MaxLevel}");
+            // Debug.Log($"[{GetType().Name}] Level {_level}/{Config?.MaxLevel}");
             OnUpgradeSuccess?.Invoke();
         }
         

@@ -129,6 +129,9 @@ namespace GameSystem
             if (amount < 0) OnMoneyLoss?.Invoke();
 
             LastMoneyDelta = amount;
+
+            if (MoneyInfo >= 1000)
+                Achievements.Unlock("ACH_B15");
             
             this.Log(LogType.Log, $"{amount}€ update");
         }
