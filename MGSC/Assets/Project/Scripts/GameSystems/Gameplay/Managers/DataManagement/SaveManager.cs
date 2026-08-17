@@ -169,6 +169,7 @@ namespace GameSystem
         //⚠️ UPDATE THIS WHEN ADDING NEW STUFF TO SAVE (only if it should be saved when closing the game)
         private static void SaveUponQuit()
         {
+            if (Data == null) Data = MakeGameData();
             // Save how long the player has played
             Data.SecondsPlayed += (int)Time.realtimeSinceStartup;
 

@@ -107,7 +107,7 @@ public class TutorialTimeline : ScriptableObject
             Tasks.RemoveCurrentTasks();
         }
         AudioSystem.StopAudioForBus_Dialog();
-
+        Instance?._currentPlayingTutorial?.Timer?.Pause();
     }
     static void ClearBoundTutorialSteps(IEnumerable<EventVariable> events)
     {

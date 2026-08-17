@@ -4,7 +4,6 @@ using Orders;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEditor;
-using System.Linq;
 
 public class OrderingArea : MonoBehaviour, IFeatureCollection
 {
@@ -23,6 +22,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     public Transform SeatParent;
     public ServingArea ServingArea;
     public InteractionButton KillButton;
+    public InteractionButton BlendButton;
     
     
     public ClientSeatHeightConfig ServingAreaConfig;
@@ -52,6 +52,8 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     {
         if (KillButton != null)
             KillButton.OnInteraction += _ => KillClient();
+        if (BlendButton != null)
+            BlendButton.OnInteraction += _ => BlendClient();
     }
 
 #if UNITY_EDITOR && EXTENSIVE_DEBUG

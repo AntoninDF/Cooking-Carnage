@@ -12,12 +12,12 @@ namespace Project.Scripts.BloodMachine
     {
         public FeatureCollection Collection { get; } = new();
 
-        [SerializeField] private EClientType       Type;
+        public EClientType       Type;
         [SerializeField] private InteractionButton ValveButton;
 
         [Header("Drink")]
         public  GameObject _drinkPrefab;
-        [SerializeField] private Transform  _drinkSpawnPoint;
+        public Transform  DrinkSpawnPoint;
 
         [Header("Liquid")]
         [SerializeField] private Renderer _reserveRenderer;
@@ -96,9 +96,9 @@ namespace Project.Scripts.BloodMachine
         {
             if (_spawnedDrink != null) return;
 
-            if (_drinkPrefab == null || _drinkSpawnPoint == null)
+            if (_drinkPrefab == null || DrinkSpawnPoint == null)
             {
-                //Debug.LogError($"[DrinkStation] _drinkPrefab ou _drinkSpawnPoint non assigné sur la station (type {Type}) — vérifier l'Inspector.");
+                //Debug.LogError($"[DrinkStation] _drinkPrefab ou DrinkSpawnPoint non assigné sur la station (type {Type}) — vérifier l'Inspector.");
                 return;
             }
 
@@ -107,7 +107,7 @@ namespace Project.Scripts.BloodMachine
 
         private void Spawn()
         {
-            _spawnedDrink = GameObject.Instantiate(_drinkPrefab, _drinkSpawnPoint.position, _drinkSpawnPoint.rotation);
+            _spawnedDrink = GameObject.Instantiate(_drinkPrefab, DrinkSpawnPoint.position, DrinkSpawnPoint.rotation);
             valve.SetPendingDrink(true);
 
             if (_spawnedDrink.TryGetComponent(out _spawnedDrinkComponent))
@@ -127,7 +127,7 @@ namespace Project.Scripts.BloodMachine
             if (_spawnedDrinkComponent != null)
                 _spawnedDrinkComponent.Grabbable.OnGrab -= HandleDrinkGrabbed;
 
-            valve.TryGrabbDrink();
+            valve.TryGrabDrink();
         }
 
         private void HandleDrinkTaked()
@@ -140,7 +140,7 @@ namespace Project.Scripts.BloodMachine
         private void CheckReserve(EClientType clientType, float targetValue)
         {
             if (clientType == Type)
-                ActualizeReserveValue(targetValue);
+                ActualizeReserveValue(reserve.GetReserveRatio(clientType));
         }
         
     }

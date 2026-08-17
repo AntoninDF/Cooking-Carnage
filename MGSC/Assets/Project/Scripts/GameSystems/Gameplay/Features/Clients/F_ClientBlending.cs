@@ -54,7 +54,7 @@ namespace Features
             var queue = cm?.WaitingQueue;
             if (queue != null) queue.OnSeatAvailable -= _client.Behaviour.OnQueueSeatAvailablePublic;
 
-            GameObject.Destroy(_client.gameObject);
+            _client.Despawn();
         }
     }
 }

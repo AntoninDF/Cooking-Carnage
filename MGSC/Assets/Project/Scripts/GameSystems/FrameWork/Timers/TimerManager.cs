@@ -36,6 +36,7 @@ namespace GameSystem
         public TimerManager()
         {
             GameLoop.OnReset += RemoveFinishedTimers;
+            Application.quitting += RemoveFinishedTimers;
         }
 
 #if UNITY_EDITOR && EXTENSIVE_DEBUG
@@ -86,7 +87,12 @@ namespace GameSystem
 
         }
 
-
+        public static Timer GetTimer(string name)
+        {
+            if (timers.TryGetValue(name, out var timer))
+                return timer;
+            return null;
+        }
         /// <summary>
         /// Starts a timer with the given name, duration, callback, and loop option.
         /// OnUpdate is invoked with the time elapsed in seconds as parameter.

@@ -14,7 +14,7 @@ using FMOD.Studio;
 public class TutorialStep : ScriptableObject
 {
     public List<SubStep> Steps = new();
-
+    public Timer Timer => _currentTimer;
     [NonSerialized] protected UISystem UI;
     [NonSerialized] protected TaskPanel Tasks;
     [NonSerialized] protected SubtitleOverlay Subtitles;

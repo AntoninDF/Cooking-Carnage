@@ -1,6 +1,7 @@
-using System.Collections.Generic;
 using Clients;
 using Features;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Upgrades;
@@ -76,6 +77,10 @@ namespace Project.Scripts.BloodMachine
 			_toothStation.BindEvents();
 		}
 
+		/// <summary>
+		/// This method is invoked by the UnityEvent <see cref="OrderingArea.OnCustomerBlended"/> in inspector
+		/// </summary>
+		/// <param name="clientType"></param>
 		public void TryGetBlood(EClientType clientType)
 		{
 		//	Debug.Log("[Global Drink Station]Try Get Blood Called");
@@ -127,6 +132,37 @@ namespace Project.Scripts.BloodMachine
 		public void OnUpgraded(UnlockDrinkMachine upgrade)
 		{
 			Globals.Gameplay.AllowBlending = new (true);
-		}
-	}
+        }
+		
+#if UNITY_EDITOR
+    void OnDrawGizmos()
+        {
+            float baseHandleHeight = 1f;
+            float increment = 0.2f;
+            var cam = SceneView.lastActiveSceneView.camera;
+            if (cam != null) increment = Vector3.Distance(cam.transform.position, transform.position) / 50f;
+            int handleCount = 0;
+            float GetY()
+            {
+                handleCount++;
+                return baseHandleHeight + (handleCount - 1) * increment;
+            }
+            if (!Application.isPlaying) return;
+
+			void DisplayInfoForDrinkStation(DrinkStation drinkStation)
+			{
+				Gizmos.color = Color.white;
+                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Station type : " + drinkStation.Type);
+                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Reserve : " + Mathf.Round(drinkStation.reserve.GetDrinkQuantity(drinkStation.Type)*100)/100 + "cL (ratio is " 
+																					+ Mathf.Round(drinkStation.reserve.GetReserveRatio(drinkStation.Type) * 100) / 100 + "/1)");
+				UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Is serving ? : " + (drinkStation.valve.IsServing ? "Yup" : "Nope"));
+				UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Serving timer : " + 
+					(drinkStation.valve.ServingTimer != null ? (Mathf.Round(drinkStation.valve.ServingTimer.Elapsed * 100) / 100) + "/" + drinkStation.valve.ServingTimer.Duration + "s" : "0/0s"));
+				UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Overflowing timer : " + 
+					(drinkStation.valve.OverflowingTimer != null ? (Mathf.Round(drinkStation.valve.OverflowingTimer.Elapsed * 100) / 100) + "/" + drinkStation.valve.OverflowingTimer.Duration + "s" : "0/0s"));
+            }
+            
+        }
+#endif
+    }
 }

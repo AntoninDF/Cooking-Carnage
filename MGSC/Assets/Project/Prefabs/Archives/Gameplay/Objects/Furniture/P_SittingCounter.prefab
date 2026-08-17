@@ -197,6 +197,7 @@ MonoBehaviour:
   SeatParent: {fileID: 5361733293880336800}
   ServingArea: {fileID: 7263218699784425065}
   KillButton: {fileID: 3602768324645416900}
+  BlendButton: {fileID: 1467731768979103045}
   ServingAreaConfig: {fileID: 11400000, guid: 9bccb6a8c9a667d47bb7d98240219e68, type: 2}
   OnCustomerKilled:
     m_PersistentCalls:
@@ -252,7 +253,7 @@ MonoBehaviour:
   OnCustomerBlended:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5670825509469044708}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
         m_MethodName: SetTrigger
         m_Mode: 5
@@ -756,40 +757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
-  Events:
-  - ActionPath:
-      ActionVariableName: OnInteraction
-      SerializedType:
-        m_Name: Action`1
-        m_AssemblyQualifiedName: System.Action`1[[Features.InteractionContext, Assembly-CSharp,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0,
-          Culture=neutral, PublicKeyToken=b77a5c561934e089
-        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-      FeaturePath:
-        FeatureVariableName: Interactable
-        SerializedType:
-          m_Name: F_Interactable
-          m_AssemblyQualifiedName: Features.F_Interactable, Assembly-CSharp, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        Path: []
-        OwningObject: {fileID: 1467731768979103045}
-      source: 0
-    Event:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 9010698450651919534}
-          m_TargetAssemblyTypeName: OrderingArea, Assembly-CSharp
-          m_MethodName: BlendClient
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+  Events: []
   references:
     version: 2
     RefIds: []
@@ -1459,11 +1427,6 @@ Transform:
 --- !u!4 &6077997524233108106 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4733547738782168993, guid: 0c759610b9dc1304e9172001e4c2e4fb, type: 3}
-  m_PrefabInstance: {fileID: 1578953799650299179}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &6263090293446580715 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 4828814745135764672, guid: 0c759610b9dc1304e9172001e4c2e4fb, type: 3}
   m_PrefabInstance: {fileID: 1578953799650299179}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2713596476473681133

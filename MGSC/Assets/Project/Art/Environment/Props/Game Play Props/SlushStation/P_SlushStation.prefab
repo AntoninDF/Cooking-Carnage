@@ -103,7 +103,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31ba94a06db74eac9ca95f06db219783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.BloodMachine.GlobalDrinkStation
-  BloodPerClients: []
+  BloodPerClients:
+  - bloodGained: 0.2
+    clientType: 1
+  - bloodGained: 0.2
+    clientType: 2
+  - bloodGained: 0.2
+    clientType: 3
   _bloodPerDrinkCl: 30
   _drinksPerFullReserve: 3
   _timeToRefillDrink: 5
