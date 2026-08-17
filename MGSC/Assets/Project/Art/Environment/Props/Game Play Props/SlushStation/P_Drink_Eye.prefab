@@ -9,6 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8763964459011285543}
+  - component: {fileID: 5245833613526532243}
+  - component: {fileID: 687375523696324419}
+  - component: {fileID: 3628510367581407540}
   m_Layer: 0
   m_Name: P_Drink_Eye
   m_TagString: Untagged
@@ -34,7 +37,68 @@ Transform:
   - {fileID: 6470468595859113166}
   - {fileID: 4403295864576525349}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 8.519996, y: 131.32701, z: 0}
+--- !u!64 &5245833613526532243
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6427651013289206968}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!114 &687375523696324419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6427651013289206968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcde3e00e2b04beda575db231c486325, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.GameSystems.Gameplay.Components.Drinks.Drink
+  defaultModel: {fileID: 4193915602254837175}
+  OnItemGrabbed: {fileID: 11400000, guid: 7bfe63f3ecb6e6343ba985c1a9991dbc, type: 2}
+  drinkType: 1
+  _animation: {fileID: 3628510367581407540}
+  _grabbedAnimation: {fileID: 7400000, guid: 3219c8407ee38c4418e10f37dd3572b8, type: 2}
+  _droppedAnimation: {fileID: 7400000, guid: bada8d9a9c18a4a4c9c525792463c6e5, type: 2}
+  _liquidRenderer: {fileID: 7375266117223913102}
+  _liquidMaterialIndex: 2
+--- !u!111 &3628510367581407540
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6427651013289206968}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 3a0e17bab2a3c8f4f9f6ff6705260d0b, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: bada8d9a9c18a4a4c9c525792463c6e5, type: 2}
+  - {fileID: 7400000, guid: 3219c8407ee38c4418e10f37dd3572b8, type: 2}
+  - {fileID: 7400000, guid: 3a0e17bab2a3c8f4f9f6ff6705260d0b, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1001 &2849010806369162514
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -163,11 +227,43 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: -8014698748001398745, guid: c5269ddaedc98f1429ce779d928f65fb, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c5269ddaedc98f1429ce779d928f65fb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4193915602254837175}
   m_SourcePrefab: {fileID: 100100000, guid: c5269ddaedc98f1429ce779d928f65fb, type: 3}
 --- !u!4 &2306688837195100921 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c5269ddaedc98f1429ce779d928f65fb, type: 3}
+  m_PrefabInstance: {fileID: 2849010806369162514}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3118973545828264003 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c5269ddaedc98f1429ce779d928f65fb, type: 3}
+  m_PrefabInstance: {fileID: 2849010806369162514}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4193915602254837175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3118973545828264003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModelController
+  _propagateChangesToChildren: 1
+  _disableShadowsIfSmallerThan: 0.5
+  _allowCustomOutlineValues: 0
+  _outline:
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Thickness: 7
+    Mode: 1
+--- !u!23 &7375266117223913102 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4743290202522977180, guid: c5269ddaedc98f1429ce779d928f65fb, type: 3}
   m_PrefabInstance: {fileID: 2849010806369162514}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4002902958046997628

@@ -101,7 +101,7 @@ namespace Trash
             _canEat = false;
             yield return new WaitForSeconds(eatTime);
             DestroyItem(obj);
-            yield return new WaitForSeconds(_animationDuration);
+            yield return new WaitForSeconds(_animationDuration - eatTime);
             Container.IsLocked = false;
             OnFinishEating?.Invoke();
             ResetThis();
@@ -112,6 +112,6 @@ namespace Trash
         {
             Destroy(go);
         }
-
+        
     }
 }

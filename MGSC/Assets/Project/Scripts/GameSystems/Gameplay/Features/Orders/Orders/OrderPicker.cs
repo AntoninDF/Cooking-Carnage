@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Upgrades;
+using Random = UnityEngine.Random;
 
 namespace Orders
 {
@@ -26,9 +27,13 @@ namespace Orders
             }
         }
 
-        private static int _selectionCount = 0;
-        private static Queue<SO_Recipe> _forcedRecipes = new();
+        private static float DrinkProbability;
+        private static float _extraDrinkChanceBonus = 0f;
 
+        private static int _selectionCount = 0; 
+        private static Queue<SO_Recipe> _forcedRecipes = new();
+        public static void SetExtraDrinkChanceBonus(float bonus) => _extraDrinkChanceBonus = bonus;
+        
         public static SO_Recipe Pick()
         {
             // If recipes have been explicitely enqueued, output them instead
@@ -85,6 +90,20 @@ namespace Orders
             SO_Recipe picked = PickRandomRecipe(weights);
             return ApplyUpgrade(picked, book, SO_RecipeUnlockConfig.Instance);
         }
+
+        public static EClientType? PickDrink(Client client)
+        {
+            if (!RecipeUnlockChecker.IsUnlocked(RecipeCategory.Simple))
+                return null;
+
+            float finalDrinkProbability = DrinkProbability + _extraDrinkChanceBonus;
+
+            if (Random.value >= finalDrinkProbability)
+                return null;
+
+            return client.Type;
+        }
+
 
         private static bool TryPickQueuedRecipe(out SO_Recipe recipe)
         {

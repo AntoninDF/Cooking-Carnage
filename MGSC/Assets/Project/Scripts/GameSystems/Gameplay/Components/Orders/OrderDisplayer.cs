@@ -1,21 +1,25 @@
-using Cooking;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Clients;
+using Cooking;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Orders
 {
     public class OrderDisplayer : MonoBehaviour
     {
-
-        [SerializeField] private Animation _animation;
-        [SerializeField] private TMP_Text _price;
-        [SerializeField] private List<Image> _ingredients;
+        [SerializeField] private List<DrinkByType>   _possibleDrinks = new();
+        [SerializeField] private Animation           _animation;
+        [SerializeField] private TMP_Text            _price;
+        [SerializeField] private List<Image>         _ingredients;
+        [SerializeField] private Image               _drink;
         [SerializeField] private List<RectTransform> _cookingMethodsPositions;
-        [SerializeField] private Image _timeSlider;
+        [SerializeField] private Image               _timeSlider;
 
         
         [SerializeField] private AnimationClip _playTV;
@@ -28,10 +32,13 @@ namespace Orders
         
         private bool _hasTriggered1Star;
         private bool _hasTriggered2Star;
+
+        private Dictionary<EClientType?, Sprite> _relativeDrinkSprite = new();
         
 
         void Start()
         {
+            BuildDrinkDict();
             foreach (Image image in _ingredients)
             {
                 image.preserveAspect = true;
@@ -43,30 +50,36 @@ namespace Orders
         {
             if (order == null) return;
             SO_Recipe recipe = order.Recipe;
-
-            /*
             string debug = "[OrderDisplayer] DisplayOrder : ";
             debug += "\nIngredient image count = " + _ingredients.Count;
             debug += "\nIngredient in recipe count = " + recipe.Ingredients.Count;
-            */
-
             _hasTriggered1Star = false;
             _hasTriggered2Star = false;
             
-            if(recipe.Ingredients.Count > 4) Debug.Log("What the fuck ??");
+            if(order.Recipe.Ingredients.Count > 4) Debug.Log("What the fuck ??");
             for (int i = 0; i < _ingredients.Count; i++)
             {
-                if(i< recipe.Ingredients.Count)
+                if(i< order.Recipe.Ingredients.Count)
                 {
                     _ingredients[i].sprite = recipe.Ingredients[i].Sprite;
                     _ingredients[i].color = Color.white;
-                    // debug += "\nSet image n°" + i + " to sprite = " + _ingredients[i].sprite.name + " and color = " + _ingredients[i].color;
+                    debug += "\nSet image n°" + i + " to sprite = " + _ingredients[i].sprite.name + " and color = " + _ingredients[i].color;
                 }
                 else
                 {
                     _ingredients[i].color = new Color(1, 1, 1, 0);
-                    // debug += "\nSet image n°" + i + " to empty (color = " + _ingredients[i].color + ")";
+                    debug += "\nSet image n°" + i + " to empty (color = " + _ingredients[i].color + ")";
                 }
+            }
+
+            if (order.Drink != null)
+            {
+                _drink.enabled = true;
+                _drink.sprite  = _relativeDrinkSprite[order.Drink];
+            }
+            else
+            {
+                _drink.enabled = false;
             }
 
             if (order.Owner != null && order.Owner.PatienceTimer != null)
@@ -74,7 +87,8 @@ namespace Orders
                 var timer = order.Owner.PatienceTimer;
                 order.Owner.PatienceTimer.onUpdate += elapsed => UpdatePriceText(recipe, elapsed, (timer != null ? timer.Duration : 60));
             }
-            // Debug.Log(debug);
+            Debug.Log(debug);
+            _price.text = order.Recipe.Price.ToString() + " $";
             StartDisplay();
         }
         void UpdatePriceText(SO_Recipe recipe, float patienceElapsed, float totalPatience)
@@ -144,7 +158,22 @@ namespace Orders
         public void PlayAnimation(Animation animationComponent)
         {
             animationComponent.Play();
-        } 
+        }
 
+        public void BuildDrinkDict()
+        {
+            foreach (DrinkByType possibleDrink in _possibleDrinks)
+            {
+                if(!_relativeDrinkSprite.ContainsKey(possibleDrink.ClientType))
+                    _relativeDrinkSprite.Add(possibleDrink.ClientType, possibleDrink.associatedDrinkSprite);
+            }
+        }
+    }
+
+    [Serializable]
+    public class DrinkByType
+    {
+        public EClientType ClientType;
+        public Sprite      associatedDrinkSprite;
     }
 }

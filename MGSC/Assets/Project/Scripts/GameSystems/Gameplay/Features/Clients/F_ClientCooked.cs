@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Features
 {
-	public class ClientCooked : Feature
+	public class F_ClientCooked : Feature
 	{
 		public Action OnCustomerCooked { get; set; }
 
@@ -14,7 +14,7 @@ namespace Features
 		private bool   _isRunning;
 		private Client _client;
 		
-		public ClientCooked(IFeatureCollection owner, float destroyDelay = 2f) : base(owner)
+		public F_ClientCooked(IFeatureCollection owner, float destroyDelay = 2f) : base(owner)
 		{
 			_client       = owner as Client;
 			_destroyDelay = destroyDelay;

@@ -27,7 +27,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     
     public ClientSeatHeightConfig ServingAreaConfig;
     public UnityEvent OnCustomerKilled;
-    
+    public UnityEvent<EClientType> OnCustomerBlended;
     
     [SerializeField] private OrderDisplayer _OrderDisplayer;
     [SerializeField] private Transform _slotParent;
@@ -136,7 +136,19 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
             Debug.Log("[OrderingArea] OnCustomerKilled invoked for client " + client.name);
             OnCustomerKilled?.Invoke();
         }
-        
+    }
+
+    public void BlendClient()
+    {
+        if (!Globals.Gameplay.AllowBlending) return;
+        Client client = ClientSeat.RegisteredClient;
+        if (client != null && ClientSeat.SittingClient != null)
+        {
+            OnCustomerKilled?.Invoke(); //A retirer si animation de mort différente
+            client.ClientBlending.Trigger();
+            GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
+            OnCustomerBlended?.Invoke(client.Type);
+        }
     }
 
 #if UNITY_EDITOR

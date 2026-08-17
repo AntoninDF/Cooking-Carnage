@@ -30,12 +30,14 @@ namespace Clients
         [GlobalEvent("Clients/On Client Enters The Cafeteria")]
         public static Action OnEnterCafeteria;
         public ClientBehaviour    Behaviour        { get; set; }
-        public ClientCooked       Cooked           { get; private set; }
+        public F_ClientCooked       Cooked           { get; private set; }
+        public F_ClientBlending    ClientBlending    { get; set; }
         public ClientLook         ClientLook       => _clientLook;
         
-        public bool               IsCooked         { get; set; }
-        public bool               IsAngry          { get; set; }
-        public int UniqueID { get; set; }
+        public bool  IsCooked  { get; set; }
+        public bool  IsBlended { get; set; }
+        public bool  IsAngry   { get; set; }
+        public int   UniqueID  { get; set; }
         public Timer PatienceTimer;
         
         public Order OrderLog { get;  set; }
@@ -185,17 +187,14 @@ namespace Clients
         public void InitFeatures(ClientMovement movement)
        {
            _clientLook = new ClientLook(this, transform, movement);
-           Cooked      = new ClientCooked(this, _cookingDelay);
-           Collection.Add(_clientLook);
-           Collection.Add(Cooked);
+           Cooked      = new F_ClientCooked(this, _cookingDelay);
+           ClientBlending = new F_ClientBlending(this, _cookingDelay);
+           // Collection.Add(_clientLook);
+           // Collection.Add(Cooked);
+           // Collection.Add(ClientBlending);
        }
+       
 
- /*
-       public void CookClient()
-       {
-           Cooked.Trigger();
-       }
- */
        public void SpawnIngredients(List<SlotContainer> containers)
        {
            List<SlotContainer> positions = containers;
@@ -310,9 +309,9 @@ namespace Clients
        /// and evaluate it if he can
        /// </summary>
        /// <param name="serving"></param>
-       public void TryAcceptServing(Servable serving)
+       public void TryAcceptServing(Servable serving, EClientType? servedDrinkType)
        {
-           if (serving == null || !serving.Enabled) return;
+        if (serving == null || !serving.Enabled) return;
            if (CurrentOrder == null) return;
 
            var recipeComponent = serving.Owner as Recipe;
@@ -321,9 +320,11 @@ namespace Clients
            SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
            if (soRecipe == null) return;
 
-           var info = new Orders.ServingInfo(serving); 
+           if (recipeComponent == null) { return; }
+           if (soRecipe == null) {  return; }
+           
+           var info = new Orders.ServingInfo(serving, servedDrinkType);
            CurrentOrder.ServingInfo = info;
-
             Achievements.Unlock("ACH_A02");
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();

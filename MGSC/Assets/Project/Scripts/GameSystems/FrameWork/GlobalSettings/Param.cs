@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -26,7 +27,11 @@ public class Param<T>
 
     public void Set(T value)
     {
-        // Debug.Log("Parameter set to " + value);
+        if (EqualityComparer<T>.Default.Equals(_value, value))
+        {
+            _value = value;
+            return; 
+        }
         _value = value;
         OnValueChange?.Invoke(value);
     }

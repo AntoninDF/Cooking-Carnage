@@ -9,6 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9094713275349182645}
+  - component: {fileID: 4909881443247532461}
+  - component: {fileID: 9067814384482051897}
+  - component: {fileID: 8322598996206211122}
   m_Layer: 0
   m_Name: P_Drink_Tooth
   m_TagString: Untagged
@@ -27,11 +30,72 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7785399478494449930}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &4909881443247532461
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2304281794536095463}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!114 &9067814384482051897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2304281794536095463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcde3e00e2b04beda575db231c486325, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.GameSystems.Gameplay.Components.Drinks.Drink
+  defaultModel: {fileID: 4541026346597752765}
+  OnItemGrabbed: {fileID: 11400000, guid: 7bfe63f3ecb6e6343ba985c1a9991dbc, type: 2}
+  drinkType: 3
+  _animation: {fileID: 8322598996206211122}
+  _grabbedAnimation: {fileID: 7400000, guid: d6851e10b854a134a8e21b446370fec7, type: 2}
+  _droppedAnimation: {fileID: 7400000, guid: 09ccbaf1c5627d64b82f8e44363ec1eb, type: 2}
+  _liquidRenderer: {fileID: 0}
+  _liquidMaterialIndex: 0
+--- !u!111 &8322598996206211122
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2304281794536095463}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 1477f14a82c77b84abc7ee5ddb515f5f, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: d6851e10b854a134a8e21b446370fec7, type: 2}
+  - {fileID: 7400000, guid: 09ccbaf1c5627d64b82f8e44363ec1eb, type: 2}
+  - {fileID: 7400000, guid: 1477f14a82c77b84abc7ee5ddb515f5f, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1001 &7746739941569279713
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -131,8 +195,35 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5575cefc3d6fd9a4ca632ab54fb0bfb2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4541026346597752765}
   m_SourcePrefab: {fileID: 100100000, guid: 5575cefc3d6fd9a4ca632ab54fb0bfb2, type: 3}
+--- !u!1 &7440117280183946160 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5575cefc3d6fd9a4ca632ab54fb0bfb2, type: 3}
+  m_PrefabInstance: {fileID: 7746739941569279713}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4541026346597752765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440117280183946160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModelController
+  _propagateChangesToChildren: 1
+  _disableShadowsIfSmallerThan: 0.5
+  _allowCustomOutlineValues: 0
+  _outline:
+    Color: {r: 1, g: 1, b: 1, a: 1}
+    Thickness: 7
+    Mode: 1
 --- !u!4 &7785399478494449930 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5575cefc3d6fd9a4ca632ab54fb0bfb2, type: 3}
