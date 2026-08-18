@@ -6,7 +6,7 @@ namespace Project.Scripts.BloodMachine
 	[Serializable]
 	public class BloodPerClient
 	{
-		public float       bloodGained;
+		public UnityEngine.Vector2      bloodGainedMinMax;
 		public EClientType clientType;
 	}
 }

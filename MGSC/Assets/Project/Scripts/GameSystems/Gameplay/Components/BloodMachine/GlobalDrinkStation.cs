@@ -32,13 +32,13 @@ namespace Project.Scripts.BloodMachine
 		[SerializeField] private List<BloodPerClient> BloodPerClients = new List<BloodPerClient>();
 		
 		[Header("Reglages")]
-		[SerializeField] private float _bloodPerDrinkCl      = 30f; 
-		[SerializeField] private int   _drinksPerFullReserve = 3;   
-		[SerializeField] private float _timeToRefillDrink     = 5f; 
+		[SerializeField] private int _bloodPerDrinkCl      = 30; 
+		[SerializeField] private int _maxBloodQuantityDisplay = 150;   
+		[SerializeField] private float _timeIntervalBetweenDroplets     = 0.5f; // This is the delay between each partial fillup of a drink (→ 3cL per 0.5s, this is the 0.5s)
+		[SerializeField] private int _centilitersPerDroplet     = 3; // This is the delay between each partial fillup of a drink (→ 3cL per 0.5s, this is the 0.5s)
 		[SerializeField] private float _timeBeforeLoosingBlood = 2f;
 
-		private float _maxBloodQuantity      => _bloodPerDrinkCl * _drinksPerFullReserve;
-		private float _bloodLostedPerSeconds => _bloodPerDrinkCl / _timeToRefillDrink;
+		private float _bloodLostedPerSeconds => _bloodPerDrinkCl / _timeIntervalBetweenDroplets;
 
 		public DrinkStation _assStation;
 		public DrinkStation _eyesStation;
@@ -60,11 +60,11 @@ namespace Project.Scripts.BloodMachine
 
 		public void CreateFeatures()
 		{
-			_reserve = new F_BloodReserve(this, _bloodPerDrinkCl, _maxBloodQuantity);
+			_reserve = new F_BloodReserve(this, _bloodPerDrinkCl, _maxBloodQuantityDisplay);
 
-			_assStation.Initialize(this, this, _reserve, _timeToRefillDrink, _timeBeforeLoosingBlood, _bloodLostedPerSeconds);
-			_eyesStation.Initialize(this, this, _reserve, _timeToRefillDrink, _timeBeforeLoosingBlood, _bloodLostedPerSeconds);
-			_toothStation.Initialize(this, this, _reserve, _timeToRefillDrink, _timeBeforeLoosingBlood, _bloodLostedPerSeconds);
+			_assStation.Initialize(this, this, _reserve, _timeIntervalBetweenDroplets, _timeBeforeLoosingBlood, _bloodLostedPerSeconds);
+			_eyesStation.Initialize(this, this, _reserve, _timeIntervalBetweenDroplets, _timeBeforeLoosingBlood, _bloodLostedPerSeconds);
+			_toothStation.Initialize(this, this, _reserve, _timeIntervalBetweenDroplets, _timeBeforeLoosingBlood, _bloodLostedPerSeconds);
 
 			BindEvents();
 			FillReserveToMin();
@@ -115,7 +115,7 @@ namespace Project.Scripts.BloodMachine
 		{
 			foreach (var client in BloodPerClients)		
 			{
-				if(client.clientType == clientType) return client.bloodGained;
+				if(client.clientType == clientType) return UnityEngine.Random.Range(client.bloodGainedMinMax.x, client.bloodGainedMinMax.y);
 			}
 			
 			//Debug.Log($"[Global Drink Station] this client type :{clientType} do not have a blood quantity associated");
@@ -151,17 +151,20 @@ namespace Project.Scripts.BloodMachine
 
 			void DisplayInfoForDrinkStation(DrinkStation drinkStation)
 			{
-				Gizmos.color = Color.white;
-                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Station type : " + drinkStation.Type);
-                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Reserve : " + Mathf.Round(drinkStation.reserve.GetDrinkQuantity(drinkStation.Type)*100)/100 + "cL (ratio is " 
+                handleCount = 0;
+                Gizmos.color = Color.white;
+                UnityEditor.Handles.Label(drinkStation.DrinkSpawnPoint.transform.position + Vector3.up * GetY(), "Station type : " + drinkStation.Type);
+                UnityEditor.Handles.Label(drinkStation.DrinkSpawnPoint.transform.position + Vector3.up * GetY(), "Reserve : " + Mathf.Round(drinkStation.reserve.GetDrinkQuantity(drinkStation.Type)*100)/100 + "cL (ratio is " 
 																					+ Mathf.Round(drinkStation.reserve.GetReserveRatio(drinkStation.Type) * 100) / 100 + "/1)");
-				UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Is serving ? : " + (drinkStation.valve.IsServing ? "Yup" : "Nope"));
-				UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Serving timer : " + 
+				UnityEditor.Handles.Label(drinkStation.DrinkSpawnPoint.transform.position + Vector3.up * GetY(), "Is serving ? : " + (drinkStation.valve.IsServing ? "Yup" : "Nope"));
+				UnityEditor.Handles.Label(drinkStation.DrinkSpawnPoint.transform.position + Vector3.up * GetY(), "Serving timer : " + 
 					(drinkStation.valve.ServingTimer != null ? (Mathf.Round(drinkStation.valve.ServingTimer.Elapsed * 100) / 100) + "/" + drinkStation.valve.ServingTimer.Duration + "s" : "0/0s"));
-				UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Overflowing timer : " + 
+				UnityEditor.Handles.Label(drinkStation.DrinkSpawnPoint.transform.position + Vector3.up * GetY(), "Overflowing timer : " + 
 					(drinkStation.valve.OverflowingTimer != null ? (Mathf.Round(drinkStation.valve.OverflowingTimer.Elapsed * 100) / 100) + "/" + drinkStation.valve.OverflowingTimer.Duration + "s" : "0/0s"));
             }
-            
+			DisplayInfoForDrinkStation(_assStation);
+			DisplayInfoForDrinkStation(_eyesStation);
+			DisplayInfoForDrinkStation(_toothStation);
         }
 #endif
     }
