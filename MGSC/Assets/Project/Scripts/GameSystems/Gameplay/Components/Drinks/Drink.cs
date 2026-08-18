@@ -39,7 +39,8 @@ namespace Project.Scripts.GameSystems.Gameplay.Components.Drinks
 
 		public void SetLiquidLevel(float shaderValue)
 		{
-			if (_liquidRenderer == null) return;
+            if (_liquidRenderer == null) return;
+            shaderValue = Mathf.Clamp01(shaderValue);
 			_liquidRenderer.GetPropertyBlock(_liquidBlock, _liquidMaterialIndex);
 			_liquidBlock.SetFloat("_LiquidLevel", shaderValue);
 			_liquidRenderer.SetPropertyBlock(_liquidBlock, _liquidMaterialIndex);

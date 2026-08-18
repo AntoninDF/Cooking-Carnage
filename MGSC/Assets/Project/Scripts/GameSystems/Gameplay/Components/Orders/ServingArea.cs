@@ -1,8 +1,6 @@
 using Features;
 using System;
-using System.Runtime.CompilerServices;
 using Clients;
-using Cooking;
 using Project.Scripts.GameSystems.Gameplay.Components.Drinks;
 using UnityEngine;
 
@@ -25,7 +23,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     private bool _watching = false;
     private void StartWatchingSlot()
     {
-        Debug.LogWarning("[ServingArea] StartWatchingSlot() appelé — watching = true");
+        //Debug.LogWarning("[ServingArea] StartWatchingSlot() appelé — watching = true");
         _watching = true;
     }
 

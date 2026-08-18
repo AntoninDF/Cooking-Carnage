@@ -71,13 +71,13 @@ namespace Trash
 
             if (Container.RequestGrab(container.HeldItem))
             {
-                if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+                if (OnGrabEventVar != null) OnGrabEventVar.Invoke();
                 return;
             }
 
             if (passThrough && container.RequestGrab(Container.HeldItem))
             {
-                if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+                if (OnGrabEventVar != null) OnGrabEventVar.Invoke();
                 return;
             }
 
@@ -86,7 +86,7 @@ namespace Trash
                 && container.HeldItem.TryGetSibling(out F_Container heldContainer)
                 && heldContainer.RequestGrab(Container.HeldItem))
             {
-                if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+                if (OnGrabEventVar != null) OnGrabEventVar.Invoke();
                 return;
             }
 
@@ -98,7 +98,7 @@ namespace Trash
                 if (incomingItem.SwapWith(existing))
                 {
                     if (OnGrabEventVar != null)
-                        OnGrabEventVar.Raise();
+                        OnGrabEventVar.Invoke();
                     return;
                 }
             }

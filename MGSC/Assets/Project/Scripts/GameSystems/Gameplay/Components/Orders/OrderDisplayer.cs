@@ -87,7 +87,7 @@ namespace Orders
                 var timer = order.Owner.PatienceTimer;
                 order.Owner.PatienceTimer.onUpdate += elapsed => UpdatePriceText(recipe, elapsed, (timer != null ? timer.Duration : 60));
             }
-            Debug.Log(debug);
+            //Debug.Log(debug);
             _price.text = order.Recipe.Price.ToString() + " $";
             StartDisplay();
         }
@@ -127,7 +127,7 @@ namespace Orders
         {
             StopDisplay();
             StartCoroutine(StopDisplayingOrder());
-            Debug.Log("[OrderDisplayer] Undisplay order");
+            //Debug.Log("[OrderDisplayer] Undisplay order");
         }
 
         IEnumerator StopDisplayingOrder()
@@ -139,7 +139,7 @@ namespace Orders
                 debug += "\n\tSetting " + image.name + "'s sprite to null (currently '" + image.sprite + "')";
                 image.sprite = null;
             }
-            Debug.Log(debug);
+            //Debug.Log(debug);
         }
 
         private void StartDisplay()

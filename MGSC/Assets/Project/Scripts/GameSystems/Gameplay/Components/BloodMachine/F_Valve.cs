@@ -8,15 +8,28 @@ using Upgrades;
 
 namespace Project.Scripts.BloodMachine
 {
+    /// <summary>
+    /// Handles the pouring of blood, the related timers, and blood consumption
+    /// </summary>
     public class F_Valve : Feature, IUpgradable<DrinkServingSpeedUpgrade>
     {
         public EClientType AssociedClientType => _associedClientType;
        
-        public Action StartServeDrink   { get; set; }
-        public Action DrinkReady        { get; set; }
-        public Action StartLoosingBlood { get; set; }
-        public Action OnDrinkTaked      { get; set; }
-        public bool IsServing => isServing;
+        public Action OnStartFillingDrink   { get; set; } // Invoked if the drink starts filling up and can contain more blood. This would be equivalent to "OnStartServing"
+        public Action OnStopFillingDrink        { get; set; } // Invoked when the drink is full
+        public Action OnStartOverflowing { get; set; } // Invoked when the drink starts receiving more blood than it can contain
+        public Action OnStopOverflowing { get; set; } // Invoked when the drink stops receiving more blood than it can contain
+        public Action OnStopServing { get; set; } // Invoked whenever we stop serving, wether we started overflowing or not
+        public bool IsServing
+        {
+            get => _isServing;
+            set
+            {
+                if (value == _isServing) return;
+                if (!value) OnStopServing?.Invoke();
+                _isServing = value;
+            }
+        }
         public Timer ServingTimer => TimerManager.GetTimer(FirstTimerName);
         public Timer OverflowingTimer => TimerManager.GetTimer(SecondTimerName);
        
@@ -26,13 +39,13 @@ namespace Project.Scripts.BloodMachine
         private GlobalDrinkStation _station;
        
         private bool _hasPendingDrink;
-        private bool isServing;
+        private bool _isServing;
 
         private float _bloodDecreaseOverTime;
         private float _startServiceDuration;
         private float _secondTimerTime;
-
         private float _serviceDuration;
+        private float _bloodQuantityBeforeServiceStart;
 
         private string FirstTimerName  => _associedClientType + " : first timer launched";
         private string SecondTimerName => _associedClientType + " : wait before loosing Blood";
@@ -60,129 +73,75 @@ namespace Project.Scripts.BloodMachine
 
         public void SetPendingDrink(bool value) => _hasPendingDrink = value;
 
-        public void TryServeDrink()
+        public bool TryServeDrink()
         {
-            if (!Globals.Gameplay.AllowBlending)
-            {
-                //Debug.Log("[F_Valve] is not allowed to serve, the blood machine is not ulocked");
-                return;
-            }
-            if (_hasPendingDrink)
-            {
-                //Debug.Log("[F_Valve] Une boisson est déjà en attente d'être récupérée");
-                return;
-            }
+            Debug.Log("Valve.TryServeDrink invoked");
+            if (!Globals.Authorizations.AllowMakingDrinks) return false;
+            if (_hasPendingDrink) return false; // Une boisson est déjà en attente d'être récupérée
+            if (!_reserve.CanServeDrink()) return false; // Not enough blood available
+            if (IsServing) return false; // Can't serve a new drink if we're already serving one
 
-            if (_reserve.CanServeDrink(_associedClientType) && !isServing)
-            {
-                isServing = true;
-                StartServeDrink?.Invoke();
-                TimerManager.StartTimer(FirstTimerName, _serviceDuration, WaitForPlayerToRetrieve);
-                _station.StartCoroutine(PourDrinkRoutine());
-            }
-            else
-            {
-                //Debug.Log($"[F_Valve] the drink cant be serve, CanServeDrink = {_reserve.CanServeDrink(_associedClientType)} & isServing = {isServing}");
-            }
+            Debug.Log("Valve.TryServeDrink has passed checks");
+            IsServing = true;
+            OnStartFillingDrink?.Invoke();
+            _bloodQuantityBeforeServiceStart = _reserve.BloodQuantity;
+            TimerManager.StartTimer(FirstTimerName, _serviceDuration, WaitForPlayerToRetrieveDrink, ProcessDrinkPouring);
+
+            return true;
         }
 
-        /// <summary>
-        /// This method name is misleading, since <see cref="TryGrabDrink"/> is invoked when the drink is grabbed, so there is no "try". 
-        /// There is just "do".
-        /// https://i.pinimg.com/originals/a5/91/c2/a591c21d89b1215f87f9c8db58a8dc62.jpg
-        /// </summary>
-        public void TryGrabDrink()
+        /// <summary>This method is called on the update of the timer that pours blood in the drink. </summary>
+        private void ProcessDrinkPouring(float elapsed)
         {
-            //if (!isServing) return; // We should be able to take the drink even if the machine stopped serving because it was out of blood
-            if (TimerManager.IsTimerRunning(FirstTimerName))
-            {
-                //Debug.Log("[F_Valve] votre boisson est occupée");
-                return;
-            }
-            DrinkTaken();
-        }
-
-        // public void TryServeDrink()
-        // {
-        //    if (_reserve.CanServeDrink(_associedClientType) && !isServing)
-        //    {
-        //       isServing = true;
-        //       StartServeDrink?.Invoke();
-        //       TimerManager.StartTimer(FirstTimerName, _firstTimerTime, WaitForPlayerToRetrieve);
-        //       _station.StartCoroutine(PourDrinkRoutine());
-        //    }
-        // }
-
-        /// <summary>
-        /// This coroutine pours blood in the drink for a given duration, and won't stop until it's done.
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator PourDrinkRoutine()
-        {
-            float elapsed        = 0f;
+            Debug.Log("Valve.ProcessDrinkPouring");
             float bloodPerDrink  = _reserve.BloodPerDrink;
+            float t = Mathf.Clamp01(elapsed / _serviceDuration);
 
-            while (elapsed < _startServiceDuration)
-            {
-                elapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsed / _startServiceDuration);
-
-                _drinkStation.ActualizeDrinkValue(t);
-
-                float delta = (bloodPerDrink / _startServiceDuration) * Time.deltaTime;
-                _reserve.RemoveBlood(_associedClientType, delta);
-                _drinkStation.ActualizeReserveValue(_reserve.GetReserveRatio(_associedClientType));
-
-                yield return null;
-            }
-
-            _drinkStation.ActualizeDrinkValue(1f);
+            _reserve.BloodQuantity = _bloodQuantityBeforeServiceStart - bloodPerDrink * t;
         }
 
         /// <summary>
         /// This method starts the grace delay between the cup being full and the blood overflowing
         /// </summary>
-        public void WaitForPlayerToRetrieve()
+        public void WaitForPlayerToRetrieveDrink()
         {
-            DrinkReady?.Invoke();
-            TimerManager.StartTimer(SecondTimerName, _secondTimerTime, LooseBlood);
+            Debug.Log("Valve.WaitForPlayerToRetrieveDrink invoked");
+            OnStopFillingDrink?.Invoke();
+            TimerManager.StartGameplayTimer(SecondTimerName, _secondTimerTime, StartOverflowing);
         }
 
         /// <summary>
         /// Start overflowing blood without filling up the drink
         /// </summary>
-        public void LooseBlood()
+        public void StartOverflowing()
         {
-            StartLoosingBlood?.Invoke();
-            _station.StartCoroutine(DecreaseBlood());
+            Debug.Log("Valve.StartOverflowing invoked");
+            OnStartOverflowing?.Invoke();
+            TimerManager.StartGameplayTimer("Start overflowing drink station " + _associedClientType, float.MaxValue, null, ProcessDecreasingBlood);
         }
 
         /// <summary>
-        /// This coroutine is invoked when the drink starts overflowing, after a grace delay
+        /// This method is invoked each frame during which the drink overflows, after a grace delay
         /// </summary>
-        /// <returns></returns>
-        private IEnumerator DecreaseBlood()
+        private void ProcessDecreasingBlood(float temp)
         {
-            while (isServing && _reserve.GetDrinkQuantity(_associedClientType) > 0)
-            {
-                float delta = _bloodDecreaseOverTime * Time.deltaTime;
-                _reserve.RemoveBlood(_associedClientType, delta);
-                _drinkStation.ActualizeReserveValue(_reserve.GetReserveRatio(_associedClientType));
+            float delta = _bloodDecreaseOverTime * Time.deltaTime;
+            _reserve.BloodQuantity -= delta;
 
-                yield return null;
-            }
+            Debug.Log("Valve.ProcessDecreasingBlood invoked");
+            if (IsServing && _reserve.BloodQuantity > 0) return;
+            
             // We exit the loop when the drink is taken or when there isn't any blood yet
-
-            // This shouldn't be invoked here since we don't know if the drink was taken (and if it was, this event is already invoked.
-            // But it makes sure that the feedbacks stop anyway. If feedbacks were to change, this should be changed too
-            OnDrinkTaked?.Invoke(); 
-            isServing = false;
+            OnStopOverflowing?.Invoke();
+            IsServing = false;
+            TimerManager.StopTimer("Start overflowing drink station " + _associedClientType);
         }
        
-        public void DrinkTaken()
+        public void WhenDrinkGrabbed()
         {
-            isServing = false;
-            OnDrinkTaked?.Invoke();
+            Debug.Log("Valve.WhenDrinkGrabbed invoked");
+            IsServing = false;
+            
             if(TimerManager.IsTimerRunning(SecondTimerName))
                 TimerManager.StopTimer(SecondTimerName);
         }

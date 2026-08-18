@@ -19,12 +19,12 @@ public class EventVariable : ScriptableObject
         _event -= callback;
     }
 
-    public void Raise(object optionalParameter)
+    public void Invoke(object optionalParameter)
     {
         Parameter = optionalParameter;
         _event?.Invoke();
     }
-    public void Raise()
+    public void Invoke()
     {
         Parameter = null;
         _event?.Invoke();

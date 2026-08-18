@@ -1,6 +1,7 @@
 using Cooking;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Clients
 {
@@ -20,8 +21,11 @@ namespace Clients
         public EClientType clientType;
         [Tooltip("The loot is the list of ingredients dropped upon death.")]
         public SO_Ingredient loot;
-        [Tooltip("How much ingredients will be spawned ? (generates a random value between min and max, rounded to the nearest whole number.")]
-        public Vector2 dropRate;
+        [Tooltip("How much ingredients will be spawned ? (generates a random value between min and max, rounded to the nearest whole number."), FormerlySerializedAs("dropRate")]
+        public Vector2 ingredientDropRate;
+        [Tooltip("How much blood will be spawned ? (generates a random value between min and max, rounded to the nearest whole number.")]
+        public Vector2 bloodDropRate;
+        public EventVariable EventInvokedUponBlending;
    
     }
 }

@@ -37,7 +37,7 @@ public class Param<T>
     }
 
     public static implicit operator T(Param<T> obj) => obj.Value;
-    [Obsolete("Consider using Param.Value = x or Param.Set(x) when reassigning, or Param = new(x) when declaring. Using Param = x would overwrite the subscribers.",true)] public static implicit operator Param<T>(T obj) => new(obj);
+    [Obsolete("\nConsider using Param.Value = x or Param.Set(x) when reassigning, \nor Param = new(x) when declaring. \nUsing Param = x would overwrite the subscribers.",true)] public static implicit operator Param<T>(T obj) => new(obj);
     public override string ToString()
     {
         return Value.ToString();

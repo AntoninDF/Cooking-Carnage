@@ -71,7 +71,7 @@ public class Plate : Item
         if (ContainerComponent.TryGetFeature(out Container))
         {
             Container.OnGrab += TryLock;
-            if (_onIngredientAdded != null) Container.OnGrab += _onIngredientAdded.Raise;
+            if (_onIngredientAdded != null) Container.OnGrab += _onIngredientAdded.Invoke;
             // Make sure only cut ingredients can be put in the plate
             Container.Filter.AddCondition(GrabbableCondition);
             Container.Filter.AddCondition(_ => Globals.Authorizations.AllowPuttingIngredientsInPlates);

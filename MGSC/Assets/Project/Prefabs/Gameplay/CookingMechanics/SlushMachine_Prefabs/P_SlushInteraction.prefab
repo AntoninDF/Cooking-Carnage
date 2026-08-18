@@ -24,13 +24,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3178310866199767869}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0034990911, y: 0.9664347, z: 0.013181193, w: 0.25655022}
-  m_LocalPosition: {x: -0.33378452, y: 0.909, z: -0.18999991}
+  m_LocalRotation: {x: -0, y: -0, z: 2.3283062e-10, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 807656573609255733}
-  m_Father: {fileID: 6150051680042463425}
+  m_Father: {fileID: 6386217600518318077}
   m_LocalEulerAnglesHint: {x: -1.357, y: 150.257, z: 0.775}
 --- !u!1 &4573166068361298048
 GameObject:
@@ -42,6 +42,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6150051680042463425}
   - component: {fileID: 2802588553563444075}
+  - component: {fileID: 5262877881293368635}
+  - component: {fileID: 6365521475327904117}
   m_Layer: 0
   m_Name: P_SlushInteraction
   m_TagString: Untagged
@@ -64,9 +66,7 @@ Transform:
   m_Children:
   - {fileID: 7681726187166830342}
   - {fileID: 4485267590478948784}
-  - {fileID: 5079958387993039334}
-  - {fileID: 916448799505100194}
-  - {fileID: 7529607005771735359}
+  - {fileID: 6386217600518318077}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &2802588553563444075
@@ -77,7 +77,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4573166068361298048}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 23bca1394585b454b8d4f583d4a95c19, type: 2}
   m_CullingMode: 0
@@ -91,7 +91,182 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!1 &5611427272680185722
+--- !u!114 &5262877881293368635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4573166068361298048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6446f4a186e24462a9b2a578eee3aab6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.BloodMachine.DrinkStation
+  _type: 0
+  _bloodPerDrink: 30
+  _bloodFlowPerSecond: 6
+  _timeBeforeLoosingBlood: 2
+  _maxBloodQuantityDisplay: 150
+  ValveButton: {fileID: 4235064865672132555}
+  _drinkPrefab: {fileID: 0}
+  _drinkSpawnPoint: {fileID: 6386217600518318077}
+  _reserveRenderer: {fileID: 0}
+  _animator: {fileID: 2802588553563444075}
+  _startServeClip: {fileID: 7400000, guid: f69346a25e9248741b42f2a0bc8a0d38, type: 2}
+--- !u!114 &6365521475327904117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4573166068361298048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ebb968dd0f3fb24d9ba5c2aeda26ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EventDisplay
+  Events:
+  - ActionPath:
+      ActionVariableName: OnStartFillingDrink
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: valve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 5262877881293368635}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2802588553563444075}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: StartServe
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnStopFillingDrink
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: valve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 5262877881293368635}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2802588553563444075}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: StopServe
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnStartOverflowing
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: valve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 5262877881293368635}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
+  - ActionPath:
+      ActionVariableName: OnStopOverflowing
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: valve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 5262877881293368635}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2802588553563444075}
+          m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+          m_MethodName: SetTrigger
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: StopOverflowing
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: OnStopServing
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: valve
+        SerializedType:
+          m_Name: F_Valve
+          m_AssemblyQualifiedName: Project.Scripts.BloodMachine.F_Valve, Assembly-CSharp,
+            Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 5262877881293368635}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls: []
+  references:
+    version: 2
+    RefIds: []
+--- !u!1 &8634472954367402048
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -99,28 +274,28 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7529607005771735359}
+  - component: {fileID: 6386217600518318077}
   m_Layer: 0
-  m_Name: VFX_liquid
+  m_Name: Drink_SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7529607005771735359
+--- !u!4 &6386217600518318077
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5611427272680185722}
+  m_GameObject: {fileID: 8634472954367402048}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.288, y: 1.395, z: -0.142}
+  m_LocalRotation: {x: 0.0034990911, y: 0.9664347, z: 0.013181193, w: 0.25655022}
+  m_LocalPosition: {x: -0.33378452, y: 0.909, z: -0.18999991}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 631748702062903809}
+  - {fileID: 916448799505100194}
   m_Father: {fileID: 6150051680042463425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1218197274605174772
@@ -208,7 +383,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 711374723974716454, guid: 4a376cec3de807b43aeaafb754546061, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a376cec3de807b43aeaafb754546061, type: 3}
@@ -216,142 +392,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 8826244599079350514, guid: 4a376cec3de807b43aeaafb754546061, type: 3}
   m_PrefabInstance: {fileID: 1218197274605174772}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &2391763922003076134
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 6150051680042463425}
-    m_Modifications:
-    - target: {fileID: 5230584324953897734, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-      propertyPath: m_Name
-      value: VFX_SlushSmoke
-      objectReference: {fileID: 0}
-    - target: {fileID: 7444137511959524800, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.406
-      objectReference: {fileID: 0}
-    - target: {fileID: 7444137511959524800, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.701
-      objectReference: {fileID: 0}
-    - target: {fileID: 7444137511959524800, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.17
-      objectReference: {fileID: 0}
-    - target: {fileID: 7444137511959524800, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7444137511959524800, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7444137511959524800, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7444137511959524800, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7444137511959524800, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7444137511959524800, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7444137511959524800, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
---- !u!4 &5079958387993039334 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7444137511959524800, guid: bb48667a3f6848c4a91089c37eb6f389, type: 3}
-  m_PrefabInstance: {fileID: 2391763922003076134}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &3768804969522872008
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 7529607005771735359}
-    m_Modifications:
-    - target: {fileID: 451481054215574215, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: m_Name
-      value: VFX_LiquideSlushy_RED
-      objectReference: {fileID: 0}
-    - target: {fileID: 2909993514180096207, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: looping
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2909993514180096207, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: lengthInSec
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4362035573396159689, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4362035573396159689, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4362035573396159689, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4362035573396159689, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4362035573396159689, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4362035573396159689, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4362035573396159689, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4362035573396159689, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 4362035573396159689, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4362035573396159689, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4419211404890339893, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-      propertyPath: looping
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
---- !u!4 &631748702062903809 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4362035573396159689, guid: a78ee566cc72b974ba07566a23df1c10, type: 3}
-  m_PrefabInstance: {fileID: 3768804969522872008}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6466898826713408540
 PrefabInstance:
@@ -427,6 +467,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6150051680042463425}
     m_Modifications:
+    - target: {fileID: 2071233539866576950, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9914449
+      objectReference: {fileID: 0}
+    - target: {fileID: 2071233539866576950, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2071233539866576950, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2071233539866576950, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.13052624
+      objectReference: {fileID: 0}
+    - target: {fileID: 2071233539866576950, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -15
+      objectReference: {fileID: 0}
     - target: {fileID: 3153832169025217327, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
       propertyPath: Events.Array.size
       value: 0
@@ -488,6 +548,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
+--- !u!114 &4235064865672132555 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6083732710800685459, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
+  m_PrefabInstance: {fileID: 7973688717039439448}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73d2525679cf86409b974e13c3960d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionButton
 --- !u!4 &4485267590478948784 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5807080249635956712, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}

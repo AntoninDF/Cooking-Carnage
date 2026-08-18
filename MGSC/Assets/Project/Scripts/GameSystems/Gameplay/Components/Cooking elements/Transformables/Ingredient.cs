@@ -38,7 +38,7 @@ public class Ingredient : Item
         if (cutModel != null)
             Cuttable.OnTransformation += () => SetActiveModel(cutModel);
         if (OnItemCut != null)
-            Cuttable.OnTransformation += OnItemCut.Raise;
+            Cuttable.OnTransformation += OnItemCut.Invoke;
 
 
         //if (data == null)

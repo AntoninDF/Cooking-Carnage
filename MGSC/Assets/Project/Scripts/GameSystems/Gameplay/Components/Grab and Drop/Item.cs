@@ -81,7 +81,7 @@ public class Item : MonoBehaviour, IFeatureCollection
     {
         Grabbable.OnGrab += TriggerAnim; 
         if (OnItemGrabbed != null)
-            Grabbable.OnGrab += () => OnItemGrabbed.Raise(Grabbable); 
+            Grabbable.OnGrab += () => OnItemGrabbed.Invoke(Grabbable); 
         Grabbable.OnLock += () => ApplyOnAllColliders(collider => collider.enabled = false);
         Grabbable.OnUnlock += () => ApplyOnAllColliders(collider => collider.enabled = true);
         Interactable.OnInteraction += TryInteract;

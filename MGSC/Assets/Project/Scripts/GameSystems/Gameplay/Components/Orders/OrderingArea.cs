@@ -142,7 +142,8 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
 
     public void BlendClient()
     {
-        if (!Globals.Gameplay.AllowBlending) return;
+        Debug.Log("OrderingArea.BlendClient invoked");
+        if (!Globals.Authorizations.AllowMakingDrinks) return;
         Client client = ClientSeat.RegisteredClient;
         if (client != null && ClientSeat.SittingClient != null)
         {
@@ -150,6 +151,8 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
             client.ClientBlending.Trigger();
             GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
             OnCustomerBlended?.Invoke(client.Type);
+            client.EventInvokedUponBlending?.Invoke(client);
+            Debug.Log("client.EventInvokedUponBlending invoked");
         }
     }
 

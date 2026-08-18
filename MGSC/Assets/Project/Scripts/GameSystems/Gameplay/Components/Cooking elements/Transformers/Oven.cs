@@ -136,9 +136,9 @@ public class Oven : MonoBehaviour, IFeatureCollection
             Container.OnDrop += _ => ResetDisplayedSprites();
             Container.OnDrop += _ => OnStopCooking();
             if (EventVariables.OnPlatePutInOven != null)
-                Container.OnGrab += EventVariables.OnPlatePutInOven.Raise;
+                Container.OnGrab += EventVariables.OnPlatePutInOven.Invoke;
             if (EventVariables.OnPlateTakenFromOven != null)
-                Container.OnDrop += EventVariables.OnPlateTakenFromOven.Raise;
+                Container.OnDrop += EventVariables.OnPlateTakenFromOven.Invoke;
             
             Container.IsLocked = !_isOvenActive;
             Container.OnDrop += obj => RaiseEventVarIfCookedOrOvercooked(obj, EventVariables.OnPlateCookedTaken, EventVariables.OnPlateOverCookedTaken);
@@ -160,9 +160,9 @@ public class Oven : MonoBehaviour, IFeatureCollection
         if (plate.TryGetSibling(out F_OverCookable overCookable) && overCookable.Transformed)
             overCooked = true;
         if (cooked && !overCooked)
-            cookedEvent?.Raise();
+            cookedEvent?.Invoke();
         if (cooked && overCooked)
-            overCookedEvent?.Raise();
+            overCookedEvent?.Invoke();
     }
 
 
@@ -188,7 +188,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
         if (Container.HeldItem.TryGetSibling(out F_Cookable cookable, true) && cookable.CanBeTransformed)
         {
             Cooker.RequestStartTransformation(cookable);
-            if (EventVariables.OnStartCooking != null) EventVariables.OnStartCooking.Raise();
+            if (EventVariables.OnStartCooking != null) EventVariables.OnStartCooking.Invoke();
         }
         else
         {

@@ -22,7 +22,7 @@ namespace Features
         
         public void Trigger()
         {
-            if (!Globals.Gameplay.AllowBlending) return;
+            if (!Globals.Authorizations.AllowMakingDrinks) return;
             if (_isRunning) return;
             _isRunning       = true;
             _timer           = 0f;

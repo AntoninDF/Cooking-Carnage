@@ -146,7 +146,7 @@ public class TutorialStep : ScriptableObject
     {
         HandleFeatureLock(actions.LockFeatures, actions.UnlockFeatures);
         DisplayArrowsFor(actions.DisplayArrows);
-        if (actions.RaiseEvent != null) actions.RaiseEvent.Raise();
+        if (actions.RaiseEvent != null) actions.RaiseEvent.Invoke();
         HandleTaskRequests(actions.AddTasks);
     }
     private void HandleFeatureLock(LockableFeature lockFeatures, LockableFeature unlockFeatures)

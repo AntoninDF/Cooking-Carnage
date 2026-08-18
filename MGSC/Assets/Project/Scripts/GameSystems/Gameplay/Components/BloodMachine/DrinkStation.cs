@@ -2,153 +2,134 @@ using System;
 using Clients;
 using Features;
 using GameSystem;
+using NaughtyAttributes;
 using Project.Scripts.GameSystems.Gameplay.Components.Drinks;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Project.Scripts.BloodMachine
 {
+    /// <summary>
+    /// Handle drink service for one given blood/client type
+    /// </summary>
 	[Serializable]
-    public class DrinkStation : IFeatureCollection
+    public class DrinkStation : MonoBehaviour, IFeatureCollection
     {
+        #region Properties
+        public bool IsServing => valve.IsServing;
+        public EClientType Type { get => _type; set => _type = value; }
+        public GameObject DrinkPrefab { get => _drinkPrefab; set => _drinkPrefab = value; }
+        public Transform DrinkSpawnPoint { get => _drinkSpawnPoint; set => _drinkSpawnPoint = value; }
+        public float ReserveFill01 => reserve.BloodQuantity / _maxBloodQuantityDisplay;
         public FeatureCollection Collection { get; } = new();
+        #endregion
 
-        public EClientType       Type;
+        #region Fields
+        // SERIALIZED FIELDS
+        [Header("Parameters")]
+        [Tooltip("What kind of blood does this station use/serve")]
+        [SerializeField] private EClientType       _type;
+        [Tooltip("Unit is centiliters")]
+        [SerializeField] private int _bloodPerDrink = 30;
+        [Tooltip("Unit is centiliters per second")]
+        [SerializeField] private float _bloodFlowPerSecond = 6f;// This is the delay between each partial fillup of a drink (→ 3cL per 0.5s, this is the 0.5s)
+        [Tooltip("Unit is seconds")]
+        [SerializeField] private float _timeBeforeLoosingBlood = 2f;
+        [Min(1f), Tooltip("Since the blood tanks visually have a maximum, this is how much blood is needed to make them appear full. In practice, they have infinite capacity")]
+        [SerializeField] private int _maxBloodQuantityDisplay = 150;
+        float servingDuration => _bloodPerDrink / _bloodFlowPerSecond;
+
+        [Header("References")]
         [SerializeField] private InteractionButton ValveButton;
-
-        [Header("Drink")]
-        public  GameObject _drinkPrefab;
-        public Transform  DrinkSpawnPoint;
-
-        [Header("Liquid")]
+        [SerializeField] private  GameObject _drinkPrefab;
+        [SerializeField] private Transform  _drinkSpawnPoint;
         [SerializeField] private Renderer _reserveRenderer;
-        [SerializeField] private int      _reserveMaterialIndex;
-
-        [Header("Animation")]
         [SerializeField] private Animator _animator;
         [SerializeField] private AnimationClip         _startServeClip;
-
-
-        private MaterialPropertyBlock _drinkBlock;
-        private MaterialPropertyBlock _reserveBlock;
-
+                
+        // NON-SERIALIZED FIELDS
         private GameObject _spawnedDrink;
         private Drink      _spawnedDrinkComponent;
 
         public F_Valve         valve;
         public F_BloodReserve  reserve;
-        public F_ValveAnimation animator;
+        #endregion
 
-        private float _firstTimerTime;
-        
-        private const float MinCuveLiquidLevel = 0.25f;
-        private const float MaxCuveLiquidLevel = 0.75f;
-        
-        private const float MinDrinkLiquidLevel = 0.5f;
-        private const float MaxDrinkLiquidLevel = 0.619f;
+        #region Methods
+        public void Initialize(GlobalDrinkStation globalDrinkStation)
+        {        
+            reserve = new(this, _bloodPerDrink);
+            valve    = new F_Valve(globalDrinkStation, this, globalDrinkStation, reserve, Type, servingDuration, _timeBeforeLoosingBlood, _bloodFlowPerSecond);
 
-        private  float RemapLiquidLevel(float ratio01, float minLevel, float maxLevel) =>
-            Mathf.Lerp(minLevel, maxLevel, Mathf.Clamp01(ratio01));
-        
-        public void Initialize(
-            IFeatureCollection owner,
-            GlobalDrinkStation globalDrinkStation,
-            F_BloodReserve     reserve,
-            float              firstTimerTime,
-            float              secondTimerTime,
-            float              bloodDecreaseOverTime)
+            BindEvents();
+            ActualizeReserveValue(ReserveFill01);
+        }
+        public void BindEvents()
         {
-            _drinkBlock   = new MaterialPropertyBlock();
-            _reserveBlock = new MaterialPropertyBlock();
-        
-            this.reserve = reserve;
-            valve    = new F_Valve(owner, this, globalDrinkStation, reserve, Type, firstTimerTime, secondTimerTime, bloodDecreaseOverTime);
-            animator = new F_ValveAnimation(this, _animator, _startServeClip, firstTimerTime); 
-            
+            ValveButton.OnInteraction += TryStartServingDrink;
+            valve.OnStopFillingDrink      += WhenDrinkReady;
+            reserve.OnBloodQuantityChange += CheckReserve;
         }
 
-        public void ActualizeDrinkValue(float ratio01)
-        {
-            _spawnedDrinkComponent?.SetLiquidLevel(RemapLiquidLevel(ratio01, MinDrinkLiquidLevel, MaxDrinkLiquidLevel));
-        }
+        void TryStartServingDrink(InteractionContext ctx) => valve.TryServeDrink();
+
+        /// <summary>Set the drink's liquid level </summary>
+        public void ActualizeDrinkValue(float ratio01) => _spawnedDrinkComponent?.SetLiquidLevel(ratio01);
 
         public void ActualizeReserveValue(float ratio01)
         {
-            _reserveRenderer.GetPropertyBlock(_reserveBlock, _reserveMaterialIndex);
-            _reserveBlock.SetFloat("_LiquidLevel", RemapLiquidLevel(ratio01, MinCuveLiquidLevel, MaxCuveLiquidLevel));
-            _reserveRenderer.SetPropertyBlock(_reserveBlock, _reserveMaterialIndex);
+            Debug.Log("DrinkStation.ActualizeReserveValue invoked");
+            ratio01 = Mathf.Clamp01(ratio01);
+            MaterialPropertyBlock reserveBlock = new();
+            _reserveRenderer.GetPropertyBlock(reserveBlock);
+            reserveBlock.SetFloat("_LiquidLevel", ratio01);
+            _reserveRenderer.SetPropertyBlock(reserveBlock);
         }
         
-        public void BindEvents()
+        void WhenDrinkReady() => TrySpawnDrink();
+        private void TrySpawnDrink()
         {
-            ValveButton.OnInteraction += _ => valve.TryServeDrink();
+            Debug.Log("DrinkStation.TrySpawnDrink invoked");
+            if (_spawnedDrink != null) return; // Don't spawn anything if the previous drink is still there
+            if (DrinkPrefab == null) return;
+            if (DrinkSpawnPoint == null) return;
 
-            reserve.OnBloodAdded   += CheckReserve;
-            reserve.OnBloodRemoved += CheckReserve;
-
-            valve.StartServeDrink += animator.StartServing;
-            valve.DrinkReady      += animator.ResetSpeed;   
-            valve.DrinkReady      += SpawnDrink;
-            valve.OnDrinkTaked    += animator.StopServe;
-            valve.OnDrinkTaked    += HandleDrinkTaked;
-        }
-
-        private void SpawnDrink()
-        {
-            if (_spawnedDrink != null) return;
-
-            if (_drinkPrefab == null || DrinkSpawnPoint == null)
-            {
-                //Debug.LogError($"[DrinkStation] _drinkPrefab ou DrinkSpawnPoint non assigné sur la station (type {Type}) — vérifier l'Inspector.");
-                return;
-            }
-
-            TimerManager.StartTimer(_drinkPrefab.name + "Station", 0.25f, Spawn);
+            TimerManager.StartTimer("Prepare to spawn drink : " + DrinkPrefab.name, 0.25f, Spawn);
         }
 
         private void Spawn()
         {
-            _spawnedDrink = GameObject.Instantiate(_drinkPrefab, DrinkSpawnPoint.position, DrinkSpawnPoint.rotation);
+            Debug.Log("DrinkStation.Spawn invoked");
+            _spawnedDrink = GameObject.Instantiate(DrinkPrefab, DrinkSpawnPoint.position, DrinkSpawnPoint.rotation);
             valve.SetPendingDrink(true);
 
             if (_spawnedDrink.TryGetComponent(out _spawnedDrinkComponent))
             {
-                _spawnedDrinkComponent.Grabbable.OnGrab += HandleDrinkGrabbed;
-                _spawnedDrinkComponent.SetLiquidLevel(RemapLiquidLevel(1f, MinDrinkLiquidLevel, MaxDrinkLiquidLevel));
-            }
-            else
-            {
-               // Debug.LogWarning($"[DrinkStation] Le prefab {_drinkPrefab.name} n'a pas de composant Drink");
+                _spawnedDrinkComponent.Grabbable.OnGrab += WhenDrinkGrabbed;
+                _spawnedDrinkComponent.SetLiquidLevel(1f);
             }
         }
 
 
-        private void HandleDrinkGrabbed()
+        private void WhenDrinkGrabbed()
         {
+            Debug.Log("DrinkStation.WhenDrinkGrabbed invoked");
             if (_spawnedDrinkComponent != null)
-                _spawnedDrinkComponent.Grabbable.OnGrab -= HandleDrinkGrabbed;
+                _spawnedDrinkComponent.Grabbable.OnGrab -= WhenDrinkGrabbed;
 
-            valve.TryGrabDrink();
-        }
+            valve.WhenDrinkGrabbed();
 
-        private void HandleDrinkTaked()
-        {
-            _spawnedDrink          = null;
+            _spawnedDrink = null;
             _spawnedDrinkComponent = null;
             valve.SetPendingDrink(false);
         }
-        
-        private void CheckReserve(EClientType clientType, float targetValue)
-        {
-            if (clientType == Type)
-                ActualizeReserveValue(reserve.GetReserveRatio(clientType));
-        }
-        
-    }
-    
-    public class DrinkStationFeatures : Feature
-    {
-        public DrinkStationFeatures(IFeatureCollection owner) : base(owner)
-        {
-        }
+               
+        private void CheckReserve(float targetValue) => ActualizeReserveValue(ReserveFill01);
+
+        [Button("Fill")] void _fill() => reserve.BloodQuantity = 150;
+        [Button("Empty")] void _empty() => reserve.BloodQuantity = 0;
+
+        #endregion
+
     }
 }

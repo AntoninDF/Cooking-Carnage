@@ -77,13 +77,13 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
 
         if (Container.RequestGrab(otherContainer.HeldItem))
         {
-            if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+            if (OnGrabEventVar != null) OnGrabEventVar.Invoke();
             return;
         }
 
         if (passThrough && otherContainer.RequestGrab(Container.HeldItem))
         {
-            if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+            if (OnGrabEventVar != null) OnGrabEventVar.Invoke();
             return;
         }
 
@@ -92,7 +92,7 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
             && otherContainer.HeldItem.TryGetSibling(out F_Container heldContainer)
             && heldContainer.RequestGrab(Container.HeldItem))
         {
-            if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+            if (OnGrabEventVar != null) OnGrabEventVar.Invoke();
             return;
         }
 
@@ -104,7 +104,7 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
             if (incomingItem.SwapWith(existing))
             {
                 if (OnGrabEventVar != null)
-                    OnGrabEventVar.Raise();
+                    OnGrabEventVar.Invoke();
                 return;
             }
         }

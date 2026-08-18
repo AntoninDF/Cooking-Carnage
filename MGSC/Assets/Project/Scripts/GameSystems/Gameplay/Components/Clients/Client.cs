@@ -198,7 +198,7 @@ namespace Clients
        public void SpawnIngredients(List<SlotContainer> containers)
        {
            List<SlotContainer> positions = containers;
-           int numberToDrop = Random.Range((int)DropRate.x, (int)DropRate.y);
+           int numberToDrop = Random.Range((int)IngredientDropRate.x, (int)IngredientDropRate.y);
            for (int i = 0; i < numberToDrop; i++)
            {
                Instantiate(Model.loot.Prefab, positions[i].transform);
