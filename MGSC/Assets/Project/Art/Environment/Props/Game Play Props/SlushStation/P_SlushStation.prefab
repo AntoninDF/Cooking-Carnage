@@ -104,21 +104,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.BloodMachine.GlobalDrinkStation
   BloodPerClients:
-  - bloodGained: 0.2
+  - bloodGainedMinMax: {x: 30, y: 60}
     clientType: 1
-  - bloodGained: 0.2
+  - bloodGainedMinMax: {x: 30, y: 60}
     clientType: 2
-  - bloodGained: 0.2
+  - bloodGainedMinMax: {x: 30, y: 60}
     clientType: 3
   _bloodPerDrinkCl: 30
   _drinksPerFullReserve: 3
   _timeToRefillDrink: 5
-  _timeBeforeLoosingBlood: 1.5
+  _timeBeforeLoosingBlood: 2
   _assStation:
     Type: 2
     ValveButton: {fileID: 58035900474611585}
     _drinkPrefab: {fileID: 222866882189378175, guid: 15a4edb475dd7db40b9b549ce629d5eb, type: 3}
-    _drinkSpawnPoint: {fileID: 7109971346479663031}
+    DrinkSpawnPoint: {fileID: 7109971346479663031}
     _reserveRenderer: {fileID: 8390174860996361006}
     _reserveMaterialIndex: 0
     _animator: {fileID: 2084917202978616097}
@@ -127,7 +127,7 @@ MonoBehaviour:
     Type: 1
     ValveButton: {fileID: 2019859377089420993}
     _drinkPrefab: {fileID: 6427651013289206968, guid: 446055376d8c2944abd31d6c0bb59f77, type: 3}
-    _drinkSpawnPoint: {fileID: 6186115863538738598}
+    DrinkSpawnPoint: {fileID: 6186115863538738598}
     _reserveRenderer: {fileID: 3099377444627508503}
     _reserveMaterialIndex: 0
     _animator: {fileID: 10917156683151969}
@@ -136,7 +136,7 @@ MonoBehaviour:
     Type: 3
     ValveButton: {fileID: 1836127371908883152}
     _drinkPrefab: {fileID: 2304281794536095463, guid: af7e7183782284149bee92983aad0b58, type: 3}
-    _drinkSpawnPoint: {fileID: 8558030956486575936}
+    DrinkSpawnPoint: {fileID: 8558030956486575936}
     _reserveRenderer: {fileID: 4784502931437997684}
     _reserveMaterialIndex: 0
     _animator: {fileID: 385636538884966000}
