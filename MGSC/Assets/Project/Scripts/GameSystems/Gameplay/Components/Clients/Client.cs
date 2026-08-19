@@ -190,12 +190,12 @@ namespace Clients
            Collection.Add(Cooked);
        }
 
- 
+ /*
        public void CookClient()
        {
            Cooked.Trigger();
        }
-
+ */
        public void SpawnIngredients(List<SlotContainer> containers)
        {
            List<SlotContainer> positions = containers;
@@ -322,7 +322,9 @@ namespace Clients
            if (soRecipe == null) return;
 
            var info = new Orders.ServingInfo(serving); 
-           CurrentOrder.ServingInfo = info;            
+           CurrentOrder.ServingInfo = info;
+
+            Achievements.Unlock("ACH_A02");
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);

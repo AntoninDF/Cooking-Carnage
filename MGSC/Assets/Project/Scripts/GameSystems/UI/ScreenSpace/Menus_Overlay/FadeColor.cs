@@ -9,11 +9,11 @@ namespace Assets.Scripts.UI
     public class FadeColor : MonoBehaviour
     {
 
+        public float Duration = 1f;
         [SerializeField] private Image _target;
         [SerializeField] private TMP_Text _textTarget;
         [SerializeField] private Color _startColor;
         [SerializeField] private Color _endColor;
-        [SerializeField] private float _duration;
         [SerializeField] private UnityEvent _onAnimationEnd;
 
         private bool _isPlaying;
@@ -22,7 +22,7 @@ namespace Assets.Scripts.UI
 
         private void Start()
         {
-            if (_duration == 0f) _duration = 1f;
+            if (Duration == 0f) Duration = 1f;
         }
         private void Update()
         {
@@ -30,8 +30,8 @@ namespace Assets.Scripts.UI
             if ( _isPlaying )
             {
                 float t = (Time.time - _startTime);
-                if (_reversed) t = _duration - t;
-                t /= _duration;
+                if (_reversed) t = Duration - t;
+                t /= Duration;
                 SetColor(t );
                 if (t >= 1f)
                 {

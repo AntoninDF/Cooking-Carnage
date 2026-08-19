@@ -13,6 +13,7 @@ public class PreShiftState : GameplayState
         {
             HUD = ui.GetWidget<HeadsUpDisplay>();
             HUD?.Enable();
+            if (Globals.Gameplay.ShiftNumber == 0) HUD.PlayTransition("Tutorial shift");
         }
 
         if (Globals.Statistics.TutorialHasBeenPlayed)

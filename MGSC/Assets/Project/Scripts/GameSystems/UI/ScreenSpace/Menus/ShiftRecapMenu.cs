@@ -73,28 +73,13 @@ namespace UI
 
         void ShowShiftRecap()
         {
-            StartTransition(Globals.Gameplay.ShiftNumber == 0 ? "End of tutorial shift" : "End of shift " + Globals.Gameplay.ShiftNumber);
-            canvas.enabled = false;
+            PlayTransition(Globals.Gameplay.ShiftNumber == 0 ? "End of tutorial shift" : "End of shift " + Globals.Gameplay.ShiftNumber);
             TimerManager.StartTimer("Animate shift recap", 3f, UpdateTexts);
-        }
-
-        void StartTransition(string text)
-        {
-            if (Reference.TryGetManager<UISystem>(out var ui))
-                ui.GetWidget<UITransition>()?.Show(text);
-        }
-        void StopTransition()
-        {
-            if (Reference.TryGetManager<UISystem>(out var ui))
-                ui.GetWidget<UITransition>()?.Hide();
         }
         void UpdateTexts()
         {
             if (!Reference.TryGetManager(out MoneyManager mm)) return;
             if (!Reference.TryGetManager(out ShiftManager sm)) return;
-
-            canvas.enabled = true;
-            StopTransition();
 
             SetMoneyGained(mm.GetMoneyGainedThisShift());
             SetCurrentTotalMoney(mm.MoneyInfo);

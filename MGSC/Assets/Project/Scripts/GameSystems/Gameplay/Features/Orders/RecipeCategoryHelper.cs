@@ -11,6 +11,7 @@ namespace Orders
 			int total    = recipe.Ingredients.Count;
 			int distinct = recipe.Ingredients.Distinct().Count();
 
+			if (total == 0) return RecipeCategory.Vide;
 			if (total == 1) return RecipeCategory.Simple;
 			if (total == 2 && distinct == 1) return RecipeCategory.DoubleSupplement;
 			if (total == 2 && distinct == 2) return RecipeCategory.MixteSimple;

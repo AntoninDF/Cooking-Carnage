@@ -4,9 +4,8 @@ using UI;
 public class MainMenuState : MenuState
 {
     protected override System.Type DefaultMenuType => typeof(MainMenu);
-    protected override float WaitBeforeDisablingMenu => lastTransition.GetType() == typeof(UpgradeState) ? 2 : 0;
+    protected override float WaitBeforeDisablingMenu => 2;
 
-    GameState lastTransition;
     public override void OnEnter()
     {
         base.OnEnter();
@@ -16,12 +15,6 @@ public class MainMenuState : MenuState
     }
 
     public override GameState FindNext(StateTransitions transition = StateTransitions.None)
-    {
-        lastTransition =  GetNext(transition);
-        return lastTransition;
-    }
-
-    private GameState GetNext(StateTransitions transition)
     {
         switch (transition)
         {
