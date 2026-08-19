@@ -12,7 +12,7 @@ public class Order
     public Client Owner => _owner;
     public SO_Recipe Recipe => _recipe;
     public float Timestamp => _timestamp;
-    public EClientType? Drink { get; set; }
+    public EClientType Drink { get; set; } = EClientType.None;
     public int ID => _id;
     public bool IsResolved { get; set; } // Wether the order has been served or not
     public bool IsCancelled { get; set; } // Wether the client has been killed or not
@@ -62,7 +62,7 @@ public class Order
         _id        = id;
     }
 
-    public void SetDrink(EClientType? drink) => Drink = drink;
+    public void SetDrink(EClientType drink) => Drink = drink;
     
     public void Resolve(Orders.ServingInfo info)
     {

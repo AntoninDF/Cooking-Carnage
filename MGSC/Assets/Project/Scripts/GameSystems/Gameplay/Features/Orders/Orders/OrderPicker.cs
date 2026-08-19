@@ -27,7 +27,7 @@ namespace Orders
             }
         }
 
-        private static float DrinkProbability;
+        public static float DrinkProbability = 0.5f; // 1 means there'll always be a drink ordered (if possible)
         private static float _extraDrinkChanceBonus = 0f;
 
         private static int _selectionCount = 0; 
@@ -91,15 +91,20 @@ namespace Orders
             return ApplyUpgrade(picked, book, SO_RecipeUnlockConfig.Instance);
         }
 
-        public static EClientType? PickDrink(Client client)
+        public static bool CanOrderDrink()
         {
-            if (!RecipeUnlockChecker.IsUnlocked(RecipeCategory.Simple))
-                return null;
+            if (!Globals.Authorizations.AllowMakingDrinks) return false;
+            if (!RecipeUnlockChecker.IsUnlocked(RecipeCategory.Simple)) return false;
+            return true;
+        }
+        public static EClientType PickDrink(Client client)
+        {
+            if (!CanOrderDrink()) return EClientType.None;
 
             float finalDrinkProbability = DrinkProbability + _extraDrinkChanceBonus;
 
             if (Random.value >= finalDrinkProbability)
-                return null;
+                return EClientType.None;
 
             return client.Type;
         }

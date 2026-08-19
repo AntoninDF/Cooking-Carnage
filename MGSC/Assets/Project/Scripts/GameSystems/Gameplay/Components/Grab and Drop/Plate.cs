@@ -2,7 +2,6 @@
 using Cooking;
 using Features;
 using System.Collections.Generic;
-using Project.Scripts.GameSystems.Gameplay.Components.Drinks;
 using UnityEngine;
 
 /// <summary>

@@ -1,7 +1,6 @@
 using Features;
 using System;
 using Clients;
-using Project.Scripts.GameSystems.Gameplay.Components.Drinks;
 using UnityEngine;
 
 public class ServingArea : MonoBehaviour, IFeatureCollection

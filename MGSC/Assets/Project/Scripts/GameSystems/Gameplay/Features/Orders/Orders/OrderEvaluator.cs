@@ -45,7 +45,7 @@ namespace Orders
             if (!served.HasValue) return 0f;
 
             float bonus = DrinkServedBonus;
-            if (order.Drink.HasValue && order.Drink.Value == served.Value)
+            //if (order.Drink.HasValue && order.Drink.Value == served.Value)
                 bonus += DrinkCorrectBonus;
 
             return bonus;

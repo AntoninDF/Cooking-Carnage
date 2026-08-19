@@ -20,7 +20,7 @@ namespace Features
             SO_Recipe recipe = Orders.OrderPicker.Pick();
 
             var order = Reference.GetManager<GameSystem.OrderManager>().NewOrder(client, recipe);
-            order.SetDrink(OrderPicker.PickDrink(client));
+            order.Drink = OrderPicker.PickDrink(client);
             
             OnNewOrder?.Invoke(order);
             DisplayRecipe?.Invoke(order.Recipe);

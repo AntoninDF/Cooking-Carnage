@@ -1,8 +1,6 @@
 using System;
 using Features;
 
-namespace Project.Scripts.BloodMachine
-{
     /// <summary>
     /// Wrapper for the available amount of blood of a given type
     /// </summary>
@@ -38,4 +36,3 @@ namespace Project.Scripts.BloodMachine
         }
         public bool CanServeDrink() => _quantity >= _bloodPerDrink;
     }
-}

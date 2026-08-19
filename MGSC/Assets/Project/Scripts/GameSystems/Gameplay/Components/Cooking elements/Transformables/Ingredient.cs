@@ -1,7 +1,6 @@
 using UnityEngine;
 using Cooking;
 using Features;
-using Project.Scripts.GameSystems.Gameplay.Components.Drinks;
 
 /// <summary>
 /// Implements the base behaviour for every ingredient
