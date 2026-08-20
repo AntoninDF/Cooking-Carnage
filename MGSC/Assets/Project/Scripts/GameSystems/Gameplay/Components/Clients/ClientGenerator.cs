@@ -25,11 +25,17 @@ namespace Clients
         /// Very confusing because you're never sure that what you get is what you've set
         /// (But it works for now I think)
         /// </summary>
-        public Vector2 DropRate
+        public Vector2 IngredientDropRate
         {
-            get => _defaultDropRate + new Vector2(_dropRateIncrement, _dropRateIncrement);
-            private set => _defaultDropRate = value;
+            get => _defaultIngredientDropRate + new Vector2(_dropRateIncrement, _dropRateIncrement);
+            private set => _defaultIngredientDropRate = value;
         }
+        public Vector2 BloodDropRate
+        {
+            get => _defaultBloodDropRate + new Vector2(_dropRateIncrement, _dropRateIncrement);
+            private set => _defaultBloodDropRate = value;
+        }
+        public EventVariable EventInvokedUponBlending { get; set; }
 
         public SplineContainer SplineComp => _splineComp;
         public float           Speed      => _speed;
@@ -43,7 +49,8 @@ namespace Clients
         private float _speed         = 5f;
         private float _reachDistance = 1f;
         private SplineContainer _splineComp;
-        public Vector2 _defaultDropRate = Vector2.one;
+        public Vector2 _defaultIngredientDropRate = Vector2.one;
+        public Vector2 _defaultBloodDropRate = new Vector2(30f, 60f);
         private float _dropRateIncrement = 0f;
         //private ClientMovement _movement;
 
@@ -68,7 +75,7 @@ namespace Clients
 
             return
                 Client
-                    .New(model.prefab, model.clientType, model.loot, model.dropRate, model.name, position, model.movementSpeed)
+                    .New(model.prefab, model.clientType, model.loot, model.ingredientDropRate, model.bloodDropRate, model.EventInvokedUponBlending, model.name, position, model.movementSpeed)
                     .SetModel(model);
             //.TryUseUpgrades();
         }
@@ -82,7 +89,7 @@ namespace Clients
         /// <param name="name">The name that will be used for the gameobject</param>
         /// <param name="position">The position at which the gameobject will be instantiated</param>
         /// <returns></returns>
-        public static Client New(GameObject prefab, EClientType type, SO_Ingredient ingredientDroppedOnKill, Vector2 dropRate, string name = null, Vector3 position = default(Vector3), float speed = 1.0f)
+        public static Client New(GameObject prefab, EClientType type, SO_Ingredient ingredientDroppedOnKill, Vector2 ingredientDropRate, Vector2 bloodDropRate, EventVariable eventWhenBlended, string name = null, Vector3 position = default(Vector3), float speed = 1.0f)
         {
             if (prefab == null)
             {
@@ -102,7 +109,8 @@ namespace Clients
             // Setup the client
             client
                 .SetType(type)
-                .SetLoot(ingredientDroppedOnKill, dropRate)
+                .SetIngredientLoot(ingredientDroppedOnKill, ingredientDropRate)
+                .SetBloodLoot(bloodDropRate, eventWhenBlended)
                 .SetSpeed(speed);
 
             if (name != null)
@@ -136,10 +144,16 @@ namespace Clients
             return this;
         }
 
-        public Client SetLoot(SO_Ingredient loot, Vector2 dropRate)
+        public Client SetIngredientLoot(SO_Ingredient loot, Vector2 dropRate)
         {
             IngredientToDrop = loot;           
-            DropRate = dropRate;
+            IngredientDropRate = dropRate;
+            return this;
+        }
+        public Client SetBloodLoot(Vector2 dropRate, EventVariable eventInvokedUponBlending)
+        {          
+            BloodDropRate = dropRate;
+            EventInvokedUponBlending = eventInvokedUponBlending;
             return this;
         }
 

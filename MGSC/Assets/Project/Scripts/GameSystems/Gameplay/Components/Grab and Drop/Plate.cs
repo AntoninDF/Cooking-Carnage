@@ -70,7 +70,7 @@ public class Plate : Item
         if (ContainerComponent.TryGetFeature(out Container))
         {
             Container.OnGrab += TryLock;
-            if (_onIngredientAdded != null) Container.OnGrab += _onIngredientAdded.Raise;
+            if (_onIngredientAdded != null) Container.OnGrab += _onIngredientAdded.Invoke;
             // Make sure only cut ingredients can be put in the plate
             Container.Filter.AddCondition(GrabbableCondition);
             Container.Filter.AddCondition(_ => Globals.Authorizations.AllowPuttingIngredientsInPlates);
@@ -134,7 +134,7 @@ public class Plate : Item
             if (!Container.RequestGrab(playerContainer.HeldItem))
             {
                 // Try to swap the plates
-                if (playerContainer.HeldItem != null && playerContainer.HeldItem.Owner is Plate playerPlate)
+                if (playerContainer.HeldItem != null && (playerContainer.HeldItem.Owner is Plate || playerContainer.HeldItem.Owner is Drink))
                 {
                     SwapWith(playerContainer.HeldItem);
                 }

@@ -19,10 +19,11 @@ namespace Features
         public Action OnClientLeaving {get; set; }
         public Action OnClientLeavingWithTips {get; set; }
         
-        public Action OnClientKilled {get; set; }
-        public Action OnMealReady { get; set; }
-        public Action OnIngredientDropped { get; set; }
-        public Action<Client> ClientLeaveTheSeat {get; set; }
+        public Action              OnClientKilled      {get;  set; }
+        public Action              OnMealReady         { get; set; }
+        public Action              OnIngredientDropped { get; set; }
+        public Action<Client>      ClientLeaveTheSeat  {get;  set; }
+        public Action  OnClientBlended     { get; set; }
         
         public Client RegisteredClient
         {
@@ -30,23 +31,24 @@ namespace Features
             set
             {
                 if (_registeredClient == value) return;
+                _registeredClient = value;
                 if (value != null)
                     OnClientRegister?.Invoke(value);
-                _registeredClient = value;
             }
         }
+
         public Client SittingClient
         {
             get => _sittingClient;
             set
             {
                 if (_sittingClient == value) return;
+                _sittingClient = value;
                 if (value != null)
                     OnClientSitting?.Invoke(value);
-                _sittingClient = value;
             }
         }
-
+        
         public Transform transform;
         public Transform parentTransform;
         public  List<SlotContainer> dropSlots = new List<SlotContainer>();
@@ -81,11 +83,13 @@ namespace Features
             if (client == null)return false;
             if (RegisteredClient != null)return false;
             
-            client.CurrentSeat        =  this;
-            client.Behaviour.OnReactionEnd += OnClientLeaving;
-            client.Behaviour.GoodReaction += OnClientLeavingWithTips;
-            RegisteredClient          =  client;
-            
+            client.CurrentSeat                      =  this;
+            client.Behaviour.OnReactionEnd          += OnClientLeaving;
+            client.Behaviour.GoodReaction           += OnClientLeavingWithTips;
+            client.ClientBlending.OnCustomerBlended += OnClientBlended;
+            //client.ClientBlending.OnCustomerBlended += () => Debug.Log("BLENDING FEEDBACK");
+            RegisteredClient                        =  client;
+            ActualizeSeatPos(client);
             return true;
         }
         
@@ -102,7 +106,7 @@ namespace Features
                 else
                     TimerManager.StartTimer("Lower client seat (" + Time.time + ")", 5.5f, () => ActualizeSeatPos(null));
             }
-            else
+            else if(!client.IsBlended)
             {
                 OnIngredientDropped?.Invoke();
                 client.SpawnIngredients(dropSlots);

@@ -30,12 +30,14 @@ namespace Clients
         [GlobalEvent("Clients/On Client Enters The Cafeteria")]
         public static Action OnEnterCafeteria;
         public ClientBehaviour    Behaviour        { get; set; }
-        public ClientCooked       Cooked           { get; private set; }
+        public F_ClientCooked       Cooked           { get; private set; }
+        public F_ClientBlending    ClientBlending    { get; set; }
         public ClientLook         ClientLook       => _clientLook;
         
-        public bool               IsCooked         { get; set; }
-        public bool               IsAngry          { get; set; }
-        public int UniqueID { get; set; }
+        public bool  IsCooked  { get; set; }
+        public bool  IsBlended { get; set; }
+        public bool  IsAngry   { get; set; }
+        public int   UniqueID  { get; set; }
         public Timer PatienceTimer;
         
         public Order OrderLog { get;  set; }
@@ -186,21 +188,18 @@ namespace Clients
         public void InitFeatures(ClientMovement movement)
        {
            _clientLook = new ClientLook(this, transform, movement);
-           Cooked      = new ClientCooked(this, _cookingDelay);
-           Collection.Add(_clientLook);
-           Collection.Add(Cooked);
+           Cooked      = new F_ClientCooked(this, _cookingDelay);
+           ClientBlending = new F_ClientBlending(this, _cookingDelay);
+           // Collection.Add(_clientLook);
+           // Collection.Add(Cooked);
+           // Collection.Add(ClientBlending);
        }
+       
 
- /*
-       public void CookClient()
-       {
-           Cooked.Trigger();
-       }
- */
        public void SpawnIngredients(List<SlotContainer> containers)
        {
            List<SlotContainer> positions = containers;
-           int numberToDrop = Random.Range((int)DropRate.x, (int)DropRate.y);
+           int numberToDrop = Random.Range((int)IngredientDropRate.x, (int)IngredientDropRate.y);
            for (int i = 0; i < numberToDrop; i++)
            {
                Instantiate(Model.loot.Prefab, positions[i].transform);
@@ -311,9 +310,9 @@ namespace Clients
        /// and evaluate it if he can
        /// </summary>
        /// <param name="serving"></param>
-       public void TryAcceptServing(Servable serving)
+       public void TryAcceptServing(Servable serving, EClientType? servedDrinkType)
        {
-           if (serving == null || !serving.Enabled) return;
+        if (serving == null || !serving.Enabled) return;
            if (CurrentOrder == null) return;
 
            var recipeComponent = serving.Owner as Recipe;
@@ -322,9 +321,11 @@ namespace Clients
            SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
            if (soRecipe == null) return;
 
-           var info = new Orders.ServingInfo(serving); 
+           if (recipeComponent == null) { return; }
+           if (soRecipe == null) {  return; }
+           
+           var info = new Orders.ServingInfo(serving, servedDrinkType);
            CurrentOrder.ServingInfo = info;
-
             Achievements.Unlock("ACH_A02");
 
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
@@ -353,32 +354,41 @@ namespace Clients
             }
             if (!Application.isPlaying) return;
 
+            // Set the style for labels
+            GUIStyle style = new();
+            Texture2D bg = new(1, 1);
+            bg.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.4f));
+            bg.Apply();
+            style.normal.background = bg;
+            style.normal.textColor = Color.white;
+
+            void Label(Vector3 pos, string text) => UnityEditor.Handles.Label(pos, text, style);
+
             if (CurrentOrder != null)
             {
                Gizmos.color = Color.white;
-               UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "HAS ORDER");
-               UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Order contains " + CurrentOrder.Recipe.Ingredients.Select(ing => ing.Name).ToList().ToString_EasyRead());
+               Label(transform.position + Vector3.up * GetY(), "HAS ORDER");
+               Label(transform.position + Vector3.up * GetY(), "|\tOrder contains " + CurrentOrder.Recipe.Ingredients.Select(ing => ing.Name).ToList().ToString_EasyRead());
+               Label(transform.position + Vector3.up * GetY(), "|\tDrink ordered : " + CurrentOrder.Drink);
             }
             else
             {
                 Gizmos.color = Color.Lerp(Color.white, Color.red, 0.3f);
-                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "NO ORDER");
+                Label(transform.position + Vector3.up * GetY(), "NO ORDER");
             }
 
             if (CurrentSeat != null)
             {
                 Gizmos.color = Color.Lerp(Color.white, Color.blue, 0.3f);
-                UnityEditor.Handles.Label(
-                                            transform.position + Vector3.up * GetY(),
-                                            "CurrentSeat is " + (CurrentSeat.Owner as UnityEngine.Object)?.name);
+                Label(transform.position + Vector3.up * GetY(), "CurrentSeat is " + (CurrentSeat.Owner as UnityEngine.Object)?.name);
             }
             {
                 Gizmos.color = Color.Lerp(Color.white, Color.blue, 0.3f);
-                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "ClientType : " + Type);
+                Label(transform.position + Vector3.up * GetY(), "ClientType : " + Type);
             }
             {
                 Gizmos.color = Color.Lerp(Color.white, Color.blue, 0.3f);
-                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Patience : " + TimerManager.TimeLeft("OrderTimer_" + UniqueID) + "s");
+                Label(transform.position + Vector3.up * GetY(), "Patience : " + TimerManager.TimeLeft("OrderTimer_" + UniqueID) + "s");
             }
         }
 

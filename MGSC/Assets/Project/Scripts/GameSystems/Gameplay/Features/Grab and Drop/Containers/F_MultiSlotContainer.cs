@@ -118,12 +118,15 @@ namespace Features
         }
         private F_SoloContainer GetFirstAvailableSlot(F_Grabbable grabbable)
         {
+            F_SoloContainer fallback = null;
             foreach (var slot in SoloContainers)
             {
                 if (slot.CanGrab(grabbable))
-                    return slot;
+                {
+                    if (fallback == null) fallback = slot;
+                }
             }
-            return null;
+            return fallback;
         }
         private void DropByFirstAvailableSlot(F_Grabbable grabbable)
         {
@@ -153,6 +156,9 @@ namespace Features
             }
         }
 
+        public override F_Grabbable HeldItem =>
+            SoloContainers.FirstOrDefault(s => s.HeldItem != null)?.HeldItem;
+        
         #endregion
     }
 

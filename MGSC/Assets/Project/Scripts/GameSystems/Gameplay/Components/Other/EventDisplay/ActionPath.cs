@@ -40,6 +40,7 @@ public class ActionPath
     public MemberInfo GetMemberInfo()
     {
         if (source == ActionSource.Global || FeaturePath == null) return null;
+        if (FeaturePath.Type == null) return null; 
         var members = FeaturePath.Type.GetMember(ActionVariableName);
         if (members == null || members.Length == 0) return null;
         return members[0];

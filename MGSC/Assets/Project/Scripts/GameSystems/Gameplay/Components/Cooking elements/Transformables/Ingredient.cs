@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cooking;
 using Features;
+
 /// <summary>
 /// Implements the base behaviour for every ingredient
 /// </summary>
@@ -36,7 +37,7 @@ public class Ingredient : Item
         if (cutModel != null)
             Cuttable.OnTransformation += () => SetActiveModel(cutModel);
         if (OnItemCut != null)
-            Cuttable.OnTransformation += OnItemCut.Raise;
+            Cuttable.OnTransformation += OnItemCut.Invoke;
 
 
         //if (data == null)
@@ -54,10 +55,11 @@ public class Ingredient : Item
         {
             containerObject.RequestGrab(Grabbable);
         }
-        else if (playerContainer.HeldItem.TryGetSibling(out F_Ingredient otherIngredient))
+        else if (playerContainer.HeldItem.TryGetSibling(out F_Ingredient otherIngredient) ||playerContainer.HeldItem.Owner is Drink)
         {
             SwapWith(playerContainer.HeldItem);
         }
+      
     }
 
     #endregion

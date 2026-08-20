@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public partial class Globals
@@ -31,8 +30,9 @@ public partial class Globals
         public static Param<float> WrongMealPrice { get; set; } = new(5f);
         public static Param<float> Threshold1Star { get; set; } = new(0.66f);
         public static Param<float> Threshold2Star { get; set; } = new(0.33f);
-        
-        // UPGRADES
-        public static Param<bool> AllowUpgrades { get; set; } = new(true);
+
+        // DRINKS
+        public static Param<float> DrinkProbabilityIncrease { get; set; } = new(0f);
+
     }
 }

@@ -209,18 +209,6 @@ namespace GameSystem
             var keys = clientTypeAmount.Keys.ToList();
             int keyCount = keys.Count;
             
-            //WIP : Works only for 3 types of Alien
-            /*
-            for (int typeIndex = 0; typeIndex < keyCount; typeIndex++)
-            {
-                int prevIndex = (typeIndex - 1) < 0 ? keyCount - 1 : typeIndex - 1;
-                int nextIndex = (typeIndex + 1) >= keyCount ? 0 : typeIndex + 1;
-
-                EClientType type = keys[typeIndex];
-                weightedTypes[type] =
-                    35 + clientTypeAmount[keys[prevIndex]] * 5 + clientTypeAmount[keys[nextIndex]] * 5;
-            }
-            */
             weightedTypes = new Dictionary<EClientType, float>();
             foreach (var kvp in clientTypeAmount)
             {
@@ -247,12 +235,13 @@ namespace GameSystem
             float randomValue = Random.value;
             
             float cumulative = 0f;
-            
             foreach (var pair in weightedTypes)
             {
                 cumulative += pair.Value;
                 if (randomValue <= cumulative)
                 {
+                    Debug.Log("Selecting client" + pair.Key + ". Weighted types are " + weightedTypes.ToString_Detailed() +
+                        ". Cumlative value was " + cumulative + ". (This log is here to ensure client selection is made correctly)");
                     return pair.Key;
                 }
             }
