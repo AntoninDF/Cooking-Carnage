@@ -15,7 +15,22 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
     public EClientType Type { get => _type; set => _type = value; }
     public GameObject DrinkPrefab { get => _drinkPrefab; set => _drinkPrefab = value; }
     public Transform DrinkSpawnPoint { get => _drinkSpawnPoint; set => _drinkSpawnPoint = value; }
-    public float ReserveFill01 => reserve.BloodQuantity / _maxBloodQuantityDisplay;
+    public float ReserveFill01 => BloodQuantity / _maxBloodQuantityDisplay; public float BloodPerDrink => _bloodPerDrink;
+    /// <summary>
+    /// Modifying the value of <see cref="BloodQuantity"/> will invoke <see cref="OnBloodQuantityChange"/>.
+    /// This allows the reserve's visual appearance to be updated automatically when the blood quantity changes.
+    /// </summary>
+    public float BloodQuantity
+    {
+        get => _quantity;
+        set
+        {
+            if (value == _quantity) return;
+            _quantity = value;
+            OnBloodQuantityChange?.Invoke(value);
+        }
+    }
+    public Action<float> OnBloodQuantityChange { get; set; }
     public FeatureCollection Collection { get; } = new();
     #endregion
 
@@ -47,14 +62,13 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
     private Drink      _spawnedDrinkComponent;
 
     public F_Valve         valve;
-    public F_BloodReserve  reserve;
+    private float _quantity = 0f;
     #endregion
 
     #region Methods
     public void Initialize(GlobalDrinkStation globalDrinkStation)
     {        
-        reserve = new(this, _bloodPerDrink);
-        valve    = new F_Valve(globalDrinkStation, this, globalDrinkStation, reserve, Type, servingDuration, _timeBeforeLoosingBlood, _bloodFlowPerSecond);
+        valve    = new F_Valve(globalDrinkStation, this, globalDrinkStation, Type, servingDuration, _timeBeforeLoosingBlood, _bloodFlowPerSecond);
 
         BindEvents();
         ActualizeReserveValue(ReserveFill01);
@@ -63,7 +77,7 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
     {
         ValveButton.OnInteraction += TryStartServingDrink;
         valve.OnStopFillingDrink      += WhenStopFillingDrink;
-        reserve.OnBloodQuantityChange += CheckReserve;
+        OnBloodQuantityChange += CheckReserve;
     }
 
     void TryStartServingDrink(InteractionContext ctx)
@@ -88,6 +102,7 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
         if (_spawnedDrink != null) return false; // Don't spawn anything if the previous drink is still there
         if (DrinkPrefab == null) return false;
         if (DrinkSpawnPoint == null) return false;
+        if (_quantity < _bloodPerDrink) return false;
         if (!valve.CanServeDrink()) return false;
         return true;
     }
@@ -141,8 +156,8 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
                
     private void CheckReserve(float targetValue) => ActualizeReserveValue(ReserveFill01);
 
-    [Button("Fill")] void _fill() => reserve.BloodQuantity = 150;
-    [Button("Empty")] void _empty() => reserve.BloodQuantity = 0;
+    [Button("Fill")] void _fill() => BloodQuantity = 150;
+    [Button("Empty")] void _empty() => BloodQuantity = 0;
 
     #endregion
 

@@ -32,7 +32,6 @@ public class F_Valve : Feature, IUpgradable<DrinkServingSpeedUpgrade>
     public Timer OverflowingTimer => TimerManager.GetTimer(SecondTimerName);
        
     private EClientType       _associedClientType;
-    private F_BloodReserve    _reserve;
     private DrinkStation      _drinkStation;
     private GlobalDrinkStation _station;
 
@@ -52,13 +51,11 @@ public class F_Valve : Feature, IUpgradable<DrinkServingSpeedUpgrade>
     public F_Valve(IFeatureCollection owner,
         DrinkStation        drinkStation,
         GlobalDrinkStation  globalDrinkStation,
-        F_BloodReserve      reserve, 
         EClientType         clientType, 
         float               startServiceDuration, 
         float               secondTimerTime, 
         float               bloodDecreaseOverTime) : base(owner)
     {
-        _reserve            = reserve;
         _drinkStation       = drinkStation;
         _station            = globalDrinkStation;
         _associedClientType = clientType;
@@ -80,7 +77,7 @@ public class F_Valve : Feature, IUpgradable<DrinkServingSpeedUpgrade>
         IsServing = true;
         _pendingDrink = drinkToServe;
         OnStartFillingDrink?.Invoke();
-        _bloodQuantityBeforeServiceStart = _reserve.BloodQuantity;
+        _bloodQuantityBeforeServiceStart = _drinkStation.BloodQuantity;
         TimerManager.StartGameplayTimer(FirstTimerName, _serviceDuration, WaitForPlayerToRetrieveDrink, ProcessDrinkPouring);
 
         return true;
@@ -90,7 +87,6 @@ public class F_Valve : Feature, IUpgradable<DrinkServingSpeedUpgrade>
     {
         if (!Globals.Authorizations.AllowMakingDrinks) return false;
         if (hasPendingDrink) return false; // Une boisson est déjà en attente d'être récupérée
-        if (!_reserve.CanServeDrink()) return false; // Not enough blood available
         if (IsServing) return false; // Can't serve a new drink if we're already serving one
         return true;
     }
@@ -99,10 +95,10 @@ public class F_Valve : Feature, IUpgradable<DrinkServingSpeedUpgrade>
     private void ProcessDrinkPouring(float elapsed)
     {
         Debug.Log("Valve.ProcessDrinkPouring");
-        float bloodPerDrink  = _reserve.BloodPerDrink;
+        float bloodPerDrink  = _drinkStation.BloodPerDrink;
         float t = Mathf.Clamp01(elapsed / _serviceDuration);
 
-        _reserve.BloodQuantity = _bloodQuantityBeforeServiceStart - bloodPerDrink * t;
+        _drinkStation.BloodQuantity = _bloodQuantityBeforeServiceStart - bloodPerDrink * t;
         _pendingDrink.SetLiquidLevel(t);
     }
 
@@ -132,10 +128,10 @@ public class F_Valve : Feature, IUpgradable<DrinkServingSpeedUpgrade>
     private void ProcessDecreasingBlood(float temp)
     {
         float delta = _bloodDecreaseOverTime * Time.deltaTime;
-        _reserve.BloodQuantity -= delta;
+        _drinkStation.BloodQuantity -= delta;
 
         Debug.Log("Valve.ProcessDecreasingBlood invoked");
-        if (IsServing && _reserve.BloodQuantity > 0) return;
+        if (IsServing && _drinkStation.BloodQuantity > 0) return;
             
         // We exit the loop when the drink is taken or when there isn't any blood yet
         OnStopOverflowing?.Invoke();

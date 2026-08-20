@@ -33,7 +33,7 @@ namespace Orders
         private bool _hasTriggered1Star;
         private bool _hasTriggered2Star;
 
-        private Dictionary<EClientType?, Sprite> _relativeDrinkSprite = new();
+        private Dictionary<EClientType, Sprite> _relativeDrinkSprite = new();
         
 
         void Start()
@@ -72,7 +72,7 @@ namespace Orders
                 }
             }
 
-            if (order.Drink != null)
+            if (order.Drink != EClientType.None)
             {
                 _drink.enabled = true;
                 _drink.sprite  = _relativeDrinkSprite[order.Drink];

@@ -28,7 +28,7 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
 		foreach(var station in _drinkStations)
 		{
 			station.Initialize(this);
-			station.reserve.BloodQuantity = 0;
+			station.BloodQuantity = 0;
         }
 		EventInvokedUponBlending.AddListener(UponClientBlend);
 
@@ -43,7 +43,7 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
 		var station = GetStation(client.Type);
 		if (station == null) return;
 		float bloodGivenByClient = UnityEngine.Random.Range(client.BloodDropRate.x, client.BloodDropRate.y);
-        station.reserve.BloodQuantity += bloodGivenByClient;
+        station.BloodQuantity += bloodGivenByClient;
         Debug.Log("GlobalDrinkStation.UponClientBlend passed");
 	}
 	/// <summary>Get the drink station for a given client type. Can be null if the station wasn't assigned in the editor</summary>
@@ -55,8 +55,8 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
 
     public void OnUpgraded(UnlockDrinkMachine upgrade) { }
 
-	[Button("Fill all")] void _fillAll() { foreach (var station in DrinkStations) station.reserve.BloodQuantity = 150; }
-	[Button("Empty all")] void _emptyAll() { foreach (var station in DrinkStations) station.reserve.BloodQuantity = 0; }
+	[Button("Fill all")] void _fillAll() { foreach (var station in DrinkStations) station.BloodQuantity = 150; }
+	[Button("Empty all")] void _emptyAll() { foreach (var station in DrinkStations) station.BloodQuantity = 0; }
 
 #if UNITY_EDITOR
     void OnDrawGizmos()
@@ -80,7 +80,7 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
             handleCount = 0;
             Gizmos.color = Color.white;
             UnityEditor.Handles.Label(GetPos(), "Station type : " + drinkStation.Type);
-            UnityEditor.Handles.Label(GetPos(), "Reserve : " + Mathf.Round(drinkStation.reserve.BloodQuantity*100)/100 + "cL (ratio is " 
+            UnityEditor.Handles.Label(GetPos(), "Reserve : " + Mathf.Round(drinkStation.BloodQuantity*100)/100 + "cL (ratio is " 
 																				+ Mathf.Round(drinkStation.ReserveFill01 * 100) / 100 + "/1)");
 			UnityEditor.Handles.Label(GetPos(), "Is serving ? : " + (drinkStation.valve.IsServing ? "Yup" : "Nope"));
 			UnityEditor.Handles.Label(GetPos(), "Serving timer : " + 

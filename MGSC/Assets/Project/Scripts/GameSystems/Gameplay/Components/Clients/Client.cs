@@ -353,32 +353,41 @@ namespace Clients
             }
             if (!Application.isPlaying) return;
 
+            // Set the style for labels
+            GUIStyle style = new();
+            Texture2D bg = new(1, 1);
+            bg.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.4f));
+            bg.Apply();
+            style.normal.background = bg;
+            style.normal.textColor = Color.white;
+
+            void Label(Vector3 pos, string text) => UnityEditor.Handles.Label(pos, text, style);
+
             if (CurrentOrder != null)
             {
                Gizmos.color = Color.white;
-               UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "HAS ORDER");
-               UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Order contains " + CurrentOrder.Recipe.Ingredients.Select(ing => ing.Name).ToList().ToString_EasyRead());
+               Label(transform.position + Vector3.up * GetY(), "HAS ORDER");
+               Label(transform.position + Vector3.up * GetY(), "|\tOrder contains " + CurrentOrder.Recipe.Ingredients.Select(ing => ing.Name).ToList().ToString_EasyRead());
+               Label(transform.position + Vector3.up * GetY(), "|\tDrink ordered : " + CurrentOrder.Drink);
             }
             else
             {
                 Gizmos.color = Color.Lerp(Color.white, Color.red, 0.3f);
-                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "NO ORDER");
+                Label(transform.position + Vector3.up * GetY(), "NO ORDER");
             }
 
             if (CurrentSeat != null)
             {
                 Gizmos.color = Color.Lerp(Color.white, Color.blue, 0.3f);
-                UnityEditor.Handles.Label(
-                                            transform.position + Vector3.up * GetY(),
-                                            "CurrentSeat is " + (CurrentSeat.Owner as UnityEngine.Object)?.name);
+                Label(transform.position + Vector3.up * GetY(), "CurrentSeat is " + (CurrentSeat.Owner as UnityEngine.Object)?.name);
             }
             {
                 Gizmos.color = Color.Lerp(Color.white, Color.blue, 0.3f);
-                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "ClientType : " + Type);
+                Label(transform.position + Vector3.up * GetY(), "ClientType : " + Type);
             }
             {
                 Gizmos.color = Color.Lerp(Color.white, Color.blue, 0.3f);
-                UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Patience : " + TimerManager.TimeLeft("OrderTimer_" + UniqueID) + "s");
+                Label(transform.position + Vector3.up * GetY(), "Patience : " + TimerManager.TimeLeft("OrderTimer_" + UniqueID) + "s");
             }
         }
 
