@@ -181,6 +181,7 @@ namespace Clients
             IsAngry = true;
             order.Cancel();
             CurrentSeat?.TryUnregister(this);
+            Behaviour.PatienceReaction?.Invoke();
         }
         public void InitFeatures(ClientMovement movement)
        {

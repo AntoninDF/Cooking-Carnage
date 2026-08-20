@@ -13,8 +13,6 @@ public class TutorialState : GameplayState
         }
         GameLoop.RequestTransition(StateTransitions.StartShift);
         
-        AudioSystem.PlayAudio(AudioSystem.Database.beforeShiftMusic,true);
-        AudioSystem.PlayAudio(AudioSystem.Database.ambience);
         TutorialTimeline.StartTutorial();
     }
 
