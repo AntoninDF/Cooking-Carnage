@@ -17,6 +17,8 @@ namespace UI
         public float ScrollSpeed = 300;
         [Tooltip("The duration of the credits' scroll, in seconds"), Min(1f), ShowIf("EnableScrolling")]
         public float ScrollDuration = 120;
+	[ShowIf("EnableScrolling")]
+	public float DelayStartScrolling;
         [ShowIf("EnableScrolling")]
         [ReadOnly] public Mask ViewportMask;
         public float ScrollSpeedMultiplier { get; set; } = 1f;
@@ -32,7 +34,7 @@ namespace UI
 
             ViewportMask.enabled = true;
             if (EnableScrolling)
-                onEnable += () => ScrollDelayed(3f);
+                onEnable += () => ScrollDelayed(DelayStartScrolling);
         }
 
         private void BindAll() => B_Back?.onClick.AddListener(OnBack);
@@ -67,7 +69,7 @@ namespace UI
             if (_previousPos != pos)
             {
                 PauseScroll();
-                TimerManager.StartTimer("Paused credits scrolling due to user input", 0.5f, ResumeScroll);
+                TimerManager.StartTimer("Paused credits scrolling due to user input", 0.05f, ResumeScroll);
                 _previousPos = pos;
                 return;
             }
