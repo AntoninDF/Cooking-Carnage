@@ -4,7 +4,6 @@ using Orders;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEditor;
-using System.Linq;
 
 public class OrderingArea : MonoBehaviour, IFeatureCollection
 {
@@ -23,11 +22,12 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     public Transform SeatParent;
     public ServingArea ServingArea;
     public InteractionButton KillButton;
+    public InteractionButton BlendButton;
     
     
     public ClientSeatHeightConfig ServingAreaConfig;
     public UnityEvent OnCustomerKilled;
-    
+    public UnityEvent<EClientType> OnCustomerBlended;
     
     [SerializeField] private OrderDisplayer _OrderDisplayer;
     [SerializeField] private Transform _slotParent;
@@ -52,6 +52,8 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     {
         if (KillButton != null)
             KillButton.OnInteraction += _ => KillClient();
+        if (BlendButton != null)
+            BlendButton.OnInteraction += _ => BlendClient();
     }
 
 #if UNITY_EDITOR && EXTENSIVE_DEBUG
@@ -136,7 +138,22 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
             Debug.Log("[OrderingArea] OnCustomerKilled invoked for client " + client.name);
             OnCustomerKilled?.Invoke();
         }
-        
+    }
+
+    public void BlendClient()
+    {
+        Debug.Log("OrderingArea.BlendClient invoked");
+        if (!Globals.Authorizations.AllowMakingDrinks) return;
+        Client client = ClientSeat.RegisteredClient;
+        if (client != null && ClientSeat.SittingClient != null)
+        {
+            OnCustomerKilled?.Invoke(); //A retirer si animation de mort différente
+            client.ClientBlending.Trigger();
+            GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
+            OnCustomerBlended?.Invoke(client.Type);
+            client.EventInvokedUponBlending?.Invoke(client);
+            Debug.Log("client.EventInvokedUponBlending invoked");
+        }
     }
 
 #if UNITY_EDITOR

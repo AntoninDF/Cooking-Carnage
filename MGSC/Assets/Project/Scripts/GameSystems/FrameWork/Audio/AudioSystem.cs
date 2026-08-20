@@ -108,7 +108,7 @@ public static class AudioSystem
         newTrack.release();
         
 #if UNITY_EDITOR
-        //UnityEngine.Debug.Log("[AudioSystem] is playing "+ audioEvent.Path);
+        UnityEngine.Debug.Log("[AudioSystem] is playing "+ audioEvent.Path);
 #endif
         
         activeAudios.Add(id, newTrack);

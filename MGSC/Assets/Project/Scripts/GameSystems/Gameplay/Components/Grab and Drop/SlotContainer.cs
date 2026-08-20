@@ -15,6 +15,9 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
     public F_SoloContainer Container { get; set; }
     public F_Interactable Interactable { get; set; }
     public F_LookAtTarget LookAtTarget { get; set; }
+    
+    public Transform PlacementAnchor                      { get; private set; }
+    public void      SetPlacementAnchor(Transform anchor) => PlacementAnchor = anchor;
 
     public bool IsInteractable
     {
@@ -69,17 +72,18 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
     }
     protected void OnInteract(InteractionContext context)
     {
+
         if (!context.TryGetFeature(out F_Container otherContainer)) return;
 
         if (Container.RequestGrab(otherContainer.HeldItem))
         {
-            if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+            if (OnGrabEventVar != null) OnGrabEventVar.Invoke();
             return;
         }
 
         if (passThrough && otherContainer.RequestGrab(Container.HeldItem))
         {
-            if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+            if (OnGrabEventVar != null) OnGrabEventVar.Invoke();
             return;
         }
 
@@ -88,7 +92,7 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
             && otherContainer.HeldItem.TryGetSibling(out F_Container heldContainer)
             && heldContainer.RequestGrab(Container.HeldItem))
         {
-            if (OnGrabEventVar != null) OnGrabEventVar.Raise();
+            if (OnGrabEventVar != null) OnGrabEventVar.Invoke();
             return;
         }
 
@@ -100,7 +104,7 @@ public class SlotContainer : MonoBehaviour, IFeatureCollection
             if (incomingItem.SwapWith(existing))
             {
                 if (OnGrabEventVar != null)
-                    OnGrabEventVar.Raise();
+                    OnGrabEventVar.Invoke();
                 return;
             }
         }

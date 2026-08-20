@@ -1,7 +1,5 @@
 using System;
 using Clients;
-using Cooking;
-using GameSystem;
 using UnityEngine;
 
 namespace Features
@@ -38,34 +36,45 @@ namespace Features
 			if (_seat.Owner is not OrderingArea orderingArea)
 				return;
 
-			var heldItem = orderingArea.ServingArea.MealSlot?.Container?.HeldItem;
-			if (heldItem == null)
-				return;
-			if (!heldItem.TryGetSibling(out Servable servable, true))
-				return;
+			var mealSlotContainer  = orderingArea.ServingArea.MealSlot?.Container;
+			var drinkSlotContainer = orderingArea.ServingArea.DrinkSlot?.Container;
 
-			orderingArea.ServingArea.MealSlot.Container.IsLocked = false;
-			orderingArea.ServingArea.MealSlot.Container.RequestDrop(heldItem);
-			heldItem.IsLocked = true;
-			orderingArea.ServingArea.MealSlot.Container.IsLocked = true;
-			
-			_client.TryAcceptServing(servable);
+			var heldItem = mealSlotContainer?.HeldItem;
+			if (heldItem == null) return;
+			if (!heldItem.TryGetSibling(out Servable servable, true)) return;
+
+			var          heldDrink       = drinkSlotContainer?.HeldItem;
+			GameObject   drinkObject     = null;
+			EClientType? servedDrinkType = null;
+
+			if (heldDrink != null && heldDrink.Owner is Drink drinkComp)
+			{
+				drinkObject     = (drinkComp as Component)?.gameObject;
+				servedDrinkType = orderingArea.ServingArea.ClientSeat.SittingClient.Type;
+			}
+
+			mealSlotContainer.IsLocked = false;
+			mealSlotContainer.RequestDrop(heldItem);
+			heldItem.IsLocked          = true;
+			mealSlotContainer.IsLocked = true;
+
+			if (heldDrink != null && drinkSlotContainer != null)
+			{
+				drinkSlotContainer.IsLocked = false;
+				drinkSlotContainer.RequestDrop(heldDrink);
+				heldDrink.IsLocked          = true;
+				drinkSlotContainer.IsLocked = true;
+			}
+
+			_client.TryAcceptServing(servable, servedDrinkType);
 
 			if (heldItem.Owner is Component plateComp)
 			{
-				if (heldItem.TryGetSibling(out F_GoToAnimation anim) && anim.CanAnimate())
-				{
-					anim.OnAnimationStop += () =>
-					                        {
-						                        anim.Enabled = false;
-						                        _client.Behaviour.OnEatEnd += () => UnityEngine.Object.Destroy(plateComp.gameObject);
-					                        };
-				}
-				else
-				{
-					_client.Behaviour.OnEatEnd += () => UnityEngine.Object.Destroy(plateComp.gameObject);
-					
-				}
+				_client.Behaviour.OnEatEnd += () =>
+				                              {
+					                              UnityEngine.Object.Destroy(plateComp.gameObject);
+					                              if (drinkObject != null) UnityEngine.Object.Destroy(drinkObject);
+				                              };
 			}
 		}
 		

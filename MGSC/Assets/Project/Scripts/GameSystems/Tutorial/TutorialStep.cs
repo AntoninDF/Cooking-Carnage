@@ -14,7 +14,7 @@ using FMOD.Studio;
 public class TutorialStep : ScriptableObject
 {
     public List<SubStep> Steps = new();
-
+    public Timer Timer => _currentTimer;
     [NonSerialized] protected UISystem UI;
     [NonSerialized] protected TaskPanel Tasks;
     [NonSerialized] protected SubtitleOverlay Subtitles;
@@ -146,7 +146,7 @@ public class TutorialStep : ScriptableObject
     {
         HandleFeatureLock(actions.LockFeatures, actions.UnlockFeatures);
         DisplayArrowsFor(actions.DisplayArrows);
-        if (actions.RaiseEvent != null) actions.RaiseEvent.Raise();
+        if (actions.RaiseEvent != null) actions.RaiseEvent.Invoke();
         HandleTaskRequests(actions.AddTasks);
     }
     private void HandleFeatureLock(LockableFeature lockFeatures, LockableFeature unlockFeatures)

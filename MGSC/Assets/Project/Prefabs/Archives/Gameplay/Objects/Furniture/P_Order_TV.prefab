@@ -1119,6 +1119,42 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 40
+--- !u!1 &3615229889705395582
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 583993087052134379}
+  m_Layer: 5
+  m_Name: Drink_Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &583993087052134379
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3615229889705395582}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 57146618538809730}
+  m_Father: {fileID: 5870487521324492399}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3742411966922730397
 GameObject:
   m_ObjectHideFlags: 0
@@ -1917,6 +1953,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27cd3c76d46443bb8b6ebb4fbd15a84d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Orders.OrderDisplayer
+  _possibleDrinks:
+  - ClientType: 1
+    associatedDrinkSprite: {fileID: 21300000, guid: ee2f37d9f6a31474591ca02011880c32, type: 3}
+  - ClientType: 2
+    associatedDrinkSprite: {fileID: 21300000, guid: b0a2d13223701ec46a3544d598bb1d8a, type: 3}
+  - ClientType: 3
+    associatedDrinkSprite: {fileID: 21300000, guid: 582ab0dcc6985d747b063657117f65e7, type: 3}
   _animation: {fileID: 1554817792483807664}
   _price: {fileID: 9133079934129188566}
   _ingredients:
@@ -1924,6 +1967,7 @@ MonoBehaviour:
   - {fileID: 261123918768206548}
   - {fileID: 5079956088571390910}
   - {fileID: 3198629164080906025}
+  _drink: {fileID: 562047325172556954}
   _cookingMethodsPositions:
   - {fileID: 8651953394024800718}
   - {fileID: 7380095604543933387}
@@ -3261,6 +3305,7 @@ RectTransform:
   - {fileID: 6289668956446606653}
   - {fileID: 6928790356065133276}
   - {fileID: 4965538314232958720}
+  - {fileID: 583993087052134379}
   m_Father: {fileID: 5507824341781683663}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3531,6 +3576,81 @@ RectTransform:
   m_AnchoredPosition: {x: -0.024999999, y: 0.024999999}
   m_SizeDelta: {x: 0.049999997, y: 0.05}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &8700008717229718903
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 57146618538809730}
+  - component: {fileID: 943787713676077260}
+  - component: {fileID: 562047325172556954}
+  m_Layer: 5
+  m_Name: Drink_Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &57146618538809730
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8700008717229718903}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.0019266001, y: 0.0019266001, z: 0.0019266001}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 583993087052134379}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.05, y: -0.084}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &943787713676077260
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8700008717229718903}
+  m_CullTransparentMesh: 1
+--- !u!114 &562047325172556954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8700008717229718903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: ee2f37d9f6a31474591ca02011880c32, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &8807641009419041447
 GameObject:
   m_ObjectHideFlags: 0

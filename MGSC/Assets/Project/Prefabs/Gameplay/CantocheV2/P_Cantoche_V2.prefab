@@ -2403,6 +2403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServingArea
   MealSlot: {fileID: 0}
+  DrinkSlot: {fileID: 0}
 --- !u!114 &1433416239384995754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2421,6 +2422,9 @@ MonoBehaviour:
   KillButton: {fileID: 0}
   ServingAreaConfig: {fileID: 0}
   OnCustomerKilled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCustomerBlended:
     m_PersistentCalls:
       m_Calls: []
   _OrderDisplayer: {fileID: 0}
@@ -2456,9 +2460,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27cd3c76d46443bb8b6ebb4fbd15a84d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Orders.OrderDisplayer
+  _possibleDrinks: []
   _animation: {fileID: 0}
   _price: {fileID: 0}
   _ingredients: []
+  _drink: {fileID: 0}
   _cookingMethodsPositions: []
   _timeSlider: {fileID: 0}
   _playTV: {fileID: 0}
@@ -2507,6 +2513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServingArea
   MealSlot: {fileID: 0}
+  DrinkSlot: {fileID: 0}
 --- !u!114 &6185336485962878167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2525,6 +2532,9 @@ MonoBehaviour:
   KillButton: {fileID: 0}
   ServingAreaConfig: {fileID: 0}
   OnCustomerKilled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCustomerBlended:
     m_PersistentCalls:
       m_Calls: []
   _OrderDisplayer: {fileID: 0}
@@ -2547,6 +2557,9 @@ MonoBehaviour:
   KillButton: {fileID: 0}
   ServingAreaConfig: {fileID: 0}
   OnCustomerKilled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCustomerBlended:
     m_PersistentCalls:
       m_Calls: []
   _OrderDisplayer: {fileID: 0}

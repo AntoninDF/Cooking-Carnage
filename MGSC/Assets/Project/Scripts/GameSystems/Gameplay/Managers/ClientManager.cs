@@ -1,9 +1,9 @@
+using Clients;
+using Features;
 using System;
 using System.Collections.Generic;
-using Clients;
-using UnityEngine;
 using System.Linq;
-using Features;
+using UnityEngine;
 
 namespace GameSystem
 {
@@ -249,9 +249,13 @@ namespace GameSystem
         public int GetBurntOrdersCount()
             => GetClientsHistory().Count(c => !c.killed && !c.wasCorrectRecipe && c.served && c.servedRecipe.name.Contains("Failed") && c.shiftNumber == Globals.Gameplay.ShiftNumber);
 
+        /// <summary>
+        /// Returns how many of each client type have been seen this shift, taking into account the live ones.
+        /// Every enum value of <see cref="EClientType"/> has a corresponding key
+        /// </summary>
         public Dictionary<EClientType, int> GetSeenClientTypesCount(int amount = -1)
         {
-            List<EClientType> seenTypes = currentClients.Where((client) => true).Select((client) => EClientType.None).ToList();
+            List<EClientType> seenTypes = currentClients.Where((client) => true).Select((client) => client.Type).ToList();
             seenTypes.InsertRange(0, currentClientHistory.Select((data) => data.clientType).ToList());
             if (amount < -1) throw new ArgumentException("[ClientManager] : You cannot ask for a negative amount of client types. Only use -1 to get all of the seen types.");
             if (amount != -1)
@@ -266,6 +270,12 @@ namespace GameSystem
                 if (!output.ContainsKey(type)) output[type] = 0;
                 output[type]++;
             }
+
+            // Make sure that every key is contained
+            foreach (EClientType clientType in Enum.GetValues(typeof(EClientType)))
+                if (!output.ContainsKey(clientType))
+                    output[clientType] = 0;
+
             return output;
         }
 

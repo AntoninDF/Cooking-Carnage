@@ -1,11 +1,13 @@
 using Clients;
 using Cooking;
 using GameSystem;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Upgrades;
+using Random = UnityEngine.Random;
 
 namespace Orders
 {
@@ -26,9 +28,12 @@ namespace Orders
             }
         }
 
-        private static int _selectionCount = 0;
-        private static Queue<SO_Recipe> _forcedRecipes = new();
+        public static float DefaultDrinkProbability = 0.5f; // 1 means there'll always be a drink ordered (if possible)
+        public static float DrinkProbability => Mathf.Clamp01(DefaultDrinkProbability + Globals.Gameplay.DrinkProbabilityIncrease);
 
+        private static int _selectionCount = 0; 
+        private static Queue<SO_Recipe> _forcedRecipes = new();
+        
         public static SO_Recipe Pick()
         {
             // If recipes have been explicitely enqueued, output them instead
@@ -80,10 +85,54 @@ namespace Orders
             }
 
             List<SO_Client> clientModels = Reference.AssetReferences.clientList;
-            EnforceSeenClientsCountTypes(ref clientCount, clientModels.Select(model => model.clientType));
             Dictionary<SO_Recipe, float> weights = SetupRecipeWeights(recipes, clientCount, clientModels);
             SO_Recipe picked = PickRandomRecipe(weights);
             return ApplyUpgrade(picked, book, SO_RecipeUnlockConfig.Instance);
+        }
+
+        public static bool CanOrderDrink()
+        {
+            if (!Globals.Authorizations.AllowMakingDrinks) return false;
+            if (!RecipeUnlockChecker.IsUnlocked(RecipeCategory.Simple)) return false;
+            return true;
+        }
+        /// <summary> Decides whether or not a drink should be served. If not, returns <see cref="EClientType.None"/>.
+        /// Otherwise, returns the type of drink, computed based on the weights given by <see cref="GetDrinkProbabilityWeights"/> </summary>
+        public static EClientType PickDrink()
+        {
+            if (!CanOrderDrink()) return EClientType.None;
+
+            // Decide wether this order will contain a drink or not
+            if (Random.value > DrinkProbability)
+                return EClientType.None;
+
+            // If it contains a drink, decide which one
+            var weights = GetDrinkProbabilityWeights();
+            float val = Random.value;
+            float accumulatedVal = 0f;
+            EClientType drink = EClientType.None;
+            foreach (var kvp in weights)
+            {
+                if (kvp.Value == 0) continue; 
+                if (val > accumulatedVal)
+                    drink = kvp.Key;
+                accumulatedVal += kvp.Value;
+            }
+            return drink;
+        }
+        public static void Test_PickDrink()
+        {
+            // Run the picking algorithm a few times to test it
+            System.Collections.Generic.List<EClientType> drinks = new();
+            int max = 1000;
+            for (int i = 0; i < max; i++) drinks.Add(PickDrink());
+            System.Collections.Generic.Dictionary<EClientType, int> dict = new();
+            foreach (EClientType type in drinks)
+            {
+                if (!dict.ContainsKey(type)) dict[type] = 0;
+                dict[type]++;
+            }
+            UnityEngine.Debug.Log("Ran drink picking for " + max + " times. Yielded the following result : " + dict.ToString_Detailed());
         }
 
         private static bool TryPickQueuedRecipe(out SO_Recipe recipe)
@@ -228,15 +277,32 @@ namespace Orders
         }
 
         /// <summary>
-        /// Makes sure that the ref dictionary <paramref name="clientCount"/> contains a key for each possible value of <see cref="EClientType"/>
+        /// WIP, returns probability weights for each type of drink. <see cref="EClientType.None"/> will always have a probability of zero, and the sum of the other probabilities will always be 1.
         /// </summary>
-        /// <param name="clientCount"></param>
-        /// <param name="clients"></param>
-        private static void EnforceSeenClientsCountTypes(ref Dictionary<EClientType, int> clientCount, IEnumerable<EClientType> clients)
+        /// <returns></returns>
+        static Dictionary<EClientType, float> GetDrinkProbabilityWeights()
         {
-            foreach (EClientType clientType in clients)
-                if (!clientCount.ContainsKey(clientType))
-                    clientCount[clientType] = 0;
+            Dictionary<EClientType, float> defaultWeights = new() { { EClientType.None, 0 }, { EClientType.A, 1f / 3f }, { EClientType.B, 1f / 3f }, { EClientType.C, 1f / 3f } };
+            if (!Reference.TryGetManager(out ClientManager cmgr)) return defaultWeights;
+
+            var clientWeights = cmgr.GetSeenClientTypesCount();
+            float clientWeightSum = clientWeights.Values.Sum();
+
+            Dictionary<EClientType, float> result = new();
+            // Apply weights and increments
+            foreach (EClientType enumValue in Enum.GetValues(typeof(EClientType)))
+            {
+                result[enumValue] = enumValue == EClientType.None ? 0 : 35;
+                result[enumValue] += clientWeights[enumValue] * 20;
+            }
+            // Normalize everything so that the sum of values is equal to 1
+            float sum = result.Values.Sum();
+            foreach (EClientType enumValue in Enum.GetValues(typeof(EClientType)))
+            {
+                result[enumValue] = result[enumValue] / sum;
+            }
+            Debug.Assert(Mathf.Approximately(result.Values.Sum(), 1f), "OrderPicker.GetDrinkProbabilityWeights() didn't return a dict which's weights' sum is equl to one : " + result.ToString_Detailed());
+            return result;
         }
     }
 }

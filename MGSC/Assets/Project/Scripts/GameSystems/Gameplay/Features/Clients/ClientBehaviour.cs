@@ -29,6 +29,8 @@ namespace Features
         public Action GoodReaction { get; set;  }
         public Action BadReaction   { get; set; }
         
+        public Action PatienceReaction { get; set; }
+        
         public Action OnExitQueue { get; set; }
         public Action OnQueuePointReached { get; set; }
         public Action<ClientSeat>      OnLeavingSeat      { get; set; }
