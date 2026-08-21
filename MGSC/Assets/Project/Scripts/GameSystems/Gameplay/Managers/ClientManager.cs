@@ -40,6 +40,8 @@ namespace GameSystem
 
         public FeatureCollection Collection { get; set; } = new();
         public ClientSeatCollection ClientSeats { get; set; }
+
+        public InteractionButton ServiceBell => serviceBell;
         #endregion
 
         #region Fields
@@ -58,6 +60,8 @@ namespace GameSystem
         Dictionary<EClientType, float> clientTypePart = new Dictionary<EClientType, float>();
 
         private float _timeBeforeGoSeating = 3.5f;
+
+        private InteractionButton serviceBell;
         #endregion
         
         #region Methods
@@ -86,7 +90,9 @@ namespace GameSystem
             {
                 clientTypePart[client.clientType] = 0f;
             }
-            
+
+            serviceBell = GameObject.Find("P_Bell").GetComponentInChildren<InteractionButton>();
+
         }
 
         public void PostInit()

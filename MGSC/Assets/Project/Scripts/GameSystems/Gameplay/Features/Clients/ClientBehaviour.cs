@@ -150,6 +150,8 @@ namespace Features
 
         private SitAndWaitForServing BuildSitAndWait(ClientSeat seat)
         {
+            Reference.GetManager<ClientManager>().ServiceBell?.OnInteraction?.Invoke(new InteractionContext(this));
+            
             var sit        = new SitAndWaitForServing(this, seat);
             sit.OnServed   += () => CanLeave();
             return sit;
