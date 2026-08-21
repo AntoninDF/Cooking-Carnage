@@ -12,5 +12,7 @@ public class AudioDatabase : ScriptableObject
     public EventReference rentPaid;
     public EventReference rentIncrease;
     public EventReference rentGameOver;
+    public EventReference pauseOpen;
+    public EventReference pauseClose;
 }
 

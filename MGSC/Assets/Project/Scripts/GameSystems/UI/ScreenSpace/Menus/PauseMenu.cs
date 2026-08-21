@@ -75,11 +75,15 @@ namespace UI
                 if (!GameLoop.IsRunning) return;
                 GameLoop.RequestPause(this);
                 Enable();
+                AudioSystem.PlayAudio(AudioSystem.Database.pauseOpen);
             }
             else
             {
                 if (Owner.GetShownWidgets<UIMenuOverlay>().Count == 0)
+                {
                     GameLoop.TryResume(this);
+                    AudioSystem.PlayAudio(AudioSystem.Database.pauseClose);
+                }
             }
         }
     }
