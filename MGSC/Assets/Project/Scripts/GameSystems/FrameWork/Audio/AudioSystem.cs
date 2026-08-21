@@ -38,8 +38,8 @@ public static class AudioSystem
         {
             masterBus = FMODUnity.RuntimeManager.GetBus("bus:/");
             musicBus = FMODUnity.RuntimeManager.GetBus("bus:/MusicBus"); 
-            sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/AmbienceBus"); 
-            ambienceBus = FMODUnity.RuntimeManager.GetBus("bus:/SFXBus"); 
+            sfxBus = FMODUnity.RuntimeManager.GetBus("bus:/SFXBus"); 
+            ambienceBus = FMODUnity.RuntimeManager.GetBus("bus:/AmbienceBus"); 
             dialogBus = FMODUnity.RuntimeManager.GetBus("bus:/DialogBus");
 
             Globals.Audio.MasterVolume.OnValueChange    += volume => masterBus.setVolume(Mathf.Clamp01(volume));
@@ -108,7 +108,7 @@ public static class AudioSystem
         newTrack.release();
         
 #if UNITY_EDITOR
-        UnityEngine.Debug.Log("[AudioSystem] is playing "+ audioEvent.Path);
+       // UnityEngine.Debug.Log("[AudioSystem] is playing "+ audioEvent.Path);
 #endif
         
         activeAudios.Add(id, newTrack);
