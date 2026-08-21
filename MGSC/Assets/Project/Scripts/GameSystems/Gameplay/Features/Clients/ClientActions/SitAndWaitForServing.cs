@@ -36,8 +36,8 @@ namespace Features
 			if (_seat.Owner is not OrderingArea orderingArea)
 				return;
 
-			var mealSlotContainer  = orderingArea.ServingArea.MealSlot?.Container;
-			var drinkSlotContainer = orderingArea.ServingArea.DrinkSlot?.Container;
+			var mealSlotContainer  = orderingArea.ServingArea.PrimarySlot?.Container;
+			var drinkSlotContainer = orderingArea.ServingArea.SecondarySlot?.Container;
 
 			var heldItem = mealSlotContainer?.HeldItem;
 			if (heldItem == null) return;
