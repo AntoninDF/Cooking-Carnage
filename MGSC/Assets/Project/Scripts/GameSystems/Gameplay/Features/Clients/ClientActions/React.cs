@@ -9,6 +9,7 @@ namespace Features
     {
         public Action GoodReaction{get;set;}
         public Action BadReaction { get; set; }
+        public Action PourboireReaction{get;set;}
         
         private Order _order;
         private Client _client;
@@ -31,6 +32,11 @@ namespace Features
             else 
             {
                 GoodReaction?.Invoke();
+
+                if (_order.OrderRating.Stars > 1)
+                {
+                    PourboireReaction?.Invoke();
+                }
             }
            
         }

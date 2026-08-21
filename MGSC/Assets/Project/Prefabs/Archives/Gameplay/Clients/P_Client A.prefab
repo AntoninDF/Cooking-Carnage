@@ -189,6 +189,69 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!1 &4049592517331001885
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4706413084214660279}
+  - component: {fileID: 1340230551906821138}
+  m_Layer: 0
+  m_Name: EugenePourboire
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4706413084214660279
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049592517331001885}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9187926946827215070}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1340230551906821138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049592517331001885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1256648449
+      Data2: 1264934378
+      Data3: 654068370
+      Data4: -551057425
+    Path: event:/SFX/Economie/Pourboire
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &4469971858992591881
 GameObject:
   m_ObjectHideFlags: 0
@@ -1512,6 +1575,9 @@ PrefabInstance:
       addedObject: {fileID: 5762591086877965796}
     - targetCorrespondingSourceObject: {fileID: 9189761921888361224, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 4706413084214660279}
+    - targetCorrespondingSourceObject: {fileID: 9189761921888361224, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 9146077736123280397}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5687090777271108394, guid: 6394af973787c974eabcd3e8c4ae7284, type: 3}
@@ -2000,6 +2066,38 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 2669331409106933665}
+          m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - ActionPath:
+      ActionVariableName: PourboireReaction
+      SerializedType:
+        m_Name: Action
+        m_AssemblyQualifiedName: System.Action, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+      FeaturePath:
+        FeatureVariableName: Behaviour
+        SerializedType:
+          m_Name: ClientBehaviour
+          m_AssemblyQualifiedName: Features.ClientBehaviour, Assembly-CSharp, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        Path: []
+        OwningObject: {fileID: 3093260400232259055}
+      source: 0
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1340230551906821138}
           m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
           m_MethodName: Play
           m_Mode: 1

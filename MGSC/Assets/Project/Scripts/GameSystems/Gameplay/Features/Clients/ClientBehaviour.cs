@@ -29,7 +29,8 @@ namespace Features
         public Action GoodReaction { get; set;  }
         public Action BadReaction   { get; set; }
         
-        public Action PatienceReaction { get; set; }
+        public Action PatienceReaction { get; set; } // this is used
+        public Action PourboireReaction { get; set; }
         
         public Action OnExitQueue { get; set; }
         public Action OnQueuePointReached { get; set; }
@@ -198,6 +199,7 @@ namespace Features
             var react = new React(this, _client.OrderLog);
             react.BadReaction += BadReaction;
             react.GoodReaction += GoodReaction;
+            react.PourboireReaction += PourboireReaction;
             return react;
         }
         

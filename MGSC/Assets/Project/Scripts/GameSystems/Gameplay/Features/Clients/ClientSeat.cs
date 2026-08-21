@@ -17,11 +17,11 @@ namespace Features
         
         public Action<Client> OnClientSitting {get; set; }
         public Action OnClientLeaving {get; set; }
-        public Action OnClientLeavingWithTips {get; set; }
         
         public Action              OnClientKilled      {get;  set; }
         public Action              OnMealReady         { get; set; }
         public Action              OnIngredientDropped { get; set; }
+        
         public Action<Client>      ClientLeaveTheSeat  {get;  set; }
         public Action  OnClientBlended     { get; set; }
         
@@ -85,7 +85,6 @@ namespace Features
             
             client.CurrentSeat                      =  this;
             client.Behaviour.OnReactionEnd          += OnClientLeaving;
-            client.Behaviour.GoodReaction           += OnClientLeavingWithTips;
             client.ClientBlending.OnCustomerBlended += OnClientBlended;
             //client.ClientBlending.OnCustomerBlended += () => Debug.Log("BLENDING FEEDBACK");
             RegisteredClient                        =  client;
