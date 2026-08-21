@@ -87,10 +87,15 @@ namespace UI
             //SetPreviousTotalMoney(mm.GetMoneyOnPreviousShift());
 
             if (sm.HasFailed)
+            {
                 SetContentMode(ContentMode.Fail);
+                AudioSystem.PlayAudio(AudioSystem.Database.rentGameOver);
+            }
             else
+            {
                 SetContentMode(ContentMode.Success);
-            AudioSystem.PlayAudio(AudioSystem.Database.rentPaid);
+                AudioSystem.PlayAudio(AudioSystem.Database.rentPaid);
+            }
 
             if (L_CurrentTotalMoney != null)
             {
@@ -152,6 +157,8 @@ namespace UI
                 //)
                 )
                 ;
+            
+            AudioSystem.PlayAudio(AudioSystem.Database.rentIncrease);
         }
 
         private bool TryClearLines()

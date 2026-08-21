@@ -11,5 +11,6 @@ public class AudioDatabase : ScriptableObject
     public EventReference shiftEndSFX;
     public EventReference rentPaid;
     public EventReference rentIncrease;
+    public EventReference rentGameOver;
 }
 
