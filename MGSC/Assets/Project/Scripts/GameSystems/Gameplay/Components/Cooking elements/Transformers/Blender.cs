@@ -87,10 +87,10 @@ namespace Cooking
             if (!Cutter.CanStartTransformation(cuttable)) goto CutFail;
             Cutter.RequestStartTransformation(cuttable);
             if (OnCutStart != null) OnCutStart.Invoke();
+            return;
 
             CutFail:
                 OnCutFail?.Invoke();
-                return;
         }
         #endregion
     }
