@@ -41,7 +41,7 @@ partial class Globals
         public static Param<bool> AllowUpgrades { get; set; } = new(true);
 
         //BLOOD
-        public static Param<bool> AllowMakingDrinks { get; set; } = new(true); //set to false after debugging
+        public static Param<bool> AllowMakingDrinks { get; set; } = new(false);
     }
 }
 

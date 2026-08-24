@@ -393,19 +393,25 @@ public class DebugWindow : MonoBehaviour
             {
                 var obj = (PropertyInfo)member;
                 value = obj.GetValue(null);
-                Label(member.Name + " : " + value);
             }
-            if (member.MemberType == MemberTypes.Field)
+            else if (member.MemberType == MemberTypes.Field)
             {
                 var obj = (FieldInfo)member;
                 value = obj.GetValue(null);
-                Label(member.Name + " : " + value);
             }
+            else return;
+
+            if (value is Param<bool> b)
+                b.Value = Toggle(b.Value, member.Name + " : " + value);
+            else if (value is Param<float> f)
+                f.Value = Float(f.Value, member.Name + " : " + value);
+            else
+                Label(member.Name + " : " + value);
         }
     }
     void DrawType(Type type)
     {
-        GUIStyle typeStyle = new();
+        GUIStyle typeStyle = new(GUI.skin.toggle);
         typeStyle.fontStyle = FontStyle.Bold;
         typeStyle.fontSize = 18;
         typeStyle.normal.textColor = Color.white;
@@ -444,6 +450,23 @@ public class DebugWindow : MonoBehaviour
             value = GUILayout.Toggle(value, text, style);
         else
             value = GUILayout.Toggle(value, text);
+        GUILayout.EndHorizontal();
+        return value;
+    }
+    float Float(float value, string text, GUIStyle style = null)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(INDENT_SIZE * indentLevel);
+        if (style != null)
+            GUILayout.Label(text, style);
+        else
+            GUILayout.Label(text);
+        if (GUILayout.Button("-10")) value += -10f;
+        if (GUILayout.Button("-1")) value += -1f;
+        if (GUILayout.Button("-0.1")) value += -0.1f;
+        if (GUILayout.Button("+0.1")) value += 0.1f;
+        if (GUILayout.Button("+1")) value += 1f;
+        if (GUILayout.Button("+10")) value += 10f;
         GUILayout.EndHorizontal();
         return value;
     }
