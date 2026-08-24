@@ -1,15 +1,11 @@
 using Features;
-using GameSystem;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using Upgrades;
 
 public class Oven : MonoBehaviour, IFeatureCollection
 {
