@@ -18,9 +18,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     #region Fields
 
     [FormerlySerializedAs("MealSlot")]
-    public SlotContainer PrimarySlot; 
-    [FormerlySerializedAs("DrinkSlot")]
-    public SlotContainer SecondarySlot;
+    public MultiSlotContainer ServingSlot;
     
     private bool _watching = false;
     private void StartWatchingSlot() =>  _watching = true;
@@ -35,28 +33,28 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     
     private void Start()
     {
-        PrimarySlot.Container.IsLocked  = true;
-        SecondarySlot.Container.IsLocked = true;
+        ServingSlot.Container.IsLocked  = true;
+        //SecondarySlot.Container.IsLocked = true;
 
         ClientSeat.OnClientSitting += OnClientSitting; 
         ClientSeat.OnClientLeaving += ()=>
                                       {
-                                          PrimarySlot.Container.IsLocked  = true;
-                                          SecondarySlot.Container.IsLocked = true;
+                                          ServingSlot.Container.IsLocked  = true;
+                                          //SecondarySlot.Container.IsLocked = true;
                                       };
 
-        PrimarySlot.Container.Filter  += BuildSlotFilter(PrimarySlot);
-        SecondarySlot.Container.Filter += BuildSlotFilter(SecondarySlot);
+        ServingSlot.Container.Filter  += BuildSlotFilter(ServingSlot);
+        //SecondarySlot.Container.Filter += BuildSlotFilter(SecondarySlot);
         
         
-        if (PrimarySlot.Container == SecondarySlot.Container)
-            Debug.LogError($"[ServingArea] MealSlot et DrinkSlot référencent le MÊME container sur {name} — vérifier l'Inspector !");
+        //if (ServingSlot.Container == SecondarySlot.Container)
+            //Debug.LogError($"[ServingArea] MealSlot et DrinkSlot référencent le MÊME container sur {name} — vérifier l'Inspector !");
     }
 
     private void OnClientSitting(Client obj)
     {
-        PrimarySlot.Container.IsLocked  = false;
-        SecondarySlot.Container.IsLocked = !DrinkExpected;
+        ServingSlot.Container.IsLocked  = false;
+        //SecondarySlot.Container.IsLocked = !DrinkExpected;
     }
    
 
@@ -67,8 +65,8 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
         ClientSeat.OnClientUnregister += _ => StopWatchingSlot();
 
         Action lockAll = () => {
-            PrimarySlot.Container.IsLocked = true;
-            SecondarySlot.Container.IsLocked = true;
+            ServingSlot.Container.IsLocked = true;
+            //SecondarySlot.Container.IsLocked = true;
         };
         ClientSeat.OnClientLeaving += lockAll;
         ClientSeat.OnClientKilled += lockAll;
@@ -80,15 +78,15 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     {
         if (!_watching) return;
 
-        var meal  = PrimarySlot?.Container?.HeldItem;
-        var drink = SecondarySlot?.Container?.HeldItem;
+        var meal  = ServingSlot?.Container?.HeldItem;
+        //var drink = SecondarySlot?.Container?.HeldItem;
 
         if (!DrinkExpected)
         {
             if (meal != null && meal != _lastHeldItem)
             {
                 _lastHeldItem               = meal;
-                PrimarySlot.Container.IsLocked = true;
+                ServingSlot.Container.IsLocked = true;
                 ClientSeat.OnMealReady?.Invoke();
             }
             else if (meal == null)
@@ -97,12 +95,12 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
             return;
         }
 
-        if (PrimarySlot.Container.IsLocked) return;
+        if (ServingSlot.Container.IsLocked) return;
 
-        if (meal != null && drink != null)
+        if (meal != null)// && drink != null)
         {
-            PrimarySlot.Container.IsLocked  = true;
-            SecondarySlot.Container.IsLocked = true;
+            ServingSlot.Container.IsLocked  = true;
+            //SecondarySlot.Container.IsLocked = true;
             ClientSeat.OnMealReady?.Invoke();
         }
     }
@@ -110,7 +108,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     private bool ItemTypeIsServable(F_Grabbable grab) 
         => (grab.Owner is Plate plate && plate.Cookable.Transformed) || grab.Owner is Drink;
 
-    private Func<object, bool> BuildSlotFilter(SlotContainer slot) { 
+    private Func<object, bool> BuildSlotFilter(MultiSlotContainer slot) { 
     return obj => { if (obj is not F_Grabbable grab) return false;
                 if (!Globals.Authorizations.AllowClientServing) return false;
                 return ItemTypeIsServable(grab); }; }

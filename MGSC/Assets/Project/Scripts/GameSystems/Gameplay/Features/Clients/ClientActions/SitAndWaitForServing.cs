@@ -36,28 +36,31 @@ namespace Features
 			if (_seat.Owner is not OrderingArea orderingArea)
 				return;
 
-			var mealSlotContainer  = orderingArea.ServingArea.PrimarySlot?.Container;
-			var drinkSlotContainer = orderingArea.ServingArea.SecondarySlot?.Container;
+			var mealSlotContainer  = orderingArea.ServingArea.ServingSlot?.Container;
+			//var drinkSlotContainer = orderingArea.ServingArea.SecondarySlot?.Container;
 
 			var heldItem = mealSlotContainer?.HeldItem;
 			if (heldItem == null) return;
 			if (!heldItem.TryGetSibling(out Servable servable, true)) return;
 
-			var          heldDrink       = drinkSlotContainer?.HeldItem;
+			//var          heldDrink       = drinkSlotContainer?.HeldItem;
 			GameObject   drinkObject     = null;
 			EClientType? servedDrinkType = null;
 
+			/*
 			if (heldDrink != null && heldDrink.Owner is Drink drinkComp)
 			{
 				drinkObject     = (drinkComp as Component)?.gameObject;
 				servedDrinkType = orderingArea.ServingArea.ClientSeat.SittingClient.Type;
 			}
+			*/
 
 			mealSlotContainer.IsLocked = false;
 			mealSlotContainer.RequestDrop(heldItem);
 			heldItem.IsLocked          = true;
 			mealSlotContainer.IsLocked = true;
 
+			/*
 			if (heldDrink != null && drinkSlotContainer != null)
 			{
 				drinkSlotContainer.IsLocked = false;
@@ -65,6 +68,7 @@ namespace Features
 				heldDrink.IsLocked          = true;
 				drinkSlotContainer.IsLocked = true;
 			}
+			*/
 
 			_client.TryAcceptServing(servable, servedDrinkType);
 
