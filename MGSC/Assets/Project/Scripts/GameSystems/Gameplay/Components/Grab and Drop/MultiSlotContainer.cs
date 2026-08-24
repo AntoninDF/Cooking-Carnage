@@ -1,12 +1,14 @@
 using UnityEngine;
 using Features;
 using System.Collections.Generic;
+using System.Linq;
 public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
 {
     #region Properties
     public FeatureCollection Collection { get; set; } = new();
     public Features.F_MultiSlotContainer Container { get; set; }
     public F_Interactable Interactable{ get; set; }
+    public List<F_Grabbable> HeldItems => Container.SoloContainers.Select(s => s.HeldItem).ToList();
     #endregion
 
     #region Fields
