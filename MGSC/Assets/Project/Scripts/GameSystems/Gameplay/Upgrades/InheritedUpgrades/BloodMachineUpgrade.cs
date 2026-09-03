@@ -1,11 +1,4 @@
-using UnityEngine;
 namespace Upgrades
 {
-
-
-    public class BloodMachineUpgrade : Upgrade<BloodMachineUpgrade>
-    {
-    
-    }
-
+    public class BloodMachineUpgrade : Upgrade<BloodMachineUpgrade> { }
 }
