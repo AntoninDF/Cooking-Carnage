@@ -191,7 +191,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
 
         // Display current meal
         Gizmos.color = Color.white;
-        var r = (ServingArea.ServingSlot?.HeldItems[0]?.Owner as Plate)?.Recipe;
+        var r = (ServingArea.ServingSlot?.HeldItem?.Owner as Plate)?.Recipe;
         UnityEditor.Handles.Label(transform.position + Vector3.up * GetY(), "Current meal : " + (r != null ? r.Name : "null"));
 
         // Display seat height

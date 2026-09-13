@@ -9,6 +9,7 @@ public class MultiSlotContainer : MonoBehaviour, IFeatureCollection
     public Features.F_MultiSlotContainer Container { get; set; }
     public F_Interactable Interactable{ get; set; }
     public List<F_Grabbable> HeldItems => Container.SoloContainers.Select(s => s.HeldItem).ToList();
+    public F_Grabbable HeldItem => Container.SoloContainers.Select(s => s.HeldItem).ToList().FirstOrDefault();
     #endregion
 
     #region Fields
