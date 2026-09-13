@@ -93,6 +93,7 @@ public class TutorialTimeline : ScriptableObject
     {
         ClearBoundTutorialSteps(Instance.TutorialStepsToBindToEvents.Select(item => item.Event));
         StopCurrentStep();
+        TutorialStep.HandleFeatureLock((TutorialStep.LockableFeature)0, (TutorialStep.LockableFeature)int.MaxValue); // Unlock everything
     }
 
     static void StopCurrentStep()

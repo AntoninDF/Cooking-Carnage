@@ -149,7 +149,7 @@ public class TutorialStep : ScriptableObject
         if (actions.RaiseEvent != null) actions.RaiseEvent.Invoke();
         HandleTaskRequests(actions.AddTasks);
     }
-    private void HandleFeatureLock(LockableFeature lockFeatures, LockableFeature unlockFeatures)
+    public static void HandleFeatureLock(LockableFeature lockFeatures, LockableFeature unlockFeatures)
     {
         // Priority is given to unlocking a feature if it is set as both lock and unlock
         // If it's neither specified to lock or unlock, the parameter should stay untouched
