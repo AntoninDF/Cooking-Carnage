@@ -44,9 +44,17 @@ public class DebugInfo
     private string GetLookedAtObject()
     {
         var p = PlayerSetup.Player;
+        string result = "null";
         if (p.LookedAtObject != null)
-            return p.LookedAtObject.Owner.ToString();
-        return "null";
+        {
+            result = p.LookedAtObject.Owner.ToString();
+            if (p.LookedAtObject.TryGetSibling(out F_Container cont))
+            {
+                string content = cont.HeldItem != null ? cont.HeldItem.Owner.ToString() : "null";
+                result += " (contains " + content + ")";
+            }
+        }
+        return result;
     }
     private string GetHeldItem()
     {

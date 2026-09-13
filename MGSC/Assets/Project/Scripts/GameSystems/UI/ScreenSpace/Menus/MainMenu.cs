@@ -44,11 +44,12 @@ namespace UI
             bool allowDebugObj = false;
 #if DEMO
             allowDemoObj = true;
+            allowReleaseObj = false;
 #endif
 #if DEVELOPMENT_BUILD
             allowDebugObj = true;
 #endif
-            // Release mode
+            // Apply the settings to the objects
             foreach (GameObject obj in _releaseSpecificObjects)
                 obj.SetActive(allowReleaseObj);
             foreach (GameObject obj in _demoSpecificObjects)

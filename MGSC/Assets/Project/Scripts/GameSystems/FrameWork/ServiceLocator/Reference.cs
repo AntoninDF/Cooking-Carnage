@@ -113,6 +113,10 @@ public class Reference
         manager = GetManager<T>();
         return manager != null;
     }
-
+    public static void Reset()
+    {
+        _managers = new();
+        _assetReferences = null;
+    }
     #endregion
 }

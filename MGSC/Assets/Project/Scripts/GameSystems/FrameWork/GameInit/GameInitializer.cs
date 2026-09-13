@@ -33,6 +33,7 @@ namespace GameSystem
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Init()
         {
+            Reference.Reset();
             // Create all the pure managers
             new OrderManager();
             new ClientManager();

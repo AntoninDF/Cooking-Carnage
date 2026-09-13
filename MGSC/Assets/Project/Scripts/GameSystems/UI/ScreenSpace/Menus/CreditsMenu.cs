@@ -76,7 +76,7 @@ namespace UI
             ScrollView.verticalNormalizedPosition = pos - delta;
             _previousPos = ScrollView.verticalNormalizedPosition;
 
-            Debug.Log("Credits Y pos is " + ScrollView.verticalNormalizedPosition);
+            //Debug.Log("Credits Y pos is " + ScrollView.verticalNormalizedPosition);
             if (ScrollView.verticalNormalizedPosition <= 0.001f)
                 OnScrollEnd();
         }

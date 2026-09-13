@@ -86,7 +86,7 @@ namespace Cooking
             if (!Container.HeldItem.TryGetSibling(out F_Cuttable cuttable, true) || !cuttable.CanBeTransformed) goto CutFail; // Ensure it is cuttable and not already cut
             if (!Cutter.CanStartTransformation(cuttable)) goto CutFail;
             Cutter.RequestStartTransformation(cuttable);
-            if (OnCutStart != null) OnCutStart.Invoke();
+            OnCutStart?.Invoke();
             return;
 
             CutFail:
