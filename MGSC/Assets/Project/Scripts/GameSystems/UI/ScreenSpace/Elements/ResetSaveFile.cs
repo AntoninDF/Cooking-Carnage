@@ -15,8 +15,17 @@ namespace UI
         private void Start()
         {
             if (B_Reset != null)
-                B_Reset.onClick.AddListener(ResetSave);
+                B_Reset.onClick.AddListener(ConfirmReset);
         }
+
+        void ConfirmReset()
+        {
+            if (!Reference.TryGetManager(out UISystem ui)) return;
+            var popup = ui.GetWidget<ConfirmationPopUp>();
+            popup.Setup("Are you sure you want to reset your save ? All your progress, upgrades and money will be lost.", ResetSave);
+            popup.Enable();
+        }
+
 
 #if UNITY_EDITOR
         [MenuItem("CookingCarnage/Reset save file")]

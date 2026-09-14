@@ -201,7 +201,9 @@ public class Plate : Item
     public SO_Recipe DetectRecipe()
     {
         SO_Recipe recipe = null;
-        var recipeComponent = gameObject.AddComponent<Recipe>();
+        Recipe recipeComponent;
+        if (!gameObject.TryGetComponent(out recipeComponent))
+            recipeComponent = gameObject.AddComponent<Recipe>();
         var recipeFeature = recipeComponent.GetFeature<F_Recipe>();
 
         recipeFeature.Ingredients = GetContainedIngredients();
