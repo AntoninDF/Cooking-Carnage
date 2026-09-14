@@ -1,119 +1,87 @@
 using Features;
 using System;
-using Clients;
+using System.Runtime.CompilerServices;
+using Cooking;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class ServingArea : MonoBehaviour, IFeatureCollection
 {
     #region Properties
-    
-    public FeatureCollection Collection     { get; set; } = new();
-    public ClientSeat        ClientSeat     { get; set; }
-    
-    private bool DrinkExpected => ClientSeat?.SittingClient?.CurrentOrder?.Drink != null && ClientSeat.SittingClient.CurrentOrder.Drink != EClientType.None;
+
+    public FeatureCollection Collection { get; set; } = new();
+    public ClientSeat ClientSeat { get; set; }
+    public SlotContainer ServingSlot => MealSlot;
 
     #endregion
 
     #region Fields
+    [FormerlySerializedAs("ServingSlot")]
+    public SlotContainer MealSlot;
 
-    [FormerlySerializedAs("MealSlot")]
-    public MultiSlotContainer ServingSlot;
-    
     private bool _watching = false;
-    private void StartWatchingSlot() =>  _watching = true;
+    private void StartWatchingSlot() => _watching = true;
     private void StopWatchingSlot()
     {
-        _lastHeldItem = null; 
-        _watching     = false;
+        _lastHeldItem = null;
+        _watching = false;
     }
 
     private F_Grabbable _lastHeldItem = null;
+
     #endregion
-    
+
+
+
     private void Start()
     {
-        ServingSlot.Container.IsLocked  = true;
-        //SecondarySlot.Container.IsLocked = true;
+        MealSlot.Container.IsLocked = true;
 
-        ClientSeat.OnClientSitting += OnClientSitting; 
-        ClientSeat.OnClientLeaving += ()=>
-                                      {
-                                          ServingSlot.Container.IsLocked  = true;
-                                          //SecondarySlot.Container.IsLocked = true;
-                                      };
+        ClientSeat.OnClientSitting += (_) => MealSlot.Container.IsLocked = false;
+        ClientSeat.OnClientLeaving += () => MealSlot.Container.IsLocked = true;
 
-        ServingSlot.Container.Filter  += BuildSlotFilter(ServingSlot);
-        //SecondarySlot.Container.Filter += BuildSlotFilter(SecondarySlot);
-        
-        
-        //if (ServingSlot.Container == SecondarySlot.Container)
-            //Debug.LogError($"[ServingArea] MealSlot et DrinkSlot référencent le MÊME container sur {name} — vérifier l'Inspector !");
+
+        if (MealSlot == null)
+        {
+            Debug.LogWarning("Please assign a meal slot on the serving area component of " + name);
+            return;
+        }
+
+        MealSlot.Container.Filter += (obj) =>
+        {
+            if (obj is not F_Grabbable grab) return false;
+            if (!grab.TryGetSibling(out Servable temp, true && ClientSeat.SittingClient != null)) return false;
+            if (!Globals.Authorizations.AllowClientServing) return false;
+            return true;
+        };
     }
-
-    private void OnClientSitting(Client obj)
-    {
-        ServingSlot.Container.IsLocked  = false;
-        //SecondarySlot.Container.IsLocked = !DrinkExpected;
-    }
-   
 
     public void Initialize(ClientSeat clientSeat)
     {
-        ClientSeat                    =  clientSeat;
-        ClientSeat.OnClientRegister   += _ => StartWatchingSlot();
+        ClientSeat = clientSeat;
+        ClientSeat.OnClientRegister += _ => StartWatchingSlot();
         ClientSeat.OnClientUnregister += _ => StopWatchingSlot();
-
-        Action lockAll = () => {
-            ServingSlot.Container.IsLocked = true;
-            //SecondarySlot.Container.IsLocked = true;
-        };
-        ClientSeat.OnClientLeaving += lockAll;
-        ClientSeat.OnClientKilled += lockAll;
+        ClientSeat.OnClientLeaving += () => MealSlot.Container.IsLocked = false;
+        ClientSeat.OnClientKilled += () => MealSlot.Container.IsLocked = true;
 
     }
-
 
     public void Update()
     {
         if (!_watching) return;
-
-        var meal  = ServingSlot?.Container?.HeldItem;
-        //var drink = SecondarySlot?.Container?.HeldItem;
-
-        if (!DrinkExpected)
+        var current = MealSlot?.Container?.HeldItem;
+        if (current != null && current != _lastHeldItem)
         {
-            if (meal != null && meal != _lastHeldItem)
-            {
-                _lastHeldItem               = meal;
-                ServingSlot.Container.IsLocked = true;
-                ClientSeat.OnMealReady?.Invoke();
-            }
-            else if (meal == null)
-                _lastHeldItem = null;
-
-            return;
-        }
-
-        if (ServingSlot.Container.IsLocked) return;
-
-        if (meal != null)// && drink != null)
-        {
-            ServingSlot.Container.IsLocked  = true;
-            //SecondarySlot.Container.IsLocked = true;
+            _lastHeldItem = current;
+            MealSlot.Container.IsLocked = true;
             ClientSeat.OnMealReady?.Invoke();
         }
+        if (current == null)
+            _lastHeldItem = null;
     }
-    
-    private bool ItemTypeIsServable(F_Grabbable grab) 
-        => (grab.Owner is Plate plate && plate.Cookable.Transformed) || grab.Owner is Drink;
 
-    private Func<object, bool> BuildSlotFilter(MultiSlotContainer slot) { 
-    return obj => { if (obj is not F_Grabbable grab) return false;
-                if (!Globals.Authorizations.AllowClientServing) return false;
-                return ItemTypeIsServable(grab); }; }
 
-#if UNITY_EDITOR
+
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;
@@ -131,5 +99,4 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
             Gizmos.DrawSphere(ClientSeat.RegisteredClient.transform.position + Vector3.up * 1f, 0.1f);
         }
     }
-#endif
 }

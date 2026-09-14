@@ -112,7 +112,8 @@ namespace UI
             }
 
             if (transform.parent != null && transform.parent.TryGetComponent(out LayoutGroup parent))
-                parent.SetLayoutVertical();
+                try { parent.SetLayoutVertical(); }
+                catch { }
         }
 
         // The 4 following methods are called in UnityEvents

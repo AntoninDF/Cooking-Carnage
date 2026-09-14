@@ -90,8 +90,8 @@ GameObject:
   - component: {fileID: 6960019933410597076}
   - component: {fileID: 8845731199550053152}
   - component: {fileID: 7263218699784425065}
-  - component: {fileID: 5780675770034747471}
   - component: {fileID: 7676619333211919107}
+  - component: {fileID: 3241959421960790907}
   m_Layer: 0
   m_Name: MealSlot
   m_TagString: Untagged
@@ -111,9 +111,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.76, z: 0.100000046}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 562504746893417590}
-  - {fileID: 2243730837116204094}
+  m_Children: []
   m_Father: {fileID: 5441982633704886918}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8845731199550053152
@@ -149,24 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fc8040690e33ea41a368db0e5322895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServingArea
-  ServingSlot: {fileID: 5780675770034747471}
---- !u!114 &5780675770034747471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1946853535442928423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fec9a93a78252747a2f2b22401a4f75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MultiSlotContainer
-  slots:
-  - {fileID: 2049904272546262688}
-  - {fileID: 9080578901975586151}
-  detectSlots: 1
-  lockItemsWhenAdded: 0
+  MealSlot: {fileID: 3241959421960790907}
 --- !u!114 &7676619333211919107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,67 +208,13 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
---- !u!1 &2049904272546262688
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 562504746893417590}
-  - component: {fileID: 5003850512985804815}
-  - component: {fileID: 4921000059424567643}
-  m_Layer: 0
-  m_Name: PrimarySlot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &562504746893417590
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2049904272546262688}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.00999999, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6960019933410597076}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5003850512985804815
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2049904272546262688}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.1, z: 0.1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4921000059424567643
+--- !u!114 &3241959421960790907
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2049904272546262688}
+  m_GameObject: {fileID: 1946853535442928423}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63a59fd62de223d418de0c80dab5994c, type: 3}
@@ -981,6 +908,7 @@ GameObject:
   m_Component:
   - component: {fileID: 836832557919513584}
   - component: {fileID: 7695260191967867365}
+  - component: {fileID: 1074669417306650988}
   m_Layer: 0
   m_Name: P_BlendButton
   m_TagString: Untagged
@@ -1023,6 +951,22 @@ MonoBehaviour:
     Color: {r: 1, g: 1, b: 1, a: 1}
     Thickness: 7
     Mode: 1
+--- !u!114 &1074669417306650988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6794022176445348500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc31d4202fbdbe54ea7dd5c1f57c793c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VersionSpecificObject
+  _releaseSpecificObjects:
+  - {fileID: 6794022176445348500}
+  _demoSpecificObjects: []
+  _debugSpecificObjects: []
 --- !u!1 &7307465556196440706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1058,76 +1002,6 @@ Transform:
   - {fileID: 6405135874972455077}
   m_Father: {fileID: 1344083561932607000}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &9080578901975586151
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2243730837116204094}
-  - component: {fileID: 6179783039204030010}
-  - component: {fileID: 6834650926513318409}
-  m_Layer: 0
-  m_Name: SecondarySlot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2243730837116204094
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9080578901975586151}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.363, y: 0.00999999, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6960019933410597076}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6179783039204030010
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9080578901975586151}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 0.1, y: 0.1, z: 0.1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6834650926513318409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9080578901975586151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63a59fd62de223d418de0c80dab5994c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlotContainer
-  isInteractable: 1
-  passThrough: 1
-  Model: {fileID: 0}
-  OnGrabEventVar: {fileID: 0}
 --- !u!1001 &110343555852581065
 PrefabInstance:
   m_ObjectHideFlags: 0

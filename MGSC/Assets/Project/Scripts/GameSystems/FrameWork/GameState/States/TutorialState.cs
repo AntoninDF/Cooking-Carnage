@@ -12,7 +12,6 @@ public class TutorialState : GameplayState
             HUD?.Enable();
         }
         GameLoop.RequestTransition(StateTransitions.StartShift);
-        
         TutorialTimeline.StartTutorial();
     }
 

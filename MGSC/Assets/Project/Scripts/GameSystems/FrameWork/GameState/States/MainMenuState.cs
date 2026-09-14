@@ -21,7 +21,10 @@ public class MainMenuState : MenuState
             case StateTransitions.StartShift:
                 {
                     if (!Globals.Statistics.TutorialHasBeenPlayed && Globals.Gameplay.ShiftNumber == 0)
+                    {
+                        GameLoop.ResetAll();
                         return new TutorialState();
+                    }
                     if (Globals.Gameplay.ShiftNumber != 0)
                         return new UpgradeState();
 

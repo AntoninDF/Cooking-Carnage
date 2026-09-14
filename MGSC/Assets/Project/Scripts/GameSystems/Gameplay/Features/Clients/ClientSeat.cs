@@ -88,7 +88,7 @@ namespace Features
             client.ClientBlending.OnCustomerBlended += OnClientBlended;
             //client.ClientBlending.OnCustomerBlended += () => Debug.Log("BLENDING FEEDBACK");
             RegisteredClient                        =  client;
-            ActualizeSeatPos(client);
+            //ActualizeSeatPos(client);
             return true;
         }
         
@@ -97,15 +97,15 @@ namespace Features
             if (client == null) return false;
             if (RegisteredClient != client) return false;
             
-            if(!client.IsCooked)
+            if(!client.IsCooked) // If the client hasn't been killed
             {
                 TryLeave(client);
-                if (client.IsAngry)
+                if (client.IsAngry) // Client is out of patience, they leave immediatly
                     ActualizeSeatPos(null);
-                else
+                else // Client is eating
                     TimerManager.StartTimer("Lower client seat (" + Time.time + ")", 5.5f, () => ActualizeSeatPos(null));
             }
-            else if(!client.IsBlended)
+            else if(!client.IsBlended) // Client has been killed for meat rather than blood
             {
                 OnIngredientDropped?.Invoke();
                 client.SpawnIngredients(dropSlots);
@@ -149,6 +149,7 @@ namespace Features
                 return false;
             }
             SittingClient = null;
+            //ActualizeSeatPos(null);
             //OnClientUnregister?.Invoke(client);
 
             //OnClientLeaving?.Invoke(client);
