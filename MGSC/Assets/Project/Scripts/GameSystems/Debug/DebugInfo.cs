@@ -12,23 +12,25 @@ public class DebugInfo
     public void Show()
     {
         // Setup for auto layout
-        int px18 = Screen.height / 60; // 18 pixels is the size we want for a reference FHD screen, but it should scale with higher rez
-        int px15 = Screen.height / 72; // Same
-        int defaultY = px18;
-        int yIncrement = px18;
+        int px18 = Screen.currentResolution.height / 60; // 18 pixels is the size we want for a reference FHD screen, but it should scale with higher rez
+        int px15 = Screen.currentResolution.height / 72; // Same
+        int defaultY = px18 * 2;
+        int yIncrement = px18*2;
         int currentLine = 1;
         Rect GetPos() => new Rect(px18, Screen.height - (defaultY + yIncrement * currentLine++), Screen.width * 0.45f, yIncrement);
+        GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
+        labelStyle.fontSize = px15;
 
         UpdateFpsCount();
 
         if (DisplayAll || Globals.Authorizations.DisplayFPS)
-            GUI.Label(GetPos(), "FPS : " + currentFps);
+            GUI.Label(GetPos(), "FPS : " + currentFps, labelStyle);
 
         if (!DisplayAll) return;
 
-        GUI.Label(GetPos(), "GameState : " + GameLoop.CurrentState.GetType().Name);
-        GUI.Label(GetPos(), "Look target : " + GetLookedAtObject());
-        GUI.Label(GetPos(), "Held item : " + GetHeldItem());
+        GUI.Label(GetPos(), "GameState : " + GameLoop.CurrentState.GetType().Name, labelStyle);
+        GUI.Label(GetPos(), "Look target : " + GetLookedAtObject(), labelStyle);
+        GUI.Label(GetPos(), "Held item : " + GetHeldItem(), labelStyle);
     }
 
     private void UpdateFpsCount()

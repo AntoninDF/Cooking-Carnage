@@ -13,7 +13,7 @@ public class RecapState : MenuState
     {
         base.OnEnter();
         SaveGameWithoutProgressFromThisShift();
-        AudioSystem.PlayAudio(AudioSystem.Database.upgradeMusic,true);
+        AudioSystem.PlayAudio(AudioSystem.Database.upgradeMusic,false);
     }
 
     public override void OnExit()

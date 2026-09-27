@@ -28,6 +28,8 @@ public class EventDisplay : MonoBehaviour, IFeatureCollection
     {
         BaseEvents = new(this);
     }
+    void OnEnable() => BaseEvents.OnEnable?.Invoke();
+    void OnDisable() => BaseEvents.OnDisable?.Invoke();
     void Start()
     {
         BindEvents();

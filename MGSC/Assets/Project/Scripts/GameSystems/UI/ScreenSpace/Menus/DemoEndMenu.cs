@@ -26,6 +26,7 @@ namespace UI
         }
         void OnNext()
         {
+            GameLoop.ResetAll();
             GameLoop.RequestTransition(StateTransitions.OpenMainMenu);
         }
         #endregion

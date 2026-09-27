@@ -151,6 +151,7 @@ public class DebugWindow : MonoBehaviour
         
         float fps = 1.0f / _deltaTime;
         GUILayout.Label($"FPS: {fps:F1}");
+        GUILayout.Label($"Press F9 to take a screenshot");
 
         var data = SaveManager.Data;
                 
