@@ -9,6 +9,9 @@ namespace NaughtyAttributes
         Error
     }
 
+    /// <summary>
+    /// Draws a box with a message in the inspector. Can be used to display information, warnings or errors. Works for fields and classes. Can be used multiple times on the same field or class.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class InfoBoxAttribute : DrawerAttribute
     {
