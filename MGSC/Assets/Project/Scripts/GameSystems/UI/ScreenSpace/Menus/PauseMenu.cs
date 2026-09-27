@@ -32,7 +32,7 @@ namespace UI
         }
         void OnResume()
         {
-            GameLoop.TryResume(this);
+            TryTogglePause(default);
         }
         void OnMainMenu()
         {
