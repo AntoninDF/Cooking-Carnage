@@ -10,7 +10,7 @@ public class MainMenuState : MenuState
     {
         base.OnEnter();
         
-        AudioSystem.PlayAudio(AudioSystem.Database.mainMenuMusic,true, false);
+        AudioSystem.PlayAudio(AudioSystem.Database.mainMenuMusic,true, true);
         TutorialTimeline.StopTutorial();
     }
 

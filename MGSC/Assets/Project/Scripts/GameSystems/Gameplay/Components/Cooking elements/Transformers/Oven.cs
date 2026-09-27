@@ -1,4 +1,6 @@
 using Features;
+using FMODUnity;
+using GameSystem;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -24,6 +26,8 @@ public class Oven : MonoBehaviour, IFeatureCollection
     [SerializeField] private ModelController _graphics;
     [SerializeField] private Feedbacks ProgressFeedbacks;
     [SerializeField] private S_EventVariables EventVariables;
+    [Tooltip("This is only useful to make sure it's reset when the game is reset. In a perfect world, it's handled by UnityEvents")]
+    [SerializeField] private StudioEventEmitter CookingSound;
     
 
     #endregion
@@ -46,6 +50,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
     private void OnEnable()
     {
         GameLoop.OnReset += ResetThis;
+        ShiftManager.OnShiftEnded += ResetThis;
 #if UNITY_EDITOR && EXTENSIVE_DEBUG
         BindActionLogs();
 #endif
@@ -53,6 +58,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
     private void OnDisable()
     {
         GameLoop.OnReset -= ResetThis;
+        ShiftManager.OnShiftEnded -= ResetThis;
 #if UNITY_EDITOR && EXTENSIVE_DEBUG
         UnbindActionLogs();
 #endif
@@ -92,6 +98,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
 #endif
     void ResetThis()
     {
+        if (Container?.HeldItem != null && Container.HeldItem.Owner is Component obj) obj.gameObject.SetActive(false);
         Container?.Empty();
         Cooker.OnTransformationOver?.Invoke(null);
         Cooker.OnTransformation?.Invoke();
@@ -100,6 +107,7 @@ public class Oven : MonoBehaviour, IFeatureCollection
         ResetDisplayedSprites();
         OnStopCooking();
         UpdateFeedbacks(0f, false);
+        if (CookingSound != null) CookingSound.Stop();
     }
 
     private void BindEvents()
