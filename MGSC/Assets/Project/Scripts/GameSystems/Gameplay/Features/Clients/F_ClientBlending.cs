@@ -27,7 +27,7 @@ namespace Features
             _isRunning       = true;
             _timer           = 0f;
             _client.IsBlended = true;
-            _client.CurrentOrder.Cancel();
+            Reference.GetManager<OrderManager>().CancelOrder(_client.CurrentOrder);
             OnCustomerBlended?.Invoke();
             _client.CurrentSeat?.TryUnregister(_client);
 

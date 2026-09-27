@@ -52,7 +52,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     {
         if (KillButton != null)
             KillButton.OnInteraction += _ => KillClient();
-        if (BlendButton != null)
+        if (BlendButton != null) 
             BlendButton.OnInteraction += _ => BlendClient();
     }
 
@@ -148,7 +148,8 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         if (client != null && ClientSeat.SittingClient != null)
         {
             OnCustomerKilled?.Invoke(); //A retirer si animation de mort différente
-            client.ClientBlending.Trigger();
+            client.Cooked.Trigger();
+            //client.ClientBlending.Trigger();
             GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
             OnCustomerBlended?.Invoke(client.Type);
             client.EventInvokedUponBlending?.Invoke(client);

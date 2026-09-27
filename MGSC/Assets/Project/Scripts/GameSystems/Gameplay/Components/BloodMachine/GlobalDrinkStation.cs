@@ -18,6 +18,8 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
     #region Fields
 	[SerializeField] private List<DrinkStation> _drinkStations;
 	[SerializeField] private EventVariable EventInvokedUponBlending;
+	[SerializeField] private List<GameObject> SlushButtonsGO;
+	[SerializeField] private GameObject SlushBands;
     #endregion
 
 
@@ -31,7 +33,7 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
 			station.BloodQuantity = 0;
         }
 		EventInvokedUponBlending.AddListener(UponClientBlend);
-
+		(this as IUpgradable<UnlockDrinkMachine>).TrySubscribe();
     }
 
 	void UponClientBlend() => UponClientBlend(EventInvokedUponBlending.Parameter as Client);
@@ -51,9 +53,21 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
 		=> DrinkStations.Where(station => station.Type == clientType).FirstOrDefault();
 
 
-    public void OnUpgradeInit(UnlockDrinkMachine upgrade) { }
+	public void OnUpgradeInit(UnlockDrinkMachine upgrade)
+	{
+	}
 
-    public void OnUpgraded(UnlockDrinkMachine upgrade) { }
+	public void OnUpgraded(UnlockDrinkMachine upgrade)
+	{
+		if (Reference.GetManager<UpgradeManager>().GetUpgradeByType<UnlockDrinkMachine>().Level > 0)
+		{
+			foreach (var SlushGO in SlushButtonsGO)
+			{
+				SlushGO.SetActive(true);
+				SlushBands.SetActive(false);
+			}
+		}
+	}
 
 	[Button("Fill all")] void _fillAll() { foreach (var station in DrinkStations) station.BloodQuantity = 150; }
 	[Button("Empty all")] void _emptyAll() { foreach (var station in DrinkStations) station.BloodQuantity = 0; }

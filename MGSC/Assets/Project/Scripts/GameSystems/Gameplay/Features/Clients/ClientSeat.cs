@@ -111,6 +111,12 @@ namespace Features
                 client.SpawnIngredients(dropSlots);
                 ActualizeSeatPos(null);
             }
+            else if (client.IsBlended)
+            {
+                //OnClientBlended.Invoke();
+                client.SpawnIngredients(dropSlots);
+                ActualizeSeatPos(null);
+            }
     
             //parentTransform.localPosition = _defaultPosition;
             var unregistered = _registeredClient;
