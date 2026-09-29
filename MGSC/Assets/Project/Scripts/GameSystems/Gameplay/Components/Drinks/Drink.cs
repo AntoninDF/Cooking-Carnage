@@ -12,6 +12,7 @@ public class Drink : Item
 	[SerializeField] private EClientType   drinkType;
 
 	[SerializeField] private Animation     _animation;
+	[SerializeField] private AnimationClip _spawnedAnimation;
 	[SerializeField] private AnimationClip _grabbedAnimation;
 	[SerializeField] private AnimationClip _droppedAnimation;
 
@@ -26,13 +27,14 @@ public class Drink : Item
 	{
 		base.Awake();
 		_liquidBlock = new MaterialPropertyBlock();
+		_animation.Play(_spawnedAnimation?.name);
 	}
 
 	protected override void BindEvents()
 	{
 		base.BindEvents();
-		//Grabbable.OnDropSFX       += (() => _animation.Play(_droppedAnimation?.name));
-		//Grabbable.OnPlayerGrabSFX += (() => _animation.Play(_grabbedAnimation?.name));
+		Grabbable.OnDropSFX       += (() => _animation.Play(_droppedAnimation?.name));
+		Grabbable.OnPlayerGrabSFX += (() => _animation.Play(_grabbedAnimation?.name));
 	}
 
 	public void SetLiquidLevel(float shaderValue)
