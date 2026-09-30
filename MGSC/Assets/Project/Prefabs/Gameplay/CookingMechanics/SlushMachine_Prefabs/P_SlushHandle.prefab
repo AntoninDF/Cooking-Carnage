@@ -103,7 +103,6 @@ GameObject:
   - component: {fileID: 3153832169025217327}
   - component: {fileID: 580859143286663979}
   - component: {fileID: 6662935976358526697}
-  - component: {fileID: 4581709613590906625}
   - component: {fileID: 2214675022339114912}
   m_Layer: 0
   m_Name: P_SlushHandle
@@ -231,51 +230,6 @@ MonoBehaviour:
     Color: {r: 1, g: 1, b: 1, a: 1}
     Thickness: 7
     Mode: 1
---- !u!114 &4581709613590906625
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7874441409090807864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71a4d82381082684080fd61cc073d18e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VersionSpecificBehaviour
-  IfReleaseVersion:
-    m_PersistentCalls:
-      m_Calls: []
-  IfDemoVersion:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2214675022339114912}
-        m_TargetAssemblyTypeName: UnityEngine.MeshCollider, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 580859143286663979}
-        m_TargetAssemblyTypeName: UnityEngine.BoxCollider, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  IfDebugVersion:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!64 &2214675022339114912
 MeshCollider:
   m_ObjectHideFlags: 0
