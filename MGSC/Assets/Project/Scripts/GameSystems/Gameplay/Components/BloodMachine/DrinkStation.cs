@@ -89,7 +89,6 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
     }
     private bool TrySpawnDrink(out Drink drink)
     {
-        Debug.Log("DrinkStation.TrySpawnDrink invoked");
         drink = null;
         if (!CanServeDrink()) return false;
 
@@ -108,7 +107,6 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
     }
     private Drink Spawn()
     {
-        Debug.Log("DrinkStation.Spawn invoked");
         _spawnedDrink = GameObject.Instantiate(DrinkPrefab, DrinkSpawnPoint);
 
         if (_spawnedDrink.TryGetComponent(out _spawnedDrinkComponent))
@@ -128,7 +126,7 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
 
     public void ActualizeReserveValue(float ratio01)
     {
-        Debug.Log("DrinkStation.ActualizeReserveValue invoked");
+        
         ratio01 = Mathf.Clamp01(ratio01);
         MaterialPropertyBlock reserveBlock = new();
         _reserveRenderer.GetPropertyBlock(reserveBlock);
@@ -144,7 +142,6 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
 
     private void WhenDrinkGrabbed()
     {
-        Debug.Log("DrinkStation.WhenDrinkGrabbed invoked");
         if (_spawnedDrinkComponent != null)
             _spawnedDrinkComponent.Grabbable.OnGrab -= WhenDrinkGrabbed;
 

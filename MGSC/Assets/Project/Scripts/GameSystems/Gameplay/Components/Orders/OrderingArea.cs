@@ -147,9 +147,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         Client client = ClientSeat.RegisteredClient;
         if (client != null && ClientSeat.SittingClient != null)
         {
-            OnCustomerKilled?.Invoke(); //A retirer si animation de mort différente
             client.Cooked.Trigger();
-            //client.ClientBlending.Trigger();
             GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
             OnCustomerBlended?.Invoke(client.Type);
             client.EventInvokedUponBlending?.Invoke(client);

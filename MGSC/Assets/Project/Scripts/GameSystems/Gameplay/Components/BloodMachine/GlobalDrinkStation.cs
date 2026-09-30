@@ -32,6 +32,13 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
 			station.Initialize(this);
 			station.BloodQuantity = 0;
         }
+		
+		foreach (var SlushGO in SlushButtonsGO)
+		{
+			SlushGO.SetActive(false);
+		}
+		SlushBands.SetActive(true);
+		
 		EventInvokedUponBlending.AddListener(UponClientBlend);
 		(this as IUpgradable<UnlockDrinkMachine>).TrySubscribe();
     }
@@ -39,14 +46,14 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
 	void UponClientBlend() => UponClientBlend(EventInvokedUponBlending.Parameter as Client);
 	void UponClientBlend(Client client)
     {
-        Debug.Log("GlobalDrinkStation.UponClientBlend invoked");
         if (client == null) return;
-        Debug.Log("GlobalDrinkStation.UponClientBlend client not null");
+        
 		var station = GetStation(client.Type);
+		
 		if (station == null) return;
+		
 		float bloodGivenByClient = UnityEngine.Random.Range(client.BloodDropRate.x, client.BloodDropRate.y);
         station.BloodQuantity += bloodGivenByClient;
-        Debug.Log("GlobalDrinkStation.UponClientBlend passed");
 	}
 	/// <summary>Get the drink station for a given client type. Can be null if the station wasn't assigned in the editor</summary>
 	public DrinkStation GetStation(EClientType clientType)
@@ -64,8 +71,8 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
 			foreach (var SlushGO in SlushButtonsGO)
 			{
 				SlushGO.SetActive(true);
-				SlushBands.SetActive(false);
 			}
+			SlushBands.SetActive(false);
 		}
 	}
 
