@@ -41,6 +41,7 @@ namespace UI
             CheckUpgradeLocks();
             foreach (var line in _upgradeLines)
                 line.UpdateGraphics();
+            ScrollRect.verticalNormalizedPosition = 0;
         }
 
         void OnMainMenu()
