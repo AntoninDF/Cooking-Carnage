@@ -42,6 +42,9 @@ partial class Globals
 
         //BLOOD
         public static Param<bool> AllowMakingDrinks { get; set; } = new(false);
+
+        // ACHIEVEMENTS
+        public static Param<bool> AllowAchievements { get; set; } = new(false);
     }
 }
 
