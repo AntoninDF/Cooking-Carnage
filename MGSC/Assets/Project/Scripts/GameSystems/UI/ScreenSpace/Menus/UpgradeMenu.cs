@@ -34,6 +34,7 @@ namespace UI
 
             onEnable += UpdateGraphicsForEveryUpgrade;
             onEnable += () => PlayTransition("Start of shift " + Globals.Gameplay.ShiftNumber);
+            onEnable += ScrollToTop;
         }
 
         private void UpdateGraphicsForEveryUpgrade()
@@ -41,9 +42,13 @@ namespace UI
             CheckUpgradeLocks();
             foreach (var line in _upgradeLines)
                 line.UpdateGraphics();
+            Debug.Log("[UpgradeMenu] UpdateGraphicsForEveryUpgrade() : Menu should be scrolled to the top");
+        }
+
+        private void ScrollToTop()
+        {
             ScrollRect.verticalNormalizedPosition = 0;
             ScrollRect.verticalScrollbar.value = 1;
-            Debug.Log("[UpgradeMenu] UpdateGraphicsForEveryUpgrade() : Menu should be scrolled to the top");
         }
 
         void OnMainMenu()
