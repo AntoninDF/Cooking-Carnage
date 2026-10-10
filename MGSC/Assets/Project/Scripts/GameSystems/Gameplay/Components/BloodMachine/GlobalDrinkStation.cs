@@ -1,6 +1,7 @@
 using Clients;
 using Features;
 using NaughtyAttributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -55,16 +56,16 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
         }
     }
 
-    void UponClientBlend() => UponClientBlend(EventInvokedUponBlending.Parameter as Client);
-	void UponClientBlend(Client client)
+    void UponClientBlend() => UponClientBlend(EventInvokedUponBlending.Parameter as Tuple<Client, Vector2>);
+	void UponClientBlend(Tuple<Client, Vector2> parameters)
     {
-        if (client == null) return;
-		LastBlendedClientType = client.Type;
-        var station = GetStation(client.Type);
+        if (parameters.Item1 == null) return;
+		LastBlendedClientType = parameters.Item1.Type;
+        var station = GetStation(parameters.Item1.Type);
 		
 		if (station == null) return;
 		
-		float bloodGivenByClient = UnityEngine.Random.Range(client.BloodDropRate.x, client.BloodDropRate.y);
+		float bloodGivenByClient = UnityEngine.Random.Range(parameters.Item2.x, parameters.Item2.y);
         station.BloodQuantity += bloodGivenByClient;
 	}
 	/// <summary>Get the drink station for a given client type. Can be null if the station wasn't assigned in the editor</summary>

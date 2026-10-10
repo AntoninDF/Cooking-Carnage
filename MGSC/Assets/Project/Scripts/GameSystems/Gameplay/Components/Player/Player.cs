@@ -79,7 +79,8 @@ public class Player : MonoBehaviour, IFeatureCollection
         itemComponent.ActiveModel.Outline.CanShowOutline = false;
         itemComponent.SetHeld(true);
         itemComponent.StoreLayerRecursive();
-        itemComponent.SetLayerRecursive(heldLayer);
+        if (item.Owner is not Drink)
+            itemComponent.SetLayerRecursive(heldLayer);
     }
 
     void ResetHeldLayer(F_Grabbable item)

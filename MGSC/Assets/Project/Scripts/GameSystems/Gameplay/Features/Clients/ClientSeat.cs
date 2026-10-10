@@ -108,13 +108,12 @@ namespace Features
             else if(!client.IsBlended) // Client has been killed for meat rather than blood
             {
                 OnIngredientDropped?.Invoke();
-                client.SpawnIngredients(dropSlots);
+                //SpawnIngredients(dropSlots, client);
                 ActualizeSeatPos(null);
             }
-            else if (client.IsBlended)
+            else // Client has been killed for blood
             {
-                //OnClientBlended.Invoke();
-                client.SpawnIngredients(dropSlots);
+                //SpawnIngredients(dropSlots, client, -1);
                 ActualizeSeatPos(null);
             }
     
@@ -170,6 +169,19 @@ namespace Features
             //(Owner as OrderingArea)?.StartCoroutine(LerpSeatPos(client, ClientSeatPosition(client)));
         }
 
+        /// <summary>/// </summary>
+        /// <param name="containers"></param>
+        /// <param name="client"></param>
+        /// <param name="count"></param>
+        public void SpawnIngredients(List<SlotContainer> containers, GameObject ingredientPrefab, Vector2 dropRate)
+        {
+            List<SlotContainer> positions = containers;
+            int numberToDrop = Mathf.RoundToInt(UnityEngine.Random.Range(dropRate.x, dropRate.y));
+            for (int i = 0; i < numberToDrop; i++)
+            {
+                GameObject.Instantiate(ingredientPrefab, positions[i].transform);
+            }
+        }
         void LerpSeatPos(Client client, Vector3 startPos, Vector3 targetPos, float t)
         {
             var curve = AnimationCurve.EaseInOut(0, 0, 1, 1);

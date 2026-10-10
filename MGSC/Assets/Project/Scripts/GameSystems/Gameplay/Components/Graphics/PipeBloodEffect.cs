@@ -21,7 +21,8 @@ public class PipeBloodEffect : MonoBehaviour
     private void OnDisable() => _onClientBlended.RemoveListener(Play);
     public void Play()
     {
-        var client = (_onClientBlended.Parameter as Client);
+        var client = (_onClientBlended.Parameter as Tuple<Client, Vector2>).Item1;
+        var dropRate = (_onClientBlended.Parameter as Tuple<Client, Vector2>).Item2; //  unused
 
         EClientType clientType;
         if (client == null) clientType = EClientType.B;

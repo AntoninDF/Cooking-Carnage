@@ -8,6 +8,8 @@ namespace Upgrades
         {
             base.LevelUp();
 			Globals.Gameplay.DrinkProbabilityIncrease.Value = ExtraChanceBonus;
+            if (_level == _config.MaxLevel)
+                Achievements.Unlock("ACH_U13");
         }
 	}
 }

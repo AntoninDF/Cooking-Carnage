@@ -12,9 +12,8 @@ namespace Clients
     /// This part of the client class handles the Client generation.
     /// For client behaviour, see Client.cs
     /// </summary>
-    public partial class Client : MonoBehaviour, IUpgradable<IngredientDropUpgrade>
-    {
-
+    public partial class Client : MonoBehaviour, IUpgradable<IngredientDropUpgrade>, IUpgradable<GainedBloodUpgrade>
+    { 
         #region Properties
 
         //public ClientMovement Movement => _movement;
@@ -27,13 +26,23 @@ namespace Clients
         /// </summary>
         public Vector2 IngredientDropRate
         {
-            get => _defaultIngredientDropRate + new Vector2(_dropRateIncrement, _dropRateIncrement);
+            get => _ingredientUpgrade != null ? _ingredientUpgrade.GetUpgradedDropRate(_defaultIngredientDropRate) : _defaultIngredientDropRate;
             private set => _defaultIngredientDropRate = value;
+        }
+        public Vector2 SecondaryIngredientDropRate
+        {
+            get => _ingredientUpgrade != null ? _ingredientUpgrade.GetUpgradedDropRate(_defaultSecondaryIngredientDropRate) : _defaultSecondaryIngredientDropRate;
+            private set => _defaultSecondaryIngredientDropRate = value;
         }
         public Vector2 BloodDropRate
         {
-            get => _defaultBloodDropRate + new Vector2(_dropRateIncrement, _dropRateIncrement);
+            get => _bloodUpgrade != null ? _bloodUpgrade.GetUpgradedDropRate(_defaultBloodDropRate) : _defaultBloodDropRate;
             private set => _defaultBloodDropRate = value;
+        }
+        public Vector2 SecondaryBloodDropRate
+        {
+            get => _bloodUpgrade != null ? _bloodUpgrade.GetUpgradedDropRate(_defaultSecondaryBloodDropRate) : _defaultSecondaryBloodDropRate;
+            private set => _defaultSecondaryBloodDropRate = value;
         }
         public EventVariable EventInvokedUponBlending { get; set; }
 
@@ -50,13 +59,16 @@ namespace Clients
         private float _reachDistance = 1f;
         private SplineContainer _splineComp;
         public Vector2 _defaultIngredientDropRate = Vector2.one;
+        public Vector2 _defaultSecondaryIngredientDropRate = Vector2.one;
         public Vector2 _defaultBloodDropRate = new Vector2(30f, 60f);
-        private float _dropRateIncrement = 0f;
+        public Vector2 _defaultSecondaryBloodDropRate = new Vector2(10f, 30f);
+        private IngredientDropUpgrade _ingredientUpgrade;
+        private GainedBloodUpgrade _bloodUpgrade;
         //private ClientMovement _movement;
 
         #endregion
-        
-        
+
+
         #region Client creation
         /// <summary>
         /// This is the advised way to spawn a new client
@@ -75,7 +87,7 @@ namespace Clients
 
             return
                 Client
-                    .New(model.prefab, model.clientType, model.loot, model.ingredientDropRate, model.bloodDropRate, model.EventInvokedUponBlending, model.name, position, model.movementSpeed)
+                    .New(model.prefab, model.clientType, model.loot, model.ingredientDropRate, model.secondaryIngredientDropRate, model.bloodDropRate, model.secondaryBloodDropRate, model.EventInvokedUponBlending, model.name, position, model.movementSpeed)
                     .SetModel(model);
             //.TryUseUpgrades();
         }
@@ -89,7 +101,7 @@ namespace Clients
         /// <param name="name">The name that will be used for the gameobject</param>
         /// <param name="position">The position at which the gameobject will be instantiated</param>
         /// <returns></returns>
-        public static Client New(GameObject prefab, EClientType type, SO_Ingredient ingredientDroppedOnKill, Vector2 ingredientDropRate, Vector2 bloodDropRate, EventVariable eventWhenBlended, string name = null, Vector3 position = default(Vector3), float speed = 1.0f)
+        public static Client New(GameObject prefab, EClientType type, SO_Ingredient ingredientDroppedOnKill, Vector2 ingredientDropRate, Vector2 secondaryIngredientDropRate, Vector2 bloodDropRate, Vector2 secondaryBloodDropRate, EventVariable eventWhenBlended, string name = null, Vector3 position = default(Vector3), float speed = 1.0f)
         {
             if (prefab == null)
             {
@@ -109,8 +121,8 @@ namespace Clients
             // Setup the client
             client
                 .SetType(type)
-                .SetIngredientLoot(ingredientDroppedOnKill, ingredientDropRate)
-                .SetBloodLoot(bloodDropRate, eventWhenBlended)
+                .SetIngredientLoot(ingredientDroppedOnKill, ingredientDropRate, secondaryIngredientDropRate)
+                .SetBloodLoot(eventWhenBlended, bloodDropRate, secondaryBloodDropRate)
                 .SetSpeed(speed);
 
             if (name != null)
@@ -144,13 +156,14 @@ namespace Clients
             return this;
         }
 
-        public Client SetIngredientLoot(SO_Ingredient loot, Vector2 dropRate)
+        public Client SetIngredientLoot(SO_Ingredient loot, Vector2 dropRate, Vector2 secondaryBloodRate)
         {
             IngredientToDrop = loot;           
             IngredientDropRate = dropRate;
+
             return this;
         }
-        public Client SetBloodLoot(Vector2 dropRate, EventVariable eventInvokedUponBlending)
+        public Client SetBloodLoot(EventVariable eventInvokedUponBlending, Vector2 dropRate, Vector2 secondaryBloodRate)
         {          
             BloodDropRate = dropRate;
             EventInvokedUponBlending = eventInvokedUponBlending;
@@ -191,24 +204,16 @@ namespace Clients
 
         #region Upgrade
 
-        public void OnUpgradeInit(IngredientDropUpgrade upgrade)
-        {
-            OnUpgrade(upgrade);
-        }
+        public void OnUpgradeInit(IngredientDropUpgrade upgrade) => OnUpgrade(upgrade);
+        public void OnUpgraded(IngredientDropUpgrade upgrade) => OnUpgrade(upgrade);
+        public void OnUpgrade(IngredientDropUpgrade upgrade) => _ingredientUpgrade = upgrade;
 
-        public void OnUpgraded(IngredientDropUpgrade upgrade)
-        {
-            OnUpgrade(upgrade);
-        }
-
-        public void OnUpgrade(IngredientDropUpgrade upgrade)
-        {
-            _dropRateIncrement = upgrade.GetDropRate();
-        }
-
+        public void OnUpgradeInit(GainedBloodUpgrade upgrade) => OnUpgrade(upgrade);
+        public void OnUpgraded(GainedBloodUpgrade upgrade) => OnUpgrade(upgrade);
+        public void OnUpgrade(GainedBloodUpgrade upgrade) => _bloodUpgrade = upgrade;
         #endregion
 
-       
+
     }
 
 }

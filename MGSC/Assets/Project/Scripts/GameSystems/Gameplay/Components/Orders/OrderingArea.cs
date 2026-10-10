@@ -4,6 +4,7 @@ using Orders;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEditor;
+using System;
 
 public class OrderingArea : MonoBehaviour, IFeatureCollection
 {
@@ -134,8 +135,11 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         if (client != null && ClientSeat.SittingClient != null)
         {
             client.Cooked.Trigger();
+            ClientSeat.SpawnIngredients(ClientSeat.dropSlots, client.Model.loot.Prefab, client.IngredientDropRate);
             GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
             ClientSeat.OnClientKilled?.Invoke();
+            if (Globals.Authorizations.AllowMakingDrinks)
+                client.EventInvokedUponBlending?.Invoke(new Tuple<Client, Vector2>(client, client.SecondaryBloodDropRate));
             //Debug.Log("[OrderingArea] OnCustomerKilled invoked for client " + client.name);
             OnCustomerKilled?.Invoke();
         }
@@ -149,9 +153,10 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         if (client != null && ClientSeat.SittingClient != null)
         {
             client.Cooked.Trigger();
+            ClientSeat.SpawnIngredients(ClientSeat.dropSlots, client.Model.loot.Prefab, client.SecondaryIngredientDropRate);
             GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
             OnCustomerBlended?.Invoke(client.Type);
-            client.EventInvokedUponBlending?.Invoke(client);
+            client.EventInvokedUponBlending?.Invoke(new Tuple<Client, Vector2>(client, client.BloodDropRate));
             //Debug.Log("client.EventInvokedUponBlending invoked");
         }
     }
