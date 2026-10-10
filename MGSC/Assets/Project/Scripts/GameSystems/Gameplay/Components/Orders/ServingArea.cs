@@ -12,12 +12,14 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
     public FeatureCollection Collection { get; set; } = new();
     public ClientSeat ClientSeat { get; set; }
     public SlotContainer ServingSlot => MealSlot;
-
+    public SlotContainer SecondarySlot => DrinkSlot;
+    
     #endregion
 
     #region Fields
     [FormerlySerializedAs("ServingSlot")]
     public SlotContainer MealSlot;
+    public SlotContainer DrinkSlot;
 
     private bool _watching = false;
     private void StartWatchingSlot() => _watching = true;

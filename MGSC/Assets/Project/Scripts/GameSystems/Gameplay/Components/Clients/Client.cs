@@ -302,24 +302,45 @@ namespace Clients
        /// and evaluate it if he can
        /// </summary>
        /// <param name="serving"></param>
-       public void TryAcceptServing(Servable serving, EClientType? servedDrinkType)
+       public void TryAcceptServing(Servable serving, EClientType servedDrinkType)
        {
-        if (serving == null || !serving.Enabled) return;
+
+           if (serving == null || !serving.Enabled) return;
+
            if (CurrentOrder == null) return;
 
-           var recipeComponent = serving.Owner as Recipe;
-           if (recipeComponent == null) return;
+           if (servedDrinkType == 0)
+           {
 
-           SO_Recipe soRecipe = recipeComponent.RecipeFeature?.Recipe;
-           if (soRecipe == null) return;
+               var recipeComponent = serving.Owner as Recipe;
+               if (recipeComponent == null) return;
 
-           if (recipeComponent == null) { return; }
-           if (soRecipe == null) {  return; }
+
+               SO_Recipe soRecipe = recipeComponent?.RecipeFeature?.Recipe;
+               if (soRecipe == null) return;
+
+           }
+           else
+           {
+               serving = null;
+           }
+           Orders.ServingInfo info = new Orders.ServingInfo();
            
-           var info = new Orders.ServingInfo(serving, servedDrinkType);
+           if (CurrentOrder.ServingInfo.Meal != null)
+           {
+               info = new Orders.ServingInfo(CurrentOrder.ServingInfo.Meal , servedDrinkType);
+           }
+           else if (CurrentOrder.ServingInfo.ServedDrink != 0)
+           {
+               info = new Orders.ServingInfo(serving , CurrentOrder.ServingInfo.ServedDrink);
+           }
+            
            CurrentOrder.ServingInfo = info;
-            Achievements.Unlock("ACH_A02");
+            
 
+           if (CurrentOrder.Drink != 0 && CurrentOrder.ServingInfo.ServedDrink == 0 || CurrentOrder.ServingInfo.ServedDrink != 0 && CurrentOrder.ServingInfo.Meal == null) return;
+
+           Achievements.Unlock("ACH_A02");
            var orderManager = Reference.GetManager<GameSystem.OrderManager>();
            orderManager.ResolveOrder(CurrentOrder, info);
            GameSystem.TimerManager.RemoveTimer(PatienceTimer);
