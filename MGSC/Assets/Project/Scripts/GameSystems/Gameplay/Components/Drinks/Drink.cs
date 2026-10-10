@@ -21,6 +21,8 @@ public class Drink : Item
 	[SerializeField] private int      _liquidMaterialIndex;
 
 	private MaterialPropertyBlock _liquidBlock;
+	
+	public Servable Servable;
 	#endregion
 
 	protected override void Awake()
@@ -28,6 +30,7 @@ public class Drink : Item
 		base.Awake();
 		_liquidBlock = new MaterialPropertyBlock();
 		_animation.Play(_spawnedAnimation?.name);
+		Servable = new(this);
 	}
 
 	protected override void BindEvents()

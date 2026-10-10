@@ -31,54 +31,45 @@ namespace Features
 		
 		private void TryGrabMeal()
 		{
-			_seat.OnMealReady -= TryGrabMeal;
+			//_seat.OnMealReady -= TryGrabMeal;  j'ai cpùùenté ceci mais ça cause probablement des bugs, we'll see
 
 			if (_seat.Owner is not OrderingArea orderingArea)
 				return;
 
-			var mealSlotContainer  = orderingArea.ServingArea.ServingSlot?.Container;
-			//var drinkSlotContainer = orderingArea.ServingArea.SecondarySlot?.Container;
+			var servingSlotContainer  = orderingArea.ServingArea.ServingSlot?.Container;
+			var drinkSlotContainer = orderingArea.ServingArea.SecondarySlot?.Container;
 
-			var heldItem = mealSlotContainer?.HeldItem;
-			if (heldItem == null) return;
-			if (!heldItem.TryGetSibling(out Servable servable, true)) return;
+			var heldItem = servingSlotContainer?.HeldItem;
 
-			//var          heldDrink       = drinkSlotContainer?.HeldItem;
-			GameObject   drinkObject     = null;
-			EClientType? servedDrinkType = null;
-
-			/*
-			if (heldDrink != null && heldDrink.Owner is Drink drinkComp)
+			
+			if (heldItem == null || !heldItem.TryGetSibling(out Servable servable, true))
 			{
-				drinkObject     = (drinkComp as Component)?.gameObject;
-				servedDrinkType = orderingArea.ServingArea.ClientSeat.SittingClient.Type;
+				return;
 			}
-			*/
 
-			mealSlotContainer.IsLocked = false;
-			mealSlotContainer.RequestDrop(heldItem);
-			heldItem.IsLocked          = true;
-			mealSlotContainer.IsLocked = true;
-
-			/*
-			if (heldDrink != null && drinkSlotContainer != null)
+			servingSlotContainer.IsLocked = false;
+			servingSlotContainer.RequestDrop(heldItem);
+			
+			if (servable.DrinkClientType != 0)
 			{
-				drinkSlotContainer.IsLocked = false;
-				drinkSlotContainer.RequestDrop(heldDrink);
-				heldDrink.IsLocked          = true;
-				drinkSlotContainer.IsLocked = true;
+				drinkSlotContainer.RequestGrab(heldItem);
+				
 			}
-			*/
+			else
+			{
+				heldItem.IsLocked          = true;
+				servingSlotContainer.IsLocked = true;
+			}
+			
+			_client.TryAcceptServing(servable, servable.DrinkClientType);
 
-			_client.TryAcceptServing(servable, servedDrinkType);
-
-			if (heldItem.Owner is Component plateComp)
+			if (heldItem.Owner is Component itemObject)
 			{
 				_client.Behaviour.OnEatEnd += () =>
-				                              {
-					                              UnityEngine.Object.Destroy(plateComp.gameObject);
-					                              if (drinkObject != null) UnityEngine.Object.Destroy(drinkObject);
-				                              };
+				{
+					UnityEngine.Object.Destroy(itemObject.gameObject);
+				};
+				                              
 			}
 		}
 		
