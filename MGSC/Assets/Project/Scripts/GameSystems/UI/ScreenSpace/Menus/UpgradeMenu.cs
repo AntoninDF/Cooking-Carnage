@@ -42,6 +42,8 @@ namespace UI
             foreach (var line in _upgradeLines)
                 line.UpdateGraphics();
             ScrollRect.verticalNormalizedPosition = 0;
+            ScrollRect.verticalScrollbar.value = 1;
+            Debug.Log("[UpgradeMenu] UpdateGraphicsForEveryUpgrade() : Menu should be scrolled to the top");
         }
 
         void OnMainMenu()

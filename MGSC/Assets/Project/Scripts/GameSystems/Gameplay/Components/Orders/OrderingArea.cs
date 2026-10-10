@@ -12,7 +12,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
     public ClientSeat ClientSeat { get; set; }
     public OrderingCounter OrderingCounter { get; set; }
     public Order NextOrder { get; set; }
-
+    public EClientType LastRegisteredClientType { get; set; }
     #endregion
 
     #region Fields
@@ -115,6 +115,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
         if (client == null) return;
 
         NextOrder = OrderingCounter.GetNewOrder(client);
+        LastRegisteredClientType = client.Type;
     }
     
     public void AssignOrder(Client client)

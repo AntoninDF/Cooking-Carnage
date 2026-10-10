@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Upgrades;
 
 public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable<UnlockDrinkMachine>
@@ -12,43 +13,54 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
 	#region Properties
 	public FeatureCollection Collection      { get; set; } = new();
 	public List<DrinkStation> DrinkStations { get => _drinkStations; set => _drinkStations = value; }
+	public EClientType LastBlendedClientType { get; set; }
 
     #endregion
 
     #region Fields
 	[SerializeField] private List<DrinkStation> _drinkStations;
 	[SerializeField] private EventVariable EventInvokedUponBlending;
-	[SerializeField] private List<GameObject> SlushButtonsGO;
-	[SerializeField] private GameObject SlushBands;
+	[SerializeField] private List<GameObject> DisableIfDrinksAllowed;
+	[SerializeField] private List<GameObject> EnableIfDrinksAllowed;
     #endregion
 
 
     private void Start() => InitializeStations();
 
 	public void InitializeStations()
-	{
-		foreach(var station in _drinkStations)
-		{
-			station.Initialize(this);
-			station.BloodQuantity = 0;
+    {
+        foreach (var station in _drinkStations)
+        {
+            station.Initialize(this);
+            station.BloodQuantity = 0;
         }
-		
-		foreach (var SlushGO in SlushButtonsGO)
-		{
-			SlushGO.SetActive(false);
-		}
-		SlushBands.SetActive(true);
-		
-		EventInvokedUponBlending.AddListener(UponClientBlend);
-		(this as IUpgradable<UnlockDrinkMachine>).TrySubscribe();
+
+        UpdateConditionalObjects();
+		Globals.Authorizations.AllowMakingDrinks.OnValueChange += _ => UpdateConditionalObjects();
+        EventInvokedUponBlending.AddListener(UponClientBlend);
+        (this as IUpgradable<UnlockDrinkMachine>).TrySubscribe();
+    }
+    /// <summary>
+    /// Enable or disable objects based on whether the player is allowed to make drinks.
+    /// </summary>
+    private void UpdateConditionalObjects()
+    {
+        foreach (var DisableGO in DisableIfDrinksAllowed)
+        {
+            DisableGO.SetActive(!Globals.Authorizations.AllowMakingDrinks);
+        }
+        foreach (var EnableGO in EnableIfDrinksAllowed)
+        {
+            EnableGO.SetActive(Globals.Authorizations.AllowMakingDrinks);
+        }
     }
 
-	void UponClientBlend() => UponClientBlend(EventInvokedUponBlending.Parameter as Client);
+    void UponClientBlend() => UponClientBlend(EventInvokedUponBlending.Parameter as Client);
 	void UponClientBlend(Client client)
     {
         if (client == null) return;
-        
-		var station = GetStation(client.Type);
+		LastBlendedClientType = client.Type;
+        var station = GetStation(client.Type);
 		
 		if (station == null) return;
 		
@@ -66,15 +78,8 @@ public class GlobalDrinkStation : MonoBehaviour, IFeatureCollection, IUpgradable
 
 	public void OnUpgraded(UnlockDrinkMachine upgrade)
 	{
-		if (Reference.GetManager<UpgradeManager>().GetUpgradeByType<UnlockDrinkMachine>().Level > 0)
-		{
-			foreach (var SlushGO in SlushButtonsGO)
-			{
-				SlushGO.SetActive(true);
-			}
-			SlushBands.SetActive(false);
-		}
-	}
+		UpdateConditionalObjects();
+    }
 
 	[Button("Fill all")] void _fillAll() { foreach (var station in DrinkStations) station.BloodQuantity = 150; }
 	[Button("Empty all")] void _emptyAll() { foreach (var station in DrinkStations) station.BloodQuantity = 0; }

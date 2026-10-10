@@ -19,7 +19,7 @@ namespace UI
         [Header("References")]
         [Tooltip("The target text object's to update")]
         [SerializeField] private TMP_Text _textObject;
-        [ReadOnly, Tooltip("This is the text that will be displayed. Place the markups in it for them to get replaced by actual data")]
+        [Tooltip("This is the text that will be displayed. Place the markups in it for them to get replaced by actual data")]
         [SerializeField] private string _baseText;
         [Tooltip("Optional gameobject that can provide data")]
         [SerializeField] private GameObject _dataSource;
@@ -208,7 +208,7 @@ namespace UI
             }
         }
 
-        private void OnValidate() => ReplicateReferenceTextFromTextComponent();
+        //private void OnValidate() => ReplicateReferenceTextFromTextComponent();
 
         [Button("Apply text from text component")]
         private void ReplicateReferenceTextFromTextComponent()

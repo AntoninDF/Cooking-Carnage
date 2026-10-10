@@ -10,7 +10,7 @@ public class VersionSpecificObject : MonoBehaviour
     [Tooltip("These objects will be disabled unless we're in a development build")]
     [SerializeField] List<GameObject> _debugSpecificObjects;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         LoadSpecificObjects();
     }

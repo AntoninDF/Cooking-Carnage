@@ -2,6 +2,7 @@ namespace Clients
 {
     /// <summary>
     /// Specifies the client archetype. Doesn't imply the ingredient dropped. For that, use SO_Ingredient instead.
+    /// A = Eugène, B = Mr. Fesse, C = Fabrice
     /// </summary>
     public enum EClientType
     {
