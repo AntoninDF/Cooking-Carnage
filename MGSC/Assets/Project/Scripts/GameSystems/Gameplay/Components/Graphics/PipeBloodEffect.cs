@@ -51,7 +51,6 @@ public class PipeBloodEffect : MonoBehaviour
     {
         if (pipe == null) return;
         TimerManager.StartGameplayTimer("PipeAnimation " + pipe.name, _bloodAnimationDuration, null, UpdatePipe(pipe, color));
-        Debug.Log("Animating pipe: " + pipe.name + " for duration: " + _bloodAnimationDuration);
     }
 
     private Action<float> UpdatePipe(MeshRenderer pipe, Color color)
@@ -60,7 +59,6 @@ public class PipeBloodEffect : MonoBehaviour
         {
             if (pipe == null) return;
             t = t / _bloodAnimationDuration;
-            Debug.Log("Animation progress for pipe " + pipe.name + ": " + t);
             float bloodAmount = Mathf.Lerp(1, -1, t);
             MaterialPropertyBlock mpb = new();
             pipe.GetPropertyBlock(mpb);

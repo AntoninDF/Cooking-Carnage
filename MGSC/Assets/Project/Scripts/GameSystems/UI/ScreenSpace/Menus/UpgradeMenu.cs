@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Upgrades;
 
@@ -72,6 +73,12 @@ namespace UI
         }
         void CheckUpgradeLocks()
         {
+            List<Type> bloodDependentUpgrades = new List<Type> {
+                typeof(GainedBloodUpgrade),
+                typeof(ExtraDrinkOrderChanceUpgrade),
+                typeof(DrinkServingSpeedUpgrade)
+            };
+
             foreach (var line in _upgradeLines)
             {
                 if (line.Config.GetUpgrade().GetType() == typeof(MixtRecipePityThresholdUpgrade))
@@ -80,6 +87,11 @@ namespace UI
                     var recipe = book.Recipes.Where(recipe => RecipeCategoryHelper.GetCategory(recipe) == RecipeCategory.MixteTriple).FirstOrDefault();
                     line.Config.IsLocked = !RecipeUnlockChecker.IsUnlocked(recipe);
                 }
+                else if (bloodDependentUpgrades.Contains(line.Config.GetUpgrade().GetType()))
+                    line.Config.IsLocked = !Globals.Authorizations.AllowMakingDrinks;
+
+                if (line.Config.IsLocked)
+                    line.transform.SetAsLastSibling();
             }
         }
         void TriggerGameStart() => GameLoop.RequestTransition(StateTransitions.StartShift);
@@ -104,22 +116,28 @@ namespace UI
             if (G_UpgradeButtonList == null || UpgradeButtonPrefab == null)
                 return;
 
+            List<UpgradeConfig> configs = GetSortedUpgradeConfigs();
+
+            foreach (var config in configs)
+                MakeNewUpgradeButton(config);
+        }
+
+        private List<UpgradeConfig> GetSortedUpgradeConfigs()
+        {
             var configs = GetUpgradeConfigs();
             // Sort configs so that le locked ones are showing last (-1 means "show before" and 1 means "show after")
             configs.Sort(new Comparison<UpgradeConfig>((x, y) =>
-                {
-                    if (x == null) return 1;
-                    if (y == null) return -1;
-                    if (x.IsLocked == y.IsLocked) return 0;
-                    if (x.IsLocked) return 1;
-                    return -1;
-                }
-                ));
-            foreach (var config in configs)
             {
-                MakeNewUpgradeButton(config);
+                if (x == null) return 1;
+                if (y == null) return -1;
+                if (x.IsLocked == y.IsLocked) return 0;
+                if (x.IsLocked) return 1;
+                return -1;
             }
+                ));
+            return configs;
         }
+
         /// <summary>
         ///  Returns the list of all the update configs available
         /// </summary>

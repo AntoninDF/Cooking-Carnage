@@ -36,7 +36,12 @@ namespace Clients
         }
         public Vector2 BloodDropRate
         {
-            get => _bloodUpgrade != null ? _bloodUpgrade.GetUpgradedDropRate(_defaultBloodDropRate) : _defaultBloodDropRate;
+            get
+            {
+                var value = _bloodUpgrade != null ? _bloodUpgrade.GetUpgradedDropRate(_defaultBloodDropRate) : _defaultBloodDropRate;
+                Debug.Log($"[Client] BloodDropRate getter called. Default: {_defaultBloodDropRate}, Returned: {value}, _bloodUpgrade: {_bloodUpgrade}");
+                return value;
+            }
             private set => _defaultBloodDropRate = value;
         }
         public Vector2 SecondaryBloodDropRate
@@ -198,6 +203,7 @@ namespace Clients
         public Client SubscribeToUpgrade()
         {
             (this as IUpgradable<IngredientDropUpgrade>).TrySubscribe();
+            (this as IUpgradable<GainedBloodUpgrade>).TrySubscribe();
             return this;
         }
         #endregion
