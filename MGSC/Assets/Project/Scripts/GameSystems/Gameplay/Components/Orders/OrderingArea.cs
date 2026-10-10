@@ -136,7 +136,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
             client.Cooked.Trigger();
             GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
             ClientSeat.OnClientKilled?.Invoke();
-            Debug.Log("[OrderingArea] OnCustomerKilled invoked for client " + client.name);
+            //Debug.Log("[OrderingArea] OnCustomerKilled invoked for client " + client.name);
             OnCustomerKilled?.Invoke();
         }
     }
@@ -152,7 +152,7 @@ public class OrderingArea : MonoBehaviour, IFeatureCollection
             GameSystem.TimerManager.RemoveTimer("OrderTimer_" + client.UniqueID);
             OnCustomerBlended?.Invoke(client.Type);
             client.EventInvokedUponBlending?.Invoke(client);
-            Debug.Log("client.EventInvokedUponBlending invoked");
+            //Debug.Log("client.EventInvokedUponBlending invoked");
         }
     }
 

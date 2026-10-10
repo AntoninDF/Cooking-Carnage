@@ -240,8 +240,8 @@ namespace GameSystem
                 cumulative += pair.Value;
                 if (randomValue <= cumulative)
                 {
-                    Debug.Log("Selecting client" + pair.Key + ". Weighted types are " + weightedTypes.ToString_Detailed() +
-                        ". Cumlative value was " + cumulative + ". (This log is here to ensure client selection is made correctly)");
+                    //Debug.Log("Selecting client" + pair.Key + ". Weighted types are " + weightedTypes.ToString_Detailed() +
+                    //    ". Cumlative value was " + cumulative + ". (This log is here to ensure client selection is made correctly)");
                     return pair.Key;
                 }
             }

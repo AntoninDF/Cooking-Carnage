@@ -40,6 +40,5 @@ public class BloodTypeVFXSelector : MonoBehaviour
                 Debug.LogWarning($"[BloodTypeVFXSelector] Unknown client type {type} for {name}");
                 break;
         }
-        Debug.Log("Playing blood FX for client type: " + type);
     }
 }
