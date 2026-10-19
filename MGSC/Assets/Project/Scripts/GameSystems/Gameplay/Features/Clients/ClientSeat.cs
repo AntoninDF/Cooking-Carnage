@@ -20,6 +20,7 @@ namespace Features
         
         public Action              OnClientKilled      {get;  set; }
         public Action              OnMealReady         { get; set; }
+        public Action              OnOrderPayed         { get; set; }
         public Action              OnIngredientDropped { get; set; }
         
         public Action<Client>      ClientLeaveTheSeat  {get;  set; }
