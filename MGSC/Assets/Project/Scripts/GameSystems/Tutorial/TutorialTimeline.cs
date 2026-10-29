@@ -36,8 +36,8 @@ public class TutorialTimeline : ScriptableObject
         Play(DefaultTutorialStep);
 
         // You have to finish the tutorial to validate it, it is considered as played as soon as you finish the last voiceline
-        EventRaisedUponEnd.AddListener(ValidateTutorial);
-        EventRaisedUponEnd.AddListener(StopTutorial);
+        EventRaisedUponEnd?.AddListener(ValidateTutorial);
+        EventRaisedUponEnd?.AddListener(StopTutorial);
     }
     void ValidateTutorial()
     {

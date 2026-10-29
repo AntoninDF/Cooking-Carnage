@@ -23,6 +23,7 @@ public class HoveringIcon : MonoBehaviour
         KillButtonPointer =             1 << 7,
         SlushMachinePointer =           1 << 8,
         OrderTV =                       1 << 9,
+        BlendButton =                   1 << 10,
         ________Warnings________ =      1 << 29,
         OvenWarning =                   1 << 14,
         SlushWarning =                  1 << 15,
