@@ -321,9 +321,8 @@ namespace Clients
 
             }
             else
-            {
                 serving = null;
-            }
+
             Orders.ServingInfo info = new Orders.ServingInfo();
            
             if (CurrentOrder.ServingInfo.Meal != null)
@@ -337,8 +336,12 @@ namespace Clients
             
             CurrentOrder.ServingInfo = info;
             
+            Debug.Log("Received a serving for client: " + Type + " with meal: " + (info.Meal != null ? info.Meal.Recipe.Name : "null") + " and drink: " + info.ServedDrink + "\n"
+                + "CurrentOrder: " + CurrentOrder.Recipe?.Name + " and drink: " + CurrentOrder.Drink);
 
-            if (CurrentOrder.Drink != 0 && CurrentOrder.ServingInfo.ServedDrink == 0 || CurrentOrder.ServingInfo.ServedDrink != 0 && CurrentOrder.ServingInfo.Meal == null) return;
+            if ((CurrentOrder.Drink != 0 && (CurrentOrder.ServingInfo.ServedDrink == 0 || CurrentOrder.ServingInfo.ServedDrink == null)) || (CurrentOrder.Recipe != null && CurrentOrder.ServingInfo.Meal == null)) return;
+
+            Debug.Log("Order resolved for client: " + Type);
 
             Achievements.Unlock("ACH_A02");
             var orderManager = Reference.GetManager<GameSystem.OrderManager>();

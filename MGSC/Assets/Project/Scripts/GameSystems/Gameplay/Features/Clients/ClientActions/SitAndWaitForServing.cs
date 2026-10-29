@@ -42,23 +42,18 @@ namespace Features
 			var heldItem = servingSlotContainer?.HeldItem;
 
 			
-			if (heldItem == null || !heldItem.TryGetSibling(out Servable servable, true))
-			{
-				return;
-			}
+			if (heldItem == null || !heldItem.TryGetSibling(out Servable servable, true)) return;
 
 			servingSlotContainer.IsLocked = false;
 			servingSlotContainer.RequestDrop(heldItem);
 			
 			if (servable.DrinkClientType != 0)
-			{
 				drinkSlotContainer.RequestGrab(heldItem);
-				
-			}
+
 			else
 			{
 				heldItem.IsLocked          = true;
-				servingSlotContainer.IsLocked = true;
+				//servingSlotContainer.IsLocked = true;
 			}
 			
 			_client.TryAcceptServing(servable, servable.DrinkClientType);
