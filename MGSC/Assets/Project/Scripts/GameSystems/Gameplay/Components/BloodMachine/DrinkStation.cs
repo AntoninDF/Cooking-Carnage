@@ -72,6 +72,16 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
 
         BindEvents();
         ActualizeReserveValue(ReserveFill01);
+
+        GameLoop.OnAfterReset += OnReset;
+    }
+    void OnReset()
+    {
+        _empty();
+        _spawnedDrink = null;
+        _spawnedDrinkComponent = null;
+        valve.OnStopOverflowing?.Invoke();
+        valve.OnStopServing?.Invoke();
     }
     public void BindEvents()
     {
