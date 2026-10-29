@@ -1,7 +1,8 @@
-using System;
 using Clients;
 using Features;
+using GameSystem;
 using NaughtyAttributes;
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -74,6 +75,7 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
         ActualizeReserveValue(ReserveFill01);
 
         GameLoop.OnAfterReset += OnReset;
+        ShiftManager.OnShiftEnded += OnReset;
     }
     void OnReset()
     {
