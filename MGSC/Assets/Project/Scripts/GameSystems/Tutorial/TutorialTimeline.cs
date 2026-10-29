@@ -18,7 +18,6 @@ public class TutorialTimeline : ScriptableObject
     }
     static TutorialTimeline _instance;
 
-
     public TutorialStep DefaultTutorialStep;
     public List<BindTutorialStepToEvent> TutorialStepsToBindToEvents = new();
     public EventVariable EventRaisedUponEnd;
@@ -28,8 +27,9 @@ public class TutorialTimeline : ScriptableObject
     List<Action> _tutorialStepBoundCallbacks = new();
 
     [NonSerialized] SubtitleOverlay Subs;
+    public static TutorialTimeline GetTimeline(string assetName) => Resources.Load<TutorialTimeline>($"Tutorials/{assetName}");
     public static void StartTutorial() => Instance.Start();
-    void Start()
+    public void Start()
     {
         Debug.Log("[TutorialTimeline] Starting the introduction sequence");
         BindTutorialStepsToEvents(TutorialStepsToBindToEvents);

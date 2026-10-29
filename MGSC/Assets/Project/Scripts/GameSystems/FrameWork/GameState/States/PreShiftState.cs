@@ -31,7 +31,12 @@ public class PreShiftState : GameplayState
                     OrderPicker.AddRecipeToQueue(recipe);
             }
         }
-        
+        if (Globals.Authorizations.AllowMakingDrinks && !Globals.Statistics.SlushTutorialHasBeenPlayed)
+        {
+            Globals.Statistics.SlushTutorialHasBeenPlayed.Value = true;
+            TutorialTimeline.GetTimeline("SlushMachine/00_SlushTutorialTimeline").Start();
+        }
+
         AudioSystem.PlayAudio(AudioSystem.Database.beforeShiftMusic,true);
         AudioSystem.PlayAudio(AudioSystem.Database.ambience);
     }

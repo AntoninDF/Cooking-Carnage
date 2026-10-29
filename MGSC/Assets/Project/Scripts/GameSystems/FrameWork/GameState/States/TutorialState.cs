@@ -12,7 +12,7 @@ public class TutorialState : GameplayState
             HUD?.Enable();
         }
         GameLoop.RequestTransition(StateTransitions.StartShift);
-        TutorialTimeline.StartTutorial();
+        TutorialTimeline.GetTimeline("Introduction/00_TutorialTimeline").Start();
     }
 
     public override void OnExit()
