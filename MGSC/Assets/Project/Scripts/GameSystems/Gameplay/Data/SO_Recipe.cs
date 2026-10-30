@@ -26,7 +26,8 @@ namespace Cooking
         [Tooltip("How much money does a recipe give")]
         [FormerlySerializedAs("Price")]
         public float DefaultPrice;
-        public float Price => DefaultPrice * Globals.BalancingWeights.RecipePriceMultiplier;
+        public float DefaultDrinkBonus;
+        public float Price => DefaultPrice * Globals.BalancingWeights.RecipePriceMultiplier ;
 
         [Tooltip("How likely this recipe is to be ordered by default. The unit is arbitrary and depends on the other recipes' probability rates.")]
         public float probabilityRate = 1f;

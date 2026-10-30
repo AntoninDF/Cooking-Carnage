@@ -85,19 +85,19 @@ namespace Orders
             if (order.Owner != null && order.Owner.PatienceTimer != null)
             {
                 var timer = order.Owner.PatienceTimer;
-                order.Owner.PatienceTimer.onUpdate += elapsed => UpdatePriceText(recipe, elapsed, (timer != null ? timer.Duration : 60));
+                order.Owner.PatienceTimer.onUpdate += elapsed => UpdatePriceText(order ,recipe, elapsed, (timer != null ? timer.Duration : 60));
             }
             //Debug.Log(debug);
             _price.text = order.Recipe.Price.ToString() + " $";
             StartDisplay();
         }
-        void UpdatePriceText(SO_Recipe recipe, float patienceElapsed, float totalPatience)
+        void UpdatePriceText(Order order, SO_Recipe recipe, float patienceElapsed, float totalPatience)
         {
-            _price.text = GetPrice(recipe, patienceElapsed, totalPatience).ToString() + " $";
+            _price.text = GetPrice(order, recipe, patienceElapsed, totalPatience).ToString() + " $";
         }
-        private float GetPrice(SO_Recipe recipe, float elapsedTime, float totalPatience)
+        private float GetPrice(Order order, SO_Recipe recipe, float elapsedTime, float totalPatience)
         {
-            float price = OrderEvaluator.CalculateBasePrice(recipe);
+            float price = OrderEvaluator.CalculateBasePrice(recipe,order);
             float tip = OrderEvaluator.CalculateTip(price, OrderEvaluator.CalculateStars(elapsedTime, totalPatience));
             return price + tip;
         }

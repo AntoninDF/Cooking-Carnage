@@ -9,8 +9,7 @@ namespace Orders
     {
         public static float WrongRecipePrice  { get; set; } = 5f;
         public static float PlainJellyPrice   { get; set; } = 1f;
-        public static float DrinkServedBonus  { get; set; } // arbitraire, à changer
-        public static float DrinkCorrectBonus { get; set; } // arbitraire, à changer
+        public static float WrongDrinkBonus { get; set; } = 5f;
         
         
         private const float TipMultiplier0Star = 0f; // 0 star => No tip
@@ -33,27 +32,19 @@ namespace Orders
             
             int   stars       = isCorrectRecipe ? CalculateStars(order) : 0;
             float tip         = isCorrectRecipe ? CalculateTip(basePrice, stars) : 0f;
-            float drinkBonus  = CalculateDrinkBonus(order);
-            float totalGained = basePrice + tip +  drinkBonus;
+            float totalGained = basePrice + tip;
 
             return new OrderRating(order, order.ServingInfo.Recipe, stars, totalGained);
-        }
-
-        private static float CalculateDrinkBonus(Order order)
-        {
-            EClientType? served = order.ServingInfo.ServedDrink;
-            if (!served.HasValue) return 0f;
-
-            float bonus = DrinkServedBonus;
-            //if (order.Drink.HasValue && order.Drink.Value == served.Value)
-                bonus += DrinkCorrectBonus;
-
-            return bonus;
         }
 
         private static bool IsCorrectRecipe(Order order)
         {
             return order.Recipe != null && order.Recipe == order.ServingInfo.Recipe;
+        }
+        
+        private static bool ContainsDrink(Order order)
+        {
+            return order.Drink != EClientType.None;
         }
 
         private static float CalculateBasePrice(Order order, bool isCorrectRecipe)
@@ -62,19 +53,26 @@ namespace Orders
 
             if (meal == null) return PlainJellyPrice;
 
-            return CalculateBasePrice(meal.Recipe, isCorrectRecipe);
+            return CalculateBasePrice(meal.Recipe,order, isCorrectRecipe);
         }
-        public static float CalculateBasePrice(SO_Recipe recipe, bool isCorrectRecipe=true)
+        public static float CalculateBasePrice(SO_Recipe recipe, Order order, bool isCorrectRecipe=true)
         {
             if (recipe == null)
                 return PlainJellyPrice;
 
+            bool containsDrink = ContainsDrink(order);
+            float drinkBonus = containsDrink ? recipe.DefaultDrinkBonus : 0;
+
             // NOTE : Les recettes vides et brûlées ont déjà leur prix de vente dans le ppté Price
 
             if (!isCorrectRecipe && recipe.Name != "Failed recipe" && recipe.Name != "Empty recipe")
-                return WrongRecipePrice;
-
-            return recipe.Price;
+            {
+                if (containsDrink) drinkBonus = WrongDrinkBonus; // meme si c'est la bonne boisson, prix de la mauvaise car plat raté
+                
+                return WrongRecipePrice + drinkBonus ;
+            }
+            //Debug.Log("contains drinks " + containsDrink + " default drink bonus " +recipe.DefaultDrinkBonus +" DrinkBonus is " + drinkBonus);
+            return recipe.Price + drinkBonus;
         }
 
         private static int CalculateStars(Order order)
