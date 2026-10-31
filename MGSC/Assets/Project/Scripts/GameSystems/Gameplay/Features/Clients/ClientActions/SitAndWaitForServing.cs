@@ -64,7 +64,8 @@ namespace Features
 			{
 				_client.Behaviour.OnEatEnd += () =>
 				{
-					UnityEngine.Object.Destroy(itemObject.gameObject);
+					heldItem?.Container?.RequestDrop(heldItem);
+                    UnityEngine.Object.Destroy(itemObject.gameObject);
 				};
 				                              
 			}

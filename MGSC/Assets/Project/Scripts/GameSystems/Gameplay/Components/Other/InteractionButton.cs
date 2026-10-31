@@ -12,6 +12,7 @@ public class InteractionButton : MonoBehaviour, IFeatureCollection
     public Action<InteractionContext> OnInteraction { get => Interactable.OnInteraction; set => Interactable.OnInteraction = value; }
     public ModelController Model;
 
+    private bool _initialized = false;
     void Awake()
     {
         Interactable = new(this);
@@ -20,6 +21,7 @@ public class InteractionButton : MonoBehaviour, IFeatureCollection
     void Start()
     {
         BindEvents();
+        _initialized = true;
         SetupMeshCollider();
     }
     private void OnEnable() => SetupMeshCollider();
@@ -34,6 +36,7 @@ public class InteractionButton : MonoBehaviour, IFeatureCollection
 
     protected void SetupMeshCollider()
     {
+        if (!_initialized) return;
         if (Model == null) return;
 
         MeshCollider col;

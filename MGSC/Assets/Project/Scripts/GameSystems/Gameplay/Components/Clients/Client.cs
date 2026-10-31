@@ -325,13 +325,17 @@ namespace Clients
 
             Orders.ServingInfo info = new Orders.ServingInfo();
            
-            if (CurrentOrder.ServingInfo.Meal != null)
+            if (CurrentOrder.ServingInfo.Meal != null) // Si on a déjà servi un plat, on garde le plat et on met à jour la boisson
             {
                 info = new Orders.ServingInfo(CurrentOrder.ServingInfo.Meal , servedDrinkType);
             }
-            else if (CurrentOrder.ServingInfo.ServedDrink != 0)
+            else if (CurrentOrder.ServingInfo.ServedDrink != 0 && CurrentOrder.ServingInfo.ServedDrink != null) // Si on a déjà servi une boisson, on garde la boisson et on met à jour le plat
             {
                 info = new Orders.ServingInfo(serving , CurrentOrder.ServingInfo.ServedDrink);
+            }
+            else // Si on n'a rien servi, on met à jour les deux
+            {
+                info = new Orders.ServingInfo(serving , servedDrinkType);
             }
             
             CurrentOrder.ServingInfo = info;
@@ -339,7 +343,10 @@ namespace Clients
             Debug.Log("Received a serving for client: " + Type + " with meal: " + (info.Meal != null ? info.Meal.Recipe.Name : "null") + " and drink: " + info.ServedDrink + "\n"
                 + "CurrentOrder: " + CurrentOrder.Recipe?.Name + " and drink: " + CurrentOrder.Drink);
 
-            if ((CurrentOrder.Drink != 0 && (CurrentOrder.ServingInfo.ServedDrink == 0 || CurrentOrder.ServingInfo.ServedDrink == null)) || (CurrentOrder.Recipe != null && CurrentOrder.ServingInfo.Meal == null)) return;
+            if (
+                (CurrentOrder.Drink != 0 && (CurrentOrder.ServingInfo.ServedDrink == 0 || CurrentOrder.ServingInfo.ServedDrink == null)) 
+                || 
+                (CurrentOrder.Recipe != null && CurrentOrder.ServingInfo.Meal == null)) return;
 
             Debug.Log("Order resolved for client: " + Type);
 
