@@ -89,6 +89,8 @@ namespace UI
                 }
                 else if (bloodDependentUpgrades.Contains(line.Config.GetUpgrade().GetType()))
                     line.Config.IsLocked = !Globals.Authorizations.AllowMakingDrinks;
+                else if (line.Config.GetUpgrade().GetType() == typeof(UnlockDrinkMachine))
+                    line.Config.IsLocked = Globals.Gameplay.ShiftNumber < 7;
 
                 if (line.Config.IsLocked)
                     line.transform.SetAsLastSibling();

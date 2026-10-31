@@ -37,7 +37,8 @@ namespace Features
 				return;
 
 			var servingSlotContainer  = orderingArea.ServingArea.ServingSlot?.Container;
-			var drinkSlotContainer = orderingArea.ServingArea.SecondarySlot?.Container;
+			var drinkSlotContainer = orderingArea.ServingArea.DrinkSlot?.Container;
+			var mealSlotContainer = orderingArea.ServingArea.MealSlot?.Container;
 
 			var heldItem = servingSlotContainer?.HeldItem;
 
@@ -52,7 +53,8 @@ namespace Features
 
 			else
 			{
-				heldItem.IsLocked          = true;
+				mealSlotContainer.RequestGrab(heldItem);
+                heldItem.IsLocked          = true;
 				//servingSlotContainer.IsLocked = true;
 			}
 			

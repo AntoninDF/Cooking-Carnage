@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 7676619333211919107}
   - component: {fileID: 3241959421960790907}
   m_Layer: 0
-  m_Name: MealSlot
+  m_Name: ServingSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -147,7 +147,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fc8040690e33ea41a368db0e5322895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServingArea
-  MealSlot: {fileID: 3241959421960790907}
+  ServingSlot: {fileID: 3241959421960790907}
+  MealSlot: {fileID: 4384196199485722468}
   DrinkSlot: {fileID: 6450353337828317369}
 --- !u!114 &7676619333211919107
 MonoBehaviour:
@@ -492,6 +493,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Die
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8909619277933717927}
+        m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
   _OrderDisplayer: {fileID: 3333766840374621683}
@@ -870,6 +883,7 @@ GameObject:
   - component: {fileID: 1467731768979103045}
   - component: {fileID: 4448384301524042338}
   - component: {fileID: 7061183801908844421}
+  - component: {fileID: 1859783294431049938}
   m_Layer: 0
   m_Name: BlendButton
   m_TagString: Untagged
@@ -959,6 +973,27 @@ MonoBehaviour:
   - {fileID: 6105658432593430129}
   _demoSpecificObjects: []
   _debugSpecificObjects: []
+--- !u!135 &1859783294431049938
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6105658432593430129}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.12
+  m_Center: {x: 0, y: 1.05, z: 0.34}
 --- !u!1 &6119278574235762139
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,7 +1100,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6794022176445348500}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9be90a15f77be6a4db862568f7948a56, type: 3}
   m_Name: 
@@ -1112,6 +1147,76 @@ PlayableDirector:
     value: {fileID: 3758572440268609842}
   m_ExposedReferences:
     m_References: []
+--- !u!1 &6868099822028183794
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 937940306405394752}
+  - component: {fileID: 7205664330675831629}
+  - component: {fileID: 4384196199485722468}
+  m_Layer: 0
+  m_Name: MealSlot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &937940306405394752
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6868099822028183794}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.76, z: 0.100000046}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5441982633704886918}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7205664330675831629
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6868099822028183794}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.240465, y: 1.108475, z: 0.13210002}
+  m_Center: {x: 0, y: 0.7904693, z: 0.088324174}
+--- !u!114 &4384196199485722468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6868099822028183794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63a59fd62de223d418de0c80dab5994c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlotContainer
+  isInteractable: 1
+  passThrough: 1
+  Model: {fileID: 0}
+  OnGrabEventVar: {fileID: 0}
 --- !u!1 &7307465556196440706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1143,6 +1248,7 @@ Transform:
   m_Children:
   - {fileID: 6960019933410597076}
   - {fileID: 7420575836655418537}
+  - {fileID: 937940306405394752}
   - {fileID: 2049341413406100142}
   - {fileID: 8544692818739799040}
   - {fileID: 6405135874972455077}

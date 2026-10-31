@@ -22,7 +22,7 @@ public class InteractionButton : MonoBehaviour, IFeatureCollection
         BindEvents();
         SetupMeshCollider();
     }
-
+    private void OnEnable() => SetupMeshCollider();
     private void BindEvents()
     {
         if (Model != null)
