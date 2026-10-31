@@ -2373,51 +2373,6 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - ActionPath:
-      ActionVariableName: OnInteraction
-      SerializedType:
-        m_Name: Action`1
-        m_AssemblyQualifiedName: System.Action`1[[Features.InteractionContext, Assembly-CSharp,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], mscorlib, Version=4.0.0.0,
-          Culture=neutral, PublicKeyToken=b77a5c561934e089
-        m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-      FeaturePath:
-        FeatureVariableName: Interactable
-        SerializedType:
-          m_Name: F_Interactable
-          m_AssemblyQualifiedName: Features.F_Interactable, Assembly-CSharp, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
-          m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-        Path: []
-        OwningObject: {fileID: 7929391311183339527}
-      source: 0
-    Event:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 3492002027963606634}
-          m_TargetAssemblyTypeName: AnimatorBoolSwitch, Assembly-CSharp
-          m_MethodName: SetTrue
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Turn On
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 647448363593362783}
-          m_TargetAssemblyTypeName: ModelController, Assembly-CSharp
-          m_MethodName: AuthorizeOutlines
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - ActionPath:
       ActionVariableName: OnTransformationStart
       SerializedType:
         m_Name: Action`1
@@ -2466,6 +2421,30 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: FMODUnity.StudioEventEmitter, FMODUnity
           m_MethodName: Play
           m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 3492002027963606634}
+          m_TargetAssemblyTypeName: AnimatorBoolSwitch, Assembly-CSharp
+          m_MethodName: SetTrue
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 647448363593362783}
+          m_TargetAssemblyTypeName: ModelController, Assembly-CSharp
+          m_MethodName: AuthorizeOutlines
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
