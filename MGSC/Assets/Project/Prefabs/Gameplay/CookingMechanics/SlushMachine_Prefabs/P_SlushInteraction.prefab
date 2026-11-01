@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2802588553563444075}
   - component: {fileID: 5262877881293368635}
   - component: {fileID: 6365521475327904117}
+  - component: {fileID: 8397988748581458218}
   m_Layer: 0
   m_Name: P_SlushInteraction
   m_TagString: Untagged
@@ -246,6 +247,21 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
+--- !u!114 &8397988748581458218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4573166068361298048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463f47ee1d619a746821ff366d39918b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BloodMachineDependantFeature
+  _bloodMachineDependency: 0
+  _dependantObjects:
+  - {fileID: 283613638392473184}
 --- !u!1 &8634472954367402048
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,17 +472,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: P_SlushHandle
       objectReference: {fileID: 0}
+    - target: {fileID: 7874441409090807864, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
+--- !u!1 &283613638392473184 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7874441409090807864, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
+  m_PrefabInstance: {fileID: 7973688717039439448}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4235064865672132555 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6083732710800685459, guid: ab9b1308269ef8e4395ff8f8bfa87d09, type: 3}
   m_PrefabInstance: {fileID: 7973688717039439448}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 283613638392473184}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f73d2525679cf86409b974e13c3960d4, type: 3}
