@@ -101,17 +101,17 @@ namespace UI
 
             switch (info)
             {
-                case EDataInfo.TimeElapsedSinceStartup:         return Time.time.ToString();
+                case EDataInfo.TimeElapsedSinceStartup:         return Time.time.Rounded(2).ToString();
                 case EDataInfo.ShiftDuration:                   return sm?.ShiftDuration.ToString();
-                case EDataInfo.RentPayedThisShift:              return sm?.GetCurrentRentPrice().ToString();
+                case EDataInfo.RentPayedThisShift:              return sm?.GetCurrentRentPrice().Rounded(2).ToString();
                 case EDataInfo.ShiftCount:                      return sm?.ShiftNumber.ToString();
                 case EDataInfo.CorrectOrdersThisShift:          return GetCorrectOrdersCount().ToString();
                 case EDataInfo.WrongOrdersThisShift:            return GetWrongOrdersCount().ToString();
                 case EDataInfo.MissedOrdersThisShift:           return GetMissedOrdersCount().ToString();
                 case EDataInfo.ClientsKilledThisShift:          return Reference.GetManager<ClientManager>()?.ClientsKilledThisShift.ToString();
-                case EDataInfo.MoneyGainedThisShift:            return mm?.GetMoneyGainedThisShift().ToString();
-                case EDataInfo.MoneyGainedOnPreviousShift:      return mm?.GetMoneyOnPreviousShift().ToString();
-                case EDataInfo.MoneyAmount:                     return mm?.MoneyInfo.ToString();
+                case EDataInfo.MoneyGainedThisShift:            return mm?.GetMoneyGainedThisShift().Rounded(2).ToString();
+                case EDataInfo.MoneyGainedOnPreviousShift:      return mm?.GetMoneyOnPreviousShift().Rounded(2).ToString();
+                case EDataInfo.MoneyAmount:                     return mm?.MoneyInfo.Rounded(2).ToString();
                 case EDataInfo.CookingSpeedUpgradeLevel:        return (um?.GetUpgradeByType<CookingSpeedUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.IngredientDropUpgradeLevel:      return (um?.GetUpgradeByType<IngredientDropUpgrade>()?.Level + 1).ToString();
                 case EDataInfo.OvenCountUpgradeLevel:           return (um?.GetUpgradeByType<OvenCountUpgrade>()?.Level + 1).ToString();
@@ -120,7 +120,7 @@ namespace UI
                 case EDataInfo.LastMoneyDelta:                  return ((int)mm?.LastMoneyDelta).ToString() ;
                 case EDataInfo.TotalAvailableUpgrades:          return um?.Upgrades.Select(up => up.Config.MaxLevel).Sum().ToString();
                 case EDataInfo.TotalBoughtUpgrades:             return um?.Upgrades.Select(up => up.Level).Sum().ToString();
-                case EDataInfo.MoneyAtTheBeginningOfTheShift:   return (mm?.GetMoneyAtTheBeginningOfThisShift() + mm.GetMoneySpentOnUpgradesThisShift()).ToString(); // This ignores what was spent in upgrades
+                case EDataInfo.MoneyAtTheBeginningOfTheShift:   return (mm.GetMoneyAtTheBeginningOfThisShift() + mm.GetMoneySpentOnUpgradesThisShift()).Rounded(2).ToString(); // This ignores what was spent in upgrades
                 case EDataInfo.CurrentProjectVersion:           return (Application.version).ToString();
                 case EDataInfo.TimePlayed:                      return SecondsAsDuration(Globals.Statistics.SecondsPlayed + (int)Time.realtimeSinceStartup); // Adds up time played during previous sessions and this session
 

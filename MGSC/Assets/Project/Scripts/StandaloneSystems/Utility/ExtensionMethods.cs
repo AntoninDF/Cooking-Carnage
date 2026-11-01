@@ -8,6 +8,11 @@ using UnityEngine;
 /// </summary>
 public static class ExtensionMethods
 {
+    public static float Rounded(this float value, int decimals)
+    {
+        var multiplier = Mathf.Pow(10, decimals);
+        return Mathf.Round(value * multiplier) / multiplier;
+    }
     /// <summary>
     /// Checks if the component exists on the gameObject
     /// </summary>
