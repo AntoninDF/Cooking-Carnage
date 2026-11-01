@@ -43,7 +43,7 @@ namespace Features
 
         protected virtual void StartTransformation(TransformableAfterTimer target)
         {
-            string timerName = "Transforming (" + UnityEngine.Time.frameCount.ToString("X") + ")";
+            string timerName = "Transforming (" + UnityEngine.Time.frameCount.ToString("X") + ", hash is " + target.GetHashCode() + ")";// Hashcode makes sure no bugs happen if two timers are triggered on the same frame
             var duration = GetTransformationDuration(target);
             currentProcess = TimerManager.StartGameplayTimer(timerName, duration, () => RequestTransformation(target), (elapsed) => Progress(elapsed, duration));
             OnTransformationStart?.Invoke(target);
