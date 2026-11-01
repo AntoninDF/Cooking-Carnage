@@ -34,7 +34,10 @@ namespace UI
 
             ViewportMask.enabled = true;
             if (EnableScrolling)
+            {
                 onEnable += () => ScrollDelayed(DelayStartScrolling);
+                onEnable += () => { ScrollView.verticalNormalizedPosition = 1; isScrolling = false; };
+            }
         }
 
         private void BindAll() => B_Back?.onClick.AddListener(OnBack);

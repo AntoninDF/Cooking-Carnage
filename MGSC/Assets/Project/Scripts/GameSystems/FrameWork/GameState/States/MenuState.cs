@@ -22,7 +22,9 @@ public class MenuState : GameState
         Menu = ui.GetWidget(DefaultMenuType);
         if (Menu == null) return;
         Menu.Enable();
-        OnStateEnd += () => TimerManager.StartTimer("Waiting before disabling menu " + DefaultMenuType.Name, WaitBeforeDisablingMenu, Menu.Disable);
+        string timerName = "Waiting before disabling menu " + DefaultMenuType.Name;
+        TimerManager.GetTimer(timerName)?.Pause();
+        OnStateEnd += () => TimerManager.StartTimer(timerName, WaitBeforeDisablingMenu, Menu.Disable);
     }
 
   
