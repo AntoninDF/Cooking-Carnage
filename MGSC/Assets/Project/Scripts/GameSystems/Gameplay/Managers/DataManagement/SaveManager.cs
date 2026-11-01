@@ -1,10 +1,9 @@
 using Newtonsoft.Json;
-using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Transactions;
+using Unity.VisualScripting;
 using UnityEngine;
 using Upgrades;
 
@@ -169,7 +168,7 @@ namespace GameSystem
         //⚠️ UPDATE THIS WHEN ADDING NEW STUFF TO SAVE (only if it should be saved when closing the game)
         private static void SaveUponQuit()
         {
-            if (Data == null) Data = MakeGameData();
+            Data = MakeGameData();
             // Save how long the player has played
             Data.SecondsPlayed += (int)Time.realtimeSinceStartup;
 
@@ -183,7 +182,7 @@ namespace GameSystem
             Data.LookSpeed = Globals.Gameplay.Player.LookSpeed;
             Data.ScrollSensitivity = Globals.Gameplay.Player.ScrollSensitivity;
 
-            //Debug.Log("Saving upon quit. Data.MasterVolume is " + Data.MasterVolume + ". Globals.Audio.MasterVolume is " + Globals.Audio.MasterVolume.Value);
+            //Debug.Log("Saving upon quit. Data is :\n" + Data.Serialize().ToString());
             SaveGameData(Data);
         }
         /// <summary>
