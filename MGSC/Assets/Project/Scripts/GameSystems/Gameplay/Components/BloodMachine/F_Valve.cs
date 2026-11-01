@@ -24,7 +24,11 @@ public class F_Valve : Feature, IUpgradable<DrinkServingSpeedUpgrade>
         set
         {
             if (value == _isServing) return;
-            if (!value) OnStopServing?.Invoke();
+            if (!value)
+            {
+                OnStopServing?.Invoke();
+                _pendingDrink = null;
+            }
             _isServing = value;
         }
     }
@@ -143,7 +147,6 @@ public class F_Valve : Feature, IUpgradable<DrinkServingSpeedUpgrade>
     {
         Debug.Log("Valve.WhenDrinkGrabbed invoked");
         IsServing = false;
-        _pendingDrink = null;
 
         if (TimerManager.IsTimerRunning(SecondTimerName))
             TimerManager.StopTimer(SecondTimerName);

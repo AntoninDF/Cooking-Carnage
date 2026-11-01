@@ -80,10 +80,12 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
     void OnReset()
     {
         _empty();
-        _spawnedDrink = null;
-        _spawnedDrinkComponent = null;
+        valve.OnStopFillingDrink?.Invoke();
         valve.OnStopOverflowing?.Invoke();
         valve.OnStopServing?.Invoke();
+        _spawnedDrink = null;
+        _spawnedDrinkComponent = null;
+        valve.IsServing = false;
     }
     public void BindEvents()
     {
@@ -148,6 +150,7 @@ public class DrinkStation : MonoBehaviour, IFeatureCollection
         
     void WhenStopFillingDrink()
     {
+        if (_spawnedDrinkComponent == null) return;
         _spawnedDrinkComponent.Grabbable.IsLocked = false;
         _spawnedDrinkComponent.SetLiquidLevel(1f);
     }
