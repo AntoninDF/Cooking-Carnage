@@ -87,10 +87,20 @@ namespace UI
                     var recipe = book.Recipes.Where(recipe => RecipeCategoryHelper.GetCategory(recipe) == RecipeCategory.MixteTriple).FirstOrDefault();
                     line.Config.IsLocked = !RecipeUnlockChecker.IsUnlocked(recipe);
                 }
-                else if (bloodDependentUpgrades.Contains(line.Config.GetUpgrade().GetType()))
-                    line.Config.IsLocked = !Globals.Authorizations.AllowMakingDrinks;
                 else if (line.Config.GetUpgrade().GetType() == typeof(UnlockDrinkMachine))
                     line.Config.IsLocked = Globals.Gameplay.ShiftNumber < 7;
+                else if (bloodDependentUpgrades.Contains(line.Config.GetUpgrade().GetType()))
+                {
+                    if (!Globals.Authorizations.AllowMakingDrinks)
+                        line.Config.IsLocked = true;
+                    else if (line.Config.GetUpgrade().GetType() == typeof(GainedBloodUpgrade))
+                        line.Config.IsLocked = Globals.Gameplay.ShiftNumber < 9;
+                    else if (line.Config.GetUpgrade().GetType() == typeof(DrinkServingSpeedUpgrade))
+                        line.Config.IsLocked = Globals.Gameplay.ShiftNumber < 8;
+                    else if (line.Config.GetUpgrade().GetType() == typeof(ExtraDrinkOrderChanceUpgrade))
+                        line.Config.IsLocked = Globals.Gameplay.ShiftNumber < 8;
+
+                }
 
                 if (line.Config.IsLocked)
                     line.transform.SetAsLastSibling();
