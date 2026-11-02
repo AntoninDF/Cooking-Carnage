@@ -50,10 +50,13 @@ namespace Features
 			
 			if (servable.DrinkClientType != 0)
 				drinkSlotContainer.RequestGrab(heldItem);
-			else
-				mealSlotContainer.RequestGrab(heldItem);
 
-            heldItem.IsLocked          = true;
+			else
+			{
+				mealSlotContainer.RequestGrab(heldItem);
+                heldItem.IsLocked          = true;
+				//servingSlotContainer.IsLocked = true;
+			}
 			
 			_client.TryAcceptServing(servable, servable.DrinkClientType);
 
@@ -62,17 +65,6 @@ namespace Features
 				_client.Behaviour.OnEatEnd += () =>
 				{
 					heldItem?.Container?.RequestDrop(heldItem);
-                    UnityEngine.Object.Destroy(itemObject.gameObject);
-				};
-				_client.Cooked.OnCustomerCooked += () =>
-				{
-					Debug.Log("Destroying item on death, value is : " + (heldItem != null ? heldItem.Owner : "null"));
-					var ds = orderingArea.ServingArea.DrinkSlot;
-                    if (ds?.HeldItem != null) ds.HeldItem.IsLocked = false;
-					ds.Container.Empty();
-                    var ms = orderingArea.ServingArea.MealSlot;
-					if (ms?.HeldItem != null) ms.HeldItem.IsLocked = false;
-					ms.Container.Empty();
                     UnityEngine.Object.Destroy(itemObject.gameObject);
 				};
 				                              

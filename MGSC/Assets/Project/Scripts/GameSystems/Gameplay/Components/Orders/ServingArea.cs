@@ -55,9 +55,6 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
             if (!grab.TryGetSibling(out Servable temp, true && ClientSeat.SittingClient != null)) return false;
             if (!Globals.Authorizations.AllowClientServing) return false;
             if (temp.Owner is Drink && ClientSeat.SittingClient?.CurrentOrder.Drink == Clients.EClientType.None) return false; // Make sure drinks are served only if drinks are asked
-            Debug.Log("Serving slot filter checks for item : " + temp.Owner + ". Drinkslot has held item : " + DrinkSlot.HeldItem + ". Mealslot has held item : " + MealSlot.HeldItem);
-            if (temp.Owner is Drink && DrinkSlot.HeldItem != null) return false;
-            if (temp.Owner is not Drink && MealSlot.HeldItem != null) return false;
             return true;
         };
     }
