@@ -62,10 +62,15 @@ namespace Features
         }
         public virtual bool CanDrop(F_Grabbable item = null)
         {
+            Debug.Log("1, container is " + Owner);
             if (!Enabled) return false;
+            Debug.Log("2, container is " + Owner);
             if (IsLocked) return false;
+            Debug.Log("3, container is " + Owner);
             if (item != null && item.IsLocked) return false;
+            Debug.Log("4, container is " + Owner);
             if (item != null && item.Container != null && item.Container.IsLocked) return false;
+            Debug.Log("5, container is " + Owner);
 
             return true;
         }
