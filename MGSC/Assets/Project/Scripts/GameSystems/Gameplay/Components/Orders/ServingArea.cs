@@ -54,6 +54,7 @@ public class ServingArea : MonoBehaviour, IFeatureCollection
             if (obj is not F_Grabbable grab) return false;
             if (!grab.TryGetSibling(out Servable temp, true && ClientSeat.SittingClient != null)) return false;
             if (!Globals.Authorizations.AllowClientServing) return false;
+            if (temp.Owner is Drink && ClientSeat.SittingClient == null) return false;
             if (temp.Owner is Drink && ClientSeat.SittingClient?.CurrentOrder.Drink == Clients.EClientType.None) return false; // Make sure drinks are served only if drinks are asked
             if (temp.Owner is Drink && DrinkSlot.HeldItem != null) return false;
             if (temp.Owner is not Drink && MealSlot.HeldItem != null) return false;
